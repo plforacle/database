@@ -325,6 +325,7 @@
 
 ### LOGICAL NETWORKS
 
+```quiz
 1. What are logical networks in OLVM?
 - A. Physical network cables
 - **B. Representations of network resources that provide connectivity for KVM virtual machines ✓**
@@ -354,9 +355,11 @@
 - **B. A virtual switch connecting VMs to the physical network ✓**
 - C. A firewall
 - D. A load balancer
+```
 
 ### STORAGE DOMAINS
 
+```quiz
 6. Can a Data Center be initialized without a storage domain attached?
 - A. Yes, storage is optional
 - **B. No, at least one storage domain must be attached before initialization ✓**
@@ -374,9 +377,11 @@
 - **B. Logical Unit Number ✓**
 - C. Linux Unified Node
 - D. Link Universal Network
+```
 
 ### VIRTUAL MACHINES & TEMPLATES
 
+```quiz
 9. Where in the Administration Portal do you create a new VM?
 - A. Storage -> VMs
 - **B. Compute -> Virtual Machines ✓**
@@ -394,4 +399,4 @@
 - **B. VNIC (Virtual Network Interface Controller) ✓**
 - C. USB adapter
 - D. Serial port
-
+```

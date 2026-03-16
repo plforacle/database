@@ -101,31 +101,31 @@ In this part, you will add KVM hosts to your cluster and verify their integratio
 1. Switch to the terminal within the VNC session.
 
 1. Connect via SSH to the olkvm01 instance.
-   ```bash
-   ssh olkvm01
-   ```
-> **Context:** All SSH commands using hostnames (e.g., `ssh olkvm01`) are executed **from the OLVM engine**, which has private DNS resolution for the cluster hosts.
+      ```bash
+      <copy>ssh olkvm01</copy>
+      ```
+   > **Context:** All SSH commands using hostnames (e.g., `ssh olkvm01`) are executed **from the OLVM engine**, which has private DNS resolution for the cluster hosts.
 
 1. Install the Oracle Linux Virtualization Manager Release package, which automatically enables/disables the required repositories.
-   ```bash
-   sudo dnf install -y oracle-ovirt-release-45-el8
-   ```   
+      ```bash
+      <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
+      ```   
 
 1. Clear the dnf cache.
-   ```bash
-   sudo dnf clean all
-   ```
+      ```bash
+      <copy>sudo dnf clean all</copy>
+      ```
 
 1. List the configured repositories and verify that the required repositories are enabled.
-   ```bash
-   sudo dnf repolist
-   ```
+      ```bash
+      <copy>sudo dnf repolist</copy>
+      ```
 
 
 1. Exit the session.
-   ```bash
-   exit
-   ```
+      ```bash
+      <copy>exit</copy>
+      ```
 
    You should now be on the Manager host.
 
@@ -186,14 +186,14 @@ In this part, you will add KVM hosts to your cluster and verify their integratio
    **Exam relevance (1Z0-1170):** Understanding the data center/cluster hierarchy is fundamental and heavily tested in "Installation & Configuration" and "Host & Cluster Management" domains. You can rename and configure this data center and cluster or add new data centers and clusters to meet your needs.
 
 1. Enter a name for the host in the Name field.
-   ```
-   olkvm01
-   ```
+      ```bash
+      <copy>olkvm01</copy>
+      ```
 
 1. In the Hostname field, enter the fully-qualified domain name or IP address of the host.
-   ```
-   vdsm01.priv.olv.oraclevcn.com
-   ```
+      ```bash
+      <copy>vdsm01.priv.olv.oraclevcn.com</copy>
+      ```
 
    This entry is the fully-qualified name of the secondary VNIC attached to the KVM host.
    
@@ -233,9 +233,9 @@ In this part, you will add KVM hosts to your cluster and verify their integratio
 
 
 1. From the OLVM engine terminal: Copy the SSH public key to the `/root/.ssh/authorized_keys` file on the KVM host.
-   ```bash
-   sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm01 -T "sudo tee -a /root/.ssh/authorized_keys"
-   ``` 
+      ```bash
+      sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm01 -T "sudo tee -a /root/.ssh/authorized_keys"
+      ``` 
     
    **What this does:** Enables passwordless SSH access from the engine to the KVM host by copying the engine's public key to the host's authorized_keys file.
 
@@ -302,7 +302,7 @@ In this part, you will add KVM hosts to your cluster and verify their integratio
 
 ## Management Portals Review
 
-![](images/management-portal.png)
+   ![](images/management-portal.png)
 
 #### THREE MANAGEMENT PORTALS - All web-based, no client installation.
 
@@ -319,80 +319,84 @@ In this part, you will add KVM hosts to your cluster and verify their integratio
 
 3. MONITORING PORTAL (Grafana):
    - Integrated Grafana dashboards
-   - Pulls data from ovirt_engine_history database (Data Warehouse)
+   - Pulls data from ovirt\_engine_history database (Data Warehouse)
    - CPU, memory, storage, network metrics
    - Grafana runs on port 3000 
 
 
 ## Lab Part 2: KVM Host - Exam Practice 
 
-### KVM HOST PREREQUISITES
+### KVM HOST PREREQUISITES 
 
-1. What is the minimum Oracle Linux version required for a KVM host?
+```quiz
+Q: 1. What is the minimum Oracle Linux version required for a KVM host?
 - A. Oracle Linux 7.5
-- **B. Oracle Linux 8.5 or later ✓**
+* B. Oracle Linux 8.5 or later
 - C. Oracle Linux 9.0
 - D. Oracle Linux 8.0
 
-2. What is the MINIMUM CPU requirement for a KVM host?
+Q: 2. What is the MINIMUM CPU requirement for a KVM host?
 - A. Single-core 32-bit CPU
-- **B. 64-bit dual-core CPU ✓**
+* B. 64-bit dual-core CPU 
 - C. 64-bit quad-core CPU
 - D. 64-bit eight-core CPU
 
-3. What is the MINIMUM RAM required for a KVM host?
+Q: 3. What is the MINIMUM RAM required for a KVM host?
 - A. 1 GB
-- **B. 2 GB ✓**
+* B. 2 GB 
 - C. 4 GB
 - D. 8 GB
 
-4. What is the MINIMUM network interface requirement for a KVM host?
+Q: 4. What is the MINIMUM network interface requirement for a KVM host?
 - A. One NIC with 100 Mbps bandwidth
-- **B. One NIC with 1 Gbps bandwidth ✓**
+* B. One NIC with 1 Gbps bandwidth 
 - C. Two NICs with 1 Gbps bandwidth
 - D. Four NICs with 1 Gbps bandwidth
+```
 
 ### ADDING HOST TO ENGINE
 
-5. Where in the Administration Portal do you add a new KVM host?
+```quiz
+Q: 5. Where in the Administration Portal do you add a new KVM host?
 - A. Storage -> Hosts
-- **B. Compute -> Hosts ✓**
+* B. Compute -> Hosts 
 - C. Network -> Hosts
 - D. Configuration -> Hosts
 
-6. Which two authentication methods can be used when adding a KVM host? **(Choose 2)**
-- **A. Password authentication ✓**
+Q: 6. Which two authentication methods can be used when adding a KVM host? **(Choose 2)**
+* A. Password authentication
 - B. Kerberos
-- **C. SSH key authentication ✓**
+* C. SSH key authentication 
 - D. Certificate authentication
 
-7. For which user account must authentication credentials be provided when adding a host?
+Q: 7. For which user account must authentication credentials be provided when adding a host?
 - A. admin user
-- **B. root user ✓**
+* B. root user 
 - C. ovirt user
 - D. vdsm user
-
+```
 
 ### VDSM & HOST ARCHITECTURE
 
-8. What is the role of the VDSM service on a KVM host?
+```quiz
+Q: 8. What is the role of the VDSM service on a KVM host?
 - A. It manages the PostgreSQL database
-- **B. It acts as a host agent running continuously as a daemon on the KVM host ✓**
+* B. It acts as a host agent running continuously as a daemon on the KVM host 
 - C. It provides the web-based administration interface
 - D. It handles SSL certificate generation
 
-9. How does the oVirt engine communicate with VDSM on the KVM hosts?
+Q: 9. How does the oVirt engine communicate with VDSM on the KVM hosts?
 - A. Through shared storage
-- **B. Through the VDSM service (host agent) ✓**
+* B. Through the VDSM service (host agent) 
 - C. Through the PostgreSQL database
 - D. Through SNMP traps
 
-10. What happens to a virtual machine if the oVirt engine goes offline?
+Q: 10. What happens to a virtual machine if the oVirt engine goes offline?
 - A. The VM automatically suspends
-- **B. The VM continues to run on the KVM host ✓**
+* B. The VM continues to run on the KVM host
 - C. The VM is migrated to another host
 - D. The VM shuts down gracefully
-
+```
 
 
 ## Configure the Second KVM Host (olkvm02)
@@ -406,32 +410,31 @@ In this part, you will add KVM hosts to your cluster and verify their integratio
 1. Switch to the terminal within the VNC session.
 
 1. Connect via SSH to the **olkvm02** instance.
-   ```bash
-   ssh olkvm02
-   ```
+      ```bash
+      <copy>ssh olkvm02</copy>
+      ```
 1. Install the Oracle Linux Virtualization Manager Release package, which automatically enables/disables the required repositories.
-   ```bash
-   sudo dnf install -y oracle-ovirt-release-45-el8
-   ```   
+      ```bash
+      <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
+      ```   
 
 1. Clear the dnf cache.
-   ```bash
-   sudo dnf clean all
-   ```
+      ```bash
+      <copy>sudo dnf clean all</copy>
+      ```
 
 1. List the configured repositories and verify that the required repositories are enabled.
-   ```bash
-   sudo dnf repolist
-   ```
+      ```bash
+      <copy>sudo dnf repolist</copy>
+      ```
 
 1. Exit the session.
-   ```bash
-   exit
-   ```
+      ```bash
+      <copy>exit</copy>
+      ```
 
    You should now be on the Manager host.
 
----
 
 ## Add KVM Host (olkvm02)
 
@@ -447,23 +450,23 @@ In this part, you will add KVM hosts to your cluster and verify their integratio
 1. Select the Default data center from the Host Cluster drop-down list.
 
 1. Enter a name for the host in the Name field.
-   ```
-   olkvm02
-   ```
+      ```bash
+      <copy>olkvm02</copy>
+      ```
 
 1. In the Hostname field, enter the fully-qualified domain name or IP address of the host.
-   ```
-   vdsm02.priv.olv.oraclevcn.com
-   ```
+      ```bash
+      <copy>vdsm02.priv.olv.oraclevcn.com</copy>
+      ```
 
 1. Under Authentication, select the SSH Public Key authentication method.
 
 1. Switch to the terminal within the VNC session.
 
 1. Copy the SSH public key to the `/root/.ssh/authorized_keys` file on the KVM host.
-   ```bash
-   sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm02 -T "sudo tee -a /root/.ssh/authorized_keys"
-   ``` 
+      ```bash
+      <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm02 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
+      ``` 
 1. Switch back to the Firefox browser and Administration Portal
 
 1. Click OK. The Power Management Configuration screen displays.
