@@ -24,36 +24,40 @@
           "filename": "../../olvm-02/olvm-02.md"
         },
 
-
         {
-          "title": "Lab 3: Set Up Networking",
+          "title": "Lab 3: Configure KVM Cluster",
           "filename": "../../olvm-03/olvm-03.md"
         },
 
         {
-          "title": "Lab 4: Configure Storage",
+          "title": "Lab 4: Set Up Networking",
           "filename": "../../olvm-04/olvm-04.md"
         },
 
         {
-          "title": "Lab 5: Import Templates",
+          "title": "Lab 5: Configure Storage",
           "filename": "../../olvm-05/olvm-05.md"
         },
 
-
         {
-          "title": "Lab 6: Create VMs",
+          "title": "Lab 6: Import Templates",
           "filename": "../../olvm-06/olvm-06.md"
         },
 
+
         {
-          "title": "Lab 7: Deploy Application",
+          "title": "Lab 7: Create VMs",
           "filename": "../../olvm-07/olvm-07.md"
         },
 
         {
-          "title": "Lab 8: Perform Live Migration",
+          "title": "Lab 8: Deploy Application",
           "filename": "../../olvm-08/olvm-08.md"
+        },
+
+        {
+          "title": "Lab 9: Perform Live Migration",
+          "filename": "../../olvm-09/olvm-09.md"
         },
 
         

@@ -59,7 +59,7 @@
 
    > **Note** — Minimum values are provided only for Small deployments; Medium and Large deployments should follow recommended values.
 
-## Lab 1: Architecture and Infrastrucute  Exam Practice  #1
+## Task 1: Architecture and Infrastrucute  Exam Practice  #1
 
 ### Architecture Quiz
 
@@ -149,7 +149,7 @@ Q: 3. What are the RECOMMENDED hardware requirements for an OLVM(Engine) SMALL d
 * E. 50 GB or greater local writable disk 
 ```
 
-## Lab 2: Open a VNC Session to the Manager
+## Task 2: Open a VNC Session to the Manager
 
 1. Open a new terminal and connect to the olvm instance via SSH.
 
@@ -224,7 +224,7 @@ Q: 3. What are the RECOMMENDED hardware requirements for an OLVM(Engine) SMALL d
 
 ---
 
-## Lab 3: Install the OLVM Engine
+## Task 3: Install the OLVM Engine
 
 1. Open the VNC Activities Menu.
 
@@ -327,7 +327,7 @@ Q: 3. What are the RECOMMENDED hardware requirements for an OLVM(Engine) SMALL d
    **Exam relevance (1Z0-1170):** Understanding what engine-setup configures is critical for the "Installation & Configuration" domain. You should know the major components it sets up (database, web server, certificates, firewall). Practice with --help - engine-setup --help shows options
 
 
-## Lab 4: OLVM Engine — Exam Practice #2
+## Task 4: OLVM Engine — Exam Practice #2
 
 **REPOSITORIES & PREREQUISITE MODULES**
 ```quiz
@@ -393,7 +393,7 @@ Q: 8. What is the default port number for PostgreSQL database communication?
 ```
 
 
-## Lab 5: Login to the Administration Portal
+## Task 5: Login to the Administration Portal
 
 1. Get the FQDN for the manager host.
       ```bash
@@ -475,7 +475,7 @@ Q: 8. What is the default port number for PostgreSQL database communication?
     ![](images/olvm-admin-portal.png)
 
 ---
-## Lab 6: OLVM Engine — Exam Practice  #3
+## Task 6: OLVM Engine — Exam Practice  #3
 
 **ARCHITECTURE & ADMINISTRATION PORTAL**
 
