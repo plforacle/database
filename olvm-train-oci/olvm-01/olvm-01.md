@@ -1,231 +1,268 @@
-# Setup Infrastructure
+# Setup OLVM Infrastructure on OCI (Bootstrap + Ansible)
 
-## Introduction
+## Overview
 
-OCI Bootstrap & Cluster Deployment
+Deploy `olvm`, `olkvm01`, `olkvm02` using Ansible from a temporary **bootstrap** instance. The bootstrap is used as the Ansible controller and should be terminated after the playbook completes and you have copied the cluster SSH keys to your local machine [1].
 
-Deploy olvm, olkvm01, olkvm02 using Ansible from a temporary bootstrap instance.
+Before launching the bootstrap, create a VCN in your target compartment. The simplest approach is the OCI **VCN Wizard**, which creates the VCN, subnets, internet gateway, route tables, and security lists in one step [1].
 
-A temporary bootstrap instance (Oracle Linux Cloud Developer 8) is used as the Ansible controller to deploy the three permanent cluster instances. The bootstrap is terminated after the playbook completes.
+---
 
-Before launching the bootstrap, a VCN must exist in the new compartment. The easiest way is to use the OCI VCN Wizard — it creates everything needed (VCN, public subnet, internet gateway, route tables, security lists) in one step.
+## Objectives
 
-### Objectives
+- Create a bootstrap VCN and launch a temporary bootstrap instance [1].
+- Install prerequisites (Python 3.8, Git, Ansible, OCI SDK) on the bootstrap [1].
+- Configure OCI credentials and generate SSH keys [1].
+- Define instance configurations and run the Ansible playbook to provision OLVM components [1].
+- Verify and access deployed instances; copy keys; open SSH tunnel [1].
 
-### Prerequisites
+---
 
+## Prerequisites
 
-## Task 1: Create Bootstrap VCN (VCN Wizard)
+- OCI tenancy with sufficient quotas (lab guidance often assumes ~18 OCPUs and ~160 GB memory for the 3 main instances) [1]
+- A compartment for lab resources
+- Access to OCI Console
+- Your SSH public key for initial access to the bootstrap
 
-1. Go to **Networking → Virtual Cloud Networks**.
-2. Click **Start VCN Wizard**.
-3. Select **Create VCN with Internet Connectivity** → click **Start VCN Wizard**.
-4. Fill in:
+> Important: Use a dev/test environment and clean up resources to avoid unnecessary costs [1].
 
-   | Field               | Value                |
-   |---------------------|----------------------|
-   | VCN Name            | bootstrap-vcn        |
-   | Compartment         | Your new compartment |
-   | VCN CIDR Block      | 10.0.0.0/16 (default)|
-   | Public Subnet CIDR  | 10.0.0.0/24 (default)|
-   | Private Subnet CIDR | 10.0.1.0/24 (default)|
+---
 
-5. Click **Next → Review → Create**.
-6. Wait for all resources to show status: **Available**.
+## Task 1 — Create Bootstrap VCN (VCN Wizard)
 
-      > 💡 **Tip**: The wizard automatically creates the Internet Gateway, Route Table, and Security Lists. No manual networking steps needed.
+1. OCI Console → **Networking → Virtual Cloud Networks**
+2. Click **Start VCN Wizard**
+3. Select **Create VCN with Internet Connectivity**
+4. Fill in (example values from lab) [1]:
 
-## Task 2: Launch Bootstrap Instance
+| Field | Value |
+|---|---|
+| VCN Name | `bootstrap-vcn` |
+| Compartment | your compartment |
+| VCN CIDR Block | `10.0.0.0/16` |
+| Public Subnet CIDR | `10.0.0.0/24` |
+| Private Subnet CIDR | `10.0.1.0/24` |
 
-1. Go to **Compute → Instances → Create Instance**.
-2. Fill in:
+5. **Next → Review → Create**
+6. Wait until all resources show **Available** [1].
 
-   | Field            | Value                                                           |
-   |------------------|-----------------------------------------------------------------|
-   | Name             | bootstrap                                                       |
-   | Compartment      | Your new compartment                                            |
-   | Image            | Oracle Linux Cloud Developer 8 (under Oracle Linux Images)      |
-   | Shape            | VM.Standard.E4.Flex — 1 OCPU / 16 GB RAM                        |
-   | VCN              | bootstrap-vcn                                                   |
-   | Subnet           | Public Subnet                                                   |
-   | Assign Public IP | Yes                                                             |
-   | SSH Keys         | Upload your existing public key                                 |
+---
 
-3. Click **Create** — wait for Status: **Running**.
-4. Note the Public IP address — you will SSH to it shortly.
+## Task 2 — Launch Bootstrap Instance
 
-      > ⚠️ **Warning**: The bootstrap instance is TEMPORARY.  You will need to terminate it after the Ansible playbook completes and you have saved the cluster SSH keys.
+1. OCI Console → **Compute → Instances → Create Instance**
+2. Use (lab example) [1]:
 
-5. SH into Bootstrap Instance: From PowerShell on your Windows machine:
+| Field | Value |
+|---|---|
+| Name | `bootstrap` |
+| Compartment | your compartment |
+| Image | Oracle Linux Cloud Developer 8 |
+| Shape | VM.Standard.E4.Flex — 1 OCPU / 16 GB |
+| VCN | `bootstrap-vcn` |
+| Subnet | Public Subnet |
+| Assign Public IP | Yes |
+| SSH Keys | upload your public key |
 
-      ```bash
-      <copy>ssh -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip></copy>
-      ```
+3. Click **Create** and wait for **Running**
+4. Note the **Public IP** [1]
 
-## Task 3: Setup Bootstrap Software 
+From Windows PowerShell:
 
+```powershell
+<copy>ssh -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip></copy>
+```
 
-1. Install prerequisites on bootstrap (Python 3.8 + git)
+> Warning: The bootstrap instance is temporary. Terminate it after the playbook finishes and after you save the cluster SSH keys locally [1].
 
-      ```bash
-      <copy>sudo dnf install -y python38 git
-      python3.8 --version
-      git --version</copy>
-      ```
+---
 
-2. Create + activate a Python 3.8 venv (this is the "single Python" part)
+## Task 3 — Setup Bootstrap Software
 
-      ```bash
-      <copy>python3.8 -m venv ~/venv-olvm
-      source ~/venv-olvm/bin/activate
-      python --version
-      which python</copy>
-      ```
+### 3.1 Install prerequisites (Python 3.8 + Git) [1]
 
+```bash
+<copy>sudo dnf install -y python38 git
+python3.8 --version
+git --version</copy>
+```
 
-3. Install OCI SDK + Ansible + jmespath into the venv
+### 3.2 Create + activate a Python 3.8 virtual environment [1]
 
-      ```bash
-      <copy>python -m pip install --upgrade pip
-      pip install oci ansible==6.7.0 jmespath
-      ansible --version
-      python -c "import oci; print(oci.__version__)"</copy>
-      ```
+```bash
+<copy>python3.8 -m venv ~/venv-olvm
+source ~/venv-olvm/bin/activate
+python --version
+which python</copy>
+```
 
-4. Clone the lab repo and install Ansible collections (with required pins)
+### 3.3 Install OCI SDK + Ansible + jmespath into the venv [1]
 
-      ```bash
-      <copy>git clone https://github.com/oracle-devrel/linux-virt-labs.git
-      cd ~/linux-virt-labs/olvm</copy>
-      ```
+```bash
+<copy>python -m pip install --upgrade pip
+pip install oci ansible==6.7.0 jmespath
+ansible --version
+python -c "import oci; print(oci.__version__)"</copy>
+```
 
-      ```bash
-      <copy>ansible-galaxy collection install -r requirements.yml --force
-      ansible-galaxy collection install community.general:6.6.0 --force
-      ansible-galaxy collection install community.crypto:1.9.0 --force</copy>
-      ```
+### 3.4 Clone the lab repo and install Ansible collections [1]
 
-      (The pinned versions match the lab's "critical" guidance to avoid Python compatibility issues on remote hosts.)
+```bash
+<copy>git clone https://github.com/oracle-devrel/linux-virt-labs.git
+cd ~/linux-virt-labs/olvm</copy>
+```
+```bash
+<copy>ansible-galaxy collection install -r requirements.yml --force
+ansible-galaxy collection install community.general:6.6.0 --force
+ansible-galaxy collection install community.crypto:1.9.0 --force</copy>
+```
 
-5. Configure OCI CLI credentials
+### 3.5 Configure OCI CLI credentials [1]
 
-      ```bash
-      <copy>oci setup config</copy>
-      ```
+```bash
+<copy>oci setup config</copy>
+```
+```bash
+<copy>ls /home/opc/.oci
+cat /home/opc/.oci/oci_api_key_public.pem</copy>
+```
+```bash
+<copy>oci iam region list | head</copy>
+```
 
-      ```bash
-      <copy>ls /home/opc/.oci
-      cat /home/opc/.oci/oci_api_key_public.pem</copy>
-      ```
+---
 
-      ```bash
-      <copy>oci iam region list | head</copy>
-      ```
+## Task 4 — Create OCI Components and Run the Playbook
 
-## Task 4: Create  OCI Components
+### 4.1 Generate SSH keypair (used by the automation) [1]
 
-1. Generate SSH keypair (used by the automation)
+```bash
+<copy>ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""</copy>
+```
 
-      ```bash
-      <copy>ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""</copy>
-      ```
+### 4.2 Set the compartment OCID (required) [1]
 
-2. Set the compartment OCID (required)
+```bash
+<copy>export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"</copy>
+```
 
-      ```bash
-      <copy>export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"
-      echo $OCI_COMPARTMENT_OCID</copy>
-      ```
+```bash
+<copy>echo "$OCI_COMPARTMENT_OCID"</copy>
+```
 
-3. Create instances.yml file
+### 4.3 Create `instances.yml` (copy/paste-safe)
 
-      ```bash
-      <copy>cat << EOF | tee instances.yml > /dev/null
-      compute_instances:
-      1:
-         instance_name: "olvm"
-         type: "engine"
-         instance_ocpus: 2
-         instance_memory: 32
-      2:
-         instance_name: "olkvm01"
-         type: "kvm"
-         instance_ocpus: 8
-         instance_memory: 64
-      3:
-         instance_name: "olkvm02"
-         type: "kvm"
-         instance_ocpus: 8
-         instance_memory: 64
-      use_vnc_on_engine: true
-      EOF</copy>
-      ```
+```bash
+<copy>cd ~/linux-virt-labs/olvm
 
-4. Create `hosts` inventory (force Ansible localhost to use the venv Python)
+cat > instances.yml <<'EOF'
+compute_instances:
+  1:
+    instance_name: "olvm"
+    type: "engine"
+    instance_ocpus: 2
+    instance_memory: 32
+  2:
+    instance_name: "olkvm01"
+    type: "kvm"
+    instance_ocpus: 8
+    instance_memory: 64
+  3:
+    instance_name: "olkvm02"
+    type: "kvm"
+    instance_ocpus: 8
+    instance_memory: 64
+use_vnc_on_engine: true
+EOF
 
-      ```bash
-      <copy>cat << EOF | tee hosts > /dev/null
-      localhost ansible_connection=local ansible_python_interpreter=$HOME/venv-olvm/bin/python
-      EOF
-      cat hosts</copy>
-      ```
+cat instances.yml</copy>
+```
 
-      (This avoids Python 3.6/3.8 mismatches without changing any oVirt files.)
+### 4.4 Create `hosts` inventory (force Ansible localhost to use the venv Python) [1]
 
-5. Run the playbook (from the venv)
+```bash
+<copy>cat > hosts <<'EOF'
+localhost ansible_connection=local ansible_python_interpreter=/home/opc/venv-olvm/bin/python
+EOF
 
-      ```bash
-      <copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml"</copy>
-      ```
+cat hosts</copy>
+```
 
-      > **⚠️ CRITICAL – Record All IP Addresses**
-      >
-      > When the playbook pauses, it displays **both public and private IP addresses** for each instance:
-      >
-      > - **olvm**
-      >   - Public IP (used for SSH access and VNC tunneling)
-      >   - Private IP (used for internal OLVM communication)
-      >
-      > - **olkvm01**
-      >   - Public IP (SSH access if needed)
-      >   - Private IP (VDSM, storage, VM networking)
-      >
-      > - **olkvm02**
-      >   - Public IP (SSH access if needed)
-      >   - Private IP (VDSM, storage, VM networking)
-      >
-      > **Required Actions:**
-      > 1. **Record both public and private IPs for all instances**
-      > 2. **Leave this terminal open  DO NOT hit `enter` to continue or `ctrl-c` then `a` to abort!!!**
-      > **Why this matters:**
-      > - OLVM uses **private IPs** for engine ↔ host (VDSM) communication
-      > - SSH access may use **public or private IPs**, depending on context
-      > - Later steps assume you understand which IP type is being used
-      >
+### 4.5 Run the playbook (from the venv) [1]
 
-## Task 5: Verify OCI component
+```bash
+<copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml"</copy>
+```
 
-11. Reboot the OCI compute instances
+#### CRITICAL — Record All IP Addresses [1]
+When the playbook pauses, record **both public and private IPs** for:
+- `olvm` (engine)
+- `olkvm01`
+- `olkvm02`
 
-      ```bash
-      <copy>ssh opc@<olvm-public-ip> "sudo reboot"
-      ssh opc@<olkvm01-public-ip> "sudo reboot"
-      ssh opc@<olkvm02-public-ip> "sudo reboot"</copy>
-      ```
+Leave the terminal open at the pause; don’t continue/abort unless the lab instructs you [1].
 
-12. Save SSH keys to your local machine (run from your local PC PowerShell)
+---
 
-      From PowerShell on Windows, copy the SSH keys before terminating the bootstrap:
+## Task 5 — Verify and Access
 
-      ```powershell
-      <copy>scp opc@<bootstrap-ip>:~/.ssh/id_rsa C:\Users\<you>\.ssh\olvm-cluster-id_rsa
-      scp opc@<bootstrap-ip>:~/.ssh/id_rsa.pub C:\Users\<you>\.ssh\olvm-cluster-id_rsa.pub</copy>
-      ```
+### 5.1 Reboot the OCI instances [1]
 
-13. Open SSH tunnel (PowerShell)**
+```bash
+ssh opc@<olvm-public-ip> "sudo reboot"
+ssh opc@<olkvm01-public-ip> "sudo reboot"
+ssh opc@<olkvm02-public-ip> "sudo reboot"
+```
 
-      ```powershell
-      <copy>ssh -L 5901:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa opc@<olvm-public-ip></copy>
-      ```
+### 5.2 Copy the cluster SSH keys to your Windows machine (before terminating bootstrap) [1]
 
+```powershell
+scp opc@<bootstrap-ip>:~/.ssh/id_rsa C:\Users\<you>\.ssh\olvm-cluster-id_rsa
+scp opc@<bootstrap-ip>:~/.ssh/id_rsa.pub C:\Users\<you>\.ssh\olvm-cluster-id_rsa.pub
+```
+
+### 5.3 Open SSH tunnel for VNC (PowerShell) [1]
+
+```powershell
+ssh -L 5901:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa opc@<olvm-public-ip>
+```
+
+---
+
+## Cleanup
+
+- Terminate the bootstrap instance after you confirm everything is deployed and you’ve copied the SSH keys [1].
+- Clean up lab resources when finished to control costs.
+```
+
+---
+
+## Part B — The two “files” as standalone (for quick validation)
+
+### `instances.yml` (correct structure)
+```yaml
+compute_instances:
+  1:
+    instance_name: "olvm"
+    type: "engine"
+    instance_ocpus: 2
+    instance_memory: 32
+  2:
+    instance_name: "olkvm01"
+    type: "kvm"
+    instance_ocpus: 8
+    instance_memory: 64
+  3:
+    instance_name: "olkvm02"
+    type: "kvm"
+    instance_ocpus: 8
+    instance_memory: 64
+use_vnc_on_engine: true
+```
+
+### `hosts` (inventory)
+```ini
+localhost ansible_connection=local ansible_python_interpreter=/home/opc/venv-olvm/bin/python
+```
 
