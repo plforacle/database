@@ -15,56 +15,60 @@
         },
 
         {
-          "title": "Lab 1: Setup Infrastructure",
-          "filename": "../../olvm-01/olvm-01.md"
+          "title": "Lab 1: Setup OCI Infrastructure",
+          "filename": "../../bootstrap/bootstrap.md"
         },
 
         {
-          "title": "Lab 2: Deploy OLVM Engine",
-          "filename": "../../olvm-02/olvm-02.md"
+          "title": "Lab 2: Install OLVM Engine",
+          "filename": "../../olvm-engine/olvm-engine.md"
         },
 
         {
-          "title": "Lab 3: Configure KVM Cluster",
-          "filename": "../../olvm-03/olvm-03.md"
+          "title": "Lab 3: Review OLVM Engine Architecture and Complete the Quiz",
+          "filename": "../../olvm-engine-exam-practice/olvm-engine-exam-practice.md"
+        },
+        {
+          "title": "Lab 4: Configure KVM Cluster",
+          "filename": "../../kvm-cluster/kvm-cluster.md"
         },
 
         {
-          "title": "Lab 4: Set Up Networking",
-          "filename": "../../olvm-04/olvm-04.md"
+          "title": "Lab 5: Set Up Networking",
+          "filename": "../../network/network.md"
+        },
+
+{
+          "title": "Lab 6: Configure Storage",
+          "filename": "../../storage/storage.md"
         },
 
         {
-          "title": "Lab 5: Configure Storage",
-          "filename": "../../olvm-05/olvm-05.md"
+          "title": "Lab 7: Import Templates",
+          "filename": "../../template/template.md"
         },
 
         {
-          "title": "Lab 6: Import Templates",
-          "filename": "../../olvm-06/olvm-06.md"
-        },
-
-
-        {
-          "title": "Lab 7: Create VMs",
-          "filename": "../../olvm-07/olvm-07.md"
+          "title": "Lab 8: Create VMs",
+          "filename": "../../virtual-machine/virtual-machine.md"
         },
 
         {
-          "title": "Lab 8: Deploy Application",
-          "filename": "../../olvm-08/olvm-08.md"
+          "title": "Lab 9: Deploy Multi Tier Application",
+          "filename": "../../application/application.md"
         },
 
         {
-          "title": "Lab 9: Perform Live Migration",
-          "filename": "../../olvm-09/olvm-09.md"
+          "title": "Lab 10: Perform Live Migration",
+          "filename": "../../migration/migration.md"
         },
 
         {
-          "title": "Lab 10: Appendices",
-          "filename": "../../olvm-10/olvm-10.md"
+          "title": "Lab 11: Appendices",
+          "filename": "../../appendix/appendix.md"
         },
-        
+
+      
         {
             "title": "Need Help?",
             "description": "Solutions to Common Problems and Directions for Receiving Live Help",
