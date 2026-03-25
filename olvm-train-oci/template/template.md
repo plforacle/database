@@ -39,7 +39,7 @@ This lab assumes you have:
 
 4. For the **File Path**, enter:
    ```
-   /tmp
+   <copy>/tmp</copy>
    ```
 
    This folder on the `olkvm01` host is from where the UI will try to import the OVA template.

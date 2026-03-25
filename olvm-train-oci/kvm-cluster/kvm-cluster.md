@@ -157,13 +157,13 @@ This lab assumes you have:
 6. Enter a name for the host:
 
    ```text
-   olkvm01
+   <copy>olkvm01</copy>
    ```
 
 7. In the **Hostname** field, enter the fully-qualified domain name or IP address of the host:
 
    ```text
-   vdsm01.priv.olv.oraclevcn.com
+   <copy>vdsm01.priv.olv.oraclevcn.com</copy>
    ```
 
    This entry is the fully-qualified name of the **secondary VNIC** attached to the KVM host.

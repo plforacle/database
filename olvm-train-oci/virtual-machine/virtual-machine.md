@@ -39,23 +39,23 @@ This lab assumes you have:
    The **New Virtual Machine** dialog box opens.
 
 3. From the **Template** drop-down list, select:
-   ```
-   OL9U5_x86_64-olvm-b253
+  ```bash
+   <copy>OL9U5_x86_64-olvm-b253</copy>
    ```
 
 4. From the **Operating System** drop-down list, select:
-   ```
-   Oracle Linux 9.x x64
+  ```bash
+   <copy>Oracle Linux 9.x x64</copy>
    ```
 
 5. In the **Name** field, enter:
-   ```
-   ol9-mysql
+  ```bash
+   <copy>ol9-mysql</copy>
    ```
 
 6. From the `nic1` drop-down list, select the VM network interface:
-   ```
-   l2-vm-network(l2-vm-network)
+  ```bash
+   <copy>l2-vm-network(l2-vm-network)</copy>
    ```
 
 7. Click **Show Advanced Options**.
@@ -95,13 +95,13 @@ Cloud-init is an industry-standard tool for VM initialization. It runs on first 
 12. Click **Authentication**.
 
 13. In the **User Name** field, enter:
-    ```
-    opc
+    ```bash
+    <copy>opc</copy>
     ```
 
 14. In the **Password** and **Verify Password** fields, enter a password for the user (for lab use `oracle`):
-    ```
-    oracle
+    ```bash
+    <copy>oracle</copy>
     ```
 
     For production systems, the recommendation is to use **SSH Authorized Key**.
@@ -109,8 +109,8 @@ Cloud-init is an industry-standard tool for VM initialization. It runs on first 
 15. Click **Networks**.
 
 16. In the **DNS Servers** field, enter:
-    ```
-    8.8.8.8
+    ```bash
+    <copy>8.8.8.8</copy>
     ```
 
 17. Click the checkbox next to **In-guest Network Interface Name**.
@@ -118,8 +118,8 @@ Cloud-init is an industry-standard tool for VM initialization. It runs on first 
 18. Click **Add new**.
 
 19. In the **In-guest Network Interface** section, click **Add new**. In the **Name** field, enter:
-    ```
-    eth0
+    ```bash
+    <copy>eth0</copy>
     ```
 
 20. From the **IPv4 Boot Protocol** drop-down list, select `Static`.
@@ -127,18 +127,18 @@ Cloud-init is an industry-standard tool for VM initialization. It runs on first 
     Due to linking the virtual machine network to the OCI VLAN network, there is no default DHCP server to assign IP addresses.
 
 21. In the **IPv4 Address** field, enter:
-    ```
-    10.0.10.100
+    ```bash
+    <copy>10.0.10.100</copy>
     ```
 
 22. In the **IPv4 Netmask** field, enter:
-    ```
-    255.255.255.0
+    ```bash
+    <copy>255.255.255.0</copy>
     ```
 
 23. In the **IPv4 Gateway** field, enter:
-    ```
-    10.0.10.1
+    ```bash
+    <copy>10.0.10.1</copy>
     ```
 
 24. Click **OK**.
@@ -208,23 +208,23 @@ Cloud-init is an industry-standard tool for VM initialization. It runs on first 
 2. Click **New**.
 
 3. From the **Template** drop-down list, select:
-   ```
-   OL9U5_x86_64-olvm-b253
+   ```bash
+   <copy>OL9U5_x86_64-olvm-b253</copy>
    ```
 
 4. From the **Operating System** drop-down list, select:
-   ```
-   Oracle Linux 9.x x64
+   ```bash
+   <copy>Oracle Linux 9.x x64</copy>
    ```
 
 5. In the **Name** field, enter:
-   ```
-   ol9-webapp
+   ```bash
+   <copy>ol9-webapp</copy>
    ```
 
 6. From the `nic1` drop-down list, select:
-   ```
-   l2-vm-network(l2-vm-network)
+   ```bash
+   <copy>l2-vm-network(l2-vm-network)</copy>
    ```
 
 7. Click **Show Advanced Options**.
@@ -242,20 +242,20 @@ Cloud-init is an industry-standard tool for VM initialization. It runs on first 
 12. Click **Authentication**.
 
 13. In the **User Name** field, enter:
-    ```
-    opc
+    ```bash
+    <copy>opc</copy>
     ```
 
 14. In the **Password** and **Verify Password** fields, enter a password for the user (for lab use `oracle`):
-    ```
-    oracle
+    ```bash
+    <copy>oracle</copy>
     ```
 
 15. Click **Networks**.
 
 16. In the **DNS Servers** field, enter:
-    ```
-    8.8.8.8
+    ```bash
+    <copy>8.8.8.8</copy>
     ```
 
 17. Click the checkbox next to **In-guest Network Interface Name**.
@@ -263,26 +263,26 @@ Cloud-init is an industry-standard tool for VM initialization. It runs on first 
 18. Click **Add new**.
 
 19. In the **In-guest Network Interface** section, click **Add new**. In the **Name** field, enter:
-    ```
-    eth0
+    ```bash
+    <copy>eth0</copy>
     ```
 
 20. From the **IPv4 Boot Protocol** drop-down list, select `Static`.
 
 21. In the **IPv4 Address** field, enter:
-    ```
-    10.0.10.101
+    ```bash
+    <copy>10.0.10.101</copy>
     ```
 
 22. In the **IPv4 Netmask** field, enter:
-    ```
-    255.255.255.0
+    ```bash
+    <copy>255.255.255.0</copy>
     ```
 
 23. In the **IPv4 Gateway** field, enter:
     ```
-    10.0.10.1
-    ```
+    <copy>10.0.10.1</copy>
+    ```bash
 
 24. Click **OK**.
 

@@ -45,7 +45,7 @@ This lab assumes you have:
 
 5. In the **Name** field, enter a name for the data domain:
    ```
-   amd-storage-domain-01
+   <copy>amd-storage-domain-01</copy>
    ```
 
 6. From the **Data Center** drop-down list, select **Default**.

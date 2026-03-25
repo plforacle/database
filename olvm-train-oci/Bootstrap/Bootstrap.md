@@ -182,8 +182,8 @@ cat instances.yml</copy>
 ### 4.4 Create `hosts` inventory (force Ansible localhost to use the venv Python)
 
 ```bash
-<copy>cat > hosts <<'EOF'
-localhost ansible_connection=local ansible_python_interpreter=/home/opc/venv-olvm/bin/python
+<copy>cat << EOF | tee hosts > /dev/null
+localhost ansible_connection=local ansible_connection=local ansible_python_interpreter=/usr/bin/python3.6
 EOF
 
 cat hosts</copy>
@@ -224,11 +224,6 @@ scp opc@<bootstrap-ip>:~/.ssh/id_rsa.pub C:\Users\<you>\.ssh\olvm-cluster-id_rsa
 ```powershell
 <copy>ssh -L 5901:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa opc@<olvm-public-ip></copy>
 ```
-
-## Task 6: Cleanup
-
-1. **Terminate the bootstrap instance** after you confirm everything is deployed and you have saved the cluster SSH keys locally.
-2. Clean up lab resources when finished to control costs (instances, VCNs, storage, etc.).
 
 ## Learn More
 

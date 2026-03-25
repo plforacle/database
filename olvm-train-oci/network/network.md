@@ -87,7 +87,7 @@ This lab assumes you have:
 
 4. For the **Name** field, enter a name for the new network:
    ```
-   l2-vm-network
+   <copy>l2-vm-network</copy>
    ```
 
 5. Under the **Network Parameters** section, the **VM Network** check box is selected by default. Leave the **VM Network** check box selected to create the new VLAN-based virtual machine network.

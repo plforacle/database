@@ -201,7 +201,7 @@ This lab assumes you have:
 3. Enter the following link to access the engine's Web UI for this lab.
 
    ```text
-   https://olvm.pub.olv.oraclevcn.com
+   <copy>https://olvm.pub.olv.oraclevcn.com</copy>
    ```
 
    **Security Warning:** Firefox will display "Warning: Potential Security Risk Ahead" because the OLVM engine uses a self-signed SSL certificate. This is expected and safe in this lab environment.
