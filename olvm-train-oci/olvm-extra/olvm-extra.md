@@ -1,9 +1,8 @@
 # OLVM Exam Practice
 --
 
-## Exam Practice #1 
+## Exam Practice #1 - Oracle Virtualization - The big picture
 
-### Architecture  
 
 ```quiz
 Q: 1. What is a Standalone Engine in Oracle Linux Virtualization Manager?
@@ -70,9 +69,9 @@ Q: 10. What is the relationship between VDSM and libvirt?
 
 ---
 
-## Exam Practice #2 
+## Exam Practice #2 - The OLVM Engine
 
-### Infrastructure Quiz
+### Infrastructure
 
 ```quiz
 Q: 1. What is the minimum Oracle Linux version required for installing the OLVM Manager (Engine)?
@@ -95,14 +94,10 @@ Q: 3. What are the RECOMMENDED hardware requirements for an OLVM (Engine) SMALL 
 * E. 50 GB or greater local writable disk
 ```
 
----
-
-## Exam Practice #3
-
 ### Repositories, Setup, and Ports
 
 ```quiz
-Q: 1. Which six repositories must be enabled on the Oracle Linux system for OLVM Engine? (Choose 6)
+Q: 4. Which six repositories must be enabled on the Oracle Linux system for OLVM Engine? (Choose 6)
 * A. BaseOS Latest
 * B. AppStream
 * C. KVM AppStream
@@ -112,25 +107,25 @@ Q: 1. Which six repositories must be enabled on the Oracle Linux system for OLVM
 - G. Docker CE
 - H. Kubernetes
 
-Q: 2. What command is used to install the Oracle oVirt release package for Enterprise Linux 8?
+Q: 5. What command is used to install the Oracle oVirt release package for Enterprise Linux 8?
 - A. dnf install ovirt-release-el8
 - B. dnf install oracle-ovirt-el8
 * C. dnf install oracle-ovirt-release-45-el8
 - D. dnf install ovirt-engine-release
 
-Q: 3. What command is used to install the OLVM Engine package?
+Q: 6. What command is used to install the OLVM Engine package?
 - A. yum install olvm-engine
 * B. dnf install ovirt-engine
 - C. dnf install olvm-manager
 - D. yum install oracle-engine
 
-Q: 4. What command is used to configure the OLVM Engine after package installation?
+Q: 7. What command is used to configure the OLVM Engine after package installation?
 - A. ovirt-setup
 * B. engine-setup
 - C. olvm-configure
 - D. manager-setup
 
-Q: 5. Which five configuration groupings are part of the engine-setup process? (Choose 5)
+Q: 8. Which five configuration groupings are part of the engine-setup process? (Choose 5)
 * A. Database configuration
 - B. Hardware configuration
 * C. Network configuration
@@ -139,56 +134,50 @@ Q: 5. Which five configuration groupings are part of the engine-setup process? (
 * F. Service configurations
 - G. Storage domain setup
 
-Q: 6. What does the engine-setup command display after all questions are answered?
+Q: 9. What does the engine-setup command display after all questions are answered?
 - A. Error log
 * B. Summary of entered values
 - C. Installation progress bar
 - D. Database schema
 
-Q: 7. Which two ports are used for web interface and REST API access? (Choose 2)
+Q: 10. Which two ports are used for web interface and REST API access? (Choose 2)
 * A. 80 (TCP)
 - B. 8080 (TCP)
 * C. 443 (TCP)
 - D. 8443 (TCP)
 
-Q: 8. What is the default port number for PostgreSQL database communication?
+Q: 11. What is the default port number for PostgreSQL database communication?
 - A. 3306
 * B. 5432
 - C. 5433
 - D. 27017
 ```
 
----
-
-## Exam Practice #4 
-
 ### Portals and Databases
 
 ```quiz
-Q: 1. Oracle Linux Virtualization Manager is built from which open-source project?
+Q: 12. Oracle Linux Virtualization Manager is built from which open-source project?
 - A. OpenStack
 * B. oVirt
 - C. Proxmox
 - D. XenServer
 
-Q: 2. Which three portals are available in the OLVM Engine web interface? (Choose 3)
+Q:13. Which three portals are available in the OLVM Engine web interface? (Choose 3)
 * A. Administration Portal
 - B. Developer Portal
 * C. VM Portal
 * D. Monitoring Portal (Grafana)
 - E. Storage Portal
 
-Q: 3. How many PostgreSQL databases are used by Oracle Linux Virtualization Manager?
+Q: 14. How many PostgreSQL databases are used by Oracle Linux Virtualization Manager?
 - A. One
 * B. Two
 - C. Three
 - D. Four
 ```
 
----
 
-
-## Exam Practice #5 
+## Exam Practice #3 - OLVM KVM Host
 
 ### KVM Host Prerequisites
 
@@ -263,7 +252,7 @@ Q: 10. What happens to a virtual machine if the oVirt engine goes offline?
 ```
 
 ---
-## Exam Practice #6 
+## Exam Practice #3 - Networking, Storage, and VM Setup
 
 ### LOGICAL NETWORKS
 
