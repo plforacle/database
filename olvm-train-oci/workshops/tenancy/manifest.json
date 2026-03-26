@@ -23,51 +23,46 @@
           "title": "Lab 2: Install OLVM Engine",
           "filename": "../../olvm-engine/olvm-engine.md"
         },
-
+   
         {
-          "title": "Lab 3: Review OLVM Engine Architecture and Complete the Quiz",
-          "filename": "../../olvm-engine-exam-practice/olvm-engine-exam-practice.md"
-        },
-        {
-          "title": "Lab 4: Configure KVM Cluster",
+          "title": "Lab 3: Configure KVM Cluster",
           "filename": "../../kvm-cluster/kvm-cluster.md"
         },
 
         {
-          "title": "Lab 5: Set Up Networking",
+          "title": "Lab 4: Set Up Networking",
           "filename": "../../network/network.md"
         },
 
-{
-          "title": "Lab 6: Configure Storage",
+        {
+          "title": "Lab 5: Configure Storage",
           "filename": "../../storage/storage.md"
         },
 
         {
-          "title": "Lab 7: Import Templates",
+          "title": "Lab 6: Import Templates",
           "filename": "../../template/template.md"
         },
 
         {
-          "title": "Lab 8: Create VMs",
+          "title": "Lab 7: Create VMs",
           "filename": "../../virtual-machine/virtual-machine.md"
         },
 
         {
-          "title": "Lab 9: Deploy Multi Tier Application",
+          "title": "Lab 8: Deploy Multi Tier Application",
           "filename": "../../application/application.md"
         },
 
         {
-          "title": "Lab 10: Perform Live Migration",
+          "title": "Lab 9: Perform Live Migration",
           "filename": "../../migration/migration.md"
         },
 
         {
-          "title": "Lab 11: Appendices",
-          "filename": "../../appendix/appendix.md"
+          "title": "Lab 10 OLVM Extra",
+          "filename": "../../olvm-extra/olvm-extra.md"
         },
-
       
         {
             "title": "Need Help?",

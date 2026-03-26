@@ -1,87 +1,9 @@
-# Review OLVM Engine Architecture and Complete the Quiz
+# OLVM Exam Practice
+--
 
-## Introduction
+## Exam Practice #1 
 
-This page provides architecture context for Oracle Linux Virtualization Manager (OLVM) and includes exam-style knowledge checks aligned to common Engine concepts (architecture, sizing, repositories, ports, and portals).
-
-Estimated Lab Time: 15–30 minutes
-
-### Objectives
-
-In this lab, you will:
-- Understand the Oracle Virtualization platform layers
-- Identify the virtualization stack components (Engine, VDSM, libvirt, QEMU, KVM)
-- Review deployment sizing guidance for small/medium/large environments
-- Validate your understanding through exam-style practice questions
-
-### Prerequisites
-
-This lab assumes you have:
-- Basic familiarity with virtualization concepts (hosts, VMs, management plane)
-- (Recommended) Completed the hands-on Engine deployment: [olvm-engine.md](olvm-engine.md)
-
----
-
-## Task 1: Oracle Virtualization — The Big Picture
-
-![](images/olvm-big-picture.png)
-
-#### WHAT DOES ORACLE VIRTUALIZATION LOOK LIKE? — The complete platform, from control plane to infrastructure
-
-### Platform layers
-
-1. **Physical Servers** — The foundation. Provide CPU, memory, storage, and networking.
-2. **Oracle Linux KVM Hosts** — The middle layer. Run multiple virtual machines with different guest operating systems, including Linux and Windows.
-3. **Oracle Linux Virtualization Manager (OLVM)** — The centralized control plane. Logically separated from the KVM hosts and the VMs they run.
-
-> **Note:** This separation is intentional — it improves reliability and scalability, and simplifies management across many hosts.
-
-### Key concept — User Space vs Kernel Space
-
-- **Kernel space** is where the OS core and drivers run — direct hardware access.
-- **User space** is where applications run — hardware access is requested through the kernel.
-
-In OLVM, **KVM runs in kernel space** for near-native performance, while each VM runs as a **QEMU** process in **user space**.
-
----
-
-## Task 2: Architecture Overview (The Virtualization Stack)
-
-![](images/olvm-stack.png)
-
-**Walk through from top to bottom:**
-1. **oVirt ENGINE** — The brain. Java app on WildFly server (formerly JBoss) + PostgreSQL. Sends commands down.
-2. **VDSM** — Virtual Desktop and Server Manager. Daemon on EVERY KVM host. The agent.
-3. **libvirt** — The API layer. VDSM talks to libvirt, not directly to KVM.
-4. **QEMU** — Quick Emulator. Emulates hardware (CPU, memory, disk, NIC) for each VM. Each VM is a QEMU process in USER SPACE.
-5. **KVM** — The actual hypervisor. Runs in KERNEL SPACE. Provides near-native performance.
-
-> **Note:** If the engine goes offline, VMs keep running! The engine is management only. KVM handles execution independently.
-
-![](images/olvm-architecture.png)
-
----
-
-## Task 3: Deployment Sizing Reference
-
-|  | Small | Medium | Large |
-|---|---|---|---|
-| **Hosts** | 1–5 | 5–50 | 50–200 |
-| **VMs** | Up to 50 | 50–500 | 500–2,000 |
-| **CPU (recommended)** | 4 cores | 8 cores | 16 cores |
-| **RAM (recommended)** | 16 GB | 32 GB | 64 GB |
-| **Disk (recommended)** | 50 GB | 100 GB | 200 GB |
-| **CPU (minimum)** | 2 cores | — | — |
-| **RAM (minimum - Standalone)** | 4 GB | — | — |
-| **RAM (minimum - Self-Hosted Engine)** | 16 GB | — | — |
-| **Disk (minimum)** | 25 GB | — | — |
-| **Deployment Types** | Standalone & Self-Hosted Engine | Standalone & Self-Hosted Engine | Standalone & Self-Hosted Engine |
-
-> **Note:** Minimum values are provided only for Small deployments; Medium and Large deployments should follow recommended values.
-
----
-
-## Task 4: Exam Practice #1 — Architecture Quiz
+### Architecture  
 
 ```quiz
 Q: 1. What is a Standalone Engine in Oracle Linux Virtualization Manager?
@@ -148,7 +70,9 @@ Q: 10. What is the relationship between VDSM and libvirt?
 
 ---
 
-## Task 5: Exam Practice #1 — Infrastructure Quiz
+## Exam Practice #2 
+
+### Infrastructure Quiz
 
 ```quiz
 Q: 1. What is the minimum Oracle Linux version required for installing the OLVM Manager (Engine)?
@@ -173,7 +97,9 @@ Q: 3. What are the RECOMMENDED hardware requirements for an OLVM (Engine) SMALL 
 
 ---
 
-## Task 6: Exam Practice #2 — Repositories, Setup, and Ports
+## Exam Practice #3
+
+### Repositories, Setup, and Ports
 
 ```quiz
 Q: 1. Which six repositories must be enabled on the Oracle Linux system for OLVM Engine? (Choose 6)
@@ -234,7 +160,9 @@ Q: 8. What is the default port number for PostgreSQL database communication?
 
 ---
 
-## Task 7: Exam Practice #3 — Portals and Databases
+## Exam Practice #4 
+
+### Portals and Databases
 
 ```quiz
 Q: 1. Oracle Linux Virtualization Manager is built from which open-source project?
@@ -259,13 +187,159 @@ Q: 3. How many PostgreSQL databases are used by Oracle Linux Virtualization Mana
 
 ---
 
-## Next Steps
 
-- Return to the hands-on Engine deployment page: [olvm-engine.md](olvm-engine.md)
+## Exam Practice #5 
 
-## Acknowledgements
+### KVM Host Prerequisites
 
-- **Author** - <Name, Title, Group>
-- **Contributors** - <Name, Group> (optional)
-- **Last Updated By/Date** - <Name, Month Year>
+```quiz
+Q: 1. What is the minimum Oracle Linux version required for a KVM host?
+- A. Oracle Linux 7.5
+* B. Oracle Linux 8.5 or later
+- C. Oracle Linux 9.0
+- D. Oracle Linux 8.0
+
+Q: 2. What is the MINIMUM CPU requirement for a KVM host?
+- A. Single-core 32-bit CPU
+* B. 64-bit dual-core CPU
+- C. 64-bit quad-core CPU
+- D. 64-bit eight-core CPU
+
+Q: 3. What is the MINIMUM RAM required for a KVM host?
+- A. 1 GB
+* B. 2 GB
+- C. 4 GB
+- D. 8 GB
+
+Q: 4. What is the MINIMUM network interface requirement for a KVM host?
+- A. One NIC with 100 Mbps bandwidth
+* B. One NIC with 1 Gbps bandwidth
+- C. Two NICs with 1 Gbps bandwidth
+- D. Four NICs with 1 Gbps bandwidth
 ```
+
+### Adding Host to Engine
+
+```quiz
+Q: 5. Where in the Administration Portal do you add a new KVM host?
+- A. Storage -> Hosts
+* B. Compute -> Hosts
+- C. Network -> Hosts
+- D. Configuration -> Hosts
+
+Q: 6. Which two authentication methods can be used when adding a KVM host? (Choose 2)
+* A. Password authentication
+- B. Kerberos
+* C. SSH key authentication
+- D. Certificate authentication
+
+Q: 7. For which user account must authentication credentials be provided when adding a host?
+- A. admin user
+* B. root user
+- C. ovirt user
+- D. vdsm user
+```
+
+### VDSM & Host Architecture
+
+```quiz
+Q: 8. What is the role of the VDSM service on a KVM host?
+- A. It manages the PostgreSQL database
+* B. It acts as a host agent running continuously as a daemon on the KVM host
+- C. It provides the web-based administration interface
+- D. It handles SSL certificate generation
+
+Q: 9. How does the oVirt engine communicate with VDSM on the KVM hosts?
+- A. Through shared storage
+* B. Through the VDSM service (host agent)
+- C. Through the PostgreSQL database
+- D. Through SNMP traps
+
+Q: 10. What happens to a virtual machine if the oVirt engine goes offline?
+- A. The VM automatically suspends
+* B. The VM continues to run on the KVM host
+- C. The VM is migrated to another host
+- D. The VM shuts down gracefully
+```
+
+---
+## Exam Practice #6 
+
+### LOGICAL NETWORKS
+
+```quiz
+Q: 1. What are logical networks in OLVM?
+- A. Physical network cables
+* B. Representations of network resources that provide connectivity for KVM virtual machines  
+- C. Virtual switches only
+- D. Network security policies
+
+Q: 2. What is the name of the default logical network automatically created during OLVM setup?
+- A. default_network
+* B. ovirtmgmt 
+- C. management_net
+- D. cluster_network
+
+Q: 3. What happens if a KVM host loses connectivity to a network marked as "required"?
+- A. Nothing, it continues normally
+* B. The host will be considered non-operational 
+- C. Only VMs on that network stop
+- D. The host reboots automatically
+
+Q: 4. For VM networks, what is created on the host for each logical network?
+- A. A VLAN tag
+* B. A bridge (virtual switch) 
+- C. A firewall rule
+- D. A routing table
+
+Q: 5. What does a network bridge act as on a KVM host?
+- A. A router
+* B. A virtual switch connecting VMs to the physical network 
+- C. A firewall
+- D. A load balancer
+```
+
+### STORAGE DOMAINS
+
+```quiz
+Q: 6. Can a Data Center be initialized without a storage domain attached?
+- A. Yes, storage is optional
+* B. No, at least one storage domain must be attached before initialization 
+- C. Only in test environments
+- D. Only for Self-Hosted Engine
+
+Q: 7. For VMs to be migrated between hosts, what storage requirement must be met?
+- A. Each host needs local storage
+* B. HOSTS must share the same storage domain 
+- C. Storage must be SSD-based
+- D. VMs must use iSCSI only
+
+Q: 8. What does LUN stand for in storage terminology?
+- A. Local Unit Number
+* B. Logical Unit Number
+- C. Linux Unified Node
+- D. Link Universal Network
+```
+
+### VIRTUAL MACHINES & TEMPLATES
+
+```quiz
+Q: 9. Where in the Administration Portal do you create a new VM?
+- A. Storage -> VMs
+* B. Compute -> Virtual Machines 
+- C. Network -> VMs
+- D. Administration -> VMs
+
+Q: Q: 10. What are the two disk allocation policies? **(Choose 2)**
+* A. Pre-allocated 
+- B. Compressed
+- **C. Thin provisioning (sparse)
+- D. Encrypted
+
+Q: 11. What does a VM use to connect to a logical network?
+- A. Physical NIC directly
+* B. VNIC (Virtual Network Interface Controller)
+- C. USB adapter
+- D. Serial port
+```
+
