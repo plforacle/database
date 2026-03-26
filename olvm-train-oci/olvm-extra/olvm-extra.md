@@ -252,7 +252,7 @@ Q: 10. What happens to a virtual machine if the oVirt engine goes offline?
 ```
 
 ---
-## Exam Practice #3 - Networking, Storage, and VM Setup
+## Exam Practice #4 - Networking, Storage, and VM Setup
 
 ### LOGICAL NETWORKS
 
