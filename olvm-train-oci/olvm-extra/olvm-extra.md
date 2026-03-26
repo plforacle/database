@@ -343,3 +343,17 @@ Q: 11. What does a VM use to connect to a logical network?
 - D. Serial port
 ```
 
+## Learn More
+
+- (Optional) Add links relevant to your workshop, such as the official install guide or product docs.
+
+## Next Steps
+
+- Review architecture and complete knowledge checks: [olvm-engine-exam-practice.md](olvm-engine-exam-practice.md)
+
+## Acknowledgements
+
+- **Author** - <Name, Title, Group>
+- **Contributors** - <Name, Group> (optional)
+- **Last Updated By/Date** - <Name, Month Year>
+```
