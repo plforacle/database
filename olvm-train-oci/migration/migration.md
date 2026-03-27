@@ -205,6 +205,6 @@ You now have hands-on experience with the core OLVM administration tasks: engine
 
 ## Acknowledgements
 
-* **Author** - <Name, Title, Group>
-* **Contributors** - <Name, Group> -- optional
-* **Last Updated By/Date** - <Name, Month Year>
+- **Author** - Shawn Kelly 
+- **Contributors** - Perside Foster
+- **Last Updated By/Date** - Perside Foster , April 1, 2026

@@ -222,9 +222,6 @@ At this point, you should have:
 
 ## Acknowledgements
 
-- **Author** - Perside Foster
-- **Contributors** - Shawn Kelly
-- **Last Updated By/Date** - Perside Foster , April 1, 2026- **Contributors** - <Name, Group> (optional)
-- **Last Updated By/Date** - <Name, Month Year>
-```
-
+- **Author** - Shawn Kelly 
+- **Contributors** - Perside Foster
+- **Last Updated By/Date** - Perside Foster , April 1, 2026

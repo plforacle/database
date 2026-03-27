@@ -65,6 +65,6 @@ This workshop assumes you have:
 
 ## Acknowledgements
 
-- **Author** - Perside Foster
-- **Contributors** - Shawn Kelly
+- **Author** - Shawn Kelly 
+- **Contributors** - Perside Foster
 - **Last Updated By/Date** - Perside Foster , April 1, 2026

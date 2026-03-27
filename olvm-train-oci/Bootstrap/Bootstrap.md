@@ -231,7 +231,6 @@ scp opc@<bootstrap-ip>:~/.ssh/id_rsa.pub C:\Users\<you>\.ssh\olvm-cluster-id_rsa
 
 ## Acknowledgements
 
-- **Author** - <Name, Title, Org>
-- **Contributors** - <Name, Org> (optional)
-- **Last Updated By/Date** - <Name, Month Year>
-```
+- **Author** - Shawn Kelly 
+- **Contributors** - Perside Foster
+- **Last Updated By/Date** - Perside Foster , April 1, 2026
