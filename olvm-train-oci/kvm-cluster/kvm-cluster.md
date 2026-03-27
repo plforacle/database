@@ -2,19 +2,16 @@
 
 ## Introduction
 
-In this lab, you will add two Oracle Linux KVM hosts (`olkvm01` and `olkvm02`) to the OLVM Engine and verify they are fully integrated into the **Default** cluster. When you add a host, the Engine installs the host agent (**VDSM**) and required dependencies, deploys certificates, configures host networking, and validates the host until it reaches an **Up** status.
+In this part, you will add KVM hosts to your cluster and verify their integration with the OLVM engine. These hosts will run your virtual machines.
 
 Estimated Lab Time: 30–45 minutes
 
 ### Objectives
 
 In this lab, you will:
-- Review KVM host architecture and the role of VDSM/libvirt/KVM/QEMU
 - Configure required repositories on both KVM hosts
 - Add both hosts (`olkvm01`, `olkvm02`) to the **Default** cluster in the Administration Portal
-- Understand OLVM hierarchy (Data Center → Cluster → Hosts → VMs) and why it matters
 - Verify both hosts reach **Up** status and know where to check logs if they do not
-- Review OLVM management portals and complete optional exam practice
 
 ### Prerequisites
 
@@ -23,111 +20,85 @@ This lab assumes you have:
 - SSH connectivity from the Engine to both KVM hosts
 - Hostnames resolvable from the Engine (for example, `ssh olkvm01`, `ssh olkvm02`)
 
----
 
-## Task 1: KVM Host Architecture — Key Components (Reference)
+
+### What You Will Build
 
 ```
-┌─────────────────────────────────────────┐
-│              ENGINE HOST                │
-│         (oVirt Engine / WildFly)        │
-│    Communicates with VDSM on hosts      │
-└──────────────┬──────────────────────────┘
-               │
-    ┌──────────▼──────────────────────────┐
-    │           KVM HOST                  │
-    │                                     │
-    │  ┌─────────┐  ┌──────────────────┐  │
-    │  │  VDSM   │  │   libvirtd       │  │
-    │  │ (host   │──│  (manages VM     │  │
-    │  │  agent) │  │   lifecycle)     │  │
-    │  └────┬────┘  └───────┬──────────┘  │
-    │       │               │             │
-    │  ┌────▼───────────────▼──────────┐  │
-    │  │         KVM Module            │  │
-    │  │      (kernel space)           │  │
-    │  └───────────┬───────────────────┘  │
-    │              │                      │
-    │  ┌───────────▼───────────────────┐  │
-    │  │     QEMU Processes            │  │
-    │  │    (user space — one per VM)  │  │
-    │  │  ┌─────┐ ┌─────┐ ┌─────┐      │  │
-    │  │  │ VM1 │ │ VM2 │ │ VM3 │      │  │
-    │  │  │guest│ │guest│ │guest│      │  │
-    │  │  │agent│ │agent│ │agent│      │  │
-    │  │  └─────┘ └─────┘ └─────┘      │  │
-    │  └───────────────────────────────┘  │
-    └─────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     Part 2: Host Configuration                          │
+│                                                                         │
+│  ┌─────────────────┐      ┌─────────────────┐   ┌─────────────────┐     │
+│  │   OLVM Engine   │      │    olkvm01      │   │    olkvm02      │     │
+│  │     (olvm)      │      │   (KVM Host)    │   │   (KVM Host)    │     │
+│  │                 │      │                 │   │                 │     │
+│  │ • Admin Portal  │ ───> │ • VDSM Agent    │   │ • VDSM Agent    │     │
+│  │ • REST API      │      │ • libvirt/KVM   │   │ • libvirt/KVM   │     │
+│  │ • PostgreSQL    │      │ • Status: Up    │   │ • Status: Up    │     │
+│  └─────────────────┘      └─────────────────┘   └─────────────────┘     │
+│                                                                         │
+│  Hosts added to Default cluster; Ready for VMs                          │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
-| Component | Where it Runs | Role |
-|-----------|--------------|------|
-| **KVM** | Kernel space (loadable kernel module) | Full virtualization using hardware extensions; shares physical hardware with VMs |
-| **QEMU** | User space (one process per VM) | Emulates hardware (CPU, memory, network, disk); executes VM code directly on host CPU |
-| **VDSM** | KVM host (daemon) | Host agent; intermediary between engine and host; manages VMs, networks, storage |
-| **libvirtd** | KVM host (service) | API layer for managing hypervisors; VDSM uses libvirt to manage VM lifecycle and collect stats |
-| **Guest Agent** | Inside each VM | Communicates with engine; reports OS details, IPs, and resource usage |
+### Steps
 
-### Critical Relationships
+1. Configure the first KVM host (olkvm01)
+2. Add the first KVM host to the cluster
+3. Configure the second KVM host (olkvm02)
+4. Add the second KVM host to the cluster
 
-- Engine → talks to → VDSM (on each host)
-- VDSM → uses → libvirt → manages → KVM/QEMU
-- KVM runs in kernel space; VMs run as QEMU processes in user space
 
----
 
-## Task 2: Configure the First KVM Host (olkvm01)
+## Task 1: Configure the First KVM Host (olkvm01)
 
-> **Context:** All SSH commands using hostnames (for example, `ssh olkvm01`) are executed **from the OLVM Engine**, which has private DNS resolution for the cluster hosts.
+1. Open the VNC Activities Menu.
 
-1. From the OLVM Engine terminal (inside your VNC session), connect to the first host:
+2. Switch to the terminal within the VNC session.
 
+3. Connect via SSH to the olkvm01 instance.
    ```bash
-   <copy>ssh olkvm01</copy>
+   ssh olkvm01
+   ```
+   **Note:** All SSH commands using hostnames (e.g., `ssh olkvm01`) are executed from the OLVM engine, which has private DNS resolution for the cluster hosts.
+
+4. Install the Oracle Linux Virtualization Manager Release package.
+   ```bash
+   sudo dnf install -y oracle-ovirt-release-45-el8
    ```
 
-2. Install the Oracle Linux Virtualization Manager Release package (enables/disables required repositories):
-
+5. Clear the dnf cache.
    ```bash
-   <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
+   sudo dnf clean all
    ```
 
-3. Clear the dnf cache:
-
+6. Verify repositories are enabled.
    ```bash
-   <copy>sudo dnf clean all</copy>
+   sudo dnf repolist
    ```
 
-4. Verify the repositories:
-
+7. Exit the session.
    ```bash
-   <copy>sudo dnf repolist</copy>
+   exit
    ```
+   You should now be on the Manager host.
 
-5. Exit back to the Engine:
 
-   ```bash
-   <copy>exit</copy>
-   ```
 
----
+## Task 2: Add KVM Host (olkvm01)
 
-## Task 3: Add KVM Host (olkvm01) to the Cluster
+1. Switch to the Firefox browser within the VNC session.
 
-1. Log in to the **Administration Portal**.
+2. Log in to the Administration Portal.
 
-2. Using the side navigation menu, go to **Compute → Hosts**.
+3. Using the side navigation menu, go to **Compute** → **Hosts**.
 
-3. On the Hosts pane, click **New**.
+4. On the Hosts pane, click **New**.
 
-4. The **New Host** dialog opens with the **General** tab selected.
-
-5. Select the **Default** data center from the **Host Cluster** drop-down list.
-
-   Installing Oracle Linux Virtualization Manager creates a data center and cluster named **Default**.
+5. Select the **Default** data center from the Host Cluster drop-down list.
 
    **OLVM hierarchy explained:**
-   ```text
+   ```
    Data Center (physical location)
       ↓
    Cluster (group of hosts with same CPU type)
@@ -137,291 +108,127 @@ This lab assumes you have:
    Virtual Machines
    ```
 
-   **Data Center**
-   - Logical container for clusters
-   - Defines shared storage and networking
-   - Typically represents a physical location or administrative boundary
-   - VMs can't migrate between data centers
+   **Key points:**
+   - A **Data Center** is a logical container for clusters. It defines shared storage and networking. VMs can't migrate between data centers.
+   - A **Cluster** is a group of hosts that share the same CPU type, storage domains, and network configuration. It enables live migration and HA. Requires at least 2 hosts for HA features.
+   - `engine-setup` creates a "Default" data center with a "Default" cluster automatically.
 
-   **Cluster**
-   - Group of hosts that share:
-     - CPU type (Intel/AMD and compatible generation for live migration)
-     - Storage domains
-     - Network configuration
-   - Enables VM live migration between hosts in the cluster
-   - Provides high availability (HA) for VMs
-   - Requires at least 2 hosts for HA features
-
-   **Default setup:** `engine-setup` creates a “Default” data center with a “Default” cluster. You can rename them or create new ones as needed.
-
-6. Enter a name for the host:
-
-   ```text
-   <copy>olkvm01</copy>
+6. Enter a name for the host in the Name field.
+   ```
+   olkvm01
    ```
 
-7. In the **Hostname** field, enter the fully-qualified domain name or IP address of the host:
-
-   ```text
-   <copy>vdsm01.priv.olv.oraclevcn.com</copy>
+7. In the Hostname field, enter the fully-qualified domain name of the host.
    ```
+   vdsm01.priv.olv.oraclevcn.com
+   ```
+   **Why this hostname:** This is the secondary VNIC (private subnet) used for OLVM management traffic, VM migration, and storage traffic. Separating management traffic from the public interface is a best practice for security and performance.
 
-   This entry is the fully-qualified name of the **secondary VNIC** attached to the KVM host.
+8. Under Authentication, select the **SSH Public Key** authentication method.
 
-   **Why use VNIC hostname (`vdsm01.priv...`)**
+9. Switch to the terminal within the VNC session.
 
-   In this lab, the KVM host has **two network interfaces (VNICs)**:
+10. Copy the SSH public key to the KVM host.
+    ```bash
+    sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm01 -T "sudo tee -a /root/.ssh/authorized_keys"
+    ```
+    **What this does:** Enables passwordless SSH access from the engine to the KVM host. The engine needs this to install VDSM, deploy configurations, and manage the host.
 
-   1. **Primary VNIC (ens3)** — Public subnet  
-      - For SSH access from outside  
-      - For external connectivity  
-      - Hostname example: `olkvm01.examplevcn.oraclevcn.com`
+11. Switch back to the Firefox browser and Administration Portal.
 
-   2. **Secondary VNIC (ens5)** — Private subnet  
-      - For OLVM management traffic (Engine ↔ VDSM)  
-      - For VM migration  
-      - For storage traffic  
-      - Hostname: `vdsm01.priv.olv.oraclevcn.com`
+12. Click **OK**. The Power Management Configuration screen displays.
 
-   **Why separate management network**
-   - **Security**: isolates management traffic from the public internet
-   - **Performance**: dedicated bandwidth for migration/storage
-   - **Best practice**: production deployments separate management and VM networks
+13. Click **OK** (OCI instances do not allow configuring power management).
 
-   **What VDSM listens on:** When you add the host using the secondary VNIC hostname, VDSM binds to that interface for Engine communications.
+    The panel updates and adds the new host. The status will show as **Installing** while the engine installs VDSM and other required packages on the host.
 
-8. Under **Authentication**, select the **SSH Public Key** authentication method.
+    **What happens during host installation:** The engine automatically connects via SSH, installs VDSM and dependencies (vdsm, vdsm-client, libvirt, qemu-kvm), deploys certificates, configures the management network (ovirtmgmt bridge), starts services, configures the firewall, and verifies connectivity before marking the host as "Up".
 
-   This action displays the engine's SSH public key within the **SSH PublicKey** field.
+    **Host status meanings:**
+    - **Installing** — VDSM and packages being installed
+    - **Initializing** — Services starting, network configuring
+    - **Up** — Host is ready to run VMs
+    - **Non Operational** — Host has issues (check logs)
+    - **Maintenance** — Host is intentionally offline for updates
 
-9. Switch to the terminal within the VNC session (Engine terminal) and copy the SSH public key to the host’s `/root/.ssh/authorized_keys`:
+    **Troubleshooting tip:** If installation fails, check `/var/log/ovirt-engine/engine.log` on the engine and `/var/log/vdsm/vdsm.log` on the host.
 
+    **Important:** After a KVM host is added to a cluster, avoid any spontaneous changes to the network configuration in `/etc/sysconfig/network-scripts/`, through NetworkManager (e.g., nmcli), or in OCI.
+
+14. **Wait for the host status to show as Up** before continuing.
+
+
+
+## Task 3: Configure the Second KVM Host (olkvm02)
+
+Repeat the same process for the second KVM host.
+
+1. Switch to the terminal within the VNC session.
+
+2. Connect via SSH to olkvm02.
    ```bash
-   <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm01 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
+   ssh olkvm02
    ```
 
-   **What this does:** Enables passwordless SSH access from the Engine to the KVM host by copying the Engine public key to the host’s authorized_keys.
-
-   **Why:** The Engine needs SSH key authentication to install VDSM, deploy configurations, and manage the host.
-
-10. Switch back to the Administration Portal and click **OK**.
-
-11. The **Power Management Configuration** screen may appear. Click **OK** (OCI instances do not allow configuring power management).
-
-12. The host appears in the host list and the Engine begins installing the host agent (VDSM) and required packages.
-
-### What happens during host installation (important)
-
-When the Engine adds a host, it typically performs:
-
-1. **SSH connection** — Engine connects using the SSH key you provided
-2. **Repository configuration** — installs release packages if needed
-3. **Package installation** — installs host components and dependencies:
-   - `vdsm`
-   - `vdsm-client`
-   - `libvirt`
-   - `qemu-kvm`
-4. **Certificate deployment** — copies Engine CA and generates host certificate
-5. **Network configuration** — configures management networking (bridges, etc.)
-6. **Service startup** — starts/enables VDSM and libvirt services
-7. **Firewall configuration** — opens required ports for VDSM communication
-8. **Host verification** — validates connectivity and marks host **Up**
-
-### Status meanings
-
-- **Installing** — VDSM and packages being installed
-- **Initializing** — services starting, network configuring
-- **Up** — Host is ready to run VMs
-- **Non Operational** — Host has issues (check logs)
-- **Maintenance** — Host is intentionally offline for updates
-
-### Troubleshooting tip
-
-If installation fails, check:
-- Engine: `/var/log/ovirt-engine/engine.log`
-- Host: `/var/log/vdsm/vdsm.log`
-
-> **Note:** After a KVM host is added to a cluster, avoid any spontaneous changes to network configuration in `/etc/sysconfig/network-scripts/`, through NetworkManager (for example `nmcli`), or in OCI, unless the lab instructs you to.
-
-13. Wait for `olkvm01` to show **Up** before continuing.
-
----
-
-## Task 4: Configure the Second KVM Host (olkvm02)
-
-> **Note:** You previously configured `olkvm01`. Now repeat the same process for the second KVM host (`olkvm02`) to enable high availability and VM migration capabilities.
-
-1. From the Engine terminal, connect to the second host:
-
+3. Install the OLVM Release package.
    ```bash
-   <copy>ssh olkvm02</copy>
+   sudo dnf install -y oracle-ovirt-release-45-el8
    ```
 
-2. Install the OLVM release package:
-
+4. Clear the dnf cache.
    ```bash
-   <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
+   sudo dnf clean all
    ```
 
-3. Clear the dnf cache:
-
+5. Verify repositories.
    ```bash
-   <copy>sudo dnf clean all</copy>
+   sudo dnf repolist
    ```
 
-4. Verify repositories:
-
+6. Exit the session.
    ```bash
-   <copy>sudo dnf repolist</copy>
+   exit
    ```
 
-5. Exit back to the Engine:
 
+
+## Task 4: Add KVM Host (olkvm02)
+
+1. From the Administration Portal, go to **Compute** → **Hosts** → **New**.
+
+2. Select the **Default** data center from the Host Cluster drop-down list.
+
+3. Enter the host name:
+   ```
+   olkvm02
+   ```
+
+4. Enter the hostname:
+   ```
+   vdsm02.priv.olv.oraclevcn.com
+   ```
+
+5. Under Authentication, select **SSH Public Key**.
+
+6. Switch to the terminal and copy the SSH public key:
    ```bash
-   <copy>exit</copy>
+   sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm02 -T "sudo tee -a /root/.ssh/authorized_keys"
    ```
 
----
+7. Switch back to the browser. Click **OK** → **OK** (power management).
 
-## Task 5: Add KVM Host (olkvm02) to the Cluster
+8. **Wait for the host status to show as Up** before continuing.
 
-1. Log in to the **Administration Portal**.
 
-2. Go to **Compute → Hosts**.
 
-3. Click **New**.
+### ✅ Configure KVM Cluster Checkpoint
 
-4. Select the **Default** data center/cluster from the **Host Cluster** drop-down list.
+At this point, you should have:
+- ✓ Both olkvm01 and olkvm02 showing status **Up** in the Hosts pane
+- ✓ Both hosts in the Default cluster
+- ✓ VDSM running on both hosts
 
-5. Enter:
-   - **Name:** `olkvm02`
-   - **Hostname:** `vdsm02.priv.olv.oraclevcn.com`
 
-6. Under **Authentication**, select **SSH Public Key**.
-
-7. From the Engine terminal, copy the Engine public key to `olkvm02`:
-
-   ```bash
-   <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm02 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
-   ```
-
-8. Click **OK**.
-
-9. If **Power Management Configuration** is displayed, click **OK** (OCI instances do not allow configuring power management).
-
-10. Wait for `olkvm02` status to show **Up**.
-
----
-
-## Task 6: Validate Both Hosts
-
-1. In **Compute → Hosts**, verify:
-   - `olkvm01` is **Up**
-   - `olkvm02` is **Up**
-
-2. If either host does not reach **Up**, use the troubleshooting tips:
-   - Engine log: `/var/log/ovirt-engine/engine.log`
-   - Host log: `/var/log/vdsm/vdsm.log`
-
----
-
-## Task 7: Management Portals Review (Reference)
-
-![](images/management-portal.png)
-
-### Three management portals (web-based)
-
-1. **Administration Portal** (used in this workshop)
-   - Full control over everything: hosts, clusters, storage domains, networks, VMs, users
-
-2. **VM Portal**
-   - Simplified interface for end users
-   - Create/start/stop VMs; console access via VNC or RDP
-   - Capabilities are controlled by admin roles (role-based access)
-
-3. **Monitoring Portal (Grafana)**
-   - Integrated Grafana dashboards
-   - Uses Engine history/data warehouse data
-   - CPU, memory, storage, network metrics
-   - Grafana commonly runs on port **3000**
-
----
-
-## Task 8: Lab Part 2 — Exam Practice (Optional)
-
-### KVM Host Prerequisites
-
-```quiz
-Q: 1. What is the minimum Oracle Linux version required for a KVM host?
-- A. Oracle Linux 7.5
-* B. Oracle Linux 8.5 or later
-- C. Oracle Linux 9.0
-- D. Oracle Linux 8.0
-
-Q: 2. What is the MINIMUM CPU requirement for a KVM host?
-- A. Single-core 32-bit CPU
-* B. 64-bit dual-core CPU
-- C. 64-bit quad-core CPU
-- D. 64-bit eight-core CPU
-
-Q: 3. What is the MINIMUM RAM required for a KVM host?
-- A. 1 GB
-* B. 2 GB
-- C. 4 GB
-- D. 8 GB
-
-Q: 4. What is the MINIMUM network interface requirement for a KVM host?
-- A. One NIC with 100 Mbps bandwidth
-* B. One NIC with 1 Gbps bandwidth
-- C. Two NICs with 1 Gbps bandwidth
-- D. Four NICs with 1 Gbps bandwidth
-```
-
-### Adding Host to Engine
-
-```quiz
-Q: 5. Where in the Administration Portal do you add a new KVM host?
-- A. Storage -> Hosts
-* B. Compute -> Hosts
-- C. Network -> Hosts
-- D. Configuration -> Hosts
-
-Q: 6. Which two authentication methods can be used when adding a KVM host? (Choose 2)
-* A. Password authentication
-- B. Kerberos
-* C. SSH key authentication
-- D. Certificate authentication
-
-Q: 7. For which user account must authentication credentials be provided when adding a host?
-- A. admin user
-* B. root user
-- C. ovirt user
-- D. vdsm user
-```
-
-### VDSM & Host Architecture
-
-```quiz
-Q: 8. What is the role of the VDSM service on a KVM host?
-- A. It manages the PostgreSQL database
-* B. It acts as a host agent running continuously as a daemon on the KVM host
-- C. It provides the web-based administration interface
-- D. It handles SSL certificate generation
-
-Q: 9. How does the oVirt engine communicate with VDSM on the KVM hosts?
-- A. Through shared storage
-* B. Through the VDSM service (host agent)
-- C. Through the PostgreSQL database
-- D. Through SNMP traps
-
-Q: 10. What happens to a virtual machine if the oVirt engine goes offline?
-- A. The VM automatically suspends
-* B. The VM continues to run on the KVM host
-- C. The VM is migrated to another host
-- D. The VM shuts down gracefully
-```
-
----
 
 ## Learn More
 
@@ -429,6 +236,6 @@ Q: 10. What happens to a virtual machine if the oVirt engine goes offline?
 
 ## Acknowledgements
 
-- **Author** - <Name, Title, Group>
-- **Contributors** - <Name, Group> (optional)
-- **Last Updated By/Date** - <Name, Month Year>
+- **Author** - Perside Foster
+- **Contributors** - Shawn Kelly
+- **Last Updated By/Date** - Perside Foster , April 1, 2026

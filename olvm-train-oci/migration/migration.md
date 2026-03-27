@@ -1,4 +1,4 @@
-# VM Live Migration
+# Perform Live Migration
 
 ## Introduction
 
@@ -6,171 +6,194 @@
 
 Live migration allows you to move a running virtual machine from one KVM host to another without downtime. This is a key capability for maintenance operations, load balancing, and high availability scenarios.
 
-Estimated Lab Time: 20–30 minutes
-
-### Objectives (Exam: 1Z0-1170 Alignment)
-
-In this lab, you will:
-* Perform live VM migration between hosts in a cluster (Exam Topic: Administrating Virtual Machines)
-* Understand migration prerequisites and verify successful migration (Exam Topic: Host & Cluster Management)
-
-### Prerequisites (Required)
-
 **Prerequisites for VM Migration:**
 - Both hosts must be in the same cluster
 - Both hosts must have access to the shared storage domain
 - The destination host must have sufficient resources (CPU, memory)
 - The logical network used by the VM must be available on both hosts
 
-**Lab-Specific Prerequisite (Engine Cache Refresh):**
-
-After extensive infrastructure changes made during this lab (network creation, storage domain attachment, VM provisioning), the engine's internal cache may be out of sync with the current host state. Restart the engine before attempting migration:
-
+## Task 1: Restart the engine
+**Lab-Specific Prerequisite:** After the extensive infrastructure changes made during this lab, the engine's internal cache may be out of sync. Restart the engine before attempting migration:
 ```bash
-<copy>sudo systemctl restart ovirt-engine</copy>
+sudo systemctl restart ovirt-engine
 ```
+Wait 2–3 minutes for the engine to fully restart, then refresh the Administration Portal in Firefox before proceeding. This does not affect running VMs.
 
-Wait 2–3 minutes for the engine to fully restart, then refresh the Administration Portal in Firefox before proceeding.
+## Task 2: Verify Migration Prerequisites
 
-**Why this is needed:** The oVirt engine caches host capabilities, network topology, and storage connectivity in memory. Over a long session with many configuration changes, this cache can become stale—causing a **"Could not fetch data needed for VM migrate operation"** error. Restarting the engine forces a full re-query of all hosts via VDSM, rebuilding an accurate view of the cluster. This does not affect running VMs, as VDSM on each host manages them independently.
+1. Go to **Compute** → **Hosts**. Verify both hosts show status **Up**.
 
-*This is the "fold" - below items are collapsed by default*
+2. Go to **Compute** → **Virtual Machines**. Verify ol9-mysql is running on olkvm01 (check the Host column).
 
----
 
-## Task 1: Verify Migration Prerequisites
+## Task 3: Perform Live Migration
 
-1. Switch to the browser within the VNC session.
+1. In the Virtual Machines pane, select **ol9-mysql**.
 
-2. Log in to the Administration Portal.
+2. Click **Migrate** in the toolbar.
 
-3. Using the side navigation menu, go to **Compute** and click **Hosts**.
-
-4. Verify both hosts show status **Up**:
-   - `olkvm01`: Up
-   - `olkvm02`: Up
-
-5. Using the side navigation menu, go to **Compute** and click **Virtual Machines**.
-
-6. Verify the `ol9-mysql` VM is running on `olkvm01`:
-   - Check the **Host** column shows `olkvm01`
-   - Check the **Status** column shows `Up` (running)
-
----
-
-## Task 2: Perform Live Migration
-
-1. In the **Virtual Machines** pane, select the `ol9-mysql` VM.
-
-2. Click the **Migrate** button in the toolbar.
-
-   The **Migrate Virtual Machine(s)** dialog box opens.
-
-3. In the **Migrate Virtual Machine(s)** dialog:
-   - **Select Destination Host**: Choose `Select destination host automatically` or select `olkvm02` manually from the drop-down list.
-
-   **Automatic vs Manual Selection:**
-   - **Automatic**: OLVM selects the best host based on available resources and scheduling policies
-   - **Manual**: You specify the exact destination host
-
-   For this lab, select **olkvm02** manually to ensure the VM moves to the second host.
+3. In the Migrate dialog, select **olkvm02** from the Destination Host dropdown.
 
 4. Click **Migrate** to start the migration.
 
-5. Monitor the migration progress:
-   - The VM status will change to **Migrating From**
-   - A progress indicator shows the migration percentage
-   - You can also click the VM name and view the **Events** tab for detailed progress
+5. Monitor the progress — the status will change to **Migrating From** with a progress indicator.
 
-### What happens during live migration
+   **What happens during live migration:**
+   ```
+   ┌─────────────────┐                    ┌─────────────────┐
+   │    olkvm01      │                    │    olkvm02      │
+   │   (Source)      │                    │  (Destination)  │
+   │                 │                    │                 │
+   │  ┌───────────┐  │  1. Memory copy    │  ┌───────────┐  │
+   │  │ ol9-mysql │  │ =================> │  │ ol9-mysql │  │
+   │  │  (VM)     │  │  2. Dirty pages    │  │  (copy)   │  │
+   │  └───────────┘  │ =================> │  └───────────┘  │
+   │                 │  3. Final sync     │                 │
+   │                 │ =================> │                 │
+   │                 │  4. Switch active  │                 │
+   └─────────────────┘                    └─────────────────┘
+           │                                      │
+           └──────────── Shared Storage ──────────┘
+                    (amd-storage-domain-01)
+   ```
 
-```
-┌─────────────────┐                    ┌─────────────────┐
-│    olkvm01      │                    │    olkvm02      │
-│   (Source)      │                    │  (Destination)  │
-│                 │                    │                 │
-│  ┌───────────┐  │  1. Memory copy    │  ┌───────────┐  │
-│  │ ol9-mysql │  │ =================> │  │ ol9-mysql │  │
-│  │  (VM)     │  │  2. Dirty pages    │  │  (copy)   │  │
-│  └───────────┘  │ =================> │  └───────────┘  │
-│                 │  3. Final sync     │                 │
-│                 │ =================> │                 │
-│                 │  4. Switch active  │                 │
-└─────────────────┘                    └─────────────────┘
-        │                                      │
-        └──────────── Shared Storage ──────────┘
-                 (amd-storage-domain-01)
-```
+   1. **Pre-copy phase**: VM memory is copied to destination while VM continues running
+   2. **Iterative copy**: Changed (dirty) memory pages are re-copied
+   3. **Stop-and-copy**: Brief pause to transfer final state
+   4. **Activation**: VM resumes on destination host
 
-1. **Pre-copy phase**: VM memory is copied to destination while the VM continues running  
-2. **Iterative copy**: Changed (dirty) memory pages are re-copied  
-3. **Stop-and-copy**: Brief pause to transfer final state  
-4. **Activation**: VM resumes on destination host  
+6. Wait for migration to complete (typically 30–60 seconds).
 
-6. Wait for the migration to complete (typically 30–60 seconds for this VM).
 
----
 
-## Task 3: Verify Migration Success
+## Task 4: Verify Migration Success
 
-1. In the **Virtual Machines** pane, verify the `ol9-mysql` VM now shows:
-   - **Host**: `olkvm02`
-   - **Status**: `Up`
+1. In the Virtual Machines pane, verify ol9-mysql now shows **Host: olkvm02** and **Status: Up**.
 
-2. Click the `ol9-mysql` VM name to open the details view.
-
-3. Click the **Events** tab to see the migration history:
+2. Click the **ol9-mysql** VM name → **Events** tab. You should see:
    - "VM ol9-mysql started migration on Host olkvm01"
    - "VM ol9-mysql was migrated to Host olkvm02"
 
-4. Verify the VM is still accessible and functioning.
-
-   From the **olvm engine** terminal (via VNC), test connectivity to the migrated VM:
+3. From the olvm engine terminal, test connectivity to the migrated VM:
    ```bash
-   <copy>ping -c 3 10.0.10.100</copy>
+   ping -c 3 10.0.10.100
    ```
 
-   **Note:** You are pinging from the `olvm` engine, not from inside the VM. This confirms the VM is reachable at the same IP address even though it now runs on a different physical host (`olkvm02`).
-
-5. Verify the database is still accessible:
+4. Verify the database is still accessible:
    ```bash
-   <copy>ssh opc@10.0.10.100 "mysql -u empapp -pWelcome#123 employee_db -e 'SELECT COUNT(*) FROM employees;'"</copy>
+   ssh opc@10.0.10.100 "mysql -u empapp -pWelcome#123 employee_db -e 'SELECT COUNT(*) FROM employees;'"
    ```
+   The output should show **8**, confirming the database is operational after migration.
 
-   The output should show `8`, confirming the database is operational after migration.
-
----
-
-## Task 4: Verify from Web Application
-
-1. From the `olvm` engine terminal, confirm the web application still connects to the migrated database:
+5. Confirm the web application still connects to the migrated database:
    ```bash
-   <copy>curl -s http://10.0.10.101:8080/employee-app/employees | grep -c "<tr>"</copy>
+   curl -s http://10.0.10.101:8080/employee-app/employees | grep -c "<tr>"
    ```
+   The output should show **9** (1 header + 8 employee rows), confirming end-to-end connectivity.
 
-   The output should show `9` (1 header + 8 employee rows), confirming end-to-end connectivity.
 
----
 
-## Reference / Exam Notes (1Z0-1170): Migration Concepts
+### ✅ Perform Live Migration Checkpoint
 
-**Exam relevance (1Z0-1170):** Live migration is a critical OLVM capability tested in the "Administrating Virtual Machines" domain. You should understand:
-- Migration prerequisites (shared storage, network, host compatibility)
-- How to initiate migration via the Administration Portal
-- How to verify successful migration
-- Use cases: host maintenance, load balancing, failure recovery
+At this point, you should have:
+- ✓ ol9-mysql successfully migrated from olkvm01 to olkvm02
+- ✓ VM accessible at the same IP address on the new host
+- ✓ Database operational after migration
+- ✓ Web application connectivity confirmed end-to-end
 
-### Additional Migration Options
 
-| Migration Type | Description | Use Case |
-|----------------|-------------|----------|
-| **Live Migration** | VM stays running during move | Production workloads, zero downtime |
-| **Offline Migration** | VM is stopped, then moved | Large VMs, guaranteed consistency |
-| **Automatic Migration** | OLVM moves VMs based on policies | Load balancing, host maintenance mode |
 
-**Tip:** Before performing maintenance on a host, use **Compute → Hosts → [select host] → Management → Maintenance**. OLVM will automatically migrate all VMs to other hosts in the cluster.
+## Quick Reference — Essential OLVM Commands
 
----
+### Installation & Engine Setup
+```bash
+# Enable OLVM repositories
+sudo dnf install -y oracle-ovirt-release-45-el8
+
+# Install engine
+sudo dnf install -y ovirt-engine
+
+# Configure engine (will prompt for admin password)
+sudo engine-setup --accept-defaults
+
+# Access portal
+# https://<fqdn>/ovirt-engine
+```
+
+### Host & Cluster Management
+```bash
+# Get engine SSH public key (for adding hosts)
+ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa
+
+# Verify VDSM service on host
+sudo systemctl status vdsm
+```
+
+### VM Access and Connectivity
+```bash
+# Connect to VMs directly from olvm engine
+ssh opc@10.0.10.100  # MySQL VM
+ssh opc@10.0.10.101  # Webapp VM
+
+# Test connectivity
+ping 10.0.10.1
+ping 8.8.8.8
+
+# Check VM network configuration
+ip addr show eth0
+```
+
+### Portal Navigation
+- **Create logical network:** Portal → Network → Networks → New
+- **Import template:** Portal → Compute → Templates → Import
+- **Import OVA VM:** Portal → Compute → Virtual Machines → Import
+- **Migrate VM:** Portal → Compute → Virtual Machines → Select VM → Migrate
+
+### Troubleshooting
+```bash
+# Check logs
+sudo tail -50 /var/log/ovirt-engine/engine.log
+sudo tail -50 /var/log/vdsm/vdsm.log
+
+# Check service status
+sudo systemctl status vdsm
+sudo systemctl status ovirt-engine
+
+# Restart engine (if cache issues)
+sudo systemctl restart ovirt-engine
+
+# Check connectivity
+ip addr show eth0
+sudo ss -tlnp | grep 8080
+```
+
+
+
+## Conclusion
+
+Congratulations on completing the OLVM Foundations training! You have successfully:
+
+- ✓ Deployed a complete OLVM virtualization platform from scratch
+- ✓ Configured two KVM hosts in a cluster
+- ✓ Set up networking and shared storage for virtual machines
+- ✓ Imported templates and created virtual machines
+- ✓ Deployed a multi-tier application using pre-built OVA files
+- ✓ Performed live VM migration between hosts with zero downtime
+
+You now have hands-on experience with the core OLVM administration tasks: engine installation, host clustering, networking, storage, VM management, and live migration. This foundation prepares you to confidently discuss and demonstrate Oracle Virtualization with customers and partners.
+
+**Next Steps:**
+- Practice the lab again in Luna Labs to build confidence and speed
+- Explore the **OLVM on OCI Lab** to build your own demo environment on your OCI tenancy
+- When ready, attend **Training 2: OLVM Advanced + Partner Bootcamp Prep** to prepare for delivering partner bootcamps with exam preparation content
+
+
+
+**The Luna lab environment expires after your session** — no cleanup is needed. Make sure to note down key learnings and take screenshots of important setups before your session ends.
+
+
+
+*This training guide is for learning and evaluation purposes. For production deployments, consult Oracle's official documentation and best practices guides.*
 
 ## Learn More
 
@@ -178,7 +201,7 @@ Wait 2–3 minutes for the engine to fully restart, then refresh the Administrat
 
 * [Oracle Linux Virtualization documentation](http://docs.oracle.com)
 
----
+
 
 ## Acknowledgements
 

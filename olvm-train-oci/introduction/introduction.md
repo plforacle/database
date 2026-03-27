@@ -6,31 +6,27 @@ Oracle Virtualization provides a high-performance, cost-effective, open-source s
 
 **Estimated Time:** 4–5 hours (hands-on) 
 
-> **Important:** In an instructor-led delivery, plan up to **8 hours** to allow time for discussion, breaks, Q&A, and practice questions.
 
 This lab is available as a hands-on lab in **Oracle Luna Labs** (luna.oracle.com). It uses example values for Oracle Cloud Infrastructure (OCI) credentials, tenancy, and compartments—substitute values with those specific to your environment.
 
-> **Note:** No programming knowledge is required. The optional application deployment is fully scripted .
+
 
 ## Lab Structure
 
-This workshop is organized into 10 progressive parts :
+This workshop is organized into 9 progressive parts :
 
 1. **Setup OCI Infrastructure** — Create the OCI OLVM objects  
-2. **Deploy OLVM Engine** — Install Oracle Linux Virtualization Manager with Administration Portal access  
-3. **Configure KVM Cluster** — Add two KVM hosts (`olkvm01`, `olkvm02`) to form a cluster  
-4. **Set Up Networking** — Create the `l2-vm-network` logical network and assign it to both hosts  
-5. **Configure Storage** — Add a Fibre Channel storage domain for VM disks and templates  
-6. **Import Templates** — Download and import an Oracle Linux 9 OVA template  
-7. **Create VMs** — Deploy two virtual machines: `ol9-mysql` (10.0.10.100) and `ol9-webapp` (10.0.10.101)  
-8. **Enable Internet Access** — Configure an OCI NAT Gateway for VM outbound connectivity  
-9. **(Optional) Deploy Application** — Install a multi-tier Java web app with MySQL database and Tomcat  
-10. **(Optional) Live Migration** — Migrate a running VM between hosts with zero downtime  
+2. **Deploy OLVM Engine** — Install Oracle Linux Virtualization Manager on a dedicated host with Administration Portal access
+3. **Configure KVM Cluster** — Add two KVM hosts (olkvm01, olkvm02) with VDSM agents to form a high-availability cluster
+4. **Set Up Networking** — Create the `l2-vm-network` logical network and assign it to both hosts
+5. **Configure Storage** — Add a Fibre Channel storage domain for VM disks and templates
+6. **Import Templates** — Download and import an Oracle Linux 9 OVA template
+7. **Create a Test VM** — Deploy a virtual machine (ol9-vm1 at 10.0.10.105) from the template to verify the infrastructure
+8. **Import Application VMs** — Import pre-built OVA files to deploy ol9-mysql (10.0.10.100) and ol9-webapp (10.0.10.101) with no manual installation required
+9. **Live Migration** — Migrate a running VM between hosts with zero downtime
 
+**End Result:** A fully functional OLVM cluster running distributed VMs with an Employee Directory web application accessible at `http://10.0.10.101:8080/employee-app/employees`
 
-**End Result:** A functional OLVM cluster running distributed VMs, with an optional Employee Directory application accessible at:
-
-`http://10.0.../employee-app/employees`
 
 ---
 
@@ -51,8 +47,8 @@ In this workshop, you will:
 
 This workshop assumes you have:
 
-- Access to **Oracle Luna Labs** (luna.oracle.com) with an Oracle account 
-- A Chrome browser with functioning copy/paste support 
+- Access to an Oracle Cloud Infrastructure Tenancy and account
+- Tiger VNC Client
 - 4–5 hours available for the hands-on portion 
 - A note-taking tool (you will record IP addresses) 
 - Basic familiarity with Linux command line usage, SSH, and terminal workflows 
@@ -69,6 +65,6 @@ This workshop assumes you have:
 
 ## Acknowledgements
 
-- **Author** - <Name, Title, Org>
-- **Contributors** - <Name, Org> (optional)
-- **Last Updated By/Date** - <Name, Month Year>
+- **Author** - Perside Foster
+- **Contributors** - Shawn Kelly
+- **Last Updated By/Date** - Perside Foster , April 1, 2026
