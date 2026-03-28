@@ -14,10 +14,10 @@ Live migration allows you to move a running virtual machine from one KVM host to
 
 ## Task 1: Restart the engine
 **Lab-Specific Prerequisite:** After the extensive infrastructure changes made during this lab, the engine's internal cache may be out of sync. Restart the engine before attempting migration:
-```bash
-sudo systemctl restart ovirt-engine
-```
-Wait 2–3 minutes for the engine to fully restart, then refresh the Administration Portal in Firefox before proceeding. This does not affect running VMs.
+    ```bash
+    <copy>sudo systemctl restart ovirt-engine</copy>
+    ```
+    Wait 2–3 minutes for the engine to fully restart, then refresh the Administration Portal in Firefox before proceeding. This does not affect running VMs.
 
 ## Task 2: Verify Migration Prerequisites
 
@@ -38,29 +38,29 @@ Wait 2–3 minutes for the engine to fully restart, then refresh the Administrat
 
 5. Monitor the progress — the status will change to **Migrating From** with a progress indicator.
 
-   **What happens during live migration:**
-   ```
-   ┌─────────────────┐                    ┌─────────────────┐
-   │    olkvm01      │                    │    olkvm02      │
-   │   (Source)      │                    │  (Destination)  │
-   │                 │                    │                 │
-   │  ┌───────────┐  │  1. Memory copy    │  ┌───────────┐  │
-   │  │ ol9-mysql │  │ =================> │  │ ol9-mysql │  │
-   │  │  (VM)     │  │  2. Dirty pages    │  │  (copy)   │  │
-   │  └───────────┘  │ =================> │  └───────────┘  │
-   │                 │  3. Final sync     │                 │
-   │                 │ =================> │                 │
-   │                 │  4. Switch active  │                 │
-   └─────────────────┘                    └─────────────────┘
-           │                                      │
-           └──────────── Shared Storage ──────────┘
-                    (amd-storage-domain-01)
-   ```
+    **What happens during live migration:**
+    ```
+    ┌─────────────────┐                    ┌─────────────────┐
+    │    olkvm01      │                    │    olkvm02      │
+    │   (Source)      │                    │  (Destination)  │
+    │                 │                    │                 │
+    │  ┌───────────┐  │  1. Memory copy    │  ┌───────────┐  │
+    │  │ ol9-mysql │  │ =================> │  │ ol9-mysql │  │
+    │  │  (VM)     │  │  2. Dirty pages    │  │  (copy)   │  │
+    │  └───────────┘  │ =================> │  └───────────┘  │
+    │                 │  3. Final sync     │                 │
+    │                 │ =================> │                 │
+    │                 │  4. Switch active  │                 │
+    └─────────────────┘                    └─────────────────┘
+            │                                      │
+            └──────────── Shared Storage ──────────┘
+                        (amd-storage-domain-01)
+    ```
 
-   1. **Pre-copy phase**: VM memory is copied to destination while VM continues running
-   2. **Iterative copy**: Changed (dirty) memory pages are re-copied
-   3. **Stop-and-copy**: Brief pause to transfer final state
-   4. **Activation**: VM resumes on destination host
+    1. **Pre-copy phase**: VM memory is copied to destination while VM continues running
+    2. **Iterative copy**: Changed (dirty) memory pages are re-copied
+    3. **Stop-and-copy**: Brief pause to transfer final state
+    4. **Activation**: VM resumes on destination host
 
 6. Wait for migration to complete (typically 30–60 seconds).
 
@@ -71,25 +71,25 @@ Wait 2–3 minutes for the engine to fully restart, then refresh the Administrat
 1. In the Virtual Machines pane, verify ol9-mysql now shows **Host: olkvm02** and **Status: Up**.
 
 2. Click the **ol9-mysql** VM name → **Events** tab. You should see:
-   - "VM ol9-mysql started migration on Host olkvm01"
-   - "VM ol9-mysql was migrated to Host olkvm02"
+    - "VM ol9-mysql started migration on Host olkvm01"
+    - "VM ol9-mysql was migrated to Host olkvm02"
 
 3. From the olvm engine terminal, test connectivity to the migrated VM:
-   ```bash
-   ping -c 3 10.0.10.100
-   ```
+    ```bash
+    <copy>ping -c 3 10.0.10.100</copy>
+    ```
 
 4. Verify the database is still accessible:
-   ```bash
-   ssh opc@10.0.10.100 "mysql -u empapp -pWelcome#123 employee_db -e 'SELECT COUNT(*) FROM employees;'"
-   ```
+    ```bash
+    <copy>ssh opc@10.0.10.100 "mysql -u empapp -pWelcome#123 employee_db -e 'SELECT COUNT(*) FROM employees;'"</copy>
+    ```
    The output should show **8**, confirming the database is operational after migration.
 
 5. Confirm the web application still connects to the migrated database:
-   ```bash
-   curl -s http://10.0.10.101:8080/employee-app/employees | grep -c "<tr>"
-   ```
-   The output should show **9** (1 header + 8 employee rows), confirming end-to-end connectivity.
+    ```bash
+    <copy>curl -s http://10.0.10.101:8080/employee-app/employees | grep -c "<tr>"</copy>
+    ```
+    The output should show **9** (1 header + 8 employee rows), confirming end-to-end connectivity.
 
 
 
@@ -108,7 +108,7 @@ At this point, you should have:
 ### Installation & Engine Setup
 ```bash
 # Enable OLVM repositories
-sudo dnf install -y oracle-ovirt-release-45-el8
+<copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
 
 # Install engine
 sudo dnf install -y ovirt-engine
@@ -182,24 +182,13 @@ Congratulations on completing the OLVM Foundations training! You have successful
 
 You now have hands-on experience with the core OLVM administration tasks: engine installation, host clustering, networking, storage, VM management, and live migration. This foundation prepares you to confidently discuss and demonstrate Oracle Virtualization with customers and partners.
 
-**Next Steps:**
-- Practice the lab again in Luna Labs to build confidence and speed
-- Explore the **OLVM on OCI Lab** to build your own demo environment on your OCI tenancy
-- When ready, attend **Training 2: OLVM Advanced + Partner Bootcamp Prep** to prepare for delivering partner bootcamps with exam preparation content
 
 
-
-**The Luna lab environment expires after your session** — no cleanup is needed. Make sure to note down key learnings and take screenshots of important setups before your session ends.
-
-
-
-*This training guide is for learning and evaluation purposes. For production deployments, consult Oracle's official documentation and best practices guides.*
+*This LiveLabs workshop is for learning and evaluation purposes. For production deployments, consult Oracle's official documentation and best practices guides.*
 
 ## Learn More
 
-*(optional - include links to docs, white papers, blogs, etc)*
-
-* [Oracle Linux Virtualization documentation](http://docs.oracle.com)
+* [Oracle Linux Virtualization documentation](https://docs.oracle.com/en/virtualization/oracle-linux-virtualization-manager/)
 
 
 

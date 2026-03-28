@@ -63,167 +63,174 @@ This lab assumes you have:
 3. Click **Create** and wait for the instance state to become **Running**.
 4. Record the instance **Public IP**.
 
-From Windows PowerShell, connect to the bootstrap instance:
+5. From Windows PowerShell, connect to the bootstrap instance:
 
-```powershell
-<copy>ssh -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip></copy>
-```
+    ```powershell
+    <copy>ssh -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip></copy>
+    ```
 
 > **Warning:** The bootstrap instance is temporary. Do not terminate it until after the playbook completes and you have copied the required SSH keys to your local machine.
 
 ## Task 3: Set Up Bootstrap Software
 
-### 3.1 Install prerequisites (Python 3.8 + Git)
+1. Install prerequisites (Python 3.8 + Git)
 
-```bash
-<copy>sudo dnf install -y python38 git
-python3.8 --version
-git --version</copy>
-```
+    ```bash
+    <copy>sudo dnf install -y python38 git
+    python3.8 --version
+    git --version</copy>
+    ```
 
-### 3.2 Create and activate a Python virtual environment
+2. Create and activate a Python virtual environment
 
-```bash
-<copy>python3.8 -m venv ~/venv-olvm
-source ~/venv-olvm/bin/activate
-python --version
-which python</copy>
-```
+    ```bash
+    <copy>python3.8 -m venv ~/venv-olvm
+    source ~/venv-olvm/bin/activate
+    python --version
+    which python</copy>
+    ```
 
-### 3.3 Install OCI SDK + Ansible + jmespath into the virtual environment
+3. Install OCI SDK + Ansible + jmespath into the virtual environment
 
-```bash
-<copy>python -m pip install --upgrade pip
-pip install oci ansible==6.7.0 jmespath
-ansible --version
-python -c "import oci; print(oci.__version__)"</copy>
-```
+    ```bash
+    <copy>python -m pip install --upgrade pip
+    pip install oci ansible==6.7.0 jmespath
+    ansible --version
+    python -c "import oci; print(oci.__version__)"</copy>
+    ```
 
-### 3.4 Clone the lab repository and install Ansible collections
+4. Clone the lab repository
 
-```bash
-<copy>git clone https://github.com/oracle-devrel/linux-virt-labs.git
-cd ~/linux-virt-labs/olvm</copy>
-```
+    ```bash
+    <copy>git clone https://github.com/oracle-devrel/linux-virt-labs.git
+    cd ~/linux-virt-labs/olvm</copy>
+    ```
 
-```bash
-<copy>ansible-galaxy collection install -r requirements.yml --force
-ansible-galaxy collection install community.general:6.6.0 --force
-ansible-galaxy collection install community.crypto:1.9.0 --force</copy>
-```
+5.  Install Ansible collections
 
-### 3.5 Configure OCI CLI credentials
+    ```bash
+    <copy>ansible-galaxy collection install -r requirements.yml --force
+    ansible-galaxy collection install community.general:6.6.0 --force
+    ansible-galaxy collection install community.crypto:1.9.0 --force</copy>
+    ```
 
-Run the OCI configuration workflow:
+## Task 4: Configure OCI CLI credentials
 
-```bash
-<copy>oci setup config</copy>
-```
+1. Run the OCI configuration workflow:
 
-Validate that credentials and keys were created:
+    ```bash
+    <copy>oci setup config</copy>
+    ```
 
-```bash
-<copy>ls /home/opc/.oci
-cat /home/opc/.oci/oci_api_key_public.pem</copy>
-```
+2. Validate that credentials and keys were created:
 
-Optional quick check:
+    ```bash
+    <copy>ls /home/opc/.oci
+    cat /home/opc/.oci/oci_api_key_public.pem</copy>
+    ```
 
-```bash
-<copy>oci iam region list | head</copy>
-```
+3. Optional quick check:
 
-## Task 4: Create OCI Components and Run the Playbook
+    ```bash
+    <copy>oci iam region list | head</copy>
+    ```
 
-### 4.1 Generate an SSH keypair (used by the automation)
+## Task 5: Create OCI Components and Run the Playbook
 
-```bash
-<copy>ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""</copy>
-```
+1. Generate an SSH keypair (used by the automation)
 
-### 4.2 Set the compartment OCID (required)
+    ```bash
+    <copy>ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""</copy>
+    ```
 
-```bash
-<copy>export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"</copy>
-```
+2. Set the compartment OCID (required)
 
-```bash
-<copy>echo "$OCI_COMPARTMENT_OCID"</copy>
-```
+    ```bash
+    <copy>export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"</copy>
+    ```
 
-### 4.3 Create `instances.yml`
+3. Display the compartment varriable
 
-```bash
-<copy>cd ~/linux-virt-labs/olvm
+    ```bash
+    <copy>echo "$OCI_COMPARTMENT_OCID"</copy>
+    ```
 
-cat > instances.yml <<'EOF'
-compute_instances:
-  1:
-    instance_name: "olvm"
-    type: "engine"
-    instance_ocpus: 2
-    instance_memory: 32
-  2:
-    instance_name: "olkvm01"
-    type: "kvm"
-    instance_ocpus: 8
-    instance_memory: 64
-  3:
-    instance_name: "olkvm02"
-    type: "kvm"
-    instance_ocpus: 8
-    instance_memory: 64
-use_vnc_on_engine: true
-EOF
+4. Create `instances.yml`
 
-cat instances.yml</copy>
-```
+    ```bash
+    <copy>cd ~/linux-virt-labs/olvm
 
-### 4.4 Create `hosts` inventory (force Ansible localhost to use the venv Python)
+    cat > instances.yml <<'EOF'
+    compute_instances:
+      1:
+        instance_name: "olvm"
+        type: "engine"
+        instance_ocpus: 2
+        instance_memory: 32
+      2:
+        instance_name: "olkvm01"
+        type: "kvm"
+        instance_ocpus: 8
+        instance_memory: 64
+      3:
+        instance_name: "olkvm02"
+        type: "kvm"
+        instance_ocpus: 8
+        instance_memory: 64
+    use_vnc_on_engine: true
+    EOF
 
-```bash
-<copy>cat << EOF | tee hosts > /dev/null
-localhost ansible_connection=local ansible_connection=local ansible_python_interpreter=/usr/bin/python3.6
-EOF
+    cat instances.yml</copy>
+    ```
 
-cat hosts</copy>
-```
+5. Create `hosts` inventory (force Ansible localhost to use the venv Python)
 
-### 4.5 Run the playbook (from the virtual environment)
+    ```bash
+    <copy>cat << EOF | tee hosts > /dev/null
+    localhost ansible_connection=local ansible_connection=local ansible_python_interpreter=/usr/bin/python3.6
+    EOF
 
-```bash
-<copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml"</copy>
-```
+    cat hosts</copy>
+    ```
 
-> **CRITICAL:** When the playbook pauses, record **both public and private IPs** for:
-> - `olvm` (engine)
-> - `olkvm01`
-> - `olkvm02`
->
-> Leave the terminal open at the pause. Do not continue/abort unless the lab instructions tell you to.
+6. Run the playbook (from the virtual environment)
 
-## Task 5: Verify and Access Deployed Instances
+    ```bash
+    <copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml"</copy>
+    ```
+    > **CRITICAL:**    
+    > **Required Actions:**
+    > - **Leave this terminal open  DO NOT hit `enter` to continue ...this action will delete all of the server components.**
+    > - **Pleae hit `ctrl-c` then `a` to abort!!! ...this action will preserve all of the server components.**
 
-### 5.1 Reboot the OCI instances
+    > Record **both public and private IPs** for:
+    > - `olvm` (engine)
+    > - `olkvm01`
+    > - `olkvm02`
+    >
 
-```bash
-<copy>ssh opc@<olvm-public-ip> "sudo reboot"
-ssh opc@<olkvm01-public-ip> "sudo reboot"
-ssh opc@<olkvm02-public-ip> "sudo reboot"</copy>
-```
+## Task 6: Verify and Access Deployed Instances
 
-### 5.2 Copy the cluster SSH keys to your Windows machine (before terminating bootstrap)
+1. Reboot the OCI instances
 
-```powershell
-<copy>scp opc@<bootstrap-ip>:~/.ssh/id_rsa C:\Users\<you>\.ssh\olvm-cluster-id_rsa
-scp opc@<bootstrap-ip>:~/.ssh/id_rsa.pub C:\Users\<you>\.ssh\olvm-cluster-id_rsa.pub</copy>
-```
+    ```bash
+    <copy>ssh opc@<olvm-public-ip> "sudo reboot"
+    ssh opc@<olkvm01-public-ip> "sudo reboot"
+    ssh opc@<olkvm02-public-ip> "sudo reboot"</copy>
+    ```
 
-### 5.3 Open an SSH tunnel for VNC (PowerShell)
+2. Copy the cluster SSH keys to your Windows machine (before terminating bootstrap)
 
-```powershell
-<copy>ssh -L 5901:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa opc@<olvm-public-ip></copy>
-```
+    ```powershell
+    <copy>scp opc@<bootstrap-ip>:~/.ssh/id_rsa C:\Users\<you>\.ssh\olvm-cluster-id_rsa
+    scp opc@<bootstrap-ip>:~/.ssh/id_rsa.pub C:\Users\<you>\.ssh\olvm-cluster-id_rsa.pub</copy>
+    ```
+
+3. Open an SSH tunnel for VNC (PowerShell)
+
+    ```powershell
+    <copy>ssh -L 5901:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa opc@<olvm-public-ip></copy>
+    ```
 
 ## Learn More
 

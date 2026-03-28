@@ -99,11 +99,12 @@ Before continuing, here's a quick overview of the OLVM virtualization stack. Und
 
 1. Open a **new terminal** and connect to the olvm instance via SSH.
 
-   The `-L` option creates an SSH tunnel to the remote VNC server.
-   ```bash
-   ssh -L 5914:localhost:5901 oracle@<ip_address_of_instance>
-   ```
-   **What this does:** Creates an SSH tunnel that forwards local port 5914 to the remote VNC server on port 5901. VNC port 5901 is not directly accessible from the internet (firewalled), so SSH tunneling provides secure, encrypted access.
+    The `-L` option creates an SSH tunnel to the remote VNC server.
+
+    ```bash
+    <copy>ssh -L 5914:localhost:5901 oracle@<ip_address_of_instance></copy>
+    ```
+    **What this does:** Creates an SSH tunnel that forwards local port 5914 to the remote VNC server on port 5901. VNC port 5901 is not directly accessible from the internet (firewalled), so SSH tunneling provides secure, encrypted access.
 
 2. Switch to the Luna Desktop.
 
@@ -124,83 +125,90 @@ Before continuing, here's a quick overview of the OLVM virtualization stack. Und
 2. Open a terminal within the VNC session.
 
 3. Enable copy and paste to the VNC session.
-   ```bash
-   vncconfig -nowin &
-   ```
+    ```bash
+    <copy>vncconfig -nowin &</copy>
+    ```
 
 4. Install the Oracle Linux Virtualization Manager Release package.
-   ```bash
-   sudo dnf install -y oracle-ovirt-release-45-el8
-   ```
-   **What this does:** Installs the OLVM repository configuration package for release 4.5 on Oracle Linux 8. This automatically enables the required YUM/DNF repositories: `ovirt-4.5`, `ovirt-4.5-extra`, `ol8_kvm_appstream`, `ol8_gluster_appstream`, and `ol8_UEKR7`.
+    ```bash
+    <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
+    ```
+    **What this does:** Installs the OLVM repository configuration package for release 4.5 on Oracle Linux 8. This automatically enables the required YUM/DNF repositories.
 
 5. Clear the dnf cache.
-   ```bash
-   sudo dnf clean all
-   ```
+    ```bash
+    <copy>sudo dnf clean all</copy>
+    ```
 
 6. Install the Manager package.
-   ```bash
-   sudo dnf install -y ovirt-engine
-   ```
-   **What this does:** Downloads the core OLVM software and all dependencies (Java, WildFly, etc.) from Oracle Yum repositories. Does not start the manager — it only places the files on disk.
+    ```bash
+    <copy>sudo dnf install -y ovirt-engine</copy>
+    ```
+    **What this does:** Downloads the core OLVM software and all dependencies (Java, WildFly, etc.) from Oracle Yum repositories. Does not start the manager — it only places the files on disk.
 
 7. List the configured repositories and verify that the required repositories are enabled.
-   ```bash
-   sudo dnf repolist
-   ```
-   You must have the following repositories enabled: `ol8_baseos_latest`, `ol8_appstream`, `ol8_kvm_appstream`, `ovirt-4.5`, `ovirt-4.5-extra`, `ol8_gluster_appstream`, `ol8_UEKR7`.
+    ```bash
+    <copy>sudo dnf repolist</copy>
+    ```
+    You must enable the following repositories:
+    - ol8\_baseos\_latest
+    - ol8\_appstream
+    - ol8\_kvm_appstream
+    - ovirt-4.5
+    - ovirt-4.5-extra
+    - ol8\_gluster\_appstream
+    - ol8\_UEKR7
 
-   If a required repository is not enabled:
-   ```bash
-   sudo dnf config-manager --enable <repository_name>
-   ```
+    If a required repository is not enabled:
+    ```bash
+    <copy>sudo dnf config-manager --enable <repository_name></copy>
+    ```
 
 8. Configure the Manager.
-   ```bash
-   sudo engine-setup --accept-defaults
-   ```
-   **What this does:** Runs the OLVM Engine configuration wizard with all default answers accepted. Behind the scenes, it configures the PostgreSQL database, installs Apache/Tomcat for the web portal, generates SSL certificates, configures the firewall, creates the admin@ovirt user, initializes the oVirt Engine, and creates the default data center and cluster.
+    ```bash
+    <copy>sudo engine-setup --accept-defaults</copy>
+    ```
+    **What this does:** Runs the OLVM Engine configuration wizard with all default answers accepted. Behind the scenes, it configures the PostgreSQL database, installs Apache/Tomcat for the web portal, generates SSL certificates, configures the firewall, creates the admin@ovirt user, initializes the oVirt Engine, and creates the default data center and cluster.
 
-   **Time:** Takes 5–10 minutes to complete all configuration steps.
+    **Time:** Takes 5–10 minutes to complete all configuration steps.
 
-   **Admin password:** The wizard will prompt for the admin@ovirt password even with `--accept-defaults`. This is the only interactive prompt. Password must be 8+ characters with uppercase, lowercase, number, and special character.
+    **Admin password:** The wizard will prompt for the admin@ovirt password even with `--accept-defaults`. This is the only interactive prompt. Password must be 8+ characters with uppercase, lowercase, number, and special character.
 
-   > **CRITICAL:** When engine-setup completes, **WRITE DOWN the admin password!**
+    > **CRITICAL:** When engine-setup completes, **WRITE DOWN the admin password!**
 
 
 
 ## Task 3: Log in to the Administration Portal
 
 1. Get the FQDN for the manager host.
-   ```bash
-   hostname -f
-   ```
-   Example output: `olvm.examplevcn.oraclevcn.com`
+    ```bash
+    <copy>hostname -f</copy>
+    ```
+    Example output: `olvm.examplevcn.oraclevcn.com`
 
 2. Open **Firefox** within the VNC session.
 
 3. Enter the following link to access the engine's Web UI:
-   ```
-   https://olvm.pub.olv.oraclevcn.com
-   ```
+    ```
+    <copy>https://olvm.pub.olv.oraclevcn.com</copy>
+    ```
 
 4. **Security Warning:** Firefox will display "Warning: Potential Security Risk Ahead" because the engine uses a self-signed SSL certificate. Click **Advanced** → **Accept the Risk and Continue**.
 
 5. Under **Downloads**, click **Engine CA Certificate**.
 
 6. Import the certificate into the browser:
-   - Open browser menu → **Settings**
-   - Search for **cert** → Click **View Certificates…**
-   - Click **Import…** → Select **All Files** from the dropdown
-   - Click the **pki-resource** file → Click **Open**
-   - Check **Trust this CA to identify websites** → Click **OK** twice
+    - Open browser menu → **Settings**
+    - Search for **cert** → Click **View Certificates…**
+    - Click **Import…** → Select **All Files** from the dropdown
+    - Click the **pki-resource** file → Click **Open**
+    - Check **Trust this CA to identify websites** → Click **OK** twice
 
 7. Close the Settings tab. From the engine's Web UI, click **Administration Portal**.
 
 8. Enter `admin@ovirt` for the Username and the password you specified during engine-setup.
 
-   The Administration Portal displays after a successful login.
+    The Administration Portal displays after a successful login.
 
 
 

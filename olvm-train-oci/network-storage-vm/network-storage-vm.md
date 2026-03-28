@@ -51,9 +51,9 @@ A **logical network** is a virtual network layer in OLVM that defines how VMs co
 3. The **Default** data center is pre-selected.
 
 4. For the Name field, enter:
-   ```
-   l2-vm-network
-   ```
+    ```
+    <copy>l2-vm-network</copy>
+    ```
 
 5. Leave the **VM Network** check box selected (default). This creates a network available to virtual machines.
 
@@ -73,7 +73,7 @@ A **logical network** is a virtual network layer in OLVM that defines how VMs co
 
 5. Drag `l2-vm-network` from the **Unassigned Logical Networks** column to the physical interface box on the right (e.g., `ens5`).
 
-   **What happens:** VDSM creates a Linux bridge on the host, attaches the physical interface to the bridge, and configures traffic rules. VMs will connect to this bridge for network access.
+    **What happens:** VDSM creates a Linux bridge on the host, attaches the physical interface to the bridge, and configures traffic rules. VMs will connect to this bridge for network access.
 
 6. Click **OK**.
 
@@ -104,9 +104,9 @@ A **storage domain** is where OLVM stores VM disk images, templates, and snapsho
 2. Click **New Domain**.
 
 3. For the Name field, enter:
-   ```
-   amd-storage-domain-01
-   ```
+    ```
+    <copy>amd-storage-domain-01</copy>
+    ```
 
 4. Data Center: **Default**
 
@@ -135,16 +135,16 @@ Oracle provides pre-built OVA templates that include a fully configured OS — n
 2. Keep the default selections for Data Center and Source. Select **olkvm01** for Host.
 
 3. For File Path, enter:
-   ```
-   /tmp
-   ```
+    ```bash
+    <copy>/tmp</copy>
+    ```
 
 4. Switch to the terminal within the VNC session. Make sure you are on the olvm instance.
 
-5. Download the OVA template to olkvm01:
-   ```bash
-   ssh olkvm01 "curl -L https://yum.oracle.com/templates/OracleLinux/OL9/u5/x86_64/OL9U5_x86_64-olvm-b253.ova -o /tmp/ol95.ova"
-   ```
+5. Download the OVA template to olkvm01 
+    ```bash
+    <copy>ssh olkvm01 "curl -L https://yum.oracle.com/templates/OracleLinux/OL9/u5/x86_64/OL9U5_x86_64-olvm-b253.ova -o /tmp/ol95.ova"</copy>
+    ```
 
 6. Switch back to the browser.
 
@@ -177,17 +177,17 @@ This test VM verifies that your networking, storage, and template infrastructure
 6. Click **Show Advanced Options**.
 
 7. Click **Initial Run** → **Authentication**.
-   - User Name: `opc`
-   - Password / Verify Password: *(your choice — for the lab, use `oracle`)*
+    - User Name: `opc`
+    - Password / Verify Password: *(your choice — for the lab, use `oracle`)*
 
 8. Click **Networks**.
-   - DNS Servers: `10.0.10.1`
-   - Check **In-guest Network Interface Name** → Click **Add new**
-   - Name: `eth0`
-   - IPv4 Boot Protocol: `Static`
-   - IPv4 Address: `10.0.10.105`
-   - IPv4 Netmask: `255.255.255.0`
-   - IPv4 Gateway: `10.0.10.1`
+    - DNS Servers: `10.0.10.1`
+    - Check **In-guest Network Interface Name** → Click **Add new**
+    - Name: `eth0`
+    - IPv4 Boot Protocol: `Static`
+    - IPv4 Address: `10.0.10.105`
+    - IPv4 Netmask: `255.255.255.0`
+    - IPv4 Gateway: `10.0.10.1`
 
 9. Click **OK**.
 
@@ -206,16 +206,16 @@ This test VM verifies that your networking, storage, and template infrastructure
 4. Log in with the username and password you defined.
 
 5. Verify the network settings:
-   ```bash
-   ip addr
-   ```
+    ```bash
+    <copy>ip addr</copy>
+    ```
    The output should show the `10.0.10.105` address on `eth0`.
 
 6. Ping the network gateway:
-   ```bash
-   ping 10.0.10.1
-   ```
-   The ping should succeed, confirming network connectivity.
+    ```bash
+    <copy>ping 10.0.10.1</copy>
+    ```
+    The ping should succeed, confirming network connectivity.
 
 
 

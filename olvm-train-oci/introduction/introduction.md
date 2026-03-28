@@ -7,10 +7,6 @@ Oracle Virtualization provides a high-performance, cost-effective, open-source s
 **Estimated Time:** 4–5 hours (hands-on) 
 
 
-This lab is available as a hands-on lab in **Oracle Luna Labs** (luna.oracle.com). It uses example values for Oracle Cloud Infrastructure (OCI) credentials, tenancy, and compartments—substitute values with those specific to your environment.
-
-
-
 ## Lab Structure
 
 This workshop is organized into 9 progressive parts :
@@ -25,10 +21,10 @@ This workshop is organized into 9 progressive parts :
 8. **Import Application VMs** — Import pre-built OVA files to deploy ol9-mysql (10.0.10.100) and ol9-webapp (10.0.10.101) with no manual installation required
 9. **Live Migration** — Migrate a running VM between hosts with zero downtime
 
-**End Result:** A fully functional OLVM cluster running distributed VMs with an Employee Directory web application accessible at `http://10.0.10.101:8080/employee-app/employees`
+**End Result:** A fully functional OLVM cluster running distributed VMs with an Employee Directory web application.
 
 
----
+
 
 ## Objectives
 
@@ -41,7 +37,7 @@ In this workshop, you will:
 - Deploy and validate virtual machines
 - Deploy a multi-tier application and perform live migration
 
----
+
 
 ## Prerequisites
 
@@ -54,14 +50,14 @@ This workshop assumes you have:
 - Basic familiarity with Linux command line usage, SSH, and terminal workflows 
 - No Java or application development experience is required (deployment is scripted) 
 
----
+
 
 ## Learn More
 
 - Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
 - Oracle Luna Labs: https://luna.oracle.com/ 
 
----
+
 
 ## Acknowledgements
 

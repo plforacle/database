@@ -58,16 +58,15 @@ In this lab, you will:
 
 
 
-## Task 1: Create Virtual Machine 1: ol9-mysql on olkvm01
+## Task 1: Download the OVA File Virtual Machine 1
 
-**Step 1: Download the OVA File**
+1. From the OLVM manager terminal  copy ol9-mysql  from object bucket to olkvm01 
 
-From the OLVM manager terminal:
-```bash
-ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/YU_c5CCO0XELLIqVwtAl77N4RXfTJXFCugLN7eDjoMzX9VMWHTGDJuAzpPbvN0gp/n/idhwewbjlvpy/b/olvm-ova/o/ol9-mysql.ova -o /tmp/ol9-mysql.ova"
-```
+    ```bash
+    <copy>ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/YU_c5CCO0XELLIqVwtAl77N4RXfTJXFCugLN7eDjoMzX9VMWHTGDJuAzpPbvN0gp/n/idhwewbjlvpy/b/olvm-ova/o/ol9-mysql.ova -o /tmp/ol9-mysql.ova"</copy>
+    ```
 
-**Step 2: Import the OVA via OLVM Administration Portal**
+## Task 2: Import the OVA via OLVM Administration Portal**
 
 1. Go to **Compute** → **Virtual Machines** → **Import**.
 2. Data Center: **Default**
@@ -83,38 +82,38 @@ ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/YU_c5C
 12. Click **OK**.
 13. Wait for the ol9-mysql VM status to show as **Down**.
 
-**Step 3: Start and Test the ol9-mysql VM**
+## Task 3: Start and Test the ol9-mysql VM**
 
 1. Select the ol9-mysql VM and click **Run**. Wait for status to change to **Up**.
 
 2. From the OLVM manager terminal, SSH into the database VM (username: `opc`, password: `oracle`):
-   ```bash
-   ssh opc@10.0.10.100
-   ```
+    ```bash
+    <copy>ssh opc@10.0.10.100</copy>
+    ```
 
 3. Verify MySQL is running and confirm employee data is present:
-   ```bash
-   mysql -u empapp -pWelcome#123 employee_db -e "SELECT COUNT(*) as employee_count FROM employees;"
-   ```
+    ```bash
+    <copy>mysql -u empapp -pWelcome#123 employee_db -e "SELECT COUNT(*) as employee_count FROM employees;"</copy>
+    ```
    You should see a count of **8** employee records.
 
 4. Exit the database VM:
-   ```bash
-   exit
-   ```
+    ```bash
+    <copy>exit</copy>
+    ```
 
 
 
-## Task 2: Create Virtual Machine 2: ol9-webapp on olkvm02
+## Task 4: Download the OVA File Virtual Machine 2
 
-**Step 1: Download the OVA File**
+1. From the OLVM manager terminal  copy  ol9-webapp  from object bucket to olkvm02 
 
 From the OLVM manager terminal:
 ```bash
-ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/QVbUx0DOX8QmXrip09IIfBEANwGCA2aQ4SojhJ5__ZX7lPjTN15Eg-174doal5-o/n/idhwewbjlvpy/b/olvm-ova/o/ol9-webapp.ova -o /tmp/ol9-webapp.ova"
+<copy>ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/QVbUx0DOX8QmXrip09IIfBEANwGCA2aQ4SojhJ5__ZX7lPjTN15Eg-174doal5-o/n/idhwewbjlvpy/b/olvm-ova/o/ol9-webapp.ova -o /tmp/ol9-webapp.ova"</copy>
 ```
 
-**Step 2: Import the OVA via OLVM Administration Portal**
+## Task 5: Import the OVA via OLVM Administration Portal
 
 1. Go to **Compute** → **Virtual Machines** → **Import**.
 2. Data Center: **Default**
@@ -130,45 +129,45 @@ ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/QVbUx0
 12. Click **OK**.
 13. Wait for the ol9-webapp VM status to show as **Down**.
 
-**Step 3: Start and Test the ol9-webapp VM**
+## Task 6: Start and Test the ol9-webapp VM
 
 1. Select the ol9-webapp VM and click **Run**. Wait for status to change to **Up**.
 
 2. From the OLVM manager terminal, SSH into the web application VM (username: `opc`, password: `oracle`):
-   ```bash
-   ssh opc@10.0.10.101
-   ```
+    ```bash
+    <copy>ssh opc@10.0.10.101</copy>
+    ```
 
 3. Verify the application is responding:
-   ```bash
-   curl -s http://localhost:8080/employee-app/ | grep -q "Welcome to Employee Directory" && echo "✓ Application is responding" || echo "✗ Application check failed"
-   ```
+    ```bash
+    <copy>curl -s http://localhost:8080/employee-app/ | grep -q "Welcome to Employee Directory" && echo "✓ Application is responding" || echo "✗ Application check failed"</copy>
+    ```
 
 4. Verify connectivity to the MySQL database:
-   ```bash
-   ping -c 3 10.0.10.100
-   ```
+    ```bash
+    <copy>ping -c 3 10.0.10.100</copy>
+    ```
    The ping should succeed, confirming both VMs can communicate over the l2-vm-network.
 
 5. Exit the application VM:
-   ```bash
-   exit
-   ```
+    ```bash
+    <copy>exit</copy>
+    ```
 
 
 
-## Task 3: Access the Application from OLVM Manager
+## Task 6: Access the Application from OLVM Manager
 
-From the OLVM manager VNC session, open Firefox and navigate to (wait about 3 minutes for data to load):
+1. From the OLVM manager VNC session, open Firefox and navigate to (wait about 3 minutes for data to load):
 
-```
-http://10.0.10.101:8080/employee-app/
-```
+    ```
+    <copy>http://10.0.10.101:8080/employee-app/</copy>
+    ```
 
-You should see:
-- **Home page**: Purple gradient background with "Welcome to Employee Directory" heading
-- Click the **"View Employees"** button
-- **Employee Directory**: Green table displaying 8 employees with names, emails, departments, and hire dates
+2. You should see:
+    - **Home page**: Purple gradient background with "Welcome to Employee Directory" heading
+    - Click the **"View Employees"** button
+    - **Employee Directory**: Green table displaying 8 employees with names, emails, departments, and hire dates
 
 
 
