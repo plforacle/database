@@ -13,7 +13,7 @@ Live migration allows you to move a running virtual machine from one KVM host to
 - The logical network used by the VM must be available on both hosts
 
 ## Task 1: Restart the engine
-**Lab-Specific Prerequisite:** After the extensive infrastructure changes made during this lab, the engine's internal cache may be out of sync. Restart the engine before attempting migration:
+1. **Lab-Specific Prerequisite:** After the extensive infrastructure changes made during this lab, the engine's internal cache may be out of sync. Restart the engine before attempting migration:
     ```bash
     <copy>sudo systemctl restart ovirt-engine</copy>
     ```
