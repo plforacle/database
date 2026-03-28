@@ -186,9 +186,12 @@ You now have hands-on experience with the core OLVM administration tasks: engine
 
 *This LiveLabs workshop is for learning and evaluation purposes. For production deployments, consult Oracle's official documentation and best practices guides.*
 
+
 ## Learn More
 
-* [Oracle Linux Virtualization documentation](https://docs.oracle.com/en/virtualization/oracle-linux-virtualization-manager/)
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
+- Oracle Luna Labs: https://luna.oracle.com/ 
+
 
 
 

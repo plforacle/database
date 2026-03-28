@@ -229,9 +229,12 @@ At this point, you should have:
 
 
 
+
 ## Learn More
 
-(Optional) Add links to docs.oracle.com pages or internal references relevant to your workshop.
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
+- Oracle Luna Labs: https://luna.oracle.com/ 
+
 
 ## Acknowledgements
 

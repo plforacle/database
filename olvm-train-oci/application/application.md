@@ -179,9 +179,12 @@ At this point, you should have:
 - ✓ Both VMs communicating across l2-vm-network
 - ✓ Employee Directory web application accessible in the browser
 
+
 ## Learn More
 
-*(optional - include links to docs, white papers, blogs, etc)*
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
+- Oracle Luna Labs: https://luna.oracle.com/ 
+
 
 
 

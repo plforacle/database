@@ -220,13 +220,12 @@ At this point, you should have:
 - ✓ Administration Portal accessible and logged in
 
 
+
 ## Learn More
 
-- (Optional) Add links relevant to your workshop, such as the official install guide or product docs.
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
+- Oracle Luna Labs: https://luna.oracle.com/ 
 
-## Next Steps
-
-- Return to the hands-on Engine deployment page: [olvm-engine.md](olvm-engine.md)
 
 ## Acknowledgements
 

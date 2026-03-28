@@ -228,11 +228,12 @@ At this point, you should have:
 - ✓ Test VM (ol9-vm1) running with network connectivity
  
 
+
 ## Learn More
 
-*(optional - include links to docs, white papers, blogs, etc)*
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
+- Oracle Luna Labs: https://luna.oracle.com/ 
 
-* [Oracle Cloud Infrastructure Networking](http://docs.oracle.com)
 
  
 ## Acknowledgements

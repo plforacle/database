@@ -332,17 +332,15 @@ Q: 11. What does a VM use to connect to a logical network?
 - D. Serial port
 ```
 
+
 ## Learn More
 
-- (Optional) Add links relevant to your workshop, such as the official install guide or product docs.
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
+- Oracle Luna Labs: https://luna.oracle.com/ 
 
-## Next Steps
-
-- Review architecture and complete knowledge checks: [olvm-engine-exam-practice.md](olvm-engine-exam-practice.md)
 
 ## Acknowledgements
 
-- **Author** - <Name, Title, Group>
-- **Contributors** - <Name, Group> (optional)
-- **Last Updated By/Date** - <Name, Month Year>
+- **Author** - Perside Foster
+- **Last Updated By/Date** - Perside Foster, April 1, 2026
 ```
