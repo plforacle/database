@@ -186,6 +186,7 @@ Repeat the same process for the second KVM host.
     ```
 
 6. Exit the session.
+
     ```bash
     <copy>exit</copy>
     ```
