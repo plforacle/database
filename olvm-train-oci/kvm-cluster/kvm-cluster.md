@@ -78,6 +78,7 @@ This lab assumes you have:
     ```
 
 7. Exit the session.
+
     ```bash
     <copy>exit</copy>
     ```
