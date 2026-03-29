@@ -113,12 +113,12 @@ This lab assumes you have:
     - A **Cluster** is a group of hosts that share the same CPU type, storage domains, and network configuration. It enables live migration and HA. Requires at least 2 hosts for HA features.
     - `engine-setup` creates a "Default" data center with a "Default" cluster automatically.
 
-6. Enter a name for the host in the Name field.
+6. Enter a **display name** for the host in the Name field.
     ```
     <copy>olkvm01</copy>
     ```
 
-7. In the Hostname field, enter the fully-qualified domain name of the host.
+7. In the **Hostname** field, enter the FQDN used for management traffic.
     ```
     <copy>vdsm01.priv.olv.oraclevcn.com</copy>
     ```
@@ -192,6 +192,8 @@ Repeat the same process for the second KVM host.
 
 
 ## Task 4: Add KVM Host (olkvm02)
+
+> Repeat the process from Task 2. Refer to that task for detailed explanations.
 
 1. From the Administration Portal, go to **Compute** → **Hosts** → **New**.
 
