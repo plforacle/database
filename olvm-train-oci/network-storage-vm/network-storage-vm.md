@@ -80,7 +80,7 @@ A **logical network** is a virtual network layer in OLVM that defines how VMs co
 
 
 ## Task 3: Assign the Logical Network to olkvm02
-
+> Repeat the process from Task 2
 1. Go to **Compute** → **Hosts**.
 
 2. Click the **olkvm02** host name.
@@ -141,7 +141,7 @@ Oracle provides pre-built OVA templates that include a fully configured OS — n
 
 4. Switch to the terminal within the VNC session. Make sure you are on the olvm instance.
 
-5. Download the OVA template to olkvm01 
+5. Download the OVA template to olkvm01 (This file is large and may take several minutes to download.) 
     ```bash
     <copy>ssh olkvm01 "curl -L https://yum.oracle.com/templates/OracleLinux/OL9/u5/x86_64/OL9U5_x86_64-olvm-b253.ova -o /tmp/ol95.ova"</copy>
     ```
