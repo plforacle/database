@@ -306,9 +306,24 @@ The playbook may occasionally fail due to timing issues — most commonly, one o
 3. Open an SSH tunnel for VNC (PowerShell)
 
     ```powershell
-    <copy>ssh -L 5901:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa opc@<olvm-public-ip></copy>
+    <copy>ssh -L 5914:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
+    Example: ssh -L 5914:localhost:5901 -i  ~/.ssh/olvm-cluster-id_rsa oracle@132.145.xx.xx
+
+
     > **Note:** Open a **new PowerShell window** on your local Windows machine for this step. Do not run this command from the bootstrap SSH session.
+
+
+### ✅ Setup OLVM Infrastructure Checkpoint
+
+At this point, you should have:
+
+- ✓ Bootstrap instance running and accessible via SSH
+- ✓ Python virtual environment with Ansible and OCI SDK installed
+- ✓ OCI CLI credentials configured and validated
+- ✓ Three instances deployed: olvm, olkvm01, and olkvm02
+- ✓ Public and private IPs recorded for all instances
+- ✓ SSH keys copied to your local Windows machine
 
 ## Learn More
 

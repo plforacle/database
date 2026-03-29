@@ -197,6 +197,9 @@ Before continuing, here's a quick overview of the OLVM virtualization stack. Und
 
 5. Under **Downloads**, click **Engine CA Certificate**.
 
+    ![](images/olvm-welcome.png)   
+
+
 6. Import the certificate into the browser:
     - Open browser menu → **Settings**
     - Search for **cert** → Click **View Certificates…**
