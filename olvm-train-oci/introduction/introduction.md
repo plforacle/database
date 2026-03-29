@@ -9,7 +9,7 @@ Oracle Virtualization provides a high-performance, cost-effective, open-source s
 
 ## Lab Structure
 
-This workshop is organized into 9 progressive parts :
+This workshop is organized into 9 progressive stages:
 
 1. **Setup OCI Infrastructure** — Create the OCI OLVM objects  
 2. **Deploy OLVM Engine** — Install Oracle Linux Virtualization Manager on a dedicated host with Administration Portal access

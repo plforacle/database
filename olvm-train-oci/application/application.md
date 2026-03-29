@@ -65,7 +65,8 @@ In this lab, you will:
     ```bash
     <copy>ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/YU_c5CCO0XELLIqVwtAl77N4RXfTJXFCugLN7eDjoMzX9VMWHTGDJuAzpPbvN0gp/n/idhwewbjlvpy/b/olvm-ova/o/ol9-mysql.ova -o /tmp/ol9-mysql.ova"</copy>
     ```
-
+    > This file is large and may take several minutes to download.
+    
 ## Task 2: Import the OVA via OLVM Administration Portal**
 
 1. Go to **Compute** → **Virtual Machines** → **Import**.
@@ -108,12 +109,13 @@ In this lab, you will:
 
 1. From the OLVM manager terminal  copy  ol9-webapp  from object bucket to olkvm02 
 
-From the OLVM manager terminal:
-```bash
-<copy>ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/QVbUx0DOX8QmXrip09IIfBEANwGCA2aQ4SojhJ5__ZX7lPjTN15Eg-174doal5-o/n/idhwewbjlvpy/b/olvm-ova/o/ol9-webapp.ova -o /tmp/ol9-webapp.ova"</copy>
-```
+    ```bash
+    <copy>ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/QVbUx0DOX8QmXrip09IIfBEANwGCA2aQ4SojhJ5__ZX7lPjTN15Eg-174doal5-o/n/idhwewbjlvpy/b/olvm-ova/o/ol9-webapp.ova -o /tmp/ol9-webapp.ova"</copy>
+    ```
+    > This file is large and may take several minutes to download.
 
 ## Task 5: Import the OVA via OLVM Administration Portal
+> Repeat the process from Task 2
 
 1. Go to **Compute** → **Virtual Machines** → **Import**.
 2. Data Center: **Default**
@@ -156,7 +158,7 @@ From the OLVM manager terminal:
 
 
 
-## Task 6: Access the Application from OLVM Manager
+## Task 7: Access the Application from OLVM Manager
 
 1. From the OLVM manager VNC session, open Firefox and navigate to (wait about 3 minutes for data to load):
 

@@ -6,14 +6,25 @@
 
 Live migration allows you to move a running virtual machine from one KVM host to another without downtime. This is a key capability for maintenance operations, load balancing, and high availability scenarios.
 
-**Prerequisites for VM Migration:**
+### Objectives
+
+In this lab, you will:
+- Restart the OLVM engine to ensure cache consistency before migration
+- Verify that migration prerequisites are met (hosts Up, shared storage, matching networks)
+- Perform a live migration of the ol9-mysql VM from olkvm01 to olkvm02
+- Verify the VM, database, and multi-tier application remain fully operational after migration
+
+### Prerequisites
+
 - Both hosts must be in the same cluster
 - Both hosts must have access to the shared storage domain
 - The destination host must have sufficient resources (CPU, memory)
 - The logical network used by the VM must be available on both hosts
 
+
+
 ## Task 1: Restart the engine
-1. **Lab-Specific Prerequisite:** After the extensive infrastructure changes made during this lab, the engine's internal cache may be out of sync. Restart the engine before attempting migration:
+1. **Lab-Specific Prerequisite:** After the extensive infrastructure changes made during the previous labs, the engine's internal cache may be out of sync. Restart the engine before attempting migration:
     ```bash
     <copy>sudo systemctl restart ovirt-engine</copy>
     ```
