@@ -26,6 +26,77 @@ This lab assumes you have:
 
 > **Important:** Use a dev/test environment and clean up resources to avoid unnecessary costs.
 
+### Special Instructions
+> Important: What to Do If the Playbook Fails
+The playbook may occasionally fail due to timing issues — most commonly, one of the KVM instances (e.g., `olkvm02`) may not be SSH-ready before Ansible's connection timeout expires. If this happens, the playbook will continue into its teardown phase and delete all provisioned resources. To Re-Run the lab after a failure do the following:
+
+1. **Verify your virtual environment is still active** (you should see `(venv-olvm)` in your prompt). If not, reactivate it:
+
+    ```bash
+    source ~/venv-olvm/bin/activate
+    ```
+
+2. **Navigate to the playbook directory:**
+
+    ```bash
+    cd ~/linux-virt-labs/olvm
+    ```
+
+3. **Recreate the `instances.yml` file:**
+
+    ```bash
+    cat > instances.yml <<'EOF'
+    compute_instances:
+      1:
+        instance_name: "olvm"
+        type: "engine"
+        instance_ocpus: 2
+        instance_memory: 32
+      2:
+        instance_name: "olkvm01"
+        type: "kvm"
+        instance_ocpus: 8
+        instance_memory: 64
+      3:
+        instance_name: "olkvm02"
+        type: "kvm"
+        instance_ocpus: 8
+        instance_memory: 64
+    use_vnc_on_engine: true
+    EOF
+    ```
+
+4. **Recreate the `hosts` inventory file:**
+
+    ```bash
+    cat << EOF | tee hosts > /dev/null
+    localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3.6
+    EOF
+    ```
+
+5. **Confirm your compartment OCID is still set:**
+
+    ```bash
+    echo "$OCI_COMPARTMENT_OCID"
+    ```
+
+    If empty, re-export it:
+
+    ```bash
+    export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"
+    ```
+
+6. **Re-run the playbook:**
+
+    ```bash
+    ansible-playbook create_instance.yml -i hosts -e "@instances.yml"
+    ```
+
+> **CRITICAL REMINDER:** When the playbook completes and prompts you to confirm removal of artifacts, press **Ctrl+C** then **a** to abort. Do **not** type `y` — doing so will delete all provisioned resources.
+
+
+
+
 ## Task 1: Create Bootstrap VCN (VCN Wizard)
 
 1. In the OCI Console, navigate to **Networking → Virtual Cloud Networks**.
@@ -149,7 +220,7 @@ This lab assumes you have:
     <copy>export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"</copy>
     ```
 
-3. Display the compartment varriable
+3. Display the compartment variable
 
     ```bash
     <copy>echo "$OCI_COMPARTMENT_OCID"</copy>
@@ -187,7 +258,7 @@ This lab assumes you have:
 
     ```bash
     <copy>cat << EOF | tee hosts > /dev/null
-    localhost ansible_connection=local ansible_connection=local ansible_python_interpreter=/usr/bin/python3.6
+    localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3.6
     EOF
 
     cat hosts</copy>
@@ -201,7 +272,7 @@ This lab assumes you have:
     > **CRITICAL:**    
     > **Required Actions:**
     > - **Leave this terminal open  DO NOT hit `enter` to continue ...this action will delete all of the server components.**
-    > - **Pleae hit `ctrl-c` then `a` to abort!!! ...this action will preserve all of the server components.**
+    > - **Please hit `ctrl-c` then `a` to abort!!! ...this action will preserve all of the server components.**
 
     > Record **both public and private IPs** for:
     > - `olvm` (engine)
@@ -211,7 +282,8 @@ This lab assumes you have:
 
 ## Task 6: Verify and Access Deployed Instances
 
-1. Reboot the OCI instances
+
+1. Reboot the OCI instances (This step is optional but recommended to ensure all network changes are fully applied.)
 
     ```bash
     <copy>ssh opc@<olvm-public-ip> "sudo reboot"
@@ -219,18 +291,24 @@ This lab assumes you have:
     ssh opc@<olkvm02-public-ip> "sudo reboot"</copy>
     ```
 
+
+
 2. Copy the cluster SSH keys to your Windows machine (before terminating bootstrap)
+
+
 
     ```powershell
     <copy>scp opc@<bootstrap-ip>:~/.ssh/id_rsa C:\Users\<you>\.ssh\olvm-cluster-id_rsa
     scp opc@<bootstrap-ip>:~/.ssh/id_rsa.pub C:\Users\<you>\.ssh\olvm-cluster-id_rsa.pub</copy>
     ```
+    > **Note:** Open a **new PowerShell window** on your local Windows machine for this step. Do not run these commands from the bootstrap SSH session.
 
 3. Open an SSH tunnel for VNC (PowerShell)
 
     ```powershell
     <copy>ssh -L 5901:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa opc@<olvm-public-ip></copy>
     ```
+    > **Note:** Open a **new PowerShell window** on your local Windows machine for this step. Do not run this command from the bootstrap SSH session.
 
 ## Learn More
 
