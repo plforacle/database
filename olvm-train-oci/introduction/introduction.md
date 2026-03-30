@@ -1,5 +1,4 @@
-# Oracle Linux Virtualization Manager (OLVM) — Hands-on Lab
-
+# Oracle Linux Virtualization Manager (OLVM) on OCI
 ## About this Workshop
 
 Oracle Virtualization provides a high-performance, cost-effective, open-source server virtualization solution that includes KVM virtualization and management capabilities. In this workshop, you will deploy Oracle Linux Virtualization Manager (OLVM) and complete core administration tasks including host/cluster setup, networking, storage, and VM lifecycle management. An optional application tier is included to demonstrate a realistic workload and live migration.
