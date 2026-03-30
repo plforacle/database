@@ -180,7 +180,9 @@ The playbook may occasionally fail due to timing issues — most commonly, one o
 5.  Install Ansible collections
 
     ```bash
-    <copy>ansible-galaxy collection install -r requirements.yml --force</copy>
+    <copy>ansible-galaxy collection install -r requirements.yml --force
+    ansible-galaxy collection install community.general:6.6.0 --force
+    ansible-galaxy collection install community.crypto:1.9.0 --force</copy>
     ```
 
 ## Task 4: Configure OCI CLI credentials
