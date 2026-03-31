@@ -217,7 +217,7 @@ This lab assumes you have:
 ## Task 6: Verify and Access Deployed Instances
 
 
-1. Reboot the OCI instances (This step is optional but recommended to ensure all network changes are fully applied.)
+1. Reboot the OCI instances.
 
     ```bash
     <copy>ssh opc@<olvm-public-ip> "sudo reboot"
@@ -226,10 +226,7 @@ This lab assumes you have:
     ```
 
 
-
 2. Copy the cluster SSH keys to your Windows machine (before terminating bootstrap)
-
-
 
     ```powershell
     <copy>scp opc@<bootstrap-ip>:~/.ssh/id_rsa C:\Users\<you>\.ssh\olvm-cluster-id_rsa
