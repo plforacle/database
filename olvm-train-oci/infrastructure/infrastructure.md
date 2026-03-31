@@ -26,72 +26,6 @@ This lab assumes you have:
 
 > **Important:** Use a dev/test environment and clean up resources to avoid unnecessary costs.
 
-### Special Instructions
-> Important: What to Do If the Playbook Fails
-The playbook may occasionally fail due to timing issues — most commonly, one of the KVM instances (e.g., `olkvm02`) may not be SSH-ready before Ansible's connection timeout expires. If this happens, the playbook will continue into its teardown phase and delete all provisioned resources. To Re-Run the lab after a failure do the following:
-
-1. **Verify your virtual environment is still active** (you should see `(venv-olvm)` in your prompt). If not, reactivate it:
-
-    ```bash
-    source ~/venv-olvm/bin/activate
-    ```
-
-2. **Navigate to the playbook directory:**
-
-    ```bash
-    cd ~/linux-virt-labs/olvm
-    ```
-
-3. **Recreate the `instances.yml` file:**
-
-    ```bash
-    cat > instances.yml <<'EOF'
-    compute_instances:
-      1:
-        instance_name: "olvm"
-        type: "engine"
-        instance_ocpus: 2
-        instance_memory: 32
-      2:
-        instance_name: "olkvm01"
-        type: "kvm"
-        instance_ocpus: 8
-        instance_memory: 64
-      3:
-        instance_name: "olkvm02"
-        type: "kvm"
-        instance_ocpus: 8
-        instance_memory: 64
-    use_vnc_on_engine: true
-    EOF
-    ```
-
-4. **Recreate the `hosts` inventory file:**
-
-    ```bash
-    cat << EOF | tee hosts > /dev/null
-    localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3.6
-    EOF
-    ```
-
-5. **Confirm your compartment OCID is still set:**
-
-    ```bash
-    echo "$OCI_COMPARTMENT_OCID"
-    ```
-
-    If empty, re-export it:
-
-    ```bash
-    export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"
-    ```
-
-6. **Re-run the playbook:**
-
-    ```bash
-    ansible-playbook create_instance.yml -i hosts -e "@instances.yml"
-    ```
-
 > **CRITICAL REMINDER:** When the playbook completes and prompts you to confirm removal of artifacts, press **Ctrl+C** then **a** to abort. Do **not** type `y` — doing so will delete all provisioned resources.
 
 
@@ -324,6 +258,7 @@ At this point, you should have:
 - ✓ Three instances deployed: olvm, olkvm01, and olkvm02
 - ✓ Public and private IPs recorded for all instances
 - ✓ SSH keys copied to your local Windows machine
+
 
 ## Learn More
 
