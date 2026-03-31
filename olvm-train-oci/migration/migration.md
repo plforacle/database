@@ -208,6 +208,6 @@ You now have hands-on experience with the core OLVM administration tasks: engine
 
 ## Acknowledgements
 
-- **Author** - SShawn Kelly, John Priest  
+- **Author** - SShawn Kelley, John Priest  
 - **Contributors** - Perside Foster
 - **Last Updated By/Date** - Perside Foster , April 1, 2026
