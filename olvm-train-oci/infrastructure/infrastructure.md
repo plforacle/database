@@ -24,11 +24,8 @@ This lab assumes you have:
 - Access to the OCI Console
 - Your SSH public key for initial access to the bootstrap instance
 
-> **Important:** Use a dev/test environment and clean up resources to avoid unnecessary costs.
-
-> **CRITICAL REMINDER:** When the playbook completes and prompts you to confirm removal of artifacts, press **Ctrl+C** then **a** to abort. Do **not** type `y` — doing so will delete all provisioned resources.
-
-
+> ⚠️ **Important:** When the playbook completes, do NOT press Enter or type `y`.  
+> Press **Ctrl+C**, then **a** to prevent resource deletion.
 
 
 ## Task 1: Create Bootstrap VCN (VCN Wizard)
@@ -73,6 +70,7 @@ This lab assumes you have:
     ```powershell
     <copy>ssh -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip></copy>
     ```
+
 
 > **Warning:** The bootstrap instance is temporary. Do not terminate it until after the playbook completes and you have copied the required SSH keys to your local machine.
 
@@ -203,10 +201,22 @@ This lab assumes you have:
     ```bash
     <copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml"</copy>
     ```
-    > **CRITICAL:**    
-    > **Required Actions:**
-    > - **Leave this terminal open  DO NOT hit `enter` to continue ...this action will delete all of the server components.**
-    > - **Please hit `ctrl-c` then `a` to abort!!! ...this action will preserve all of the server components.**
+
+    > ⚠️ **CRITICAL: DO NOT CONTINUE WHEN PROMPTED**
+    >
+    > When the playbook completes, you will see a prompt to remove resources.
+    >
+    > - **DO NOT press Enter**
+    > - **DO NOT type `y`**
+    >
+    > This will trigger deletion of ALL provisioned infrastructure.
+    >
+    > **Instead:**
+    > - Press **Ctrl+C**
+    > - Then press **a** to abort safely
+    >
+    > This preserves all deployed OLVM resources.
+
 
     > Record **both public and private IPs** for:
     > - `olvm` (engine)
