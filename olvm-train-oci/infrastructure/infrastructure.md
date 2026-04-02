@@ -138,6 +138,8 @@ This lab assumes you have:
     <copy>oci iam region list | head</copy>
     ```
 
+> **Important** : The OCI configuration process is slow. Ignore the error response ... keep executing the above commmand unit you see a short list of regions... Wait 5 minutes before trying again.
+
 ## Task 5: Create OCI Components and Run the Playbook
 
 1. Generate an SSH keypair (used by the automation)
