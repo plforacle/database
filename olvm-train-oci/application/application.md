@@ -67,9 +67,10 @@ In this lab, you will:
     ```
     > This file is large and may take several minutes to download.
     
-## Task 2: Import the OVA via OLVM Administration Portal**
+## Task 2: Import the OVA via OLVM Administration Portal
 
-1. Go to **Compute** → **Virtual Machines** → **Import**.
+1. Go to **Compute** → **Virtual Machines** → **Import**.(click on the 3 dots)
+    ![](images/import-vm.png)   
 2. Data Center: **Default**
 3. Source: **Virtual Appliance (OVA)**
 4. Host: **olkvm01**
@@ -83,22 +84,25 @@ In this lab, you will:
 12. Click **OK**.
 13. Wait for the ol9-mysql VM status to show as **Down**.
 
-## Task 3: Start and Test the ol9-mysql VM**
+## Task 3: Start and Test the ol9-mysql VM
 
 1. Select the ol9-mysql VM and click **Run**. Wait for status to change to **Up**.
 
 2. From the OLVM manager terminal, SSH into the database VM (username: `opc`, password: `oracle`):
+
     ```bash
     <copy>ssh opc@10.0.10.100</copy>
     ```
 
 3. Verify MySQL is running and confirm employee data is present:
+
     ```bash
     <copy>mysql -u empapp -pWelcome#123 employee_db -e "SELECT COUNT(*) as employee_count FROM employees;"</copy>
     ```
    You should see a count of **8** employee records.
 
 4. Exit the database VM:
+
     ```bash
     <copy>exit</copy>
     ```
@@ -152,6 +156,7 @@ In this lab, you will:
    The ping should succeed, confirming both VMs can communicate over the l2-vm-network.
 
 5. Exit the application VM:
+
     ```bash
     <copy>exit</copy>
     ```

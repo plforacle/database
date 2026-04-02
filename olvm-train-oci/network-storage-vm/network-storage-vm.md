@@ -51,6 +51,7 @@ A **logical network** is a virtual network layer in OLVM that defines how VMs co
 3. The **Default** data center is pre-selected.
 
 4. For the Name field, enter:
+
     ```
     <copy>l2-vm-network</copy>
     ```
@@ -104,6 +105,7 @@ A **storage domain** is where OLVM stores VM disk images, templates, and snapsho
 2. Click **New Domain**.
 
 3. For the Name field, enter:
+
     ```
     <copy>amd-storage-domain-01</copy>
     ```
@@ -135,6 +137,7 @@ Oracle provides pre-built OVA templates that include a fully configured OS — n
 2. Keep the default selections for Data Center and Source. Select **olkvm01** for Host.
 
 3. For File Path, enter:
+
     ```bash
     <copy>/tmp</copy>
     ```
@@ -142,6 +145,7 @@ Oracle provides pre-built OVA templates that include a fully configured OS — n
 4. Switch to the terminal within the VNC session. Make sure you are on the olvm instance.
 
 5. Download the OVA template to olkvm01 (This file is large and may take several minutes to download.) 
+
     ```bash
     <copy>ssh olkvm01 "curl -L https://yum.oracle.com/templates/OracleLinux/OL9/u5/x86_64/OL9U5_x86_64-olvm-b253.ova -o /tmp/ol95.ova"</copy>
     ```
@@ -206,12 +210,14 @@ This test VM verifies that your networking, storage, and template infrastructure
 4. Log in with the username and password you defined.
 
 5. Verify the network settings:
+
     ```bash
     <copy>ip addr</copy>
     ```
    The output should show the `10.0.10.105` address on `eth0`.
 
 6. Ping the network gateway:
+
     ```bash
     <copy>ping 10.0.10.1</copy>
     ```

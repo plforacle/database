@@ -57,22 +57,26 @@ This lab assumes you have:
 2. Switch to the terminal within the VNC session.
 
 3. Connect via SSH to the olkvm01 instance(It takes a while to connect... just wait).
+
     ```bash
     <copy>ssh olkvm01</copy>
     ```
     **Note:** All SSH commands using hostnames (e.g., `ssh olkvm01`) are executed from the OLVM engine, which has private DNS resolution for the cluster hosts.
 
 4. Install the Oracle Linux Virtualization Manager Release package.
+
     ```bash
     <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
     ```
 
 5. Clear the dnf cache.
+
     ```bash
     <copy>sudo dnf clean all</copy>
     ```
 
 6. Verify repositories are enabled.
+
     ```bash
     <copy>sudo dnf repolist</copy>
     ```
@@ -115,11 +119,13 @@ This lab assumes you have:
     - `engine-setup` creates a "Default" data center with a "Default" cluster automatically.
 
 6. Enter a **display name** for the host in the Name field.
+
     ```
     <copy>olkvm01</copy>
     ```
 
 7. In the **Hostname** field, enter the FQDN used for management traffic.
+
     ```
     <copy>vdsm01.priv.olv.oraclevcn.com</copy>
     ```
@@ -130,6 +136,7 @@ This lab assumes you have:
 9. Switch to the terminal within the VNC session.
 
 10. Copy the SSH public key to the KVM host.
+
     ```bash
     <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm01 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
     ```
@@ -166,21 +173,25 @@ Repeat the same process for the second KVM host.
 1. Switch to the terminal within the VNC session.
 
 2. Connect via SSH to olkvm02.
+
     ```bash
     <copy>ssh olkvm02</copy>
     ```
 
 3. Install the OLVM Release package.
+
     ```bash
     <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
     ```
 
 4. Clear the dnf cache.
+
     ```bash
     <copy>sudo dnf clean all</copy>
     ```
 
 5. Verify repositories.
+
     ```bash
     <copy>sudo dnf repolist</copy>
     ```
@@ -202,11 +213,13 @@ Repeat the same process for the second KVM host.
 2. Select the **Default** data center from the Host Cluster drop-down list.
 
 3. Enter the host name:
+
     ```
     <copy>olkvm02</copy>
     ```
 
 4. Enter the hostname:
+
     ```
     <copy>vdsm02.priv.olv.oraclevcn.com</copy>
     ```
@@ -214,6 +227,7 @@ Repeat the same process for the second KVM host.
 5. Under Authentication, select **SSH Public Key**.
 
 6. Switch to the terminal and copy the SSH public key:
+
     ```bash
     <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm02 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
     ```

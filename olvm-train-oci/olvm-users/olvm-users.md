@@ -42,8 +42,10 @@ This lab assumes you have:
 2. Navigate to the Keycloak Administration Console:
 
     ```text
-    <copy>https://<olvm-fqdn>/ovirt-engine-auth/admin</copy>
+    <copy>https://<olvm-fqdn>/ovirt-engine-auth</copy>
     ```
+
+    Example: https://olvm.pub.olv.oraclevcn.com/ovirt-engine-auth
 
 3. Log in using the Keycloak administrative account:
 
@@ -96,17 +98,19 @@ This lab assumes you have:
 
 3. Go to **Administration** → **Users**.
 
-4. Click **Add**.
+4. Under **Search** select **internalsso (internalkeycloak-authz)**
 
-5. In the search field, enter the username you created in Keycloak:
+5. Click **Add**.
+
+6. In the search field, enter the username you created in Keycloak:
 
     ```text
     <copy>newadmin</copy>
     ```
 
-6. Click **Go**.
+7. Click **Go**.
 
-7. Select the user from the results and click **Add**.
+8. Select the user from the results and click **Add**.
 
 > **Troubleshooting Tip:** If the user does not appear, verify that the account was created in the `Ovirt-internal` Keycloak realm and that you are searching the correct authorization provider.
 
@@ -132,22 +136,21 @@ To create a local internal user in OLVM 4.5, use the `ovirt-aaa-jdbc-tool` on th
 
 1. Connect to the OLVM engine host using SSH.
 
-2. Create the user account. Replace `username` with your desired account name.
+2. Create the user account. 
 
     ```bash
-    <copy>sudo ovirt-aaa-jdbc-tool user add username --attribute=firstName=John --attribute=lastName=Doe</copy>
+    <copy>sudo ovirt-aaa-jdbc-tool user add test1 --attribute=firstName=John --attribute=lastName=Doe</copy>
     ```
 
     The `--attribute` flags are optional, but they are recommended because they make the user easier to identify in the Administration Portal.
 
 ## Task 6: Set the Local User Password
 
-By default, newly created local users cannot log in until a password is set.
 
 1. Run the following command on the engine host:
 
     ```bash
-    <copy>sudo ovirt-aaa-jdbc-tool user password-reset username</copy>
+    <copy>sudo ovirt-aaa-jdbc-tool user password-reset test1</copy>
     ```
 
 2. Enter and confirm the password when prompted.

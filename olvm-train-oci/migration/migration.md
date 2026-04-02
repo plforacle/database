@@ -25,6 +25,7 @@ In this lab, you will:
 
 ## Task 1: Restart the engine
 1. **Lab-Specific Prerequisite:** After the extensive infrastructure changes made during the previous labs, the engine's internal cache may be out of sync. Restart the engine before attempting migration:
+
     ```bash
     <copy>sudo systemctl restart ovirt-engine</copy>
     ```

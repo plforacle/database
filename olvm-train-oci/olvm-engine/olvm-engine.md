@@ -125,28 +125,33 @@ Before continuing, here's a quick overview of the OLVM virtualization stack. Und
 2. Open a terminal within the VNC session.
 
 3. Enable copy and paste to the VNC session.
+
     ```bash
     <copy>vncconfig -nowin &</copy>
     ```
 
 4. Install the Oracle Linux Virtualization Manager Release package.
+
     ```bash
     <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
     ```
     **What this does:** Installs the OLVM repository configuration package for release 4.5 on Oracle Linux 8. This automatically enables the required YUM/DNF repositories.
 
 5. Clear the dnf cache.
+
     ```bash
     <copy>sudo dnf clean all</copy>
     ```
 
 6. Install the Manager package.
+
     ```bash
     <copy>sudo dnf install -y ovirt-engine</copy>
     ```
     **What this does:** Downloads the core OLVM software and all dependencies (Java, WildFly, etc.) from Oracle Yum repositories. Does not start the manager — it only places the files on disk.
 
 7. List the configured repositories and verify that the required repositories are enabled.
+
     ```bash
     <copy>sudo dnf repolist</copy>
     ```
@@ -160,11 +165,13 @@ Before continuing, here's a quick overview of the OLVM virtualization stack. Und
     - ol8\_UEKR7
 
     If a required repository is not enabled:
+
     ```bash
     <copy>sudo dnf config-manager --enable <repository_name></copy>
     ```
 
 8. Configure the Manager.
+
     ```bash
     <copy>sudo engine-setup --accept-defaults</copy>
     ```
@@ -181,6 +188,7 @@ Before continuing, here's a quick overview of the OLVM virtualization stack. Und
 ## Task 3: Log in to the Administration Portal
 
 1. Get the FQDN for the manager host.
+
     ```bash
     <copy>hostname -f</copy>
     ```
@@ -189,6 +197,7 @@ Before continuing, here's a quick overview of the OLVM virtualization stack. Und
 2. Open **Firefox** within the VNC session.
 
 3. Enter the following link to access the engine's Web UI:
+
     ```
     <copy>https://olvm.pub.olv.oraclevcn.com</copy>
     ```
