@@ -45,6 +45,10 @@
           "filename": "../../migration/migration.md"
         },
 
+        {
+          "title": "Lab 7: Manage Users and Roles",
+          "filename": "../../olvm-users/olvm-users.md"
+        },
       
         {
             "title": "Need Help?",
