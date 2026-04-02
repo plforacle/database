@@ -217,11 +217,11 @@ At this point, you should have:
 
 ## Learn More
 
-- Oracle Linux Virtualization Manager documentation
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
 - Keycloak Administration Console documentation
 
 ## Acknowledgements
 
-- **Author** -
-- **Contributors** -
-- **Last Updated By/Date** -
+- **Author** - Shawn Kelley, John Priest  
+- **Contributors** - Perside Foster
+- **Last Updated By/Date** - Perside Foster , April 1, 2026
