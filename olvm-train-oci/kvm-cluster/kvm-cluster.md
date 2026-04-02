@@ -56,7 +56,7 @@ This lab assumes you have:
 
 2. Switch to the terminal within the VNC session.
 
-3. Connect via SSH to the olkvm01 instance.
+3. Connect via SSH to the olkvm01 instance(It takes a while to connect... just wait).
     ```bash
     <copy>ssh olkvm01</copy>
     ```
@@ -159,7 +159,7 @@ This lab assumes you have:
 14. **Wait for the host status to show as Up** before continuing.
 
 
-## Task 3: Configure the Second KVM Host (olkvm02)
+## Task 3: Configure the Second KVM Host (It takes a while to connect... just wait)
 
 Repeat the same process for the second KVM host.
 
