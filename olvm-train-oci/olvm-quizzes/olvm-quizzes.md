@@ -1,9 +1,7 @@
 # OLVM Exam Practice Quiz Bank
 ### 60 Questions Mapped to Exam 1Z0-1170 — Oracle Linux Virtualization Manager Associate
 
----
-
-## How to Use This Quiz Bank
+ ### How to Use This Quiz Bank
 
 This quiz bank is designed to be reviewed during OLVM training, with each section mapped to a lab part. Review each section after completing the corresponding hands-on lab section.
 
@@ -15,8 +13,7 @@ This quiz bank is designed to be reviewed during OLVM training, with each sectio
 | Section 4 | Networking, Storage & VM Administration | Part 3 — After VMs running | ~15 min |
 | Section 5 | VM Lifecycle, Migration & Operations | Parts 4–5 — After migration complete | ~15 min |
 
----
-
+ 
 ## Section 1: Architecture & Big Picture
 *Review during Ansible playbook wait time (~8 min) and after deployment completes*
 
@@ -93,7 +90,7 @@ Q: 12. Which application server does the oVirt engine run on?
 - C. Oracle WebLogic
 - D. Nginx
 ```
----
+
 
 ## Section 2: Engine Installation & Configuration
 *Review during engine-setup wait time (~10 min) and after Administration Portal access*
@@ -176,313 +173,242 @@ Q: 12. Where are the OLVM Engine log files located?
 - C. /opt/ovirt/logs/
 - D. /var/log/messages
 ```
----
-
-
-
----
 
 ## Section 3: KVM Host & Cluster Management
 *Review after both hosts show status "Up" in the Administration Portal*
 
-1. What is the minimum Oracle Linux version required for a KVM host?
-- A. Oracle Linux 7.5
+```quiz
+Q: 1. What is the minimum Oracle Linux version required for a KVM host?
+* A. Oracle Linux 7.5
 - B. Oracle Linux 8.5 or later
 - C. Oracle Linux 9.0
 - D. Oracle Linux 8.0
 
-2. What is the MINIMUM CPU requirement for a KVM host?
+Q: 2. What is the MINIMUM CPU requirement for a KVM host?
 - A. Single-core 32-bit CPU
-- B. 64-bit dual-core CPU
+* B. 64-bit dual-core CPU
 - C. 64-bit quad-core CPU
 - D. 64-bit eight-core CPU
 
-3. What is the MINIMUM network interface requirement for a KVM host?
+Q: 3. What is the MINIMUM network interface requirement for a KVM host?
 - A. One NIC with 100 Mbps bandwidth
-- B. One NIC with 1 Gbps bandwidth
+* B. One NIC with 1 Gbps bandwidth
 - C. Two NICs with 1 Gbps bandwidth
 - D. Four NICs with 1 Gbps bandwidth
 
-4. Where in the Administration Portal do you add a new KVM host?
+Q: 4. Where in the Administration Portal do you add a new KVM host?
 - A. Storage → Hosts
-- B. Compute → Hosts
+* B. Compute → Hosts
 - C. Network → Hosts
 - D. Configuration → Hosts
 
-5. Which two authentication methods can be used when adding a KVM host? (Choose 2)
-- A. Password authentication
+Q: 5. Which two authentication methods can be used when adding a KVM host? (Choose 2)
+* A. Password authentication
 - B. Kerberos
 - C. SSH key authentication
 - D. Certificate authentication
 
-6. For which user account must authentication credentials be provided when adding a host?
+Q: 6. For which user account must authentication credentials be provided when adding a host?
 - A. admin user
-- B. root user
+* B. root user
 - C. ovirt user
 - D. vdsm user
 
-7. What is the role of the VDSM service on a KVM host?
+Q: 7. What is the role of the VDSM service on a KVM host?
 - A. It manages the PostgreSQL database
-- B. It acts as a host agent running continuously as a daemon on the KVM host
+* B. It acts as a host agent running continuously as a daemon on the KVM host
 - C. It provides the web-based administration interface
 - D. It handles SSL certificate generation
 
-8. What happens to a virtual machine if the oVirt engine goes offline?
+Q: 8. What happens to a virtual machine if the oVirt engine goes offline?
 - A. The VM automatically suspends
-- B. The VM continues to run on the KVM host
+* B. The VM continues to run on the KVM host
 - C. The VM is migrated to another host
 - D. The VM shuts down gracefully
 
-9. True or False: A single KVM host can belong to multiple Data Centers simultaneously.
+Q: 9. True or False: A single KVM host can belong to multiple Data Centers simultaneously.
 - A. True
-- B. False
+* B. False
 
-10. What must a KVM host's state be before it can be moved to a different cluster within the same Data Center?
+Q: 10. What must a KVM host's state be before it can be moved to a different cluster within the same Data Center?
 - A. Up
-- B. Maintenance
+* B. Maintenance
 - C. Non-Operational
 - D. Down
 
-11. Which service must be active on a KVM host for the OLVM engine to manage firewall rules?
+Q: 11. Which service must be active on a KVM host for the OLVM engine to manage firewall rules?
 - A. iptables
 - B. nftables
-- C. firewalld
+* C. firewalld
 - D. UFW
 
-12. What is the correct order of the OLVM resource hierarchy, from highest to lowest?
+Q: 12. What is the correct order of the OLVM resource hierarchy, from highest to lowest?
 - A. Cluster → Data Center → Host → VM
-- B. Data Center → Cluster → Host → VM
+* B. Data Center → Cluster → Host → VM
 - C. Host → Cluster → Data Center → VM
 - D. Data Center → Host → Cluster → VM
+```quiz
 
----
-
-### Section 3 — Answer Key
-
-| # | Answer | Explanation |
-|---|--------|-------------|
-| 1 | B | Oracle Linux 8.5 or later is required for KVM hosts |
-| 2 | B | Minimum is a 64-bit dual-core CPU |
-| 3 | B | Minimum is one NIC with 1 Gbps bandwidth |
-| 4 | B | Hosts are managed under Compute → Hosts |
-| 5 | A, C | Password and SSH key authentication are supported |
-| 6 | B | Root credentials are required when adding a host |
-| 7 | B | VDSM acts as a host agent daemon, mediating between the engine and KVM/libvirt |
-| 8 | B | VMs continue running — KVM handles execution independently |
-| 9 | B (False) | A host can only belong to one Data Center and one Cluster at a time |
-| 10 | B | The host must be in Maintenance mode before moving to a different cluster |
-| 11 | C | firewalld must be active; OLVM manages firewall rules through it |
-| 12 | B | Data Center → Cluster → Host → VM |
-
----
 
 ## Section 4: Networking, Storage & VM Administration
 *Review after VMs are running and network/storage are verified*
 
-1. What are logical networks in OLVM?
+```quiz
+Q: 1. What are logical networks in OLVM?
 - A. Physical network cables
-- B. Representations of network resources that provide connectivity for KVM virtual machines
+* B. Representations of network resources that provide connectivity for KVM virtual machines
 - C. Virtual switches only
 - D. Network security policies
 
-2. What is the name of the default logical network automatically created during OLVM setup?
+Q: 2. What is the name of the default logical network automatically created during OLVM setup?
 - A. default_network
-- B. ovirtmgmt
+* B. ovirtmgmt
 - C. vm_network
 - D. management_bridge
 
-3. Which three are valid Storage Domain types in OLVM? (Choose 3)
-- A. Data
+Q: 3. Which three are valid Storage Domain types in OLVM? (Choose 3)
+* A. Data
 - B. Boot
-- C. ISO
-- D. Export
+* C. ISO
+* D. Export
 - E. Template
 
-4. Can a storage domain be shared between multiple Data Centers?
+Q: 4. Can a storage domain be shared between multiple Data Centers?
 - A. Yes, freely shared
-- B. No, storage domains cannot be shared between different OLVM Data Centers
+* B. No, storage domains cannot be shared between different OLVM Data Centers
 - C. Only ISO domains can be shared
 - D. Only with special configuration
 
-5. What is the Storage Pool Manager (SPM)?
+Q: 5. What is the Storage Pool Manager (SPM)?
 - A. A physical storage device
-- B. A management role assigned to one host in the Data Center
+* B. A management role assigned to one host in the Data Center
 - C. A type of storage domain
 - D. A backup application
 
-6. How many hosts can have the SPM role in a single Data Center at one time?
+Q: 6. How many hosts can have the SPM role in a single Data Center at one time?
 - A. All hosts share the SPM role equally
-- B. Only one host at a time
+* B. Only one host at a time
 - C. Two hosts for redundancy
 - D. Up to five hosts
 
-7. What storage requirement must be met for VMs to be migrated between hosts?
+Q: 7. What storage requirement must be met for VMs to be migrated between hosts?
 - A. Each host needs local storage
-- B. VMs must share the same storage domain accessible by both hosts
+* B. VMs must share the same storage domain accessible by both hosts
 - C. Storage must be SSD-based
 - D. VMs must use iSCSI only
 
-8. Which storage type does NOT support VM live migration or high availability?
+Q: 8. Which storage type does NOT support VM live migration or high availability?
 - A. NFS
 - B. iSCSI
 - C. Fibre Channel
-- D. Local Storage
+* D. Local Storage
 
-9. What is an OVA file?
+Q: 9. What is an OVA file?
 - A. An Oracle Virtualization Agent
-- B. An Open Virtualization Archive — a portable VM package containing disk images and configuration
+* B. An Open Virtualization Archive — a portable VM package containing disk images and configuration
 - C. An Operating Virtual Appliance log file
 - D. An OLVM Version Archive for backups
 
-10. What is the difference between thin provisioning and pre-allocated disk provisioning?
+Q: 10. What is the difference between thin provisioning and pre-allocated disk provisioning?
 - A. Thin provisioning is faster but uses more space
-- B. Thin provisioning allocates disk space only as data is written; pre-allocated reserves all space upfront
+* B. Thin provisioning allocates disk space only as data is written; pre-allocated reserves all space upfront
 - C. Pre-allocated provisioning is only available for NFS storage
 - D. There is no difference — they are the same
 
-11. What does cloud-init do when a VM is created from a template?
+Q: 11. What does cloud-init do when a VM is created from a template?
 - A. Installs the hypervisor on the host
-- B. Configures the VM on first boot — sets hostname, user accounts, networking, and runs custom scripts
+* B. Configures the VM on first boot — sets hostname, user accounts, networking, and runs custom scripts
 - C. Creates a backup of the template
 - D. Manages the storage domain
 
-12. Can a Data Center be initialized without a storage domain attached?
+Q: 12. Can a Data Center be initialized without a storage domain attached?
 - A. Yes, storage is optional
-- B. No, at least one storage domain must be attached before initialization
+* B. No, at least one storage domain must be attached before initialization
 - C. Only in test environments
 - D. Only for Self-Hosted Engine deployments
+```
 
----
-
-### Section 4 — Answer Key
-
-| # | Answer | Explanation |
-|---|--------|-------------|
-| 1 | B | Logical networks are virtual network representations providing VM connectivity |
-| 2 | B | ovirtmgmt is the default management network created during engine-setup |
-| 3 | A, C, D | Data (VM disks/templates/snapshots), ISO (installation media), Export (import/export VMs) |
-| 4 | B | Storage domains are isolated per Data Center — cannot be shared |
-| 5 | B | SPM is a management role assigned to one host per Data Center |
-| 6 | B | Only one host holds the SPM role at a time; if it fails, another host takes over automatically |
-| 7 | B | Source and destination hosts must access the same storage domain (shared storage) |
-| 8 | D | Local storage does not support migration or HA — it creates a single-host cluster |
-| 9 | B | OVA = Open Virtualization Archive, containing disk images, configuration, and metadata |
-| 10 | B | Thin provisioning allocates space on demand; pre-allocated reserves all space immediately |
-| 11 | B | Cloud-init runs on first boot to configure hostname, users, networking, and custom scripts |
-| 12 | B | At least one storage domain must be attached before the Data Center can initialize |
-
----
 
 ## Section 5: VM Lifecycle, Migration & Operations
 *Review after live migration is completed and verified*
 
-1. What are the prerequisites for live migrating a VM between hosts? (Choose 3)
-- A. Both hosts must be in the same cluster
-- B. Both hosts must have access to the shared storage domain
+```quiz
+Q: 1. What are the prerequisites for live migrating a VM between hosts? (Choose 3)
+* A. Both hosts must be in the same cluster
+* B. Both hosts must have access to the shared storage domain
 - C. The VM must be powered off
-- D. The logical network used by the VM must be available on both hosts
+* D. The logical network used by the VM must be available on both hosts
 - E. The hosts must have different CPU types
 
-2. What is the correct order of phases during a live migration?
+Q: 2. What is the correct order of phases during a live migration?
 - A. Stop-and-copy → Pre-copy → Activation
-- B. Pre-copy → Iterative dirty page copy → Stop-and-copy → Activation on destination
+* B. Pre-copy → Iterative dirty page copy → Stop-and-copy → Activation on destination
 - C. Activation → Pre-copy → Stop-and-copy
 - D. Snapshot → Copy → Restore
 
-3. During live migration, does the VM experience any downtime?
+Q: 3. During live migration, does the VM experience any downtime?
 - A. Yes, the VM is offline for several minutes
-- B. No downtime — the VM continues running throughout with only a brief pause during final sync
+* B. No downtime — the VM continues running throughout with only a brief pause during final sync
 - C. The VM must be rebooted after migration
 - D. Downtime depends on the storage type used
 
-4. VMs can be migrated between which levels of the OLVM hierarchy?
+Q: 4. VMs can be migrated between which levels of the OLVM hierarchy?
 - A. Between Data Centers
 - B. Between Clusters within the same Data Center
-- C. Between hosts within the same Cluster
+* C. Between hosts within the same Cluster
 - D. Between any hosts regardless of hierarchy
 
-5. What happens to a VM's IP address after live migration to a different host?
+Q: 5. What happens to a VM's IP address after live migration to a different host?
 - A. The IP address changes to match the new host
-- B. The IP address stays the same — the VM retains its network identity
+* B. The IP address stays the same — the VM retains its network identity
 - C. The VM loses network connectivity
 - D. A new IP must be manually assigned
 
-6. Which migration type requires the VM to be stopped before moving?
+Q: 6. Which migration type requires the VM to be stopped before moving?
 - A. Live Migration
-- B. Offline Migration
+* B. Offline Migration
 - C. Automatic Migration
 - D. Hot Migration
 
-7. What should you do before performing maintenance on a KVM host that is running VMs?
+Q: 7. What should you do before performing maintenance on a KVM host that is running VMs?
 - A. Shut down all VMs manually
-- B. Put the host in Maintenance mode — OLVM will automatically migrate VMs to other hosts
+* B. Put the host in Maintenance mode — OLVM will automatically migrate VMs to other hosts
 - C. Disconnect the storage domain first
 - D. Remove the host from the cluster
 
-8. If the SPM host fails during a migration, what happens?
+Q: 8. If the SPM host fails during a migration, what happens?
 - A. All VMs in the Data Center stop running
-- B. OLVM automatically selects a new SPM from the remaining hosts
+* B. OLVM automatically selects a new SPM from the remaining hosts
 - C. The storage domain becomes read-only
 - D. You must manually reinstall the storage domain
 
-9. Which three are valid VM "Run Options" in OLVM? (Choose 3)
-- A. Run Once
+Q: 9. Which three are valid VM "Run Options" in OLVM? (Choose 3)
+* A. Run Once
 - B. Run and Pause
 - C. Run as Stateless
 - D. Run in Cloud-Init mode
 - E. Run on High Priority
 
-10. What disk format allows for thin provisioning in OLVM?
+Q: 10. What disk format allows for thin provisioning in OLVM?
 - A. Raw
-- B. QCOW2
+* B. QCOW2
 - C. VMDK
 - D. ISO
 
-11. Which component provides the Data Warehouse (DWH) historical data used by the Monitoring Portal?
+Q: 11. Which component provides the Data Warehouse (DWH) historical data used by the Monitoring Portal?
 - A. VDSM
-- B. The ovirt_engine_history database
+* B. The ovirt_engine_history database
 - C. The SPM host
 - D. engine-config
 
-12. Which three are valid migration policies in OLVM Cluster settings? (Choose 3)
-- A. Minimal Downtime
+Q: 12. Which three are valid migration policies in OLVM Cluster settings? (Choose 3)
+* A. Minimal Downtime
 - B. Suspend and Resume
 - C. Post-copy
 - D. Pre-copy
 - E. Legacy
-
----
-
-### Section 5 — Answer Key
-
-| # | Answer | Explanation |
-|---|--------|-------------|
-| 1 | A, B, D | Same cluster, shared storage, and matching logical networks are required. The VM must be running (not off), and hosts must have compatible (not different) CPU types |
-| 2 | B | Pre-copy memory → iteratively copy dirty pages → brief stop-and-copy → activate on destination |
-| 3 | B | Live migration is designed for zero downtime — only a brief pause during the final sync |
-| 4 | C | VMs can only migrate between hosts within the same Cluster (same CPU type, storage, network) |
-| 5 | B | The VM retains its IP address, MAC address, and network identity after migration |
-| 6 | B | Offline migration requires the VM to be stopped, then moved to the destination host |
-| 7 | B | Putting a host in Maintenance mode triggers automatic migration of all VMs to other hosts in the cluster |
-| 8 | B | OLVM automatically reassigns the SPM role to another available host |
-| 9 | A, C, D | Run Once (one-time boot settings), Stateless (reverts to snapshot on shutdown), Cloud-Init mode (first-boot configuration) |
-| 10 | B | QCOW2 format supports thin provisioning; Raw format is pre-allocated |
-| 11 | B | The ovirt_engine_history database stores historical data used by Grafana dashboards |
-| 12 | A, C, E | Minimal Downtime, Post-copy, and Legacy are valid migration policies |
-
----
-
-## Score Interpretation
-
-| Score | Rating | Recommendation |
-|-------|--------|----------------|
-| 55–60 correct | Excellent | Comprehensive mastery — ready for the exam |
-| 49–54 correct | Very Good | Strong understanding — review missed topics |
-| 43–48 correct | Good | Solid foundation — targeted review needed |
-| 37–42 correct | Fair | Review weak sections before exam |
-| Below 37 | Needs Review | Retake the lab and review all sections |
-
----
+```
+ 
 
 ## Key Topics to Remember for Exam 1Z0-1170
 
@@ -523,6 +449,12 @@ VM Lifecycle & Migration:
 - Cloud-init runs on first boot only
 - Maintenance mode auto-migrates VMs off a host
 
----
+## Learn More
 
-*This quiz bank is designed for use with Training 2: OLVM Advanced + Partner Bootcamp Prep. Questions are aligned with the 1Z0-1170 exam objectives and mapped to the hands-on lab sections.*
+- Oracle Linux Virtualization Document :https://docs.oracle.com/en/virtualization/oracle-linux-virtualization-manager/
+
+## Acknowledgements
+
+- **Author** - Perside Foster 
+- **Contributors** - Perside Foster
+- **Last Updated By/Date** - Perside Foster , April 1, 2026

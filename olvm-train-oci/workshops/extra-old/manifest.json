@@ -1,10 +1,10 @@
 {
-  "workshoptitle": "OLVM Trainnig Quiz Bank",
+  "workshoptitle": "Get started with OLVM Extra",
     "help": "livelabs-help-oci_us@oracle.com",
     "tutorials": [
         {
           "title": "OLVM Extra",
-          "filename": "../../olvm-quizzes/olvm-quizzes.md"
+          "filename": "../../olvm-extra/olvm-extra.md"
         },
       
         {
