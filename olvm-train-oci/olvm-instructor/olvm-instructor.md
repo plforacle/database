@@ -1,6 +1,6 @@
 # OLVM Live Instructor Companion — 1-Page Version with Exact Quiz Stops
 
-## Purpose
+## Introduction
 Use this as a **thin instructor overlay** while teaching the Luna lab live on a shared screen. Students already have the explanations in the Luna left pane, and both students and instructor also have access to the quiz page. Your job is to control **pace, checkpoints, quiz moments, recovery, and verbal emphasis**.
 
 Quiz source: attached OLVM quiz bank.

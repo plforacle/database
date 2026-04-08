@@ -1,5 +1,7 @@
 # OLVM Exam Practice Quiz Bank
-## 60 Questions Mapped to Exam 1Z0-1170 — Oracle Linux Virtualization Manager Associate
+## Introduction
+
+60 Questions Mapped to Exam 1Z0-1170 — Oracle Linux Virtualization Manager Associate
 
 ### How to Use This Quiz Bank
 
