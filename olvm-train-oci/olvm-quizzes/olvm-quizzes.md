@@ -1,7 +1,7 @@
 # OLVM Exam Practice Quiz Bank
-### 60 Questions Mapped to Exam 1Z0-1170 — Oracle Linux Virtualization Manager Associate
+## 60 Questions Mapped to Exam 1Z0-1170 — Oracle Linux Virtualization Manager Associate
 
- ### How to Use This Quiz Bank
+### How to Use This Quiz Bank
 
 This quiz bank is designed to be reviewed during OLVM training, with each section mapped to a lab part. Review each section after completing the corresponding hands-on lab section.
 
@@ -131,7 +131,7 @@ Q: 6. Which five components does engine-setup configure automatically? (Choose 5
 * A. PostgreSQL database
 * B. Apache/Tomcat web server
 * C. SSL certificates
-- D. Firewall rules
+* D. Firewall rules
 * E. admin@ovirt user
 - F. KVM hypervisor on the local server
 - G. DNS server
@@ -205,7 +205,7 @@ Q: 4. Where in the Administration Portal do you add a new KVM host?
 Q: 5. Which two authentication methods can be used when adding a KVM host? (Choose 2)
 * A. Password authentication
 - B. Kerberos
-- C. SSH key authentication
+* C. SSH key authentication
 - D. Certificate authentication
 
 Q: 6. For which user account must authentication credentials be provided when adding a host?
@@ -247,7 +247,7 @@ Q: 12. What is the correct order of the OLVM resource hierarchy, from highest to
 * B. Data Center → Cluster → Host → VM
 - C. Host → Cluster → Data Center → VM
 - D. Data Center → Host → Cluster → VM
-```quiz
+```
 
 
 ## Section 4: Networking, Storage & VM Administration
@@ -385,9 +385,9 @@ Q: 8. If the SPM host fails during a migration, what happens?
 Q: 9. Which three are valid VM "Run Options" in OLVM? (Choose 3)
 * A. Run Once
 - B. Run and Pause
-- C. Run as Stateless
+* C. Run as Stateless
 - D. Run in Cloud-Init mode
-- E. Run on High Priority
+* E. Run on High Priority
 
 Q: 10. What disk format allows for thin provisioning in OLVM?
 - A. Raw
@@ -403,10 +403,10 @@ Q: 11. Which component provides the Data Warehouse (DWH) historical data used by
 
 Q: 12. Which three are valid migration policies in OLVM Cluster settings? (Choose 3)
 * A. Minimal Downtime
-- B. Suspend and Resume
+* B. Suspend and Resume
 - C. Post-copy
 - D. Pre-copy
-- E. Legacy
+* E. Legacy
 ```
  
 
@@ -421,7 +421,7 @@ Engine:
 - Minimum OL 8.5; runs on WildFly + PostgreSQL
 - `engine-setup` configures database, web server, certs, firewall, admin user
 - Standalone minimum RAM = 4 GB; Self-Hosted minimum RAM = 16 GB
-- Two databases: ovirt_engine + ovirt_engine_history
+- Two databases: ovirt\_engine + ovirt\_engine\_history
 
 Hosts & Clusters:
 - Host added via Compute → Hosts; requires root SSH access
