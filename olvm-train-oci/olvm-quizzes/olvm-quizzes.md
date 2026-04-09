@@ -181,8 +181,8 @@ Q: 12. Where are the OLVM Engine log files located?
 
 ```quiz
 Q: 1. What is the minimum Oracle Linux version required for a KVM host?
-* A. Oracle Linux 7.5
-- B. Oracle Linux 8.5 or later
+- A. Oracle Linux 7.5
+* B. Oracle Linux 8.8 or later
 - C. Oracle Linux 9.0
 - D. Oracle Linux 8.0
 
