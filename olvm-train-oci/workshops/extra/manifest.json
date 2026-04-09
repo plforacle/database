@@ -2,10 +2,6 @@
   "workshoptitle": "OLVM Trainnig Quiz Bank",
     "help": "livelabs-help-oci_us@oracle.com",
     "tutorials": [
-      {
-          "title": "OLVM Instructor",
-          "filename": "../../olvm-instructor/olvm-instructor.md"
-      },
 
       {
           "title": "OLVM Quizzes",
