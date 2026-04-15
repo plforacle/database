@@ -7,12 +7,52 @@
                  "../../variables/variables-in-another-file.json"],
     "help": "livelabs-help-**enterarea**_us@oracle.com",
     "tutorials": [
+
         {
-            "title": "Introduction",
-            "description": "The Introduction is always first. The title and contents menu title match for the Introduction.",
-            "filename": "../../introduction/introduction.md"
+        "title": "Introduction",
+        "filename": "../../introduction/introduction.md"
         },
-    
+
+        {
+        "title": "Lab 1: Review Architecture",
+        "filename": "../../review-architecture/review-architecture.md"
+        },
+
+        {
+        "title": "Lab 2: Prepare OCI",
+        "filename": "../../prepare-oci/prepare-oci.md"
+        },
+
+        {
+        "title": "Lab 3: Deploy OCVS",
+        "filename": "../../deploy-ocvs/deploy-ocvs.md"
+        },
+
+        {
+        "title": "Lab 4: Prepare Source VM",
+        "filename": "../../prepare-source-vm/prepare-source-vm.md"
+        },
+
+        {
+        "title": "Lab 5: Prepare OLVM",
+        "filename": "../../prepare-olvm/prepare-olvm.md"
+        },
+
+        {
+        "title": "Lab 6: Prepare OCM",
+        "filename": "../../prepare-ocm/prepare-ocm.md"
+        },
+
+        {
+        "title": "Lab 7: Migrate VM",
+        "filename": "../../migrate-vm/migrate-vm.md"
+        },
+
+        {
+        "title": "Lab 8: Validate Migration",
+        "filename": "../../validate-migration/validate-migration.md"
+        },
+
         {
             "title": "Need Help?",
             "description": "Solutions to Common Problems and Directions for Receiving Live Help",
