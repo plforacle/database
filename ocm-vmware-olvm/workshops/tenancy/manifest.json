@@ -14,42 +14,37 @@
         },
 
         {
-        "title": "Lab 1: Review Architecture",
-        "filename": "../../review-architecture/review-architecture.md"
-        },
-
-        {
-        "title": "Lab 2: Prepare OCI",
+        "title": "Lab 1: Prepare OCI",
         "filename": "../../prepare-oci/prepare-oci.md"
         },
 
         {
-        "title": "Lab 3: Deploy OCVS",
+        "title": "Lab 2: Deploy OCVS",
         "filename": "../../deploy-ocvs/deploy-ocvs.md"
         },
 
         {
-        "title": "Lab 4: Prepare Source VM",
+        "title": "Lab 3: Prepare Source VM",
         "filename": "../../prepare-source-vm/prepare-source-vm.md"
         },
 
         {
-        "title": "Lab 5: Prepare OLVM",
+        "title": "Lab 4: Prepare OLVM",
         "filename": "../../prepare-olvm/prepare-olvm.md"
         },
 
         {
-        "title": "Lab 6: Prepare OCM",
+        "title": "Lab 5: Prepare OCM",
         "filename": "../../prepare-ocm/prepare-ocm.md"
         },
 
         {
-        "title": "Lab 7: Migrate VM",
+        "title": "Lab 6: Migrate VM",
         "filename": "../../migrate-vm/migrate-vm.md"
         },
 
         {
-        "title": "Lab 8: Validate Migration",
+        "title": "Lab 7: Validate Migration",
         "filename": "../../validate-migration/validate-migration.md"
         },
 

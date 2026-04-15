@@ -48,6 +48,13 @@ The workshop uses three main components:
 
 ## Task 3: Review OCVS Networking
 
+The following diagram shows how the OCVS single-host SDDC is deployed in OCI and how the NSX overlay network connects to the OCI VCN underlay.
+
+![OCVS Single Host SDDC Architecture](images/ocvs-architecture.png  "System Architecture")
+
+
+As you review the diagram, focus on the OCI VCN, subnets, and VLANs on the left, and the NSX Tier-0, Tier-1, and workload overlay network on the right.
+
 Oracle Cloud VMware Solution uses NSX-T for virtual networking inside the VMware environment. OCI provides the underlying cloud network, including the VCN, subnets, and VLANs.
 
 1. Review the OCI underlay networking components used by OCVS:
