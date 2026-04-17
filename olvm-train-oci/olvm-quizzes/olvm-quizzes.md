@@ -79,12 +79,13 @@ Q: 10. What is the relationship between VDSM and libvirt?
 - A. VDSM replaces libvirt completely
 - B. libvirt runs inside VDSM
 - C. They operate independently without interaction
-*  D. VDSM relies on libvirt to manage the lifecycle of VMs and  collect statistics
+* D. VDSM relies on libvirt to manage the lifecycle of VMs and  collect statistics
+
 Q: 11. What happens to running virtual machines if the oVirt engine goes offline?
 - A. All VMs are automatically suspended
 - B. VMs shut down gracefully
 - C. VMs are migrated to a standby host
-*  D. VMs continue to run on the KVM hosts
+* D. VMs continue to run on the KVM hosts
 
 Q: 12. Which application server does the oVirt engine run on?
 - A. Apache HTTP Server
@@ -107,7 +108,7 @@ Q: 1. What is the minimum Oracle Linux version required for installing the OLVM 
 Q: 2. Which two CPU technologies must be supported for the Engine host processor? (Choose 2)
 * A. Intel VT-x
 - B. Intel SGX
-- C. AMD-V
+* C. AMD-V
 - D. ARM TrustZone
 
 Q: 3. What are the RECOMMENDED hardware requirements for an OLVM Engine SMALL deployment? (Choose 3)
