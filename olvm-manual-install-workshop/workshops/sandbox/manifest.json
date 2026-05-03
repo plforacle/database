@@ -1,0 +1,36 @@
+{
+  "workshoptitle": "Build and Configure an OLVM on OCI Demo Environment",
+  "help": "livelabs-help-db_us@oracle.com",
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "description": "Workshop overview, assumptions, and the source-aligned lab flow for platform engineers.",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Lab 1: Build the OCI Network Foundation",
+      "description": "Create the compartment, VCN, security rules, network security group, and VLAN used by the OLVM demo environment.",
+      "filename": "../../build-oci-foundation/build-oci-foundation.md"
+    },
+    {
+      "title": "Lab 2: Provision the OLVM Engine and KVM Hosts",
+      "description": "Create the three instances, add the private and VLAN VNICs, and attach the shared block volumes.",
+      "filename": "../../provision-olvm-instances/provision-olvm-instances.md"
+    },
+    {
+      "title": "Lab 3: Install Oracle Linux Virtualization Manager",
+      "description": "Install the engine packages, run engine setup, import the CA certificate, and sign in to the administration portal.",
+      "filename": "../../install-olvm-engine/install-olvm-engine.md"
+    },
+    {
+      "title": "Lab 4: Onboard Hosts, Networks, and Storage",
+      "description": "Prepare the KVM hosts, add them to OLVM, assign the logical network, and attach Fibre Channel storage domains.",
+      "filename": "../../onboard-hosts-and-storage/onboard-hosts-and-storage.md"
+    },
+    {
+      "title": "Lab 5: Deploy and Access Virtual Machines",
+      "description": "Import templates, create a virtual machine, enable external access, and capture the optional DHCP and troubleshooting actions.",
+      "filename": "../../deploy-and-access-vms/deploy-and-access-vms.md"
+    }
+  ]
+}
