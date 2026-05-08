@@ -2,260 +2,206 @@
 
 ## Introduction
 
-In this part, you will add KVM hosts to your cluster and verify their integration with the OLVM engine. These hosts will run your virtual machines.
+In this lab, you will prepare both KVM hosts and add them to the OLVM default cluster. When the lab is complete, `olkvm01` and `olkvm02` should both reach `Up` status and be ready for networking, storage, and VM placement.
 
-Estimated Lab Time: 30–45 minutes
+**Estimated Lab Time:** 45-60 minutes, including host installation and status transitions.
 
 ### Objectives
 
 In this lab, you will:
-- Configure required repositories on both KVM hosts
-- Add both hosts (`olkvm01`, `olkvm02`) to the **Default** cluster in the Administration Portal
-- Verify both hosts reach **Up** status and know where to check logs if they do not
+
+- Configure the required repositories on both KVM hosts
+- Add `olkvm01` and `olkvm02` to the **Default** cluster in the Administration Portal
+- Wait for both hosts to reach **Up** status
+- Know where to check logs if host installation does not complete
 
 ### Prerequisites
 
 This lab assumes you have:
-- Completed the OLVM Engine installation and can log in to the **Administration Portal**
-- SSH connectivity from the Engine to both KVM hosts
-- Hostnames resolvable from the Engine (for example, `ssh olkvm01`, `ssh olkvm02`)
 
+- Completed the Lab 2 checkpoint
+- Access to the OLVM Administration Portal
+- A working manager desktop session through the Lab 2 SSH tunnel
+- SSH connectivity from `olvm` to both KVM hosts
 
+> **Important:** Do not start Lab 4 until both hosts show status `Up`. Starting network or storage tasks while a host is still installing can leave the environment inconsistent.
 
-### What You Will Build
+## Task 1: Configure the First KVM Host (`olkvm01`)
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     Part 2: Host Configuration                          │
-│                                                                         │
-│  ┌─────────────────┐      ┌─────────────────┐   ┌─────────────────┐     │
-│  │   OLVM Engine   │      │    olkvm01      │   │    olkvm02      │     │
-│  │     (olvm)      │      │   (KVM Host)    │   │   (KVM Host)    │     │
-│  │                 │      │                 │   │                 │     │
-│  │ • Admin Portal  │ ───> │ • VDSM Agent    │   │ • VDSM Agent    │     │
-│  │ • REST API      │      │ • libvirt/KVM   │   │ • libvirt/KVM   │     │
-│  │ • PostgreSQL    │      │ • Status: Up    │   │ • Status: Up    │     │
-│  └─────────────────┘      └─────────────────┘   └─────────────────┘     │
-│                                                                         │
-│  Hosts added to Default cluster; Ready for VMs                          │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+1. Open the **Terminal** application inside the manager desktop.
 
-### Steps
-
-1. Configure the first KVM host (olkvm01)
-2. Add the first KVM host to the cluster
-3. Configure the second KVM host (olkvm02)
-4. Add the second KVM host to the cluster
-
-
-
-## Task 1: Configure the First KVM Host (olkvm01)
-
-1. Open the VNC Activities Menu.
-
-2. Switch to the terminal within the VNC session.
-
-3. Connect via SSH to the olkvm01 instance(It takes a while to connect... just wait).
+2. Connect to `olkvm01`:
 
     ```bash
     <copy>ssh olkvm01</copy>
     ```
-    **Note:** All SSH commands using hostnames (e.g., `ssh olkvm01`) are executed from the OLVM engine, which has private DNS resolution for the cluster hosts.
 
-4. Install the Oracle Linux Virtualization Manager Release package.
+    The first SSH connection can take 2-5 minutes after provisioning or reboot. If the prompt does not appear immediately, wait before retrying.
+
+3. Install the OLVM release package:
 
     ```bash
     <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
     ```
 
-5. Clear the dnf cache.
+4. Install the required UEK kernel modules
+
+    ```bash
+    <copy>sudo dnf install -y kernel-uek-modules-extra</copy>
+    ```
+
+5. Clear the DNF cache:
 
     ```bash
     <copy>sudo dnf clean all</copy>
     ```
 
-6. Verify repositories are enabled.
+6. Verify that the repositories are visible:
 
     ```bash
     <copy>sudo dnf repolist</copy>
     ```
 
-7. Exit the session.
+7. Exit back to the manager host:
 
     ```bash
     <copy>exit</copy>
     ```
-   You should now be on the Manager host.
 
+## Task 2: Add `olkvm01` to the Cluster
 
+1. Switch to the **Administration Portal** in Firefox.
 
-## Task 2: Add KVM Host (olkvm01)
+2. Navigate to **Compute -> Hosts**.
 
-1. Switch to the Firefox browser within the VNC session.
+3. Click **New**.
 
-2. Log in to the Administration Portal.
+4. Select the **Default** data center from the **Host Cluster** drop-down list.
 
-3. Using the side navigation menu, go to **Compute** → **Hosts**.
-
-4. On the Hosts pane, click **New**.
-
-5. Select the **Default** data center from the Host Cluster drop-down list.
-
-    **OLVM hierarchy explained:**
-    ```
-    Data Center (physical location)
-        ↓
-    Cluster (group of hosts with same CPU type)
-        ↓
-    Hosts (physical servers running KVM)
-        ↓
-    Virtual Machines
-    ```
-
-    **Key points:**
-    - A **Data Center** is a logical container for clusters. It defines shared storage and networking. VMs can't migrate between data centers.
-    - A **Cluster** is a group of hosts that share the same CPU type, storage domains, and network configuration. It enables live migration and HA. Requires at least 2 hosts for HA features.
-    - `engine-setup` creates a "Default" data center with a "Default" cluster automatically.
-
-6. Enter a **display name** for the host in the Name field.
+5. For **Name**, enter:
 
     ```
     <copy>olkvm01</copy>
     ```
 
-7. In the **Hostname** field, enter the FQDN used for management traffic.
+6. For **Hostname**, enter the FQDN used for management traffic:
 
     ```
     <copy>vdsm01.priv.olv.oraclevcn.com</copy>
     ```
-    **Why this hostname:** This is the secondary VNIC (private subnet) used for OLVM management traffic, VM migration, and storage traffic. Separating management traffic from the public interface is a best practice for security and performance.
 
-8. Under Authentication, select the **SSH Public Key** authentication method.
+7. Under **Authentication**, select **SSH Public Key**.
 
-9. Switch to the terminal within the VNC session.
-
-10. Copy the SSH public key to the KVM host.
+8. Switch back to the terminal and copy the engine public key to the host:
 
     ```bash
     <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm01 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
     ```
-    **What this does:** Enables passwordless SSH access from the engine to the KVM host. The engine needs this to install VDSM, deploy configurations, and manage the host.
 
-11. Switch back to the Firefox browser and Administration Portal.
+9. Return to the browser and click **OK**.
 
-12. Click **OK**. The Power Management Configuration screen displays.
+10. When the **Power Management Configuration** dialog appears, click **OK** again. OCI instances do not use power management in this lab.
 
-13. Click **OK** (OCI instances do not allow configuring power management).
+11. The host status moves through **Installing** and **Initializing** before it reaches **Up**.
 
-    The panel updates and adds the new host. The status will show as **Installing** while the engine installs VDSM and other required packages on the host.
+    **Expected time:** 10-20 minutes.
 
-    **What happens during host installation:** The engine automatically connects via SSH, installs VDSM and dependencies (vdsm, vdsm-client, libvirt, qemu-kvm), deploys certificates, configures the management network (ovirtmgmt bridge), starts services, configures the firewall, and verifies connectivity before marking the host as "Up".
+    If the host stays in **Installing** or **Initializing** for more than 25 minutes, or changes to **Non Operational**, stop and review:
 
-    **Host status meanings:**
-    - **Installing** — VDSM and packages being installed
-    - **Initializing** — Services starting, network configuring
-    - **Up** — Host is ready to run VMs
-    - **Non Operational** — Host has issues (check logs)
-    - **Maintenance** — Host is intentionally offline for updates
+    - `/var/log/ovirt-engine/engine.log` on the manager
+    - `/var/log/vdsm/vdsm.log` on the host
 
-    **Troubleshooting tip:** If installation fails, check `/var/log/ovirt-engine/engine.log` on the engine and `/var/log/vdsm/vdsm.log` on the host.
+12. After a KVM host is added to a cluster, do not make ad hoc network changes in OCI, NetworkManager, or `/etc/sysconfig/network-scripts/`.
 
-    **Important:** After a KVM host is added to a cluster, avoid any spontaneous changes to the network configuration in `/etc/sysconfig/network-scripts/`, through NetworkManager (e.g., nmcli), or in OCI.
+13. Wait for `olkvm01` to show status **Up** before you continue.
 
-14. **Wait for the host status to show as Up** before continuing.
+## Task 3: Configure the Second KVM Host (`olkvm02`)
 
-
-## Task 3: Configure the Second KVM Host (It takes a while to connect... just wait)
-
-Repeat the same process for the second KVM host.
-
-1. Switch to the terminal within the VNC session.
-
-2. Connect via SSH to olkvm02.
+1. From the manager terminal, connect to `olkvm02`:
 
     ```bash
     <copy>ssh olkvm02</copy>
     ```
 
-3. Install the OLVM Release package.
+2. Install the OLVM release package:
 
     ```bash
     <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
     ```
 
-4. Clear the dnf cache.
+3. Install the required UEK kernel modules
+
+    ```bash
+    <copy>sudo dnf install -y kernel-uek-modules-extra</copy>
+    ```
+
+4. Clear the DNF cache:
 
     ```bash
     <copy>sudo dnf clean all</copy>
     ```
 
-5. Verify repositories.
+5. Verify that the repositories are visible:
 
     ```bash
     <copy>sudo dnf repolist</copy>
     ```
 
-6. Exit the session.
+6. Exit back to the manager host:
 
     ```bash
     <copy>exit</copy>
     ```
 
+## Task 4: Add `olkvm02` to the Cluster
 
+1. In the **Administration Portal**, navigate to **Compute -> Hosts -> New**.
 
-## Task 4: Add KVM Host (olkvm02)
+2. Select the **Default** data center from the **Host Cluster** drop-down list.
 
-> Repeat the process from Task 2. Refer to that task for detailed explanations.
-
-1. From the Administration Portal, go to **Compute** → **Hosts** → **New**.
-
-2. Select the **Default** data center from the Host Cluster drop-down list.
-
-3. Enter the host name:
+3. For **Name**, enter:
 
     ```
     <copy>olkvm02</copy>
     ```
 
-4. Enter the hostname:
+4. For **Hostname**, enter:
 
     ```
     <copy>vdsm02.priv.olv.oraclevcn.com</copy>
     ```
 
-5. Under Authentication, select **SSH Public Key**.
+5. Under **Authentication**, select **SSH Public Key**.
 
-6. Switch to the terminal and copy the SSH public key:
+6. Switch to the terminal and copy the engine public key to the host:
 
     ```bash
     <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm02 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
     ```
 
-7. Switch back to the browser. Click **OK** → **OK** (power management).
+7. Return to the browser and click **OK**, then click **OK** again in the power management dialog.
 
-8. **Wait for the host status to show as Up** before continuing.
+8. Wait for `olkvm02` to show status **Up** before you continue.
 
+    Use the same 10-20 minute expectation and the same troubleshooting guidance from Task 2 if the host does not finish installation cleanly.
 
-
-### ✅ Configure KVM Cluster Checkpoint
+### Configure KVM Cluster Checkpoint
 
 At this point, you should have:
-- ✓ Both olkvm01 and olkvm02 showing status **Up** in the Hosts pane
-- ✓ Both hosts in the Default cluster
-- ✓ VDSM running on both hosts
 
+- `olkvm01` showing status **Up**
+- `olkvm02` showing status **Up**
+- Both hosts in the **Default** cluster
+- No host installation tasks still running
 
-
+You are ready for Lab 4 only when all checkpoint items above are complete.
 
 ## Learn More
 
-- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
-- Oracle Luna Labs: https://luna.oracle.com/ 
-
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest 
+- **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster , April 1, 2026
+- **Last Updated By/Date** - Perside Foster, May 6, 2026

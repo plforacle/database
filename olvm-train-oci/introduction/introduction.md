@@ -1,65 +1,73 @@
 # Oracle Linux Virtualization Manager (OLVM) on OCI
-## About this Workshop
 
-Oracle Virtualization provides a high-performance, cost-effective, open-source server virtualization solution that includes KVM virtualization and management capabilities. In this workshop, you will deploy Oracle Linux Virtualization Manager (OLVM) and complete core administration tasks including host/cluster setup, networking, storage, and VM lifecycle management. An optional application tier is included to demonstrate a realistic workload and live migration.
+## Introduction
 
-**Estimated Time:** 4–5 hours (hands-on) 
+Oracle Linux Virtualization Manager (OLVM) provides KVM-based virtualization and centralized management for Oracle Linux environments. In this workshop, you will deploy OLVM on Oracle Cloud Infrastructure (OCI) and complete core administration tasks including host onboarding, networking, storage, virtual machine lifecycle management, user management, and live migration.
 
+**Estimated Workshop Time:** 4-5 hours of hands-on work, including wait time for OCI provisioning, package installation, OVA downloads, and host registration.
 
-## Lab Structure
+## Audience and Delivery Model
 
-This workshop is organized into 9 progressive stages:
+This workshop is designed for instructor-led enablement sessions for Oracle solution engineers and partners. It has been validated in guided delivery.
 
-1. **Setup OCI Infrastructure** — Create the OCI OLVM objects  
-2. **Deploy OLVM Engine** — Install Oracle Linux Virtualization Manager on a dedicated host with Administration Portal access
-3. **Configure KVM Cluster** — Add two KVM hosts (olkvm01, olkvm02) with VDSM agents to form a high-availability cluster
-4. **Set Up Networking** — Create the `l2-vm-network` logical network and assign it to both hosts
-5. **Configure Storage** — Add a Fibre Channel storage domain for VM disks and templates
-6. **Import Templates** — Download and import an Oracle Linux 9 OVA template
-7. **Create a Test VM** — Deploy a virtual machine (ol9-vm1 at 10.0.10.105) from the template to verify the infrastructure
-8. **Import Application VMs** — Import pre-built OVA files to deploy ol9-mysql (10.0.10.100) and ol9-webapp (10.0.10.101) with no manual installation required
-9. **Live Migration** — Migrate a running VM between hosts with zero downtime
+If you complete the workshop outside a guided session, use each checkpoint before moving on. Do not assume a later lab can be started safely while an earlier lab is still provisioning resources.
 
-**End Result:** A fully functional OLVM cluster running distributed VMs with an Employee Directory web application.
+## Workshop Flow
 
+This workshop is organized into the following labs:
 
+1. **Lab 1: Setup OCI Infrastructure** - Provision the bootstrap instance and use Ansible to create the OLVM manager and KVM hosts.
+2. **Lab 2: Deploy OLVM Engine** - Connect securely to the manager desktop, install the OLVM engine, and validate portal access.
+3. **Lab 3: Configure KVM Cluster** - Add `olkvm01` and `olkvm02` to the default cluster and wait for both hosts to reach `Up`.
+4. **Lab 4: Set Up Networking, Storage, and VM** - Create the VM network, add shared storage, import the Oracle Linux template, and validate the first VM.
+5. **Lab 5: Deploy Multi Tier Application** - Import the application OVAs, power on the database and web application VMs, and validate connectivity.
+6. **Lab 6: Perform Live Migration** - Migrate a running VM between hosts with no planned downtime.
+7. **Lab 7: Manage Users and Roles** - Create users and validate role-based access within OLVM.
+8. **Lab 8: Configure OCI NAT Gateway for VM Internet Access** - Create a NAT Gateway, add a route table, and associate it with the VLAN for outbound VM connectivity.
 
+**End Result:** A working OLVM deployment on OCI with a two-host KVM cluster, shared storage, multiple virtual machines, and a running Employee Directory application.
+
+## Workshop Rules
+
+Follow these rules throughout the workshop:
+
+- Complete the labs in order.
+- Do not start Lab 4 until both KVM hosts in Lab 3 show status `Up`.
+- Do not start Lab 5 until Lab 4 confirms the logical network, storage domain, template import, and test VM are all working.
+- Treat the documented wait times as part of the workshop. Long-running tasks are expected.
+- If a step runs materially longer than the documented range and you cannot verify progress, stop and contact the instructor or workshop owner before changing the environment manually.
 
 ## Objectives
 
 In this workshop, you will:
 
 - Deploy Oracle Linux Virtualization Manager (OLVM) Engine and verify portal access
-- Add and configure KVM hosts into a cluster
+- Add and configure KVM hosts in a cluster
 - Configure logical networking for virtual machines
+- Configure OCI outbound internet access for VLAN-based virtual machines
 - Configure shared storage domains and import VM templates
 - Deploy and validate virtual machines
 - Deploy a multi-tier application and perform live migration
-
-
+- Review OLVM user and role administration
 
 ## Prerequisites
 
 This workshop assumes you have:
 
-- Access to an Oracle Cloud Infrastructure Tenancy and account
-- Tiger VNC Client
-- 4–5 hours available for the hands-on portion 
-- A note-taking tool (you will record IP addresses) 
-- Basic familiarity with Linux command line usage, SSH, and terminal workflows 
-- No Java or application development experience is required (deployment is scripted) 
-
-
+- Access to an Oracle Cloud Infrastructure tenancy and the target compartment for the lab
+- Permission to create OCI networking, compute, and storage resources required by the workshop
+- A local SSH client and local PowerShell terminal
+- TigerVNC Viewer installed on your local machine for the OLVM manager desktop session
+- 4-5 hours available for the hands-on portion
+- A note-taking tool for recording hostnames, IP addresses, and credentials
+- Basic familiarity with Linux command line usage, SSH, and terminal workflows
 
 ## Learn More
 
-- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
-- Oracle Luna Labs: https://luna.oracle.com/ 
-
-
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest 
+- **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster , April 1, 2026
+- **Last Updated By/Date** - Perside Foster, May 6, 2026

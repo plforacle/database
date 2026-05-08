@@ -1,58 +1,61 @@
 {
   "workshoptitle": "Oracle Linux Virtualization Manager (OLVM) on OCI",
-    "help": "livelabs-help-oci_us@oracle.com",
-    "tutorials": [
-        {
-            "title": "Introduction",
-            "description": "The Introduction is always second. The title and contents menu title match for the Introduction.",
-            "filename": "../../introduction/introduction.md"
-        },
-
-        {
-          "title": "Get Started",
-          "description": "Prerequisites for LiveLabs (Oracle-owned tenancies). The title of the lab and the Contents Menu title (the title above) match for Prerequisite lab. This lab is always first.",
-          "filename": "https://oracle-livelabs.github.io/common/labs/cloud-login/cloud-login.md"
-        },
-
-        {
-          "title": "Lab 1: Setup OCI Infrastructure",
-          "filename": "../../infrastructure/infrastructure.md"
-        },
-
-        {
-          "title": "Lab 2: Deploy OLVM Engine",
-          "filename": "../../olvm-engine/olvm-engine.md"
-        },
-   
-        {
-          "title": "Lab 3: Configure KVM Cluster",
-          "filename": "../../kvm-cluster/kvm-cluster.md"
-        },
-
-        {
-          "title": "Lab 4: Set Up Networking, Storage, and VM",
-          "filename": "../../network-storage-vm/network-storage-vm.md"
-        },
-
-
-        {
-          "title": "Lab 5: Deploy Multi Tier Application",
-          "filename": "../../application/application.md"
-        },
-
-        {
-          "title": "Lab 6: Perform Live Migration",
-          "filename": "../../migration/migration.md"
-        },
-
-        {
-          "title": "Lab 7: Manage Users and Roles",
-          "filename": "../../olvm-users/olvm-users.md"
-        },
-      
-        {
-            "title": "Need Help?",
-            "description": "Solutions to Common Problems and Directions for Receiving Live Help",
-            "filename":"https://oracle-livelabs.github.io/common//labs/need-help/need-help-freetier.md"          }
-    ]
+  "help": "livelabs-help-oci_us@oracle.com",
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "description": "Workshop audience, prerequisites, sequencing rules, and expected outcomes.",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Get Started",
+      "description": "Sign in to OCI and confirm access to the tenancy and compartment used for this workshop.",
+      "filename": "https://oracle-livelabs.github.io/common/labs/cloud-login/cloud-login.md"
+    },
+    {
+      "title": "Lab 1: Setup OCI Infrastructure",
+      "description": "Create the bootstrap environment, run the provisioning playbook, and verify the OLVM hosts.",
+      "filename": "../../infrastructure/infrastructure.md"
+    },
+    {
+      "title": "Lab 2: Deploy OLVM Engine",
+      "description": "Open the manager desktop securely, install OLVM Engine, and validate portal access.",
+      "filename": "../../olvm-engine/olvm-engine.md"
+    },
+    {
+      "title": "Lab 3: Configure KVM Cluster",
+      "description": "Add both KVM hosts to the default cluster and wait for them to reach Up status.",
+      "filename": "../../kvm-cluster/kvm-cluster.md"
+    },
+    {
+      "title": "Lab 4: Set Up Networking, Storage, and VM",
+      "description": "Create the VM network, add storage, import the template, and validate a test VM.",
+      "filename": "../../network-storage-vm/network-storage-vm.md"
+    },
+    {
+      "title": "Lab 5: Deploy Multi Tier Application",
+      "description": "Import the application OVAs, start the VMs, and verify the Employee Directory application.",
+      "filename": "../../application/application.md"
+    },
+    {
+      "title": "Lab 6: Perform Live Migration",
+      "description": "Migrate a running virtual machine between hosts and validate continuity.",
+      "filename": "../../migration/migration.md"
+    },
+    {
+      "title": "Lab 7: Manage Users and Roles",
+      "description": "Create users, assign roles, and verify role-based access in OLVM.",
+      "filename": "../../olvm-users/olvm-users.md"
+    },
+    {
+      "title": "Lab 8: Configure OCI NAT Gateway for VM Internet Access",
+      "description": "Create a NAT Gateway, add a route table, and associate it with the VLAN for outbound VM connectivity.",
+      "filename": "../../oci-nat-gateway/oci-nat-gateway.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Troubleshooting resources and directions for getting assistance during the workshop.",
+      "filename": "https://oracle-livelabs.github.io/common/labs/need-help/need-help-freetier.md"
+    }
+  ]
 }

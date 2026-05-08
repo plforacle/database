@@ -1,246 +1,227 @@
-# Deploy OLVM Engine 
+# Deploy OLVM Engine
 
 ## Introduction
 
-In this lab, you will connect to the OLVM Manager host using a secure SSH tunnel to VNC, install the required OLVM Engine packages, run `engine-setup`, and then validate access to the Engine web interface (Administration Portal).
+In this lab, you will use the manager host created in Lab 1, access its desktop through an SSH tunnel, install the required OLVM packages, run `engine-setup`, and validate access to the Administration Portal.
 
-Estimated Lab Time: 60–90 minutes
+**Estimated Lab Time:** 60-90 minutes, including package download and engine setup time.
 
 ### Objectives
 
 In this lab, you will:
-- Open a VNC session to the OLVM Manager via SSH tunneling
-- Install OLVM repositories and Engine packages
-- Verify required repositories are enabled
-- Run `engine-setup` and record the `admin@ovirt` credentials
-- Log in to the Administration Portal and validate the deployment
+
+- Open a local TigerVNC session to the OLVM manager through an SSH tunnel
+- Install the required OLVM repositories and engine packages
+- Run `engine-setup` and record the `admin@ovirt` password
+- Log in to the Administration Portal and verify the deployment
 
 ### Prerequisites
 
 This lab assumes you have:
-- A deployed OLVM Manager instance and its IP address
-- SSH connectivity to the OLVM Manager
-- Access to the Luna desktop environment with TigerVNC available
 
-### SSH Connection Reference
+- Completed Lab 1 and the Lab 1 checkpoint
+- Recorded the public IP address for `olvm`
+- Copied `olvm-cluster-id_rsa` to your local machine
+- TigerVNC Viewer installed on your local machine
+- A local PowerShell terminal available
 
-Throughout this lab, you'll connect to different systems. Use this reference:
+> **Important:** In this workshop, the "manager desktop" means your local TigerVNC client connected to `localhost:5914` through SSH tunneling.
+>
+> **Important:** If your endpoint policy blocks TigerVNC, stop and contact the instructor or workshop owner. Do **not** expose port `5901` publicly in OCI.
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         Connection Paths                                │
-│                                                                         │
-│  ┌──────────────┐      ┌──────────────┐      ┌──────────────────────┐   │
-│  │ Your PC      │ SSH  │    olvm      │ SSH  │   Virtual Machines   │   │
-│  │ (VNC Viewer) │ ───> │   (Engine)   │ ───> │                      │   │
-│  └──────────────┘      └──────────────┘      │  • ol9-mysql         │   │
-│                              │               │    (10.0.10.100)     │   │
-│                              │ SSH           │                      │   │
-│                              ▼               │  • ol9-webapp        │   │
-│                        ┌──────────────┐      │    (10.0.10.101)     │   │
-│                        │ KVM Hosts    │      └──────────────────────┘   │
-│                        │ • olkvm01    │                                 │
-│                        │ • olkvm02    │                                 │
-│                        └──────────────┘                                 │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+### Connection Reference
 
-| From | To | Command |
-|------|-----|---------|
-| olvm | ol9-mysql | `ssh opc@10.0.10.100` |
-| olvm | ol9-webapp | `ssh opc@10.0.10.101` |
-| olvm | KVM hosts | `ssh olkvm01` or `ssh olkvm02` |
+Use these connection paths throughout this and later labs:
 
-**Note:** KVM hosts use pre-configured SSH keys and hostnames. VMs require username, IP, and password for SSH login.
-
-### Architecture Overview — What You Need to Know
-
-Before continuing, here's a quick overview of the OLVM virtualization stack. Understanding these layers helps you troubleshoot and explain the platform:
-
-**The Virtualization Stack (top to bottom):**
-
-1. **oVirt Engine** — The brain. Java app on WildFly server + PostgreSQL database. Sends commands down to hosts.
-2. **VDSM** — Virtual Desktop and Server Manager. A daemon running on EVERY KVM host. Acts as the agent between the engine and the hypervisor.
-3. **libvirt** — The API layer. VDSM talks to libvirt, not directly to KVM.
-4. **QEMU** — Quick Emulator. Emulates hardware (CPU, memory, disk, NIC) for each VM. Each VM runs as a QEMU process in **user space**.
-5. **KVM** — The actual hypervisor. Runs in **kernel space**. Provides near-native performance.
-
-> **Key concept:** If the engine goes offline, VMs keep running. The engine is management only — KVM handles execution independently.
-
-### What You Will Build
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│  Part 1: Infrastructure Setup                                           │
-│                                                                         │
-│  ┌─────────────────┐                                                    │
-│  │   OLVM Engine   │                                                    │
-│  │     (olvm)      │                                                    │
-│  │                 │                                                    │
-│  │ • Admin Portal  │                                                    │
-│  │ • REST API      │                                                    │
-│  │ • PostgreSQL    │                                                    │
-│  └─────────────────┘                                                    │
-│                                                                         │
-│  olkvm01 and olkvm02 hosts provisioned but not yet configured           │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-### Steps
-
-1. Launch the OLVM lab in Luna Labs
-2. Deploy the lab environment using Ansible (provisions olvm, olkvm01, olkvm02)
-3. Record IP addresses for all hosts
-4. Open a VNC session to the OLVM Manager
-5. Install the Oracle Linux Virtualization Manager Engine
-6. Log in to the Administration Portal
+- **Local machine -> manager desktop:** `ssh -N -L 5914:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip>`
+- **Manager shell -> KVM hosts:** `ssh olkvm01` or `ssh olkvm02`
+- **Manager shell -> application VMs in later labs:** `ssh opc@10.0.10.100` or `ssh opc@10.0.10.101`
 
 ## Task 1: Open a VNC Session to the Manager
 
-1. Open a **new terminal** and connect to the olvm instance via SSH.
+1. From your local Windows machine, open a new PowerShell window.
 
-    The `-L` option creates an SSH tunnel to the remote VNC server.
+2. If you did not keep the Lab 1 tunnel open, start it now:
 
-    ```bash
-    <copy>ssh -L 5914:localhost:5901 oracle@<ip_address_of_instance></copy>
+    ```powershell
+    <copy>ssh -N -L 5914:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
-    **What this does:** Creates an SSH tunnel that forwards local port 5914 to the remote VNC server on port 5901. VNC port 5901 is not directly accessible from the internet (firewalled), so SSH tunneling provides secure, encrypted access.
 
-2. Switch to the Luna Desktop.
+3. Leave this PowerShell window open. It forwards local port `5914` to the manager's local VNC port `5901`.
 
-3. Open the **TigerVNC Viewer** by clicking the **Applications** menu → **Internet** → **TigerVNC Viewer**.
+4. Start **TigerVNC Viewer** on your local machine.
 
-4. Log on by entering `localhost:5914` into the VNC Server text box and pressing **Connect**.
+5. In the **VNC Server** field, enter `localhost:5914`, then click **Connect**.
 
-5. Enter the `oracle` user's password of **oracle** and press **OK**.
+    ```
+    <copy>localhost:5914</copy>
+    ```
 
-6. The Server's GUI desktop is displayed with a first-time login setup. Press **Next** three times, then **Skip**, followed by **Start Using Oracle Linux Server**. Close or minimize the Getting Started window.
+6. When prompted, enter the `oracle` user's VNC password:
 
+    ```
+    <copy>oracle</copy>
+    ```
 
+7. The manager desktop appears. If first-login screens are shown, click through them and then close or minimize the welcome window.
 
 ## Task 2: Install the Engine
 
-1. Open the VNC Activities Menu.
+1. Open the **Terminal** application inside the manager desktop.
 
-2. Open a terminal within the VNC session.
-
-3. Enable copy and paste to the VNC session.
+2. Enable clipboard copy and paste inside the VNC session:
 
     ```bash
     <copy>vncconfig -nowin &</copy>
     ```
 
-4. Install the Oracle Linux Virtualization Manager Release package.
+3. Install the Oracle Linux Virtualization Manager release package:
 
     ```bash
     <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
     ```
-    **What this does:** Installs the OLVM repository configuration package for release 4.5 on Oracle Linux 8. This automatically enables the required YUM/DNF repositories.
+4. Install the UEK extra kernel modules package.
 
-5. Clear the dnf cache.
+    ```bash
+    <copy>sudo dnf install -y kernel-uek-modules-extra</copy>
+    ```
+5. Reboot the system.
+
+    ```bash
+    <copy>sudo reboot</copy>
+    ```
+    **Important:** Your SSH or VNC session will disconnect during the reboot. Wait for the system to come back online, then reconnect and continue with the next step.
+
+6. After the engine reboots, close the old SSH tunnel terminal or open a new terminal.
+
+7. Recreate the SSH tunnel to the OLVM engine from your local Windows machine.
+
+    ```powershell
+    <copy>ssh -N -L 5914:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    ```
+
+8. Reopen TigerVNC Viewer and connect to host and enter password:
+
+    ```text
+    <copy>localhost:5914</copy>
+    ```
+
+    **Important:** The previous SSH tunnel disconnects during the reboot. If you receive an error that the local port is already in use, close the old terminal window and try the SSH tunnel command again.
+
+
+9. Clear the DNF cache:
 
     ```bash
     <copy>sudo dnf clean all</copy>
     ```
 
-6. Install the Manager package.
-
-    ```bash
-    <copy>sudo dnf install -y ovirt-engine</copy>
-    ```
-    **What this does:** Downloads the core OLVM software and all dependencies (Java, WildFly, etc.) from Oracle Yum repositories. Does not start the manager — it only places the files on disk.
-
-7. List the configured repositories and verify that the required repositories are enabled.
+10. List the configured repositories and verify that the required repositories are enabled:
 
     ```bash
     <copy>sudo dnf repolist</copy>
     ```
-    You must enable the following repositories:
-    - ol8\_baseos\_latest
-    - ol8\_appstream
-    - ol8\_kvm_appstream
-    - ovirt-4.5
-    - ovirt-4.5-extra
-    - ol8\_gluster\_appstream
-    - ol8\_UEKR7
 
-    If a required repository is not enabled:
+    Required repositories:
+
+    - `ol8_baseos_latest`
+    - `ol8_addons`
+    - `ol8_appstream`
+    - `ol8_kvm_appstream`
+    - `ovirt-4.5`
+    - `ovirt-4.5-extra`
+    - `ol8_gluster_appstream`
+    - `ol8_UEKR7`
+
+11. If any required repository is disabled, enable it:
 
     ```bash
     <copy>sudo dnf config-manager --enable <repository_name></copy>
     ```
 
-8. Configure the Manager.
+
+
+12. Install the OLVM engine package:
+
+    ```bash
+    <copy>sudo dnf install -y ovirt-engine</copy>
+    ```
+
+    This package install can take 10-15 minutes depending on repository speed.
+
+13. Run the OLVM engine setup:
 
     ```bash
     <copy>sudo engine-setup --accept-defaults</copy>
     ```
-    **What this does:** Runs the OLVM Engine configuration wizard with all default answers accepted. Behind the scenes, it configures the PostgreSQL database, installs Apache/Tomcat for the web portal, generates SSL certificates, configures the firewall, creates the admin@ovirt user, initializes the oVirt Engine, and creates the default data center and cluster.
 
-    **Time:** Takes 5–10 minutes to complete all configuration steps.
+    **Expected runtime:** 5-10 minutes.
 
-    **Admin password:** The wizard will prompt for the admin@ovirt password even with `--accept-defaults`. This is the only interactive prompt. Password must be 8+ characters with uppercase, lowercase, number, and special character.
+    `engine-setup` still prompts you to set the `admin@ovirt` password. Use a strong password that includes uppercase, lowercase, a number, and a special character.
 
-    > **CRITICAL:** When engine-setup completes, **WRITE DOWN the admin password!**
+    > **Critical:** Write down the `admin@ovirt` password before you continue.
 
-
+    If `engine-setup` runs longer than 15 minutes but continues printing progress, let it finish. If it stops with an error, capture the message and contact the instructor or workshop owner before changing the configuration manually.
 
 ## Task 3: Log in to the Administration Portal
 
-1. Get the FQDN for the manager host.
+1. Get the fully qualified domain name of the manager host:
 
     ```bash
     <copy>hostname -f</copy>
     ```
-    Example output: `olvm.examplevcn.oraclevcn.com`
 
-2. Open **Firefox** within the VNC session.
+2. Open **Firefox** inside the manager desktop.
 
-3. Enter the following link to access the engine's Web UI:
+3. Browse to the manager URL:
 
     ```
-    <copy>https://olvm.pub.olv.oraclevcn.com</copy>
+    <copy>https://<output-from-hostname-f></copy>
     ```
 
-4. **Security Warning:** Firefox will display "Warning: Potential Security Risk Ahead" because the engine uses a self-signed SSL certificate. Click **Advanced** → **Accept the Risk and Continue**.
+    If `engine-setup` prints a more specific portal URL at the end of the run, use that exact URL instead.
 
-5. Under **Downloads**, click **Engine CA Certificate**.
+4. Firefox displays a certificate warning because the lab uses a self-signed certificate. Click **Advanced -> Accept the Risk and Continue**.
 
-    ![](images/olvm-welcome.png)   
+5. On the landing page, click **Engine CA Certificate**.
 
+    ![](images/olvm-welcome.png)
 
-6. Import the certificate into the browser:
-    - Open browser menu → **Settings**
-    - Search for **cert** → Click **View Certificates…**
-    - Click **Import…** → Select **All Files** from the dropdown
-    - Click the **pki-resource** file → Click **Open**
-    - Check **Trust this CA to identify websites** → Click **OK** twice
+6. Import the certificate into Firefox:
 
-7. Close the Settings tab. From the engine's Web UI, click **Administration Portal**.
+    - Open the browser menu -> **Settings**
+    - Search for **cert**
+    - Click **View Certificates...**
+    - Click **Import...**
+    - Select the downloaded certificate file
+    - Check **Trust this CA to identify websites**
+    - Click **OK**
 
-8. Enter `admin@ovirt` for the Username and the password you specified during engine-setup.
+7. Return to the engine landing page and click **Administration Portal**.
 
-    The Administration Portal displays after a successful login.
+8. Sign in with:
 
+    - Username: `admin@ovirt`
+    - Password: the password you created during `engine-setup`
 
+    The Administration Portal should open successfully. If the page is still starting, wait 1-2 minutes and refresh once.
 
-### ✅Deploy OLVM Engine Checkpoint
+### Deploy OLVM Engine Checkpoint
 
 At this point, you should have:
 
-- ✓ OLVM Engine installed and configured
-- ✓ Administration Portal accessible and logged in
+- A working SSH tunnel from your local machine to the manager desktop
+- OLVM engine installed and configured
+- The Administration Portal open and accessible
+- The `admin@ovirt` password recorded
 
-
+Keep the SSH tunnel and manager desktop available for Labs 3-5.
 
 ## Learn More
 
-- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
-- Oracle Luna Labs: https://luna.oracle.com/ 
-
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest  
+- **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster , April 1, 2026
+- **Last Updated By/Date** - Perside Foster, May 6, 2026

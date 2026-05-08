@@ -2,201 +2,195 @@
 
 ## Introduction
 
-### Part 4: Application Tier (Optional)
+In this optional lab, you will import two prebuilt OVAs: one for a MySQL database VM and one for a Java web application VM. The lab demonstrates how OLVM can package complete workloads and redeploy them across the cluster with minimal manual configuration.
 
-### Overview
-
-In this part, you will deploy a complete multi-tier web application across your two-host cluster by importing pre-built OVA files. There is no need to install operating systems, configure databases, or set up application servers manually. Each OVA contains a fully configured, ready-to-run VM.
-
-This demonstrates one of OLVM's most powerful capabilities: packaging working virtual machines — complete with their OS, software, data, and configuration — and redeploying them on a different OLVM system with minimal effort.
-
-Estimated Lab Time: 10–20 minutes
+**Estimated Lab Time:** 20-35 minutes, including OVA download, import, and application startup time.
 
 ### Objectives
 
 In this lab, you will:
-* Deploy MySQL database on a VM (`ol9-mysql` on `olkvm01`)
-* Deploy Java web application on a VM (`ol9-webapp` on `olkvm02`)
-* Verify multi-tier connectivity across the `l2-vm-network`
-* Test distributed application functionality
 
-### What You Will Build
+- Import and start the `ol9-mysql` database VM
+- Import and start the `ol9-webapp` application VM
+- Verify connectivity across `l2-vm-network`
+- Validate the Employee Directory application in the browser
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                    Part 4: Application Tier                            │
-│                                                                        │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                         olkvm01                                 │   │
-│  │  ┌──────────────────────┐                                       │   │
-│  │  │   ol9-mysql VM       │                                       │   │
-│  │  │   10.0.10.100        │ ──────────────┐                       │   │
-│  │  │                      │               │                       │   │
-│  │  │ • MySQL 8.0          │               │                       │   │
-│  │  │ • employee_db        │               │                       │   │
-│  │  │ • 8 sample records   │               │                       │   │
-│  │  └──────────────────────┘               │                       │   │
-│  └─────────────────────────────────────────┼───────────────────────┘   │
-│                                            │ JDBC                      │
-│                                            ▼                           │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                         olkvm02                                 │   │
-│  │  ┌──────────────────────┐                                       │   │
-│  │  │   ol9-webapp VM      │                                       │   │
-│  │  │   10.0.10.101        │                                       │   │
-│  │  │                      │                                       │   │
-│  │  │ • Apache Tomcat      │                                       │   │
-│  │  │ • OpenJDK 17         │                                       │   │
-│  │  │ • Employee Directory │                                       │   │
-│  │  └──────────────────────┘                                       │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│           │                                                            │
-│           ▼                                                            │
-│  [Browser Access: http://10.0.10.101:8080/employee-app/employees]      │
-└────────────────────────────────────────────────────────────────────────┘
-```
+### Prerequisites
 
+This lab assumes you have:
 
+- Completed the Lab 4 checkpoint
+- A working `l2-vm-network`
+- An active shared storage domain
+- Access to the Administration Portal and manager desktop
 
-## Task 1: Download the OVA File Virtual Machine 1
+> **Important:** Complete the database VM import and validation before you start the web application VM import. Do not run both imports in parallel during the workshop.
 
-1. From the OLVM manager terminal  copy ol9-mysql  from object bucket to olkvm01 
+## Task 1: Download the `ol9-mysql` OVA
+
+1. From the manager terminal, download `ol9-mysql.ova` to `olkvm01`:
 
     ```bash
     <copy>ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/YU_c5CCO0XELLIqVwtAl77N4RXfTJXFCugLN7eDjoMzX9VMWHTGDJuAzpPbvN0gp/n/idhwewbjlvpy/b/olvm-ova/o/ol9-mysql.ova -o /tmp/ol9-mysql.ova"</copy>
     ```
-    > This file is large and may take several minutes to download.
-    
-## Task 2: Import the OVA via OLVM Administration Portal
 
-1. Go to **Compute** → **Virtual Machines** → **Import**.(click on the 3 dots)
-    ![](images/import-vm.png)   
-2. Data Center: **Default**
-3. Source: **Virtual Appliance (OVA)**
-4. Host: **olkvm01**
-5. File Path: `/tmp`
+    **Expected time:** 10-20 minutes.
+
+## Task 2: Import the `ol9-mysql` OVA
+
+1. In the **Administration Portal**, navigate to **Compute -> Virtual Machines -> Import**.
+
+2. Set **Data Center** to **Default**.
+
+3. Set **Source** to **Virtual Appliance (OVA)**.
+
+4. Set **Host** to **olkvm01**.
+
+5. Set **File Path** to `/tmp`.
+
 6. Click **Load**.
-7. Under Virtual Machines on Source, select **ol9-mysql.ova**.
-8. Use the move arrow to move it to Virtual Machines to Import.
+
+7. Under **Virtual Machines on Source**, select `ol9-mysql.ova`.
+
+8. Move it to **Virtual Machines to Import** with the arrow button.
+
 9. Click **Next**.
-10. Click **ol9-mysql** → **Network Interfaces**.
-11. Select `l2-vm-network` for both Network Name and Profile Name.
-12. Click **OK**.
-13. Wait for the ol9-mysql VM status to show as **Down**.
 
-## Task 3: Start and Test the ol9-mysql VM
+10. Select `ol9-mysql`, open **Network Interfaces**, and set both **Network Name** and **Profile Name** to `l2-vm-network`.
 
-1. Select the ol9-mysql VM and click **Run**. Wait for status to change to **Up**.
+11. Click **OK**.
 
-2. From the OLVM manager terminal, SSH into the database VM (username: `opc`, password: `oracle`):
+12. Wait for the `ol9-mysql` VM status to show **Down** before you continue.
+
+    **Expected time:** 10-15 minutes.
+
+## Task 3: Start and Test the `ol9-mysql` VM
+
+1. Select `ol9-mysql` and click **Run**.
+
+2. Wait for the VM status to change to **Up**.
+
+3. From the manager terminal, connect to the database VM:
 
     ```bash
     <copy>ssh opc@10.0.10.100</copy>
     ```
 
-3. Verify MySQL is running and confirm employee data is present:
+4. Verify MySQL and the sample data:
 
     ```bash
     <copy>mysql -u empapp -pWelcome#123 employee_db -e "SELECT COUNT(*) as employee_count FROM employees;"</copy>
     ```
-   You should see a count of **8** employee records.
 
-4. Exit the database VM:
+    You should see a count of **8** employee records.
+
+5. Exit the database VM:
 
     ```bash
     <copy>exit</copy>
     ```
 
+## Task 4: Download the `ol9-webapp` OVA
 
-
-## Task 4: Download the OVA File Virtual Machine 2
-
-1. From the OLVM manager terminal  copy  ol9-webapp  from object bucket to olkvm02 
+1. From the manager terminal, download `ol9-webapp.ova` to `olkvm02`:
 
     ```bash
     <copy>ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/QVbUx0DOX8QmXrip09IIfBEANwGCA2aQ4SojhJ5__ZX7lPjTN15Eg-174doal5-o/n/idhwewbjlvpy/b/olvm-ova/o/ol9-webapp.ova -o /tmp/ol9-webapp.ova"</copy>
     ```
-    > This file is large and may take several minutes to download.
 
-## Task 5: Import the OVA via OLVM Administration Portal
-> Repeat the process from Task 2
+    **Expected time:** 10-20 minutes.
 
-1. Go to **Compute** → **Virtual Machines** → **Import**.
-2. Data Center: **Default**
-3. Source: **Virtual Appliance (OVA)**
-4. Host: **olkvm02**
-5. File Path: `/tmp`
+## Task 5: Import the `ol9-webapp` OVA
+
+1. In the **Administration Portal**, navigate to **Compute -> Virtual Machines -> Import**.
+
+2. Set **Data Center** to **Default**.
+
+3. Set **Source** to **Virtual Appliance (OVA)**.
+
+4. Set **Host** to **olkvm02**.
+
+5. Set **File Path** to `/tmp`.
+
 6. Click **Load**.
-7. Under Virtual Machines on Source, select **ol9-webapp.ova**.
-8. Use the move arrow to move it to Virtual Machines to Import.
+
+7. Under **Virtual Machines on Source**, select `ol9-webapp.ova`.
+
+8. Move it to **Virtual Machines to Import** with the arrow button.
+
 9. Click **Next**.
-10. Click **ol9-webapp** → **Network Interfaces**.
-11. Select `l2-vm-network` for both Network Name and Profile Name.
-12. Click **OK**.
-13. Wait for the ol9-webapp VM status to show as **Down**.
 
-## Task 6: Start and Test the ol9-webapp VM
+10. Select `ol9-webapp`, open **Network Interfaces**, and set both **Network Name** and **Profile Name** to `l2-vm-network`.
 
-1. Select the ol9-webapp VM and click **Run**. Wait for status to change to **Up**.
+11. Click **OK**.
 
-2. From the OLVM manager terminal, SSH into the web application VM (username: `opc`, password: `oracle`):
+12. Wait for the `ol9-webapp` VM status to show **Down** before you continue.
+
+    **Expected time:** 10-15 minutes.
+
+## Task 6: Start and Test the `ol9-webapp` VM
+
+1. Select `ol9-webapp` and click **Run**.
+
+2. Wait for the VM status to change to **Up**.
+
+3. From the manager terminal, connect to the application VM:
+
     ```bash
     <copy>ssh opc@10.0.10.101</copy>
     ```
 
-3. Verify the application is responding:
+4. Verify that the application responds:
+
     ```bash
-    <copy>curl -s http://localhost:8080/employee-app/ | grep -q "Welcome to Employee Directory" && echo "✓ Application is responding" || echo "✗ Application check failed"</copy>
+    <copy>curl -s http://localhost:8080/employee-app/ | grep -q "Welcome to Employee Directory" && echo "Application is responding" || echo "Application check failed"</copy>
     ```
 
-4. Verify connectivity to the MySQL database:
+    If this check fails immediately after boot, wait 2-3 minutes for Tomcat to finish starting and try again.
+
+5. Verify connectivity to the MySQL VM:
+
     ```bash
     <copy>ping -c 3 10.0.10.100</copy>
     ```
-   The ping should succeed, confirming both VMs can communicate over the l2-vm-network.
 
-5. Exit the application VM:
+6. Exit the application VM:
 
     ```bash
     <copy>exit</copy>
     ```
 
+## Task 7: Access the Application from the Manager
 
-
-## Task 7: Access the Application from OLVM Manager
-
-1. From the OLVM manager VNC session, open Firefox and navigate to (wait about 3 minutes for data to load):
+1. From Firefox in the manager desktop, browse to:
 
     ```
     <copy>http://10.0.10.101:8080/employee-app/</copy>
     ```
 
-2. You should see:
-    - **Home page**: Purple gradient background with "Welcome to Employee Directory" heading
-    - Click the **"View Employees"** button
-    - **Employee Directory**: Green table displaying 8 employees with names, emails, departments, and hire dates
+2. Wait 2-5 minutes for the application to finish loading if needed.
 
+3. Verify the application:
 
+    - The home page displays **Welcome to Employee Directory**
+    - Clicking **View Employees** opens the employee list
+    - The employee list shows eight records
 
-### ✅ Deploy Multi Tier Application Checkpoint
+### Deploy Multi Tier Application Checkpoint
 
 At this point, you should have:
-- ✓ ol9-mysql running on olkvm01 with MySQL 8.0 and 8 employee records
-- ✓ ol9-webapp running on olkvm02 with Tomcat and Employee Directory app
-- ✓ Both VMs communicating across l2-vm-network
-- ✓ Employee Directory web application accessible in the browser
 
+- `ol9-mysql` running and returning 8 employee records
+- `ol9-webapp` running and reachable from the manager
+- Network connectivity between `10.0.10.101` and `10.0.10.100`
+- The Employee Directory application visible in the browser
 
 ## Learn More
 
-- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
-- Oracle Luna Labs: https://luna.oracle.com/ 
-
-
-
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest 
+- **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster , April 1, 2026
+- **Last Updated By/Date** - Perside Foster, May 6, 2026
