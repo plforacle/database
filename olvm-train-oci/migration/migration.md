@@ -21,9 +21,8 @@ In this lab, you will:
 - The destination host must have sufficient resources (CPU, memory)
 - The logical network used by the VM must be available on both hosts
 
-
-
 ## Task 1: Restart the engine
+
 1. **Lab-Specific Prerequisite:** After the extensive infrastructure changes made during the previous labs, the engine's internal cache may be out of sync. Restart the engine before attempting migration:
 
     ```bash
@@ -35,8 +34,11 @@ In this lab, you will:
 
 1. Go to **Compute** → **Hosts**. Verify both hosts show status **Up**.
 
-2. Go to **Compute** → **Virtual Machines**. Verify ol9-mysql is running on olkvm01 (check the Host column).
+    ![The OLVM Hosts pane showing both olkvm01 and olkvm02 with status Up.](images/olvm-hosts-pane.png)
 
+2. Go to **Compute** → **Virtual Machines**. Check the **Host** column for `ol9-mysql` to confirm which host it is currently running on.
+
+    > **Note:** OLVM may have placed `ol9-mysql` on either `olkvm01` or `olkvm02`. Note which host it is currently on — you will migrate it to the other host in Task 3.
 
 ## Task 3: Perform Live Migration
 
@@ -44,7 +46,7 @@ In this lab, you will:
 
 2. Click **Migrate** in the toolbar.
 
-3. In the Migrate dialog, select **olkvm02** from the Destination Host dropdown.
+3. In the Migrate dialog, select the **other** host (not the one currently shown in the Host column) from the **Destination Host** dropdown.
 
 4. Click **Migrate** to start the migration.
 
@@ -76,11 +78,9 @@ In this lab, you will:
 
 6. Wait for migration to complete (typically 30–60 seconds).
 
-
-
 ## Task 4: Verify Migration Success
 
-1. In the Virtual Machines pane, verify ol9-mysql now shows **Host: olkvm02** and **Status: Up**.
+1. In the Virtual Machines pane, verify `ol9-mysql` now shows the destination host in the **Host** column and **Status: Up**.
 
 2. Click the **ol9-mysql** VM name → **Events** tab. You should see:
     - "VM ol9-mysql started migration on Host olkvm01"
@@ -103,17 +103,13 @@ In this lab, you will:
     ```
     The output should show **9** (1 header + 8 employee rows), confirming end-to-end connectivity.
 
-
-
 ### ✅ Perform Live Migration Checkpoint
 
 At this point, you should have:
-- ✓ ol9-mysql successfully migrated from olkvm01 to olkvm02
+- ✓ ol9-mysql successfully migrated to the destination host
 - ✓ VM accessible at the same IP address on the new host
 - ✓ Database operational after migration
 - ✓ Web application connectivity confirmed end-to-end
-
-
 
 ## Quick Reference — Essential OLVM Commands
 
@@ -179,11 +175,9 @@ ip addr show eth0
 sudo ss -tlnp | grep 8080
 ```
 
-
-
 ## Conclusion
 
-Congratulations on completing the OLVM Foundations training! You have successfully:
+Congratulations on completing the OLVM Foundations workshop! You have successfully:
 
 - ✓ Deployed a complete OLVM virtualization platform from scratch
 - ✓ Configured two KVM hosts in a cluster
@@ -194,21 +188,15 @@ Congratulations on completing the OLVM Foundations training! You have successful
 
 You now have hands-on experience with the core OLVM administration tasks: engine installation, host clustering, networking, storage, VM management, and live migration. This foundation prepares you to confidently discuss and demonstrate Oracle Virtualization with customers and partners.
 
-
-
 *This LiveLabs workshop is for learning and evaluation purposes. For production deployments, consult Oracle's official documentation and best practices guides.*
-
 
 ## Learn More
 
-- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
-- Oracle Luna Labs: https://luna.oracle.com/ 
-
-
-
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html
+- Oracle Luna Labs: https://luna.oracle.com/
 
 ## Acknowledgements
 
-- **Author** - SShawn Kelley, John Priest  
+- **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster , April 1, 2026
+- **Last Updated By/Date** - Perside Foster, April 1, 2026

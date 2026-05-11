@@ -29,8 +29,7 @@ This lab assumes you have:
 - A local Windows PowerShell terminal
 
 > **Important:** This lab builds the base environment used by every later lab. Do not continue to Lab 2 until the Lab 1 checkpoint is complete.
->
-> **Important:** The OLVM manager desktop is accessed through an SSH tunnel. Do **not** open TCP port `5901` publicly in OCI.
+
 
 ## Task 1: Create Bootstrap VCN (VCN Wizard)
 
@@ -156,6 +155,8 @@ This lab assumes you have:
     - **User OCID:** Profile menu -> **User Settings** -> Copy next to the OCID
     - **Tenancy OCID:** Profile menu -> **Tenancy: _your tenancy_** -> Copy next to the OCID
     - **Region Identifier:** The region shown in the Console header, for example `us-ashburn-1`
+        > **Note:** Durin OCI Setup you will be presented with the Region index list... find the matching Region and enter its index. Example: 71: us-ashburn-1 ... the index is 71
+
     - **Compartment OCID:** **Identity & Security -> Compartments -> _your compartment_ -> Copy** next to the OCID
 
     ```bash
@@ -176,7 +177,6 @@ This lab assumes you have:
     cat /home/opc/.oci/oci_api_key_public.pem</copy>
     ```
 
-
 3. Upload the copied public API key to your OCI user:
 
     - In the OCI Console, click the profile menu and open **User Settings**.
@@ -193,8 +193,6 @@ This lab assumes you have:
 
     If this command fails immediately after `oci setup config`, wait 2-5 minutes for the key registration to propagate and try again.
     If it still fails, confirm the key appears under **User Settings** -> **Token and Keys** -> **API Keys**, then rerun the command.
-
-
 
 ## Task 5: Create OCI Components and Run the Playbook
 
@@ -238,7 +236,7 @@ This lab assumes you have:
         type: "kvm"
         instance_ocpus: 8
         instance_memory: 64
-    use_vnc_on_engine: true
+    use_vnc_on_engine: false
     blk_volume_size_in_gbs: 512
     EOF
 
@@ -296,16 +294,24 @@ This lab assumes you have:
     ```powershell
     <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip> "hostname -f"</copy>
     ```
+3. Add an ingress rule to allow HTTPS access to the OLVM Administration Portal from your local browser. Navigate using this path:
 
-3. Optional now, but required at the start of Lab 2: open the SSH tunnel for the manager desktop:
+    **OLV-VCN -> Subnets -> Public Subnet -> Security -> Default Security List -> Security Rules -> Add Ingress Rules**
 
-    ```powershell
-    <copy>ssh -N -L 5914:localhost:5901 -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
-    ```
+    Enter the following values:
 
-    Leave this PowerShell window open while you use TigerVNC Viewer. In Lab 2, connect TigerVNC Viewer to `localhost:5914`.
+    | Field | Value |
+    |---|---|
+    | Source CIDR | `0.0.0.0/0` |
+    | IP Protocol | TCP |
+    | Destination Port Range | `443` |
+    | Description | `Allow HTTPS access to OLVM Administration Portal` |
 
-4. After you confirm local SSH access to `olvm`, you are ready to terminate the bootstrap instance in the next task.
+    - Click **Add Ingress Rules**
+
+    > **Note:** OCI security list changes take effect immediately — no reboot is required.
+
+4. After you confirm local SSH access to `olvm`, you are ready to terminate the bootstrap instance in the next task. You can skip the Terminate task for later..
 
 ## Task 7: Terminate the Bootstrap Instance
 

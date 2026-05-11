@@ -21,14 +21,18 @@ This lab assumes you have:
 
 - Completed the Lab 2 checkpoint
 - Access to the OLVM Administration Portal
-- A working manager desktop session through the Lab 2 SSH tunnel
+- SSH access to the OLVM manager from your local machine
 - SSH connectivity from `olvm` to both KVM hosts
 
 > **Important:** Do not start Lab 4 until both hosts show status `Up`. Starting network or storage tasks while a host is still installing can leave the environment inconsistent.
 
 ## Task 1: Configure the First KVM Host (`olkvm01`)
 
-1. Open the **Terminal** application inside the manager desktop.
+1. From your local PowerShell window, connect to the OLVM manager:
+
+    ```bash
+    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    ```
 
 2. Connect to `olkvm01`:
 
@@ -74,17 +78,20 @@ This lab assumes you have:
 
 2. Navigate to **Compute -> Hosts**.
 
+    ![The OLVM Administration Portal showing the Hosts pane with both KVM hosts listed.](images/olvm-admin-portal.png)
+
 3. Click **New**.
 
 4. Select the **Default** data center from the **Host Cluster** drop-down list.
 
 5. For **Name**, enter:
-
-    ```
+    ```bash
     <copy>olkvm01</copy>
     ```
 
 6. For **Hostname**, enter the FQDN used for management traffic:
+
+    > **Tip:** To confirm the correct FQDN for your environment, run `hostname -f` on `olkvm01` from the manager terminal before filling in this field.
 
     ```
     <copy>vdsm01.priv.olv.oraclevcn.com</copy>
@@ -103,6 +110,8 @@ This lab assumes you have:
 10. When the **Power Management Configuration** dialog appears, click **OK** again. OCI instances do not use power management in this lab.
 
 11. The host status moves through **Installing** and **Initializing** before it reaches **Up**.
+
+    ![The OLVM management portal showing the host status transitions during installation.](images/completed-hosts.png)
 
     **Expected time:** 10-20 minutes.
 
@@ -164,8 +173,9 @@ This lab assumes you have:
     ```
     <copy>olkvm02</copy>
     ```
+4. For **Hostname**, enter the FQDN used for management traffic:
 
-4. For **Hostname**, enter:
+    > **Tip:** To confirm the correct FQDN for your environment, run `hostname -f` on `olkvm02` from the manager terminal before filling in this field.
 
     ```
     <copy>vdsm02.priv.olv.oraclevcn.com</copy>

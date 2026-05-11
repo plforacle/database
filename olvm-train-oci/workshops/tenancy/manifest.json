@@ -33,14 +33,14 @@
       "filename": "../../network-storage-vm/network-storage-vm.md"
     },
     {
-      "title": "Lab 5: Deploy Multi Tier Application",
-      "description": "Import the application OVAs, start the VMs, and verify the Employee Directory application.",
-      "filename": "../../application/application.md"
+      "title": "Lab 5: Configure OCI NAT Gateway for VM Internet Access",
+      "description": "Create a NAT Gateway, add a route table, and associate it with the VLAN for outbound VM connectivity.",
+      "filename": "../../oci-nat-gateway/oci-nat-gateway.md"
     },
     {
-      "title": "Lab 6: Perform Live Migration",
-      "description": "Migrate a running virtual machine between hosts and validate continuity.",
-      "filename": "../../migration/migration.md"
+      "title": "Lab 6: Deploy Multi Tier Application",
+      "description": "Import the application OVAs, start the VMs, and verify the Employee Directory application.",
+      "filename": "../../application/application.md"
     },
     {
       "title": "Lab 7: Manage Users and Roles",
@@ -48,10 +48,11 @@
       "filename": "../../olvm-users/olvm-users.md"
     },
     {
-      "title": "Lab 8: Configure OCI NAT Gateway for VM Internet Access",
-      "description": "Create a NAT Gateway, add a route table, and associate it with the VLAN for outbound VM connectivity.",
-      "filename": "../../oci-nat-gateway/oci-nat-gateway.md"
+      "title": "Lab 8: Perform Live Migration",
+      "description": "Migrate a running virtual machine between hosts and validate continuity.",
+      "filename": "../../migration/migration.md"
     },
+
     {
       "title": "Need Help?",
       "description": "Troubleshooting resources and directions for getting assistance during the workshop.",

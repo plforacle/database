@@ -39,12 +39,12 @@ This lab assumes you have:
 
     ![The OCI Console navigation menu highlights Virtual Cloud Networks under Networking.](images/oci-home-menu-vcn.png)
 
-3. Click the name of your Virtual Cloud Network (VCN) in the table.
+3. Click the name of your Virtual Cloud Network (VCN) in the table. Then click the **Gateway** tab.
     - **Name:** `OLV-VCN`
 
     ![The Virtual Cloud Networks page lists the VCN used by the lab.](images/oci-vcn.png)
 
-4. From the `OLV-VCN` page click **NAT Gateways** tab.
+4. From the `OLV-VCN` `Gateways page` click **NAT Gateways** tab.
 
     ![Show the NAT Gateways option.](images/nat-gateway.png)
 
@@ -62,7 +62,7 @@ This lab assumes you have:
 
 ## Task 2: Create a Route Table for the VLAN
 
-1. From the `OLV-VCN` page click **Route Tables** tab.
+1. From the `OLV-VCN` page click **Routing** tab.
 
     ![Show the NAT Gateways option.](images/route-tables.png)
 
@@ -100,19 +100,7 @@ This lab assumes you have:
 4. Click **Save Changes**.
 
 
-## Task 4: Test VM connectivity
-1. Go back to the `ol9-vm1` console 
-
-2. Ping an external address (for example, `google.com`).
-    ```bash
-        ping google.com
-    ```
-
-   The ping should succeed, confirming the NAT Gateway is working.
-   
-   ![Show VM connect result.](images/vm-connect-test.png)
-
-## Task 5: Access a VLAN VM through the OLVM host
+## Task 4: Access a VLAN VM through the OLVM host
 
 The NAT Gateway only allows the VMs to reach the internet; it does not open a path for you to SSH directly into a VM from your laptop. To reach a VM on the 10.0.10.x network from your laptop, first connect to the olvm host and then connect from olvm to the VLAN VM as described in this task.
 

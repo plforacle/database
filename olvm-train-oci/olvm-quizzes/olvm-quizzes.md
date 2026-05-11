@@ -275,11 +275,12 @@ Q: 10. What does cloud-init do when a VM is created from a template?
 - C. Creates a backup of the template
 - D. Manages the storage domain
 
-Q: 11. What are the prerequisites for live migrating a VM between hosts. Can a Data Center be initialized without a storage domain attached?
+Q: 11. Can a Data Center be initialized without a storage domain attached?
 - A. Yes, storage is optional
 * B. No, at least one storage domain must be attached before initialization
 - C. Only in test environments
 - D. Only for Self-Hosted Engine deployments
+
 ```
 
 

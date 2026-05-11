@@ -34,7 +34,7 @@ Use these connection paths throughout this and later labs:
 - **Local machine -> OLVM manager shell:** `ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip>`
 - **Manager shell -> KVM hosts:** `ssh olkvm01` or `ssh olkvm02`
 - **Manager shell -> application VMs in later labs:** `ssh opc@10.0.10.100` or `ssh opc@10.0.10.101`
-- **Administration Portal (local browser):** `https://<olvm-fqdn>/ovirt-engine`
+- **Administration Portal (local browser):** `https://<olvm-public-ip>/ovirt-engine`
 
 ## Task 1: Connect to the Manager via SSH
 
@@ -148,54 +148,41 @@ Use these connection paths throughout this and later labs:
 
     The output should include `https`.
 
-## Task 3: Update Your Local Hosts File
+12. By default, OLVM only accepts requests on the FQDN configured during `engine-setup`. Because your local browser cannot resolve the internal OCI FQDN, you must register the public IP as an alternate FQDN.
 
-The OLVM Administration Portal must be accessed using the engine's fully qualified domain name (FQDN). Because that FQDN is an internal OCI DNS name, your local browser cannot resolve it. Adding a single entry to your local hosts file maps the FQDN to the public IP of the `olvm` instance, which lets your browser reach the portal directly.
-
-1. From your SSH session on the `olvm` instance, get the engine FQDN:
+    Open the SSO configuration file:
 
     ```bash
-    <copy>hostname -f</copy>
+    <copy>sudo nano /etc/ovirt-engine/engine.conf.d/11-setup-sso.conf</copy>
     ```
 
-    Record the FQDN — for example, `olvm.pub.olv.oraclevcn.com`.
-
-2. On your local Windows machine, open **Command Prompt** as administrator:
-
-    - Type `cmd` in the Start menu
-    - Right-click **Command Prompt** and select **Run as administrator**
-
-3. Open the hosts file in Notepad:
+    Find the line that begins with `SSO_ALTERNATE_ENGINE_FQDNS=` and add the public IP of your `olvm` instance between the quotes:
 
     ```
-    <copy>notepad C:\Windows\System32\drivers\etc\hosts</copy>
+    SSO_ALTERNATE_ENGINE_FQDNS="<olvm-public-ip>"
     ```
 
-4. Add a line at the bottom of the file that maps the public IP of the `olvm` instance to the engine FQDN. Use your own values:
+    Save and exit nano (`Ctrl+O`, Enter, `Ctrl+X`).
 
-    ```
-    <olvm-public-ip>   <olvm-fqdn>
-    ```
+13. Restart the OLVM engine to apply the SSO change:
 
-    Example:
-
-    ```
-    141.148.13.243   olvm.pub.olv.oraclevcn.com
+    ```bash
+    <copy>sudo systemctl restart ovirt-engine</copy>
     ```
 
-5. Save the file and close Notepad.
+    Wait 1-2 minutes for the engine to fully start before continuing to Task 3.
 
-## Task 4: Log in to the Administration Portal
+    > **Note:** Your local browser will display a "Not secure" warning when accessing the portal by IP address. This is expected — the OLVM certificate is issued for the FQDN, not the IP. Click through the warning to continue.
+
+## Task 3: Log in to the Administration Portal
 
 1. Open your local browser (Chrome, Firefox, or Edge).
 
-2. Navigate to the Administration Portal using the engine FQDN:
+2. Navigate to the Administration Portal using the public IP of the `olvm` instance:
 
     ```
-    <copy>https://<olvm-fqdn>/ovirt-engine</copy>
+    <copy>https://<olvm-public-ip>/ovirt-engine</copy>
     ```
-
-    For example: `https://olvm.pub.olv.oraclevcn.com/ovirt-engine`
 
     ![The OLVM welcome page showing the Engine CA Certificate and Administration Portal links.](images/olvm-welcome.png)
 
@@ -219,7 +206,7 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
     - Select the downloaded certificate file
     - Place it in the **Trusted Root Certification Authorities** store
 
-6. Return to `https://<olvm-fqdn>/ovirt-engine` and click **Administration Portal**.
+6. Return to `https://<olvm-public-ip>/ovirt-engine` and click **Administration Portal**.
 
 7. Sign in with:
 

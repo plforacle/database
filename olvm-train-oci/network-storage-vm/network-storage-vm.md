@@ -23,7 +23,7 @@ This lab assumes you have:
 - Completed the Lab 3 checkpoint
 - Both KVM hosts showing status **Up**
 - Access to the Administration Portal
-- A working manager desktop session through the Lab 2 SSH tunnel
+- SSH access to the OLVM manager from your local machine
 
 > **Important:** Do not start this lab while either host is still `Installing`, `Initializing`, or `Non Operational`.
 >
@@ -57,7 +57,13 @@ This lab assumes you have:
 
 4. Click **Setup Host Networks**.
 
-5. Drag `l2-vm-network` from **Unassigned Logical Networks** to the physical interface box on the right, such as `ens5`.
+    ![The Setup Host Networks dialog showing Unassigned Logical Networks on the left and physical interfaces on the right.](images/olvm-setup-host-networks.png)
+
+5. Drag `l2-vm-network` from **Unassigned Logical Networks** on the left side into the physical interface box on the right side (for example, `ens5`).
+
+    > **Tip:** Look for the interface that does **not** already have `ovirtmgmt` assigned to it. That is the correct interface for VM traffic.
+
+    ![The Setup Host Networks dialog after l2-vm-network has been dragged to the physical interface.](images/olvm-setup-host-networks-assigned.png)
 
 6. Click **OK** and wait for the network setup task to finish before you continue.
 
@@ -71,7 +77,7 @@ This lab assumes you have:
 
 4. Click **Setup Host Networks**.
 
-5. Drag `l2-vm-network` from **Unassigned Logical Networks** to the physical interface box on the right.
+5. Drag `l2-vm-network` from **Unassigned Logical Networks** to the physical interface box on the right, using the same interface you used for `olkvm01`.
 
 6. Click **OK** and wait for the network setup task to finish before you continue.
 
@@ -109,27 +115,31 @@ This lab assumes you have:
 
 ## Task 5: Import a Virtual Machine Template
 
-1. Navigate to **Compute -> Templates -> Import**.
+> **Important:** Start the OVA download in the terminal **before** clicking Load in the browser. The browser dialog will return no results if the file is not yet present on the host.
 
-2. Keep the default values for **Data Center** and **Source**, and select **olkvm01** for **Host**.
+1. Switch to the manager terminal and make sure you are on the `olvm` host.
 
-3. For **File Path**, enter:
-
-    ```bash
-    <copy>/tmp</copy>
-    ```
-
-4. Switch to the manager terminal and make sure you are on the `olvm` host.
-
-5. Download the OVA template to `olkvm01`:
+2. Download the OVA template to `olkvm01`:
 
     ```bash
     <copy>ssh olkvm01 "curl -L https://yum.oracle.com/templates/OracleLinux/OL9/u5/x86_64/OL9U5_x86_64-olvm-b253.ova -o /tmp/ol95.ova"</copy>
     ```
 
-    **Expected time:** 10-20 minutes, depending on download speed.
+    **Expected time:** 10-20 minutes, depending on download speed. Wait for the `curl` command to complete and return you to the shell prompt before continuing.
 
-6. Return to the browser and click **Load**.
+3. Navigate to **Compute -> Templates -> Import**.
+
+4. Keep the default values for **Data Center** and **Source**, and select **olkvm01** for **Host**.
+
+5. For **File Path**, enter:
+
+    ```bash
+    <copy>/tmp</copy>
+    ```
+
+    ![The Import Template dialog with the File Path set to /tmp and olkvm01 selected as the host.](images/olvm-import-templates.png)
+
+6. Click **Load**.
 
 7. In **Virtual Machines on Source**, select the OVA template.
 
@@ -166,7 +176,7 @@ This lab assumes you have:
 
 8. Open **Networks** and enter:
 
-    - **DNS Servers:** `10.0.10.1`
+    - **DNS Servers:** `10.0.10.1`  (This is the OCI VCN DNS resolver)
     - Check **In-guest Network Interface Name**, then click **Add New**
     - **Name:** `eth0`
     - **IPv4 Boot Protocol:** `Static`
@@ -176,7 +186,7 @@ This lab assumes you have:
 
 9. Click **OK**.
 
-10. Wait for the VM status to change from **Importing** to **Down** before you continue.
+10. Wait for the storage domain status to show **Active** before you continue.
 
 ## Task 7: Run the Test Virtual Machine
 
@@ -184,13 +194,19 @@ This lab assumes you have:
 
 2. Wait for the VM status to change to **Up**.
 
-3. Open the console by clicking **Console -> Console Options**, selecting **noVNC**, and clicking **OK**.
+3. From your local PowerShell window, connect to the OLVM manager.
 
-4. Click **Console** to open the VM session in a new browser window.
+    ```bash
+    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    ```
 
-5. Log in with the username and password defined in Task 6.
+4. Connect to `ol9-vm1` (**Log in with the password defined in Task 6.*** ):
 
-6. Verify the network settings:
+    ```bash
+    <copy>ssh opc@10.0.10.105</copy>
+    ```
+
+5. Verify the network settings:
 
     ```bash
     <copy>ip addr</copy>
@@ -198,7 +214,7 @@ This lab assumes you have:
 
     The output should show `10.0.10.105` on `eth0`.
 
-7. Verify gateway connectivity:
+6. Verify gateway connectivity:
 
     ```bash
     <copy>ping 10.0.10.1</copy>

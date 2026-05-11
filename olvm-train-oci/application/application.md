@@ -22,7 +22,7 @@ This lab assumes you have:
 - Completed the Lab 4 checkpoint
 - A working `l2-vm-network`
 - An active shared storage domain
-- Access to the Administration Portal and manager desktop
+- Access to the Administration Portal from your local browser
 
 > **Important:** Complete the database VM import and validation before you start the web application VM import. Do not run both imports in parallel during the workshop.
 
@@ -34,11 +34,13 @@ This lab assumes you have:
     <copy>ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/YU_c5CCO0XELLIqVwtAl77N4RXfTJXFCugLN7eDjoMzX9VMWHTGDJuAzpPbvN0gp/n/idhwewbjlvpy/b/olvm-ova/o/ol9-mysql.ova -o /tmp/ol9-mysql.ova"</copy>
     ```
 
-    **Expected time:** 10-20 minutes.
+    **Expected time:** 10-20 minutes. Wait for the `curl` command to complete before continuing to Task 2.
 
 ## Task 2: Import the `ol9-mysql` OVA
 
 1. In the **Administration Portal**, navigate to **Compute -> Virtual Machines -> Import**.
+
+    ![The Import VM dialog showing Source set to Virtual Appliance OVA and olkvm01 selected as Host.](images/import-vm.png)
 
 2. Set **Data Center** to **Default**.
 
@@ -70,7 +72,7 @@ This lab assumes you have:
 
 2. Wait for the VM status to change to **Up**.
 
-3. From the manager terminal, connect to the database VM:
+3. From the manager terminal, connect to the database VM(username: **opc** / password: **oracle**):
 
     ```bash
     <copy>ssh opc@10.0.10.100</copy>
@@ -98,7 +100,7 @@ This lab assumes you have:
     <copy>ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/QVbUx0DOX8QmXrip09IIfBEANwGCA2aQ4SojhJ5__ZX7lPjTN15Eg-174doal5-o/n/idhwewbjlvpy/b/olvm-ova/o/ol9-webapp.ova -o /tmp/ol9-webapp.ova"</copy>
     ```
 
-    **Expected time:** 10-20 minutes.
+    **Expected time:** 10-20 minutes. Wait for the `curl` command to complete before continuing to Task 5.
 
 ## Task 5: Import the `ol9-webapp` OVA
 
@@ -134,7 +136,7 @@ This lab assumes you have:
 
 2. Wait for the VM status to change to **Up**.
 
-3. From the manager terminal, connect to the application VM:
+3. From the manager terminal, connect to the application VM (username: **opc** / password: **oracle**):
 
     ```bash
     <copy>ssh opc@10.0.10.101</copy>
@@ -160,21 +162,33 @@ This lab assumes you have:
     <copy>exit</copy>
     ```
 
-## Task 7: Access the Application from the Manager
 
-1. From Firefox in the manager desktop, browse to:
+## Task 7: Access the Application from Your Local Browser
+
+1. From a **new** local PowerShell window, create an SSH tunnel to the webapp VM:
+
+    ```powershell
+        <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa -L 8080:10.0.10.101:8080 -N oracle@<olvm-public-ip></copy>
+    ```
+
+    Leave this window open. The tunnel is active as long as this session remains connected.
+
+2. From your local browser, navigate to:
 
     ```
-    <copy>http://10.0.10.101:8080/employee-app/</copy>
+    <copy>http://localhost:8080/employee-app/</copy>
     ```
 
-2. Wait 2-5 minutes for the application to finish loading if needed.
+3. Wait 2-5 minutes for the application to finish loading if needed.
 
-3. Verify the application:
+4. Verify the application:
 
     - The home page displays **Welcome to Employee Directory**
     - Clicking **View Employees** opens the employee list
     - The employee list shows eight records
+
+    ![The Employee Directory application running in the browser showing 8 employee records.](images/employee-directory.png)
+
 
 ### Deploy Multi Tier Application Checkpoint
 

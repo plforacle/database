@@ -37,7 +37,7 @@ This lab assumes you have:
 
 ## Task 1: Create a Keycloak-Backed Administrative User
 
-1. Open Firefox from the OLVM manager desktop.
+1. Open your local browser (Chrome, Firefox, or Edge).
 
 2. Navigate to the Keycloak Administration Console:
 
@@ -57,6 +57,8 @@ This lab assumes you have:
     ```text
     <copy>Ovirt-internal</copy>
     ```
+
+    > **Important:** Make sure the realm selector in the top-left of the Keycloak console shows **Ovirt-internal** — not **master**. If it shows **master**, click the realm name and switch to **Ovirt-internal** before continuing.
 
 5. In the left navigation menu, click **Users**.
 
@@ -98,6 +100,8 @@ This lab assumes you have:
 
 3. Go to **Administration** → **Users**.
 
+    ![The OLVM Administration Portal showing the Users pane under the Administration menu.](images/olvm-admin-portal.png)
+
 4. Under **Search** select **internalsso (internalkeycloak-authz)**
 
 5. Click **Add**.
@@ -136,7 +140,7 @@ To create a local internal user in OLVM 4.5, use the `ovirt-aaa-jdbc-tool` on th
 
 1. Connect to the OLVM engine host using SSH.
 
-2. Create the user account. 
+2. Create the user account.
 
     ```bash
     <copy>sudo ovirt-aaa-jdbc-tool user add test1 --attribute=firstName=John --attribute=lastName=Doe</copy>
@@ -145,7 +149,6 @@ To create a local internal user in OLVM 4.5, use the `ovirt-aaa-jdbc-tool` on th
     The `--attribute` flags are optional, but they are recommended because they make the user easier to identify in the Administration Portal.
 
 ## Task 6: Set the Local User Password
-
 
 1. Run the following command on the engine host:
 
@@ -165,11 +168,13 @@ Even after the local user is created, the account will not appear in the Adminis
 
 3. Click **Add**.
 
-4. In the search field, type the name of the user you just created.
+4. In the **Search** dropdown, select **internal (internal-authz)** — this is the provider for local users created with `ovirt-aaa-jdbc-tool`, not the Keycloak provider.
 
-5. Click **Go**.
+5. In the search field, type the name of the user you just created.
 
-6. Select the user from the results and click **Add**.
+6. Click **Go**.
+
+7. Select the user from the results and click **Add**.
 
 ## Task 8: Assign a Role to the Local User
 
@@ -187,8 +192,6 @@ Once added to the portal, you must assign a role.
 - `SuperUser` for full administrative rights
 
 5. Click **OK**.
-
-
 ## Task 9: Verify User Access
 
 1. Log out of the OLVM Administration Portal.
@@ -199,7 +202,9 @@ Once added to the portal, you must assign a role.
 
 4. Verify that the local internal user has the expected role assigned in the **Permissions** tab.
 
-> **Note:** In a Keycloak-enabled OLVM 4.5 environment, a local internal user created with `ovirt-aaa-jdbc-tool` may not be usable for normal web portal login. For browser-based administrative access, use a Keycloak-backed user.
+## Task 5: Create a Local Internal User
+
+> **Important:** In a Keycloak-enabled OLVM 4.5 environment, a local internal user created with `ovirt-aaa-jdbc-tool` may not be usable for normal web portal login. For browser-based administrative access, use a Keycloak-backed user such as the one created in Tasks 1–4.
 
 ## Key Concepts
 
@@ -220,11 +225,11 @@ At this point, you should have:
 
 ## Learn More
 
-- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html 
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html
 - Keycloak Administration Console documentation
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest  
+- **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster , April 1, 2026
+- **Last Updated By/Date** - Perside Foster, May 6, 2026
