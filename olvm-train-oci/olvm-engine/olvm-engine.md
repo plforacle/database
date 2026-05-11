@@ -4,7 +4,7 @@
 
 In this lab, you will connect to the manager host created in Lab 1 using SSH, install the required OLVM packages, run `engine-setup`, and validate access to the Administration Portal directly from your local browser.
 
-**Estimated Lab Time:** 60-90 minutes, including package download and engine setup time.
+**Estimated Lab Time:** 40-60 minutes, including package download and engine setup time.
 
 ### Objectives
 
@@ -160,18 +160,23 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
 
     Record the FQDN — for example, `olvm.pub.olv.oraclevcn.com`.
 
-2. On your local Windows machine, open **Command Prompt** as administrator:
+2. On your local machine, edit the hosts file using the instructions for your operating system:
 
-    - Type `cmd` in the Start menu
-    - Right-click **Command Prompt** and select **Run as administrator**
+    **Windows:**
+    - Type `cmd` in the Start menu, right-click **Command Prompt**, and select **Run as administrator**
+    - Run: `notepad C:\Windows\System32\drivers\etc\hosts`
 
-3. Open the hosts file in Notepad:
-
+    **macOS:**    
+    ```bash
+    <copy>sudo nano /etc/hosts</copy>
     ```
-    <copy>notepad C:\Windows\System32\drivers\etc\hosts</copy>
+
+    **Linux:**
+    ```bash
+    <copy>sudo nano /etc/hosts</copy>
     ```
 
-4. Add a line at the bottom of the file that maps the public IP of the `olvm` instance to the engine FQDN. Use your own values:
+3. Add a line at the bottom of the file that maps the public IP of the `olvm` instance to the engine FQDN:
 
     ```
     <olvm-public-ip>   <olvm-fqdn>
@@ -183,7 +188,7 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
     141.148.13.243   olvm.pub.olv.oraclevcn.com
     ```
 
-5. Save the file and close Notepad.
+4. Save the file and close the editor.
 
 ## Task 4: Log in to the Administration Portal
 

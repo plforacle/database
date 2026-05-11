@@ -4,7 +4,7 @@
 
 In this optional lab, you will import two prebuilt OVAs: one for a MySQL database VM and one for a Java web application VM. The lab demonstrates how OLVM can package complete workloads and redeploy them across the cluster with minimal manual configuration.
 
-**Estimated Lab Time:** 20-35 minutes, including OVA download, import, and application startup time.
+**Estimated Lab Time:** 15-30 minutes, including OVA download, import, and application startup time.
 
 ### Objectives
 

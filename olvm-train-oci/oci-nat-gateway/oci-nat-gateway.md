@@ -17,7 +17,7 @@ In this lab, you will:
 - Associate the route table with the VLAN used by the OLVM VMs
 - Access a VM on the VLAN by using the `olvm` host as a jump point
 
-Estimated Time: 20-25 minutes
+Estimated Time: 15-25 minutes
 
 ## Prerequisites
 

@@ -4,7 +4,7 @@
 
 In this lab, you will create the logical network for guest traffic, add shared storage, import an Oracle Linux template, and deploy a test VM to verify the environment before you move on to the application lab.
 
-**Estimated Lab Time:** 60-75 minutes, including OVA download and template import time.
+**Estimated Lab Time:** 40-60 minutes, including OVA download and template import time.
 
 ### Objectives
 
@@ -57,7 +57,7 @@ This lab assumes you have:
 
 4. Click **Setup Host Networks**.
 
-    ![The Setup Host Networks dialog showing Unassigned Logical Networks on the left and physical interfaces on the right.](images/olvm-setup-host-networks.png)
+    ![Setup Host Network](images/olvm-setup-host-networks.png)
 
 5. Drag `l2-vm-network` from **Unassigned Logical Networks** on the left side into the physical interface box on the right side (for example, `ens5`).
 
@@ -137,7 +137,7 @@ This lab assumes you have:
     <copy>/tmp</copy>
     ```
 
-    ![The Import Template dialog with the File Path set to /tmp and olkvm01 selected as the host.](images/olvm-import-templates.png)
+    ![Import Template dialog with the File Path.](images/olvm-import-templates.png)
 
 6. Click **Load**.
 
@@ -200,7 +200,7 @@ This lab assumes you have:
     <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
-4. Connect to `ol9-vm1` (**Log in with the password defined in Task 6.*** ):
+4. Connect to `ol9-vm1` (**Log in with the password defined in Task 6.**):
 
     ```bash
     <copy>ssh opc@10.0.10.105</copy>

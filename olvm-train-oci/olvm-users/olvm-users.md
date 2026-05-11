@@ -136,6 +136,8 @@ This lab assumes you have:
 
 ## Task 5: Create a Local Internal User
 
+> **Important:** In a Keycloak-enabled OLVM 4.5 environment, a local internal user created with `ovirt-aaa-jdbc-tool` may not be usable for normal web portal login. For browser-based administrative access, use a Keycloak-backed user such as the one created in Tasks 1–4.
+
 To create a local internal user in OLVM 4.5, use the `ovirt-aaa-jdbc-tool` on the engine host.
 
 1. Connect to the OLVM engine host using SSH.
@@ -192,6 +194,7 @@ Once added to the portal, you must assign a role.
 - `SuperUser` for full administrative rights
 
 5. Click **OK**.
+
 ## Task 9: Verify User Access
 
 1. Log out of the OLVM Administration Portal.
@@ -202,9 +205,6 @@ Once added to the portal, you must assign a role.
 
 4. Verify that the local internal user has the expected role assigned in the **Permissions** tab.
 
-## Task 5: Create a Local Internal User
-
-> **Important:** In a Keycloak-enabled OLVM 4.5 environment, a local internal user created with `ovirt-aaa-jdbc-tool` may not be usable for normal web portal login. For browser-based administrative access, use a Keycloak-backed user such as the one created in Tasks 1–4.
 
 ## Key Concepts
 
@@ -213,7 +213,7 @@ Once added to the portal, you must assign a role.
 - Both types of users must be added to OLVM and assigned roles before they can be used effectively.
 - A user without permissions can authenticate but may not have usable access in the portal.
 
-## ✅ Manage Users and Roles Checkpoint
+## Manage Users and Roles Checkpoint
 
 At this point, you should have:
 

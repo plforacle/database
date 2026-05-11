@@ -2,9 +2,9 @@
 
 ## Introduction
 
-### Overview
-
 Live migration allows you to move a running virtual machine from one KVM host to another without downtime. This is a key capability for maintenance operations, load balancing, and high availability scenarios.
+
+**Estimated Lab Time:** 5-10 minutes
 
 ### Objectives
 
@@ -34,7 +34,7 @@ In this lab, you will:
 
 1. Go to **Compute** → **Hosts**. Verify both hosts show status **Up**.
 
-    ![The OLVM Hosts pane showing both olkvm01 and olkvm02 with status Up.](images/olvm-hosts-pane.png)
+    ![OLVM Hosts pane olkvm01 and olkvm02 status Up.](images/olvm-hosts-pane.png)
 
 2. Go to **Compute** → **Virtual Machines**. Check the **Host** column for `ol9-mysql` to confirm which host it is currently running on.
 

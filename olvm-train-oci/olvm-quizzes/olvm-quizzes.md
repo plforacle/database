@@ -295,7 +295,7 @@ Q: 1. What is the correct order of phases during a live migration?
 - C. Activation → Pre-copy → Stop-and-copy
 - D. Snapshot → Copy → Restore
 
-Q: 2 During live migration, does the VM experience any downtime?
+Q: 2. During live migration, does the VM experience any downtime?
 - A. Yes, the VM is offline for several minutes
 * B. No downtime — the VM continues running throughout with only a brief pause during final sync
 - C. The VM must be rebooted after migration

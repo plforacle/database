@@ -202,19 +202,26 @@ This lab assumes you have:
     <copy>ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""</copy>
     ```
 
-2. Set the compartment OCID:
+2. Copy the OCID for the compartment you are using for this workshop.
+
+    In the OCI Console, open **Identity & Security -> Compartments**, select the target compartment, and copy its **OCID**.
+
+3. Set the compartment OCID in your terminal:
 
     ```bash
-    <copy>export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"</copy>
+    <copy>read -r -p "Paste your compartment OCID: " OCI_COMPARTMENT_OCID
+export OCI_COMPARTMENT_OCID</copy>
     ```
 
-3. Display the compartment variable to verify it was set:
+4. Confirm the value was set:
 
     ```bash
     <copy>echo "$OCI_COMPARTMENT_OCID"</copy>
     ```
 
-4. Create `instances.yml`:
+    The value should start with `ocid1.compartment.oc1`.
+
+5. Create `instances.yml`:
 
     ```bash
     <copy>cd ~/linux-virt-labs/olvm
@@ -245,7 +252,7 @@ This lab assumes you have:
 
     **Block volume sizing:** `blk_volume_size_in_gbs` makes the provisioned block volume size configurable during deployment. This workshop uses `512` GB as a defined, lower-cost value instead of the larger default allocation of `1 TB`, while still providing enough capacity for the lab environment. If your environment requires more storage, you can increase this value before running the playbook.
 
-5. Create the `hosts` inventory so Ansible uses the virtual environment Python:
+6. Create the `hosts` inventory so Ansible uses the virtual environment Python:
 
     ```bash
     <copy>cat <<'EOF' > hosts
@@ -255,7 +262,7 @@ This lab assumes you have:
     cat hosts</copy>
     ```
 
-6. Run the playbook from the virtual environment:
+7. Run the playbook from the virtual environment:
 
     ```bash
     <copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml"</copy>
@@ -274,7 +281,7 @@ This lab assumes you have:
     >
     > This preserves the deployed OLVM infrastructure for the remaining labs.
 
-7. Record **both public and private IPs** for:
+8. Record **both public and private IPs** for:
 
     - `olvm`
     - `olkvm01`
