@@ -111,8 +111,6 @@ This lab assumes you have:
 
 11. The host status moves through **Installing** and **Initializing** before it reaches **Up**.
 
-    ![The OLVM management portal showing the host status transitions during installation.](images/completed-hosts.png)
-
     **Expected time:** 10-20 minutes.
 
     If the host stays in **Installing** or **Initializing** for more than 25 minutes, or changes to **Non Operational**, stop and review:
@@ -192,6 +190,9 @@ This lab assumes you have:
 7. Return to the browser and click **OK**, then click **OK** again in the power management dialog.
 
 8. Wait for `olkvm02` to show status **Up** before you continue.
+
+    ![The OLVM management portal showing the host status transitions during installation.](images/completed-hosts.png)
+
 
     Use the same 10-20 minute expectation and the same troubleshooting guidance from Task 2 if the host does not finish installation cleanly.
 

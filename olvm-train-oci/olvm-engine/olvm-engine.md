@@ -192,7 +192,7 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
 
 ## Task 4: Log in to the Administration Portal
 
-1. Open your local browser (Chrome, Firefox, or Edge).
+1. Open your local browser. **Firefox:** is a lot easier to use(Chrome, Firefox, or Edge).
 
 2. Navigate to the Administration Portal using the engine FQDN:
 
