@@ -43,7 +43,7 @@
       "filename": "../../application/application.md"
     },
     {
-      "title": "Lab 7: Manage Users and Roles",
+      "title": "Lab 7: Manage Users and Roles (Optional)",
       "description": "Create users, assign roles, and verify role-based access in OLVM.",
       "filename": "../../olvm-users/olvm-users.md"
     },
