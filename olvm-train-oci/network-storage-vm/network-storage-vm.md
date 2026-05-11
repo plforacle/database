@@ -222,6 +222,11 @@ This lab assumes you have:
 
     The ping should succeed, confirming network connectivity.
 
+7. Exit the VM:
+
+    ```bash
+    <copy>exit</copy>
+    ```
 ### Set Up Networking, Storage, and VM Checkpoint
 
 At this point, you should have:

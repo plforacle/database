@@ -135,6 +135,11 @@ The NAT Gateway only allows the VMs to reach the internet; it does not open a pa
 
     ![VLAN VM connect result.](images/vlan-vm-test.png)
 
+6. Exit the VM:
+
+    ```bash
+    <copy>exit</copy>
+    ```
 
 ### Configure OCI NAT Gateway Checkpoint
 
