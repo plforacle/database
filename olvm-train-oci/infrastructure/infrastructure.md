@@ -352,7 +352,7 @@ The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to p
 
     > **Note:** OCI security list changes take effect immediately — no reboot is required.
 
-4. After you confirm local SSH access to `olvm`, you are ready to terminate the bootstrap instance in the next task. You can skip the Terminate task for later..
+4. After you confirm local SSH access to `olvm`, you are ready to terminate the bootstrap instance in the next task. You can skip the Terminate task for later.
 
 ## Task 7: Terminate the Bootstrap Instance
 
