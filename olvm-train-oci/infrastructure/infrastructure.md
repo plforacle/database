@@ -10,6 +10,7 @@ In this lab, you will use a temporary bootstrap instance as the Ansible controll
 
 In this lab, you will:
 
+- Verify that VLAN support (Layer 2 network virtualization) is enabled for the tenancy
 - Create a VCN for the bootstrap deployment
 - Launch a temporary bootstrap compute instance
 - Install required software on the bootstrap host
@@ -23,6 +24,7 @@ In this lab, you will:
 This lab assumes you have:
 
 - An OCI tenancy with sufficient quotas for the workshop instances
+- **VLAN support (Layer 2 network virtualization) enabled for the tenancy and target region** — see Task 0 below
 - A target compartment for lab resources
 - Access to the OCI Console
 - Your SSH public key for the initial bootstrap instance login
@@ -30,6 +32,45 @@ This lab assumes you have:
 
 > **Important:** This lab builds the base environment used by every later lab. Do not continue to Lab 2 until the Lab 1 checkpoint is complete.
 
+
+## Task 0: Verify VLAN Support Is Enabled
+
+The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to provide the OLVM management, migration, and storage networks. OCI VLANs provide Layer 2 network segmentation within a VCN. Some tenancies or regions may require VLAN / Layer 2 networking capability to be enabled or validated before VLAN creation succeeds.
+
+> **⚠️ If VLANs are not visible or VLAN creation is not available in your target region, stop here.** The playbook in Task 5 will fail if the required VLAN capability is not available. Submit a limit increase or support request and wait for confirmation before continuing.
+
+### To request VLAN support or a limit update, if needed
+
+1. Sign in to the OCI Console.
+
+2. Open the navigation menu and go to **Governance & Administration → Tenancy Management → Limits, Quotas and Usage**.
+
+3. Search for **VLAN** or browse to the **Networking** category.
+
+4. If a VLAN-related limit/request option is available, open a limit increase request. If VLANs are not listed or you cannot request the needed item from the Console, open an Oracle Support request.
+
+5. Include the following text in your request:
+
+   > Please enable or validate Layer 2 network virtualization / VLAN support for tenancy `<tenancy-OCID>` in region `<region>`. This is required to deploy Oracle Linux Virtualization Manager (OLVM) on OCI and to create the VLANs needed for OLVM management, migration, and storage networks.
+
+6. Replace `<tenancy-OCID>` with your tenancy OCID and `<region>` with your OCI region identifier, for example `us-ashburn-1`.
+
+7. Submit the request and wait for confirmation before continuing.
+
+### To verify VLAN support is active before running the playbook
+
+1. In the OCI Console, switch to the workshop target region.
+
+2. Go to **Networking → Virtual Cloud Networks**.
+
+3. Select an existing VCN in that region, or create/open the workshop bootstrap VCN if one is already available.
+
+4. Under the VCN **Resources** menu, look for **VLANs**.
+
+   - If **VLANs** is visible and you can access or create VLAN resources, continue with the lab.
+   - If **VLANs** is not visible, first confirm you are in the correct region, compartment, and IAM group. If those are correct, do not proceed until Oracle Support confirms VLAN / Layer 2 networking capability or the required limit update has been applied.
+
+> **Note:** Validate this in the same OCI region the workshop will use. Do not assume VLAN availability or enablement across regions.
 
 ## Task 1: Create Bootstrap VCN (VCN Wizard)
 
@@ -202,26 +243,19 @@ This lab assumes you have:
     <copy>ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""</copy>
     ```
 
-2. Copy the OCID for the compartment you are using for this workshop.
-
-    In the OCI Console, open **Identity & Security -> Compartments**, select the target compartment, and copy its **OCID**.
-
-3. Set the compartment OCID in your terminal:
+2. Set the compartment OCID:
 
     ```bash
-    <copy>read -r -p "Paste your compartment OCID: " OCI_COMPARTMENT_OCID
-export OCI_COMPARTMENT_OCID</copy>
+    <copy>export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"</copy>
     ```
 
-4. Confirm the value was set:
+3. Display the compartment variable to verify it was set:
 
     ```bash
     <copy>echo "$OCI_COMPARTMENT_OCID"</copy>
     ```
 
-    The value should start with `ocid1.compartment.oc1`.
-
-5. Create `instances.yml`:
+4. Create `instances.yml`:
 
     ```bash
     <copy>cd ~/linux-virt-labs/olvm
@@ -252,7 +286,7 @@ export OCI_COMPARTMENT_OCID</copy>
 
     **Block volume sizing:** `blk_volume_size_in_gbs` makes the provisioned block volume size configurable during deployment. This workshop uses `512` GB as a defined, lower-cost value instead of the larger default allocation of `1 TB`, while still providing enough capacity for the lab environment. If your environment requires more storage, you can increase this value before running the playbook.
 
-6. Create the `hosts` inventory so Ansible uses the virtual environment Python:
+5. Create the `hosts` inventory so Ansible uses the virtual environment Python:
 
     ```bash
     <copy>cat <<'EOF' > hosts
@@ -262,7 +296,7 @@ export OCI_COMPARTMENT_OCID</copy>
     cat hosts</copy>
     ```
 
-7. Run the playbook from the virtual environment:
+6. Run the playbook from the virtual environment:
 
     ```bash
     <copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml"</copy>
@@ -281,7 +315,7 @@ export OCI_COMPARTMENT_OCID</copy>
     >
     > This preserves the deployed OLVM infrastructure for the remaining labs.
 
-8. Record **both public and private IPs** for:
+7. Record **both public and private IPs** for:
 
     - `olvm`
     - `olkvm01`
@@ -347,6 +381,7 @@ export OCI_COMPARTMENT_OCID</copy>
 
 At this point, you should have:
 
+- VLAN support (Layer 2 network virtualization) confirmed active for the tenancy and region
 - OCI credentials configured on the bootstrap host
 - Three deployed instances: `olvm`, `olkvm01`, and `olkvm02`
 - Public and private IPs recorded for all three instances

@@ -57,10 +57,24 @@ This workshop assumes you have:
 - Access to an Oracle Cloud Infrastructure tenancy and the target compartment for the lab
 - Permission to create OCI networking, compute, and storage resources required by the workshop
 - A local SSH client and local PowerShell terminal
-- TigerVNC Viewer installed on your local machine for the OLVM manager desktop session
 - 4-5 hours available for the hands-on portion
 - A note-taking tool for recording hostnames, IP addresses, and credentials
 - Basic familiarity with Linux command line usage, SSH, and terminal workflows
+
+
+### Required: Verify Layer 2 Network Virtualization / VLAN Support
+
+> **⚠️ Action Required Before Workshop Day**
+
+This workshop creates VLANs inside an OCI Virtual Cloud Network (VCN). The Ansible provisioning playbook uses these VLANs to build the OLVM management, migration, and storage networks.
+
+Before the workshop, verify that VLAN resources are available in the target OCI region and compartment you will use for the lab. If VLANs are not visible in the VCN resource menu, or if VLAN creation is not available, request the required VLAN / Layer 2 networking enablement or service-limit update before the workshop.
+
+Do not wait until the provisioning lab to check this. The playbook will fail if the required VLAN capability is not available.
+
+**Submit a support or service-limit request before the workshop if VLANs are not available:**
+
+
 
 ## Learn More
 
