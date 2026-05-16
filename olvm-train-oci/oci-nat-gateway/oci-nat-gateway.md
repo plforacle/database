@@ -19,6 +19,10 @@ In this lab, you will:
 
 Estimated Time: 15-25 minutes
 
+### Video Walkthrough
+
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab5-no-presenter.mp4)
+
 ## Prerequisites
 
 This lab assumes you have:

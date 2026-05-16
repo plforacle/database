@@ -6,6 +6,10 @@ In this lab, you will connect to the manager host created in Lab 1 using SSH, in
 
 **Estimated Lab Time:** 40-60 minutes, including package download and engine setup time.
 
+### Video Walkthrough
+
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab2-no-presenter.mp4)
+
 ### Objectives
 
 In this lab, you will:

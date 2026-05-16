@@ -6,6 +6,10 @@ Live migration allows you to move a running virtual machine from one KVM host to
 
 **Estimated Lab Time:** 5-10 minutes
 
+### Video Walkthrough
+
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab8-no-presenter.mp4)
+
 ### Objectives
 
 In this lab, you will:

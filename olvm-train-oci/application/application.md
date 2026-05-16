@@ -6,6 +6,10 @@ In this optional lab, you will import two prebuilt OVAs: one for a MySQL databas
 
 **Estimated Lab Time:** 15-30 minutes, including OVA download, import, and application startup time.
 
+### Video Walkthrough
+
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab6-no-presenter.mp4)
+
 ### Objectives
 
 In this lab, you will:

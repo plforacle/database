@@ -6,6 +6,10 @@ In this lab, you will prepare both KVM hosts and add them to the OLVM default cl
 
 **Estimated Lab Time:** 45-60 minutes, including host installation and status transitions.
 
+### Video Walkthrough
+
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab3-no-presenter.mp4)
+
 ### Objectives
 
 In this lab, you will:

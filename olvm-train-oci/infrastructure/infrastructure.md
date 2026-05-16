@@ -6,6 +6,10 @@ In this lab, you will use a temporary bootstrap instance as the Ansible controll
 
 **Estimated Lab Time:** 45-60 minutes, including 20-35 minutes for the Ansible provisioning run.
 
+### Video Walkthrough
+
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab1-no-presenter.mp4)
+
 ### Objectives
 
 In this lab, you will:

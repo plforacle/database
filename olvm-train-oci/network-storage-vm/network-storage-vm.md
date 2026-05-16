@@ -6,6 +6,10 @@ In this lab, you will create the logical network for guest traffic, add shared s
 
 **Estimated Lab Time:** 40-60 minutes, including OVA download and template import time.
 
+### Video Walkthrough
+
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab4-no-presenter.mp4)
+
 ### Objectives
 
 In this lab, you will:
