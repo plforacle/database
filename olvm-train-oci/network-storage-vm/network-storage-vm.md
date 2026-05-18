@@ -8,6 +8,8 @@ In this lab, you will create the logical network for guest traffic, add shared s
 
 ### Video Walkthrough
 
+This walkthrough video is silent and does not include audio narration.
+
 [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab4-no-presenter.mp4)
 
 ### Objectives

@@ -8,6 +8,8 @@ In this lab, you will prepare both KVM hosts and add them to the OLVM default cl
 
 ### Video Walkthrough
 
+This walkthrough video is silent and does not include audio narration.
+
 [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab3-no-presenter.mp4)
 
 ### Objectives

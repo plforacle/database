@@ -8,6 +8,8 @@ In this lab, you will connect to the manager host created in Lab 1 using SSH, in
 
 ### Video Walkthrough
 
+This walkthrough video is silent and does not include audio narration.
+
 [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab2-no-presenter.mp4)
 
 ### Objectives

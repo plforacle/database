@@ -8,6 +8,8 @@ In this optional lab, you will import two prebuilt OVAs: one for a MySQL databas
 
 ### Video Walkthrough
 
+This walkthrough video is silent and does not include audio narration.
+
 [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab6-no-presenter.mp4)
 
 ### Objectives

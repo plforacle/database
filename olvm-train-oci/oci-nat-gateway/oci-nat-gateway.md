@@ -21,6 +21,8 @@ Estimated Time: 15-25 minutes
 
 ### Video Walkthrough
 
+This walkthrough video is silent and does not include audio narration.
+
 [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab5-no-presenter.mp4)
 
 ## Prerequisites

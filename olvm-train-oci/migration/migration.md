@@ -8,6 +8,8 @@ Live migration allows you to move a running virtual machine from one KVM host to
 
 ### Video Walkthrough
 
+This walkthrough video is silent and does not include audio narration.
+
 [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab8-no-presenter.mp4)
 
 ### Objectives
