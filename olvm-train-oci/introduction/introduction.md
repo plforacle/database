@@ -61,18 +61,42 @@ This workshop assumes you have:
 - A note-taking tool for recording hostnames, IP addresses, and credentials
 - Basic familiarity with Linux command line usage, SSH, and terminal workflows
 
+### Required: OCI IAM Policies
 
-### Required: Verify Layer 2 Network Virtualization / VLAN Support
+Before starting the workshop, confirm that your OCI user has permission to create the compute, networking, and storage resources used by the lab.
 
-> **⚠️ Action Required Before Workshop Day**
+The Ansible provisioning playbook creates the lab infrastructure, including the OLVM instances, VCN resources, VLANs, public IPs, and block volume. Users do not need to create those resources manually.
+
+The simplest IAM policy model is to create a dedicated compartment for the workshop and grant the lab group full access inside only that compartment:
+
+```text
+Allow group <group-name> to manage all-resources in compartment <compartment-name>
+```
+
+If your tenancy requires narrower policies, use these as a starting point:
+
+```text
+Allow group <group-name> to manage instance-family in compartment <compartment-name>
+Allow group <group-name> to manage virtual-network-family in compartment <compartment-name>
+Allow group <group-name> to manage volume-family in compartment <compartment-name>
+Allow group <group-name> to read app-catalog-listings in tenancy
+```
+
+The workshop user must also be able to upload an OCI API key to their OCI user profile. The provisioning lab runs `oci setup config` from the bootstrap host and uses that user API key to create the lab resources.
+
+### Required: OCI Service Limits and Quotas
+
+Before workshop day, confirm that the target OCI tenancy, region, and compartment have enough available service limits for compute, memory, block storage, public IPs, VCN networking, VLANs, and one NAT gateway. If your tenancy is new, restricted, or close to its service limits, ask your tenancy administrator to review OCI **Limits, Quotas and Usage** before starting the workshop.
+
+Lab 1 includes the provisioning steps. If a quota or service limit is insufficient, the Ansible playbook may fail while creating the lab resources.
+
+### Required: Layer 2 Network Virtualization / VLAN Support
 
 This workshop creates VLANs inside an OCI Virtual Cloud Network (VCN). The Ansible provisioning playbook uses these VLANs to build the OLVM management, migration, and storage networks.
 
-Before the workshop, verify that VLAN resources are available in the target OCI region and compartment you will use for the lab. If VLANs are not visible in the VCN resource menu, or if VLAN creation is not available, request the required VLAN / Layer 2 networking enablement or service-limit update before the workshop.
+Before workshop day, confirm with your tenancy administrator that VLAN / Layer 2 network virtualization is available in the target OCI region and compartment. Lab 1 includes the hands-on verification steps before provisioning begins.
 
-Do not wait until the provisioning lab to check this. The playbook will fail if the required VLAN capability is not available.
-
-**Submit a support or service-limit request before the workshop if VLANs are not available:**
+If VLANs are not available, submit a support or service-limit request before starting the workshop. The provisioning playbook in Lab 1 will fail if the required VLAN capability is not enabled.
 
 
 
@@ -84,4 +108,4 @@ Do not wait until the provisioning lab to check this. The playbook will fail if 
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, May 6, 2026
+- **Last Updated By/Date** - Perside Foster, May 19, 2026
