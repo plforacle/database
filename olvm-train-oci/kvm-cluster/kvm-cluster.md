@@ -219,6 +219,6 @@ You are ready for Lab 4 only when all checkpoint items above are complete.
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest
-- **Contributors** - Perside Foster
+- **Author** - Shawn Kelley, Perside Foster
+- **Contributor** - Marvin Kim
 - **Last Updated By/Date** - Perside Foster, May 20, 2026

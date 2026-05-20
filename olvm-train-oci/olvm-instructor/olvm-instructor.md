@@ -235,6 +235,6 @@ Live migration proves that the OLVM environment was configured correctly across 
 
 ## Acknowledgements
 
-- **Author** - Perside Foster
-- **Contributors** - Perside Foster
+- **Author** - Shawn Kelley, Perside Foster
+- **Contributor** - Marvin Kim
 - **Last Updated By/Date** - Perside Foster, May 20, 2026

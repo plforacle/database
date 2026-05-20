@@ -106,6 +106,6 @@ If VLANs are not available, submit a support or service-limit request before sta
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest
-- **Contributors** - Perside Foster
+- **Author** - Shawn Kelley, Perside Foster
+- **Contributor** - Marvin Kim
 - **Last Updated By/Date** - Perside Foster, May 20, 2026
