@@ -4,13 +4,13 @@
 
 In this lab, you will create the logical network for guest traffic, add shared storage, import an Oracle Linux template, and deploy a test VM to verify the environment before you move on to the application lab.
 
-**Estimated Lab Time:** 40-60 minutes, including OVA download and template import time.
+Estimated Time: 40-60 minutes, including OVA download and template import time.
 
 ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab4-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab4-no-presenter.mp4)
 
 ### Objectives
 
@@ -253,4 +253,4 @@ You are ready for Lab 5 only when all checkpoint items above are complete.
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, May 6, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

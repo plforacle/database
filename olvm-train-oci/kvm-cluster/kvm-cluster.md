@@ -4,13 +4,13 @@
 
 In this lab, you will prepare both KVM hosts and add them to the OLVM default cluster. When the lab is complete, `olkvm01` and `olkvm02` should both reach `Up` status and be ready for networking, storage, and VM placement.
 
-**Estimated Lab Time:** 45-60 minutes, including host installation and status transitions.
+Estimated Time: 45-60 minutes, including host installation and status transitions.
 
 ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab3-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab3-no-presenter.mp4)
 
 ### Objectives
 
@@ -221,4 +221,4 @@ You are ready for Lab 4 only when all checkpoint items above are complete.
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, May 6, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

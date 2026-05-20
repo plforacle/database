@@ -4,13 +4,13 @@
 
 In this lab, you will use a temporary bootstrap instance as the Ansible controller for the workshop environment. You will create a VCN, launch the bootstrap host, install required software, configure OCI credentials, run the provisioning playbook, and verify access to the three instances used in later labs: `olvm`, `olkvm01`, and `olkvm02`.
 
-**Estimated Lab Time:** 45-60 minutes, including 20-35 minutes for the Ansible provisioning run.
+Estimated Time: 45-60 minutes, including 20-35 minutes for the Ansible provisioning run.
 
 ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab1-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab1-no-presenter.mp4)
 
 ### Objectives
 
@@ -30,7 +30,7 @@ In this lab, you will:
 This lab assumes you have:
 
 - An OCI tenancy with sufficient quotas for the workshop instances
-- **VLAN support (Layer 2 network virtualization) enabled for the tenancy and target region** — see Task 0 below
+- **VLAN support (Layer 2 network virtualization) enabled for the tenancy and target region** - see Task 0 below
 - A target compartment for lab resources
 - Access to the OCI Console
 - Your SSH public key for the initial bootstrap instance login
@@ -405,4 +405,4 @@ You are ready for Lab 2 only after all checkpoint items above are complete.
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, May 6, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

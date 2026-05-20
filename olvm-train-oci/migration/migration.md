@@ -4,13 +4,13 @@
 
 Live migration allows you to move a running virtual machine from one KVM host to another without downtime. This is a key capability for maintenance operations, load balancing, and high availability scenarios.
 
-**Estimated Lab Time:** 5-10 minutes
+Estimated Time: 5-10 minutes
 
 ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab8-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab8-no-presenter.mp4)
 
 ### Objectives
 
@@ -121,39 +121,39 @@ At this point, you should have:
 
 ### Installation & Engine Setup
 ```bash
-# Enable OLVM repositories
+ # Enable OLVM repositories
 <copy>sudo dnf install -y oracle-ovirt-release-45-el8</copy>
 
-# Install engine
+ # Install engine
 sudo dnf install -y ovirt-engine
 
-# Configure engine (will prompt for admin password)
+ # Configure engine (will prompt for admin password)
 sudo engine-setup --accept-defaults
 
-# Access portal
-# https://<fqdn>/ovirt-engine
+ # Access portal
+ # https://<fqdn>/ovirt-engine
 ```
 
 ### Host & Cluster Management
 ```bash
-# Get engine SSH public key (for adding hosts)
+ # Get engine SSH public key (for adding hosts)
 ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa
 
-# Verify VDSM service on host
+ # Verify VDSM service on host
 sudo systemctl status vdsm
 ```
 
 ### VM Access and Connectivity
 ```bash
-# Connect to VMs directly from olvm engine
+ # Connect to VMs directly from olvm engine
 ssh opc@10.0.10.100  # MySQL VM
 ssh opc@10.0.10.101  # Webapp VM
 
-# Test connectivity
+ # Test connectivity
 ping 10.0.10.1
 ping 8.8.8.8
 
-# Check VM network configuration
+ # Check VM network configuration
 ip addr show eth0
 ```
 
@@ -165,18 +165,18 @@ ip addr show eth0
 
 ### Troubleshooting
 ```bash
-# Check logs
+ # Check logs
 sudo tail -50 /var/log/ovirt-engine/engine.log
 sudo tail -50 /var/log/vdsm/vdsm.log
 
-# Check service status
+ # Check service status
 sudo systemctl status vdsm
 sudo systemctl status ovirt-engine
 
-# Restart engine (if cache issues)
+ # Restart engine (if cache issues)
 sudo systemctl restart ovirt-engine
 
-# Check connectivity
+ # Check connectivity
 ip addr show eth0
 sudo ss -tlnp | grep 8080
 ```
@@ -205,4 +205,4 @@ You now have hands-on experience with the core OLVM administration tasks: engine
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, April 1, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

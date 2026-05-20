@@ -1,7 +1,17 @@
 # OLVM Exam Practice Quiz Bank
 ## Introduction
 
-60 Questions Mapped to Exam 1Z0-1170 — Oracle Linux Virtualization Manager Associate
+60 questions mapped to Exam 1Z0-1170 - Oracle Linux Virtualization Manager Associate
+
+Estimated Time: 75 minutes
+
+### Objectives
+
+In this quiz bank, you will:
+
+- Review OLVM architecture and core components
+- Check understanding of engine installation and host management
+- Reinforce networking, storage, VM lifecycle, and migration concepts
 
 ### How to Use This Quiz Bank
 
@@ -390,4 +400,4 @@ VM Lifecycle & Migration:
 
 - **Author** - Perside Foster 
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster , April 1, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

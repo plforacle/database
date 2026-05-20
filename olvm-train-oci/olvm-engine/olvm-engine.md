@@ -4,13 +4,13 @@
 
 In this lab, you will connect to the manager host created in Lab 1 using SSH, install the required OLVM packages, run `engine-setup`, and validate access to the Administration Portal directly from your local browser.
 
-**Estimated Lab Time:** 40-60 minutes, including package download and engine setup time.
+Estimated Time: 40-60 minutes, including package download and engine setup time.
 
 ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab2-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab2-no-presenter.mp4)
 
 ### Objectives
 
@@ -260,4 +260,4 @@ Keep your SSH session and browser open for Labs 3-5.
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, May 6, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

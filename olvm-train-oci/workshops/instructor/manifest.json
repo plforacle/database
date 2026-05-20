@@ -1,5 +1,5 @@
 {
-  "workshoptitle": "OLVM Trainnig Quiz Bank",
+  "workshoptitle": "OLVM Training Quiz Bank",
     "help": "livelabs-help-oci_us@oracle.com",
     "tutorials": [
       {
@@ -15,6 +15,6 @@
         {
             "title": "Need Help?",
             "description": "Solutions to Common Problems and Directions for Receiving Live Help",
-            "filename":"https://oracle-livelabs.github.io/common//labs/need-help/need-help-freetier.md"          }
+            "filename":"https://oracle-livelabs.github.io/common/labs/need-help/need-help-freetier.md"          }
     ]
 }

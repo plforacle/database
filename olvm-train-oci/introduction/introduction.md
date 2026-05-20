@@ -37,7 +37,7 @@ Follow these rules throughout the workshop:
 - Treat the documented wait times as part of the workshop. Long-running tasks are expected.
 - If a step runs materially longer than the documented range and you cannot verify progress, stop and contact the instructor or workshop owner before changing the environment manually.
 
-## Objectives
+### Objectives
 
 In this workshop, you will:
 
@@ -108,4 +108,4 @@ If VLANs are not available, submit a support or service-limit request before sta
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, May 19, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

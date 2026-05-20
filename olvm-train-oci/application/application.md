@@ -4,13 +4,13 @@
 
 In this optional lab, you will import two prebuilt OVAs: one for a MySQL database VM and one for a Java web application VM. The lab demonstrates how OLVM can package complete workloads and redeploy them across the cluster with minimal manual configuration.
 
-**Estimated Lab Time:** 15-30 minutes, including OVA download, import, and application startup time.
+Estimated Time: 15-30 minutes, including OVA download, import, and application startup time.
 
 ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-train-oci/o/videos/olvm-on-oci-lab6-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab6-no-presenter.mp4)
 
 ### Objectives
 
@@ -37,7 +37,7 @@ This lab assumes you have:
 1. From the manager terminal, download `ol9-mysql.ova` to `olkvm01`:
 
     ```bash
-    <copy>ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/YU_c5CCO0XELLIqVwtAl77N4RXfTJXFCugLN7eDjoMzX9VMWHTGDJuAzpPbvN0gp/n/idhwewbjlvpy/b/olvm-ova/o/ol9-mysql.ova -o /tmp/ol9-mysql.ova"</copy>
+    <copy>ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/ova-e4-shape%2Fol9-mysql.ova -o /tmp/ol9-mysql.ova"</copy>
     ```
 
     **Expected time:** 10-20 minutes. Wait for the `curl` command to complete before continuing to Task 2.
@@ -103,7 +103,7 @@ This lab assumes you have:
 1. From the manager terminal, download `ol9-webapp.ova` to `olkvm02`:
 
     ```bash
-    <copy>ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/p/QVbUx0DOX8QmXrip09IIfBEANwGCA2aQ4SojhJ5__ZX7lPjTN15Eg-174doal5-o/n/idhwewbjlvpy/b/olvm-ova/o/ol9-webapp.ova -o /tmp/ol9-webapp.ova"</copy>
+    <copy>ssh olkvm02 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/ova-e4-shape%2Fol9-webapp.ova -o /tmp/ol9-webapp.ova"</copy>
     ```
 
     **Expected time:** 10-20 minutes. Wait for the `curl` command to complete before continuing to Task 5.
@@ -213,4 +213,4 @@ At this point, you should have:
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, May 6, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

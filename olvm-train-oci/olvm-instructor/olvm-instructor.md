@@ -1,9 +1,20 @@
-# OLVM Live Instructor Companion — 1-Page Version with Exact Quiz Stops
+# OLVM Live Instructor Companion - 1-Page Version with Exact Quiz Stops
 
 ## Introduction
 Use this as a **thin instructor overlay** while teaching the Luna lab live on a shared screen. Students already have the explanations in the Luna left pane, and both students and instructor also have access to the quiz page. Your job is to control **pace, checkpoints, quiz moments, recovery, and verbal emphasis**.
 
 Quiz source: attached OLVM quiz bank.
+
+Estimated Time: 8 hours
+
+### Objectives
+
+In this instructor companion, you will:
+
+- Plan the one-day delivery sequence
+- Manage checkpoints, breaks, and quiz stops
+- Keep the class synchronized during long-running lab tasks
+- Reinforce key OLVM concepts at the end of the workshop
 
 ---
 
@@ -221,3 +232,9 @@ Shared storage was required because both hosts must be able to access the **same
 <summary>**What does live migration prove?**</summary>  
 Live migration proves that the OLVM environment was configured correctly across the key layers: **cluster membership, host compatibility, shared storage, and network availability**. It also proves that a running workload can move between hosts with little or no service interruption.
 </details>
+
+## Acknowledgements
+
+- **Author** - Perside Foster
+- **Contributors** - Perside Foster
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

@@ -10,9 +10,9 @@ In this lab, you will create both:
 - a Keycloak-backed administrative user
 - a local internal user
 
-Estimated Lab Time: 20–30 minutes
+Estimated Time: 20-30 minutes
 
-## Objectives
+### Objectives
 
 In this lab, you will:
 
@@ -232,4 +232,4 @@ At this point, you should have:
 
 - **Author** - Shawn Kelley, John Priest
 - **Contributors** - Perside Foster
-- **Last Updated By/Date** - Perside Foster, May 6, 2026
+- **Last Updated By/Date** - Perside Foster, May 20, 2026
