@@ -1,0 +1,55 @@
+{
+  "workshoptitle": "OLVM Training Quiz Bank",
+  "help": "livelabs-help-oci_us@oracle.com",
+  "tutorials": [
+    {
+      "title": "Section 1: Architecture & Overview",
+      "filename": "../../quiz-bank/section-01-architecture-and-overview/section-01-architecture-and-overview.md"
+    },
+    {
+      "title": "Section 2: Engine Installation",
+      "filename": "../../quiz-bank/section-02-engine-installation/section-02-engine-installation.md"
+    },
+    {
+      "title": "Section 3: Core Components",
+      "filename": "../../quiz-bank/section-03-core-components/section-03-core-components.md"
+    },
+    {
+      "title": "Section 4: KVM Host Installation",
+      "filename": "../../quiz-bank/section-04-kvm-host-installation/section-04-kvm-host-installation.md"
+    },
+    {
+      "title": "Section 5: Storage Domain Management",
+      "filename": "../../quiz-bank/section-05-storage-domain-management/section-05-storage-domain-management.md"
+    },
+    {
+      "title": "Section 6: Network Management",
+      "filename": "../../quiz-bank/section-06-network-management/section-06-network-management.md"
+    },
+    {
+      "title": "Section 7: User Management",
+      "filename": "../../quiz-bank/section-07-user-management/section-07-user-management.md"
+    },
+    {
+      "title": "Section 8: Optimization Practices",
+      "filename": "../../quiz-bank/section-08-optimization-practices/section-08-optimization-practices.md"
+    },
+    {
+      "title": "Section 9: Virtual Machine Administration",
+      "filename": "../../quiz-bank/section-09-virtual-machine-administration/section-09-virtual-machine-administration.md"
+    },
+    {
+      "title": "Section 10: Events & Logs Management",
+      "filename": "../../quiz-bank/section-10-events-and-logs-management/section-10-events-and-logs-management.md"
+    },
+    {
+      "title": "Section 11: Recovery Management",
+      "filename": "../../quiz-bank/section-11-recovery-management/section-11-recovery-management.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Solutions to Common Problems and Directions for Receiving Live Help",
+      "filename": "https://oracle-livelabs.github.io/common/labs/need-help/need-help-freetier.md"
+    }
+  ]
+}
