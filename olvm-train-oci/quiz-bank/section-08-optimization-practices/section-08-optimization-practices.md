@@ -374,5 +374,5 @@ Q: 50. What is incompatible with memory hot plug/unplug operations?
 
 ## Acknowledgements
 
-- **Source** - OLVM_Practice_Tests_Combined.pdf
-- **Generated From** - Oracle Linux Virtualization Manager Exam 1Z0-1170 practice test collection
+- **Author** - Perside Foster
+- **Source Material** - OLVM bootcamp training and Oracle Linux Virtualization Manager documentation

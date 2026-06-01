@@ -3,6 +3,10 @@
   "help": "livelabs-help-oci_us@oracle.com",
   "tutorials": [
     {
+      "title": "Introduction",
+      "filename": "../../quiz-bank/introduction/introduction.md"
+    },
+    {
       "title": "Section 1: Architecture & Overview",
       "filename": "../../quiz-bank/section-01-architecture-and-overview/section-01-architecture-and-overview.md"
     },

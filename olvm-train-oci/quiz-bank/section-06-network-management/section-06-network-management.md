@@ -373,5 +373,5 @@ Q: 50. In the VM details page, which tab shows network interface information?
 
 ## Acknowledgements
 
-- **Source** - OLVM_Practice_Tests_Combined.pdf
-- **Generated From** - Oracle Linux Virtualization Manager Exam 1Z0-1170 practice test collection
+- **Author** - Perside Foster
+- **Source Material** - OLVM bootcamp training and Oracle Linux Virtualization Manager documentation

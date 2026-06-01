@@ -493,6 +493,5 @@ VM Lifecycle & Migration:
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, Perside Foster
-- **Contributor** - Marvin Kim
-- **Last Updated By/Date** - Perside Foster, May 20, 2026
+- **Author** - Perside Foster
+- **Source Material** - OLVM bootcamp training and Oracle Linux Virtualization Manager documentation
