@@ -1,0 +1,115 @@
+# Oracle Linux Virtualization Manager (OLVM) on OCI
+
+## Introduction
+
+Oracle Linux Virtualization Manager (OLVM) provides KVM-based virtualization and centralized management for Oracle Linux environments. In this workshop, you will deploy OLVM on Oracle Cloud Infrastructure (OCI) and complete core administration tasks including host onboarding, networking, storage, virtual machine lifecycle management, user management, and live migration.
+
+**Estimated Workshop Time:** 4-5 hours of hands-on work, including wait time for OCI provisioning, package installation, OVA downloads, and host registration.
+
+## Audience and Delivery Model
+
+This workshop is designed for instructor-led enablement sessions for Oracle solution engineers and partners. It has been validated in guided delivery.
+
+If you complete the workshop outside a guided session, use each checkpoint before moving on. Do not assume a later lab can be started safely while an earlier lab is still provisioning resources.
+
+## Workshop Flow
+
+This workshop is organized into the following labs:
+
+1. **Lab 1: Setup OCI Infrastructure** - Provision the bootstrap instance and use Ansible to create the OLVM manager and KVM hosts.
+2. **Lab 2: Deploy OLVM Engine** - Connect to the manager via SSH, install the OLVM engine, and validate portal access.
+3. **Lab 3: Configure KVM Cluster** - Add `olkvm01` and `olkvm02` to the default cluster and wait for both hosts to reach `Up`.
+4. **Lab 4: Set Up Networking, Storage, and VM** - Create the VM network, add shared storage, import the Oracle Linux template, and validate the first VM.
+5. **Lab 4A: Provision OCI Networking for a Dedicated Migration Path (Optional)** - Create a new OCI VLAN, attach secondary VNICs to both KVM hosts, and verify host-to-host connectivity on the new migration path.
+6. **Lab 4B: Map the Dedicated Migration Network in OLVM (Optional)** - Create a migration-role logical network in OLVM and map it to both KVM hosts using the new OCI-side migration interface.
+7. **Lab 5: Configure OCI NAT Gateway for VM Internet Access** - Create a NAT Gateway, add a route table, and associate it with the VLAN for outbound VM connectivity.
+8. **Lab 6: Deploy Multi Tier Application** - Import the application OVAs, power on the database and web application VMs, and validate connectivity.
+9. **Lab 7: Manage Users and Roles** - Create users and validate role-based access within OLVM.
+10. **Lab 8: Perform Live Migration** - Migrate a running VM between hosts with no planned downtime.
+
+**End Result:** A working OLVM deployment on OCI with a two-host KVM cluster, shared storage, multiple virtual machines, and a running Employee Directory application.
+
+## Workshop Rules
+
+Follow these rules throughout the workshop:
+
+- Complete the labs in order.
+- Do not start Lab 4 until both KVM hosts in Lab 3 show status `Up`.
+- Do not start Lab 5 until Lab 4 confirms the logical network, storage domain, template import, and test VM are all working.
+- Labs 4A and 4B are optional. Complete them immediately after Lab 4 if you want to extend the environment with a dedicated migration path, or skip both without blocking the rest of the workshop.
+- Treat the documented wait times as part of the workshop. Long-running tasks are expected.
+- If a step runs materially longer than the documented range and you cannot verify progress, stop and contact the instructor or workshop owner before changing the environment manually.
+
+### Objectives
+
+In this workshop, you will:
+
+- Deploy Oracle Linux Virtualization Manager (OLVM) Engine and verify portal access
+- Add and configure KVM hosts in a cluster
+- Configure logical networking for virtual machines
+- Optionally provision a dedicated OCI and OLVM migration network path
+- Configure OCI outbound internet access for VLAN-based virtual machines
+- Configure shared storage domains and import VM templates
+- Deploy and validate virtual machines
+- Deploy a multi-tier application and perform live migration
+- Review OLVM user and role administration
+
+## Prerequisites
+
+This workshop assumes you have:
+
+- Access to an Oracle Cloud Infrastructure tenancy and the target compartment for the lab
+- Permission to create OCI networking, compute, and storage resources required by the workshop
+- A local SSH client and local PowerShell terminal
+- 4-5 hours available for the hands-on portion
+- A note-taking tool for recording hostnames, IP addresses, and credentials
+- Basic familiarity with Linux command line usage, SSH, and terminal workflows
+
+### Required: OCI IAM Policies
+
+Before starting the workshop, confirm that your OCI user has permission to create the compute, networking, and storage resources used by the lab.
+
+The Ansible provisioning playbook creates the lab infrastructure, including the OLVM instances, VCN resources, VLANs, public IPs, and block volume. Users do not need to create those resources manually.
+
+The simplest IAM policy model is to create a dedicated compartment for the workshop and grant the lab group full access inside only that compartment:
+
+```text
+Allow group <group-name> to manage all-resources in compartment <compartment-name>
+```
+
+If your tenancy requires narrower policies, use these as a starting point:
+
+```text
+Allow group <group-name> to manage instance-family in compartment <compartment-name>
+Allow group <group-name> to manage virtual-network-family in compartment <compartment-name>
+Allow group <group-name> to manage volume-family in compartment <compartment-name>
+Allow group <group-name> to read app-catalog-listings in tenancy
+```
+
+The workshop user must also be able to upload an OCI API key to their OCI user profile. The provisioning lab runs `oci setup config` from the bootstrap host and uses that user API key to create the lab resources.
+
+### Required: OCI Service Limits and Quotas
+
+Before workshop day, confirm that the target OCI tenancy, region, and compartment have enough available service limits for compute, memory, block storage, public IPs, VCN networking, VLANs, and one NAT gateway. If your tenancy is new, restricted, or close to its service limits, ask your tenancy administrator to review OCI **Limits, Quotas and Usage** before starting the workshop.
+
+Lab 1 includes the provisioning steps. If a quota or service limit is insufficient, the Ansible playbook may fail while creating the lab resources.
+
+### Required: Layer 2 Network Virtualization / VLAN Support
+
+This workshop creates VLANs inside an OCI Virtual Cloud Network (VCN). The Ansible provisioning playbook uses these VLANs to build the OLVM management, migration, and storage networks.
+
+Before workshop day, confirm with your tenancy administrator that VLAN / Layer 2 network virtualization is available in the target OCI region and compartment. Lab 1 includes the hands-on verification steps before provisioning begins.
+
+If VLANs are not available, submit a support or service-limit request before starting the workshop. The provisioning playbook in Lab 1 will fail if the required VLAN capability is not enabled.
+
+
+
+## Learn More
+
+- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html
+
+## Acknowledgements
+
+- **Author** - Shawn Kelley, Perside Foster
+- **Contributor** - Marvin Kim
+- **Last Updated By/Date** - Perside Foster, May 20, 2026

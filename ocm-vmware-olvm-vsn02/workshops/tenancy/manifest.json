@@ -1,0 +1,56 @@
+{
+  "workshoptitle": "Build an OCM Demo: VMware to OLVM in OCI",
+  "help": "livelabs-help-oci_us@oracle.com",
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "description": "Review the OCM demo build goals, scope, prerequisites, and source material limits.",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Lab 1: Review the OCM Demo Architecture",
+      "description": "Review the OCVS source, OLVM target, OCM migration flow, and required build values.",
+      "filename": "../../review-architecture/review-architecture.md"
+    },
+    {
+      "title": "Lab 2: Prepare OCI Prerequisites",
+      "description": "Prepare tenancy access, compartment, vault, and non-overlapping network ranges.",
+      "filename": "../../prepare-oci/prepare-oci.md"
+    },
+    {
+      "title": "Lab 3: Deploy the OCVS Source Environment",
+      "description": "Deploy a single-host OCVS SDDC and connect its workload network to OCI resources.",
+      "filename": "../../deploy-ocvs/deploy-ocvs.md"
+    },
+    {
+      "title": "Lab 4: Access and Prepare the VMware Source Workload",
+      "description": "Create a jump host, access vCenter and NSX, upload the Oracle Linux ISO, and build the source VM.",
+      "filename": "../../prepare-source-vm/prepare-source-vm.md"
+    },
+    {
+      "title": "Lab 5: Prepare the OLVM Target",
+      "description": "Verify the OLVM target engine, hosts, storage, networking, templates, and AAA readiness.",
+      "filename": "../../prepare-olvm/prepare-olvm.md"
+    },
+    {
+      "title": "Lab 6: Prepare Oracle Cloud Migrations",
+      "description": "Configure OCM prerequisites, remote agent appliance, VDDK dependency, VMware discovery, and OLVM discovery.",
+      "filename": "../../prepare-ocm/prepare-ocm.md"
+    },
+    {
+      "title": "Lab 7: Migrate the Workload with Oracle Cloud Migrations",
+      "description": "Create the OLVM migration project, configure replication and target placement, generate the Resource Manager stack, and run the migration.",
+      "filename": "../../migrate-vm/migrate-vm.md"
+    },
+    {
+      "title": "Lab 8: Validate the Migrated VM",
+      "description": "Validate the migrated VM in OLVM and capture repeatable demo notes.",
+      "filename": "../../validate-migration/validate-migration.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Solutions to common problems and directions for receiving LiveLabs help.",
+      "filename": "https://oracle-livelabs.github.io/common/labs/need-help/need-help-freetier.md"
+    }
+  ]
+}
