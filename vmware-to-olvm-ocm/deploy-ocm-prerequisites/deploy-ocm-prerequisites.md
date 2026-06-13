@@ -41,7 +41,8 @@ In this lab, you will:
     | Enabled Migrations | Select VMware to OLVM |
     | Replication bucket name| ocm_replication |
     | Create a new replication bucket? | Enable |
-    | Migration root compartment | Select the compartment that will contain the migration prerequisite compartments |
+    | Enable Remote Agent Appliance logging| Enable |
+    | Migration root compartment | olvm-migrations |
 
     ![ Create Stack Configuration ](images/create-stack-configure.png "Configure Stack values")
 
@@ -62,23 +63,25 @@ In this lab, you will:
     - Click **Apply**.
     ![ Resource Stack Apply](images/stack-apply.png " Click on Stack Apply action ")
 
-2. From the apply  page click the `Apply` button
+2. From the apply page, click **Apply**.
 
 3. Wait for the apply job to complete.
 
-4. If the apply job fails with an invalid tags error, click **Apply** again.
+4. If the apply job fails with an invalid tags error, wait a few minutes, then click **Apply** again on the same stack.
 
     This retry handles a known tag propagation timing condition. If the failure is not related to invalid tags, troubleshoot the Resource Manager job before retrying.
 
-    If the job fails with `The value of the field 'compartmentId' must not be null`, return to the stack configuration and confirm **Primary Prerequisite Stack** is enabled. A secondary prerequisite stack requires existing `Migration` and `MigrationSecrets` compartments under the selected migration root compartment.
+5. If the apply job fails while creating `oci_kms_key.ocm_key` with a DNS lookup error for a new Vault management endpoint, wait 5 to 10 minutes, then click **Apply** again on the same stack.
 
-5. Confirm that the apply job shows **Succeeded**.
+    This retry handles a Vault endpoint propagation timing condition after the Vault is created. Do not delete the stack or recreate the prerequisite resources unless instructed by Oracle Support.
 
-6. Open **Stack Resources**.
+6. Confirm that the apply job shows **Succeeded**.
 
-7. Confirm that compartments, dynamic groups, user groups, policies, tag namespace, Vault, KMS key, and Object Storage bucket resources show **Available**, **Active**, or the expected terminal state.
+7. Open **Stack Resources**.
 
-8. Record the resource names needed in later labs.
+8. Confirm that compartments, dynamic groups, user groups, policies, tag namespace, Vault, KMS key, and Object Storage bucket resources show **Available**, **Active**, or the expected terminal state.
+
+9. Record the resource names needed in later labs.
 
     ```text
     Replication bucket:

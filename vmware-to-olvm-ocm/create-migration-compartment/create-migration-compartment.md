@@ -37,7 +37,7 @@ In this lab, you will:
 7. Select **Parent Compartment** from drop-down list
 
 8. Click **Create Compartment**.
-   ![Migration compartment](images/create-compartment.png "Create Migration compartmen")
+    ![Migration compartment](images/create-compartment.png "Create Migration compartmen")
 
 9. Refresh your browser after the compartment is created.
 

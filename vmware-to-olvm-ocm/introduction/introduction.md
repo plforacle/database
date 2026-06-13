@@ -30,6 +30,14 @@ This workshop assumes you have:
 * A workstation that can reach OCI over HTTPS and the remote agent appliance registration endpoint.
 * Network connectivity from the remote agent appliance to vCenter, ESXi hosts, OCI service endpoints, Object Storage, and OLVM.
 
+## Workshop Architecture
+
+The workshop uses Oracle Cloud Migrations in OCI to coordinate a migration from a VMware vSphere source environment to an OLVM target environment. OCI provides the Cloud Migrations service, Object Storage for migration dependencies and replication artifacts, and the service endpoints required by the remote agent appliance.
+
+The remote agent appliance runs in the VMware environment and needs network access to vCenter, ESXi hosts, DNS, NTP, OCI service endpoints, and OLVM. The user workstation is used only for registration and console-driven setup tasks.
+
+![VMware to OLVM migration architecture](images/vmware-to-olvm-architecture.png "Show VMware to OLVM migration architecture")
+
 ## Workshop Flow
 
 * Lab 1 creates the migration compartment.
