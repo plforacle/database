@@ -6,11 +6,11 @@ In this lab, you will prepare both KVM hosts and add them to the OLVM default cl
 
 Estimated Time: 45-60 minutes, including host installation and status transitions.
 
-### Video Walkthrough
+<!-- ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab3-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab3-no-presenter.mp4) -->
 
 ### Objectives
 
@@ -37,7 +37,7 @@ This lab assumes you have:
 1. From your local PowerShell window, connect to the OLVM manager:
 
     ```bash
-    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
 2. Connect to `olkvm01` and install the required packages:
@@ -91,7 +91,7 @@ This lab assumes you have:
 
 2. Navigate to **Compute -> Hosts**.
 
-    ![Show OLVM Administration Portal](images/olvm-admin-portal.png "Show OLVM Administration Portal")
+    ![Show OLVM Administration Portal](./images/olvm-admin-portal.png "Show OLVM Administration Portal")
 
 3. Click **New**.
 
@@ -214,7 +214,7 @@ This lab assumes you have:
 
 8. Wait for `olkvm02` to show status **Up** before you continue.
 
-    ![Show OLVM management portal  with both active kvm host](images/completed-hosts.png "Show OLVM management portal  with both active kvm host")
+    ![Show OLVM management portal with both active KVM hosts](./images/completed-hosts.png "Show OLVM management portal with both active KVM hosts")
 
     **Expected time:** 10-20 minutes.
 

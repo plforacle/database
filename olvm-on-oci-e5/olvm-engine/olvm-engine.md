@@ -6,11 +6,11 @@ In this lab, you will connect to the manager host created in Lab 1, install the 
 
 Estimated Time: 40-60 minutes, including package download and engine setup time.
 
-### Video Walkthrough
+<!-- ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab2-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab2-no-presenter.mp4)  -->
 
 ### Objectives
 
@@ -28,28 +28,31 @@ This lab assumes you have:
 - Completed the Lab 1 checkpoint
 - Recorded the public IP address for `olvm`
 - Created or retained the `olvm-cluster-id_rsa` private key on your local machine
-- A local PowerShell terminal available
+- A local terminal (Windows PowerShell, macOS Terminal, or Linux terminal)
 - A local browser (Chrome, Firefox, or Edge)
 
 > **Important:** The Administration Portal is accessed directly from your local browser over HTTPS. No VNC client or SSH tunnel is required.
+
 
 ### Connection Reference
 
 Use these connection paths throughout this and later labs:
 
-- **Local machine -> OLVM manager shell:** `ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip>`
+- **Local machine -> OLVM manager shell:** `ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip>`
 - **Manager shell -> KVM hosts:** `ssh olkvm01` or `ssh olkvm02`
 - **Manager shell -> guest VMs in later labs:** check the VM **Host** column, then use `ssh -tt <kvm-host> "ssh opc@<vm-ip>"`
 - **Administration Portal (local browser):** `https://<olvm-fqdn>/ovirt-engine`
 
+
+
 ## Task 1: Connect to the Manager via SSH
 
-1. From your local Windows machine, open a **PowerShell** window.
+1. From your local machine, open a terminal.
 
 2. Connect to the OLVM manager:
 
     ```powershell
-    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
 3. Verify you are on the correct host:
@@ -79,7 +82,7 @@ Use these connection paths throughout this and later labs:
 3. Reconnect to the manager after reboot:
 
     ```powershell
-    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
 4. Prepare DNF and verify the OLVM repositories are available:
@@ -151,36 +154,34 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
 
 2. On your local machine, edit the hosts file using the instructions for your operating system:
 
-    **Windows:**
-    - Type `cmd` in the Start menu, right-click **Command Prompt**, and select **Run as administrator**
-    - Run the following command:
+    - **Windows:**
+        - Type `cmd` in the Start menu, right-click **Command Prompt**, and select **Run as administrator**
+        - Run the following command:
 
         ```bash
         <copy>notepad C:\Windows\System32\drivers\etc\hosts</copy>
         ```
 
-    **macOS:**    
-    ```bash
-    <copy>sudo nano /etc/hosts</copy>
-    ```
+    - **macOS:**
 
-    **Linux:**
-    ```bash
-    <copy>sudo nano /etc/hosts</copy>
-    ```
+        ```bash
+        <copy>sudo nano /etc/hosts</copy>
+        ```
+
+    - **Linux:**
+
+        ```bash
+        <copy>sudo nano /etc/hosts</copy>
+        ```
 
 3. Add a line at the bottom of the file that maps the public IP of the `olvm` instance to the engine FQDN:
 
-    ```
-    <olvm-public-ip>   <olvm-fqdn>
-    ```
-
-    Example:
-
-    ```
-    141.148.13.243   olvm.pub.olv.oraclevcn.com
+    ```bash
+    <copy><olvm-public-ip>   <olvm-fqdn></copy>
     ```
 
+    **Example:** 141.148.13.243   olvm.pub.olv.oraclevcn.com
+  
 4. Save the file and close the editor.
 
 ## Task 4: Log in to the Administration Portal
@@ -189,17 +190,17 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
 
 2. Navigate to the Administration Portal using the engine FQDN:
 
-    ```
+    ```bash
     <copy>https://<olvm-fqdn>/ovirt-engine</copy>
     ```
 
     For example: `https://olvm.pub.olv.oraclevcn.com/ovirt-engine`
 
-    ![Show OLVM welcome page showing the Engine CA Certificate](images/olvm-welcome.png "Show OLVM welcome page showing the Engine CA Certificate")
-
 3. Your browser displays a certificate warning because the lab uses a self-signed certificate. Click **Advanced -> Accept the Risk and Continue** (Firefox) or **Advanced -> Proceed** (Chrome/Edge).
 
 4. On the landing page, click **Engine CA Certificate** to download it.
+
+    ![Show OLVM welcome page showing the Engine CA Certificate](./images/olvm-welcome.png "Show OLVM welcome page showing the Engine CA Certificate")
 
 5. Import the certificate into your browser:
 
@@ -226,7 +227,7 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
 
     The Administration Portal should open successfully. If the page is still starting, wait 1-2 minutes and refresh once.
 
-    ![Show OLVM Administration Portal dashboard after successful login](images/olvm-admin-portal.png "Show OLVM Administration Portal dashboard after successful login")
+    ![Show OLVM Administration Portal dashboard after successful login](./images/olvm-admin-portal.png "Show OLVM Administration Portal dashboard after successful login")
 
 ## Deploy OLVM Engine Checkpoint
 

@@ -15,7 +15,7 @@
     {
       "title": "Learner Lab 1: Verify E5 OCI Network Prerequisites",
       "description": "Run the learner-facing verification checklist after setup is complete.",
-      "filename": "../../infrastructure/infrastructure.md"
+      "filename": "../../verify-infrastructure/verify-infrastructure.md"
     },
     {
       "title": "Instructor Companion",

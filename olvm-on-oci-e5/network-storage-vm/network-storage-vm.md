@@ -10,7 +10,7 @@ Estimated Time: 40-60 minutes, including OVA download and template import time.
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab4-no-presenter.mp4)
+<!-- [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab4-no-presenter.mp4) -->
 
 ### Objectives
 
@@ -45,7 +45,7 @@ This lab assumes you have:
 
 4. For **Name**, enter:
 
-    ```
+    ```bash
     <copy>l2-vm-network</copy>
     ```
 
@@ -63,13 +63,13 @@ This lab assumes you have:
 
 4. Click **Setup Host Networks**.
 
-    ![Show Host Network dialog](images/olvm-setup-host-networks.png "Show Host Network dialog")
+    ![Show Host Network dialog](./images/olvm-setup-host-networks.png "Show Host Network dialog")
 
 5. Drag `l2-vm-network` from **Unassigned Logical Networks** on the left side into the physical interface box on the right side (for example, `ens5`).
 
     > **Tip:** Look for the interface that does **not** already have `ovirtmgmt` assigned to it. That is the correct interface for VM traffic.
 
-    ![Show Host Networks dialog after l2-vm-network setup](images/olvm-setup-host-networks-assigned.png "Show Host Networks dialog after l2-vm-network setup")
+    ![Show Host Networks dialog after l2-vm-network setup](./images/olvm-setup-host-networks-assigned.png "Show Host Networks dialog after l2-vm-network setup")
 
 6. In the same **Setup Host Networks** dialog, configure the `l2-vm-network` address for `olkvm01`.
 
@@ -171,7 +171,7 @@ This lab assumes you have:
     <copy>/tmp</copy>
     ```
 
-    ![Show Import Template dialog with the File Path](images/olvm-import-templates.png "Show Import Template dialog with the File Path")
+    ![Show Import Template dialog with the File Path](./images/olvm-import-templates.png "Show Import Template dialog with the File Path")
 
 6. Click **Load**.
 
@@ -248,10 +248,10 @@ This lab assumes you have:
 
     The interface should be plugged and linked. If `nic1` is missing, unplugged, unlinked, or using the wrong profile, shut down the VM, edit the VM network interface, select `l2-vm-network`, then start the VM again.
 
-5. From your local PowerShell window, connect to the OLVM manager.
+5. From your local terminal, connect to the OLVM manager.
 
     ```bash
-    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
 6. Confirm the KVM host has an address on `l2-vm-network`.

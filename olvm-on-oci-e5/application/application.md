@@ -10,7 +10,7 @@ Estimated Time: 15-30 minutes, including OVA download, import, and application s
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab6-no-presenter.mp4)
+<!-- [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab6-no-presenter.mp4) -->
 
 ### Objectives
 
@@ -52,7 +52,7 @@ This lab assumes you have:
 
 1. In the **Administration Portal**, navigate to **Compute -> Virtual Machines -> Import**.
 
-    ![Show Import VM dialog showing Source](images/import-vm.png "Show Import VM dialog showing Source")
+    ![Show Import VM dialog showing Source](./images/import-vm.png "Show Import VM dialog showing Source")
 
 2. Set **Data Center** to **Default**.
 
@@ -226,27 +226,27 @@ This lab assumes you have:
 
     For the required lab path, `ol9-webapp` should be running on `olkvm01`. Use `olkvm01` for the tunnel command.
 
-2. From a **new** local PowerShell window, create an SSH tunnel to the webapp VM.
+2. From a **new** local terminal, create an SSH tunnel to the webapp VM.
 
     This tunnel is needed because your browser cannot reach the VM VLAN directly. The tunnel connects your laptop to the OLVM manager first, then to the KVM host, and finally forwards local port `8080` to the web application VM.
 
     If `ol9-webapp` is running on `olkvm01`, run:
 
     ```powershell
-    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm01</copy>
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm01</copy>
     ```
 
     If you intentionally kept `ol9-webapp` on `olkvm02`, run:
 
     ```powershell
-    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm02</copy>
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm02</copy>
     ```
 
     Leave this window open. The tunnel is active as long as this session remains connected.
 
 3. From your local browser, navigate to:
 
-    ```
+    ```text
     <copy>http://localhost:8080/employee-app/</copy>
     ```
 
@@ -258,7 +258,7 @@ This lab assumes you have:
     - Clicking **View Employees** opens the employee list
     - The employee list shows eight records
 
-    ![Show Employee Directory application](images/employee-directory.png"Show Employee Directory application")
+    ![Show Employee Directory application](./images/employee-directory.png "Show Employee Directory application")
 
 
 ## Deploy Multi Tier Application Checkpoint

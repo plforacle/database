@@ -2,17 +2,21 @@
 
 ## Introduction
 
-In this setup lab, you will use a temporary bootstrap instance as the Ansible controller for the workshop environment. You will create a VCN, launch the bootstrap host, install required software, configure OCI credentials, run the provisioning playbook with `VM.Standard.E5.Flex`, and verify access to the three instances used in later labs: `olvm`, `olkvm01`, and `olkvm02`.
+In this setup lab, you will use a temporary bootstrap instance as the Ansible controller for the workshop environment. You will create a VCN, launch the bootstrap host, install required software, configure OCI credentials, run the provisioning playbook with `VM.Standard.E5.Flex`, and verify access to the three instances used in later labs: `olvm`, `olkvm01`, and `olkvm02`. 
 
 If your instructor or workshop owner already provided a working E5 environment, skip this lab and begin with Lab 2.
 
 Estimated Time: 45-60 minutes, including 20-35 minutes for the Ansible provisioning run.
 
-### Video Walkthrough
+![Lab 1 bootstrap flow](./images/lab1-bootstrap-flow.png "Show Lab 1 bootstrap flow")
+
+*A temporary bootstrap instance runs the Ansible playbook that provisions the OLVM manager and two KVM hosts on OCI. The bootstrap instance is terminated after the cluster SSH keys are copied to your local machine.*
+
+<!-- ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab1-no-presenter.mp4)
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab1-no-presenter.mp4) -->
 
 ### Objectives
 
@@ -32,53 +36,34 @@ In this lab, you will:
 This lab assumes you have:
 
 - An OCI tenancy with sufficient quotas for the workshop instances
-- **VLAN support (Layer 2 network virtualization) enabled for the tenancy and target region** - see Task 0 below
+- **VLAN support (Layer 2 network virtualization) enabled for the tenancy and target region** - see Task 1 below
 - A target compartment for lab resources
 - Access to the OCI Console
 - Your SSH public key for the initial bootstrap instance login
-- A local Windows PowerShell terminal
+- A local terminal (Windows PowerShell, macOS Terminal, or Linux terminal)
 
 > **Important:** This lab builds the base environment used by every later lab. Continue to Lab 2 only after the setup checkpoint passes.
 
+## Task 1: Verify VLAN Support Is Available
 
-## Task 0: Verify VLAN Support Is Enabled
+The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM management, migration, and storage networks. If VLAN support is not available in your target region, the playbook will fail.
 
-The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to provide the OLVM management, migration, and storage networks. OCI VLANs provide Layer 2 network segmentation within a VCN. Some tenancies or regions may require VLAN / Layer 2 networking capability to be enabled or validated before VLAN creation succeeds.
+1. Sign in to the OCI Console and switch to the workshop target region.
 
-> **Warning:** If VLANs are not visible or VLAN creation is not available in your target region, stop here. The playbook in Task 6 will fail if the required VLAN capability is not available. Submit a limit increase or support request and wait for confirmation before continuing.
+2. Go to **Networking -> Virtual Cloud Networks** and open any existing VCN, or create a temporary one.
 
-### To request VLAN support or a limit update, if needed
+3. Under the VCN **Resources** menu, look for **VLANs**.
 
-1. Sign in to the OCI Console.
+    - If **VLANs** is visible and you can access or create VLAN resources, continue with Task 2.
+    - If **VLANs** is not visible, first confirm you are in the correct region, compartment, and IAM group. If those are correct, continue with the steps below to request VLAN support before proceeding.
 
-2. Open the navigation menu and go to **Governance & Administration -> Tenancy Management -> Limits, Quotas and Usage**.
+4. To request VLAN support, go to **Governance & Administration -> Tenancy Management -> Limits, Quotas and Usage** and search for **VLAN** under the **Networking** category.
 
-3. Search for **VLAN** or browse to the **Networking** category.
+5. If a VLAN limit increase option is available, submit the request. If VLANs are not listed, open an Oracle Support request with the following text:
 
-4. If a VLAN-related limit/request option is available, open a limit increase request. If VLANs are not listed or you cannot request the needed item from the Console, open an Oracle Support request.
+    > Please enable Layer 2 network virtualization / VLAN support for tenancy `<tenancy-OCID>` in region `<region>`. This is required to deploy Oracle Linux Virtualization Manager (OLVM) on OCI.
 
-5. Include the following text in your request:
-
-    > Please enable or validate Layer 2 network virtualization / VLAN support for tenancy `<tenancy-OCID>` in region `<region>`. This is required to deploy Oracle Linux Virtualization Manager (OLVM) on OCI and to create the VLANs needed for OLVM management, migration, and storage networks.
-
-6. Replace `<tenancy-OCID>` with your tenancy OCID and `<region>` with your OCI region identifier, for example `us-ashburn-1`.
-
-7. Submit the request and wait for confirmation before continuing.
-
-## Task 1: Verify VLAN Support Is Active Before Running the Playbook
-
-1. In the OCI Console, switch to the workshop target region.
-
-2. Go to **Networking -> Virtual Cloud Networks**.
-
-3. Select an existing VCN in that region, or create/open the workshop bootstrap VCN if one is already available.
-
-4. Under the VCN **Resources** menu, look for **VLANs**.
-
-    - If **VLANs** is visible and you can access or create VLAN resources, continue with the lab.
-    - If **VLANs** is not visible, first confirm you are in the correct region, compartment, and IAM group. If those are correct, do not proceed until Oracle Support confirms VLAN / Layer 2 networking capability or the required limit update has been applied.
-
-    > **Note:** Validate this in the same OCI region the workshop will use. Do not assume VLAN availability or enablement across regions.
+6. Wait for confirmation before continuing. Do not proceed to Task 2 until VLANs are visible in the target region.
 
 ## Task 2: Create Bootstrap VCN (VCN Wizard)
 
@@ -136,7 +121,7 @@ The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to p
 
 4. Record the bootstrap instance **Public IP**.
 
-5. From Windows PowerShell, connect to the bootstrap instance:
+5. From a local terminal (Windows PowerShell, macOS Terminal, or Linux terminal) connect to the bootstrap instance:
 
     ```powershell
     <copy>ssh -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip></copy>
@@ -254,7 +239,7 @@ The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to p
 2. Set the compartment OCID:
 
     ```bash
-    <copy>export OCI_COMPARTMENT_OCID="ocid1.compartment.oc1..REDACTED"</copy>
+    <copy>export OCI_COMPARTMENT_OCID="<your-compartment-ocid>"</copy>
     ```
 
 3. Display the compartment variable to verify it was set:
@@ -292,7 +277,11 @@ The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to p
     cat instances.yml</copy>
     ```
 
-    **Block volume sizing:** `blk_volume_size_in_gbs` makes the provisioned block volume size configurable during deployment. This workshop uses `512` GB as a defined, lower-cost value instead of the larger default allocation of `1 TB`, while still providing enough capacity for the lab environment. If your environment requires more storage, you can increase this value before running the playbook.
+    > **Notes:**
+    - `use_vnc_on_engine: false` disables VNC on the OLVM manager. This lab uses SSH tunneling to access the OLVM portal instead.
+    - **Block volume sizing:** `blk_volume_size_in_gbs` makes the provisioned block volume size configurable during deployment. This workshop uses `512` GB as a defined, lower-cost value instead of the larger default allocation of `1 TB`, while still providing enough capacity for the lab environment. If your environment requires more storage, you can increase this value before running the playbook.
+
+
 
 5. Create the `hosts` inventory so Ansible uses the virtual environment Python:
 
@@ -337,7 +326,7 @@ The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to p
 
 ## Task 7: Verify and Access Deployed Instances
 
-1. From a new PowerShell window on your local machine, copy the cluster SSH keys from the bootstrap host:
+1. From a local terminal (Windows PowerShell, macOS Terminal, or Linux terminal) copy the cluster SSH keys from the bootstrap host:
 
     ```powershell
     <copy>scp -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa C:\Users\<you>\.ssh\olvm-cluster-id_rsa
@@ -347,14 +336,14 @@ The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to p
 2. Verify that you can SSH to the OLVM manager from your local machine:
 
     ```powershell
-    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip> "hostname -f"</copy>
-    ```
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip> "hostname -f"</copy>
+  
+
 3. Add an ingress rule to allow HTTPS access to the OLVM Administration Portal from your local browser. Navigate using this path:
 
     **OLV-VCN -> Subnets -> Public Subnet -> Security -> Default Security List -> Security Rules -> Add Ingress Rules**
 
-
-    ### Select **Default Security List for OLV-VCN**. If two entries appear with the same name, select the one created most recently. 
+    **Select Default Security List for OLV-VCN**. If two entries appear with the same name, select the one created most recently.
 
 
     Enter the following values:
@@ -375,7 +364,7 @@ The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to p
 4. Connect to `olvm` as `oracle`.
 
     ```powershell
-    <copy>ssh -i C:\Users\<you>\.ssh\olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
 5. From the `olvm` terminal, verify passwordless SSH to both KVM hosts:
@@ -410,7 +399,7 @@ The Ansible provisioning playbook creates OCI VLAN resources inside the VCN to p
 
 7. Wait until the instance state changes to **Terminated**.
 
-## Setup OLVM Infrastructure Checkpoint
+## Set Up OLVM Infrastructure Checkpoint
 
 At this point, you should have:
 

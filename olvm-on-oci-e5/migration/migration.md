@@ -10,7 +10,7 @@ Estimated Time: 10-15 minutes
 
 This walkthrough video is silent and does not include audio narration.
 
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab8-no-presenter.mp4)
+<!-- [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab8-no-presenter.mp4) -->
 
 ### Objectives
 
@@ -35,7 +35,7 @@ This lab assumes you have:
 
 ## Task 1: Refresh the OLVM Engine
 
-1. From the `olvm` terminal, restart the OLVM engine:
+1. From the `olvm` terminal, restart the OLVM engine to refresh its internal state before migration:
 
     ```bash
     <copy>sudo systemctl restart ovirt-engine</copy>
@@ -54,7 +54,7 @@ This lab assumes you have:
     - `olkvm01`
     - `olkvm02`
 
-    ![Show OLVM Hosts pane showing both KVM hosts in Up status](images/olvm-hosts-pane.png "Show OLVM Hosts pane showing both KVM hosts in Up status")
+    ![Show OLVM Hosts pane showing both KVM hosts in Up status](./images/olvm-hosts-pane.png "Show OLVM Hosts pane showing both KVM hosts in Up status")
 
 3. Go to **Compute -> Virtual Machines**.
 
