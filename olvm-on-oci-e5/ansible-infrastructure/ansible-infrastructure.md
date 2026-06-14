@@ -92,6 +92,7 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
 6. Wait until all VCN resources show **Available** before you continue. This normally takes 2-5 minutes.
 
+
 ## Task 3: Launch Bootstrap Instance
 
 1. In the OCI Console, navigate to **Compute -> Instances -> Create Instance**.
@@ -124,7 +125,7 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 5. From a local terminal (Windows PowerShell, macOS Terminal, or Linux terminal) connect to the bootstrap instance:
 
     ```powershell
-    <copy>ssh -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip></copy>
+    <copy>ssh -i ~/.ssh/<your-key> opc@<bootstrap-public-ip></copy>
     ```
 
     > **Warning:** The bootstrap instance is temporary. Do not terminate it until the playbook completes, the cluster keys are copied to your local machine, and you have verified SSH access to `olvm`.
@@ -329,15 +330,16 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 1. From a local terminal (Windows PowerShell, macOS Terminal, or Linux terminal) copy the cluster SSH keys from the bootstrap host:
 
     ```powershell
-    <copy>scp -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa C:\Users\<you>\.ssh\olvm-cluster-id_rsa
-    scp -i C:\Users\<you>\.ssh\<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa.pub C:\Users\<you>\.ssh\olvm-cluster-id_rsa.pub</copy>
+    <copy>scp -i ~/.ssh/id_rsa opc@<bootstrap-public-ip>:~/.ssh/id_rsa C:\Users\Perside\.ssh\olvm-cluster-id_rsa_01
+
+    scp -i ~/.ssh/id_rsa opc@<bootstrap-public-ip>:~/.ssh/id_rsa.pub C:\Users\Perside\.ssh\olvm-cluster-id_rsa_01.pub</copy>
     ```
 
 2. Verify that you can SSH to the OLVM manager from your local machine:
 
     ```powershell
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip> "hostname -f"</copy>
-  
+    ```
 
 3. Add an ingress rule to allow HTTPS access to the OLVM Administration Portal from your local browser. Navigate using this path:
 
@@ -367,14 +369,19 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
-5. From the `olvm` terminal, verify passwordless SSH to both KVM hosts:
+5. From the `olvm` terminal, verify passwordless SSH to `olkvm01`:
 
     ```bash
-    <copy>ssh olkvm01 hostname -f
-    ssh olkvm02 hostname -f</copy>
+        <copy>ssh olkvm01 hostname -f</copy>
     ```
 
-6. After you confirm SSH access to `olvm` and both KVM hosts, you are ready to terminate the bootstrap instance in the next task. You can skip the Terminate task for later.
+6. Verify passwordless SSH to `olkvm02`:
+
+    ```bash
+        <copy>ssh olkvm02 hostname -f</copy>
+    ```
+
+7. After you confirm SSH access to `olvm` and both KVM hosts, you are ready to terminate the bootstrap instance in the next task. **You can skip the Terminate task for later.**
 
 ## Task 8: Terminate the Bootstrap Instance
 
