@@ -54,6 +54,10 @@ This lab assumes you have:
     <copy>sudo dnf update -y oracle-ovirt-release-45-el8</copy>
     ```
 
+    ![Olkvm01-start](./images/olkvm01-start.png "Show Olkvm01-start")
+
+    ![Olkvm01-start-complete](./images/olkvm01-start-complete.png "Show Olkvm01-start-complete")
+
 3. Reboot `olkvm01`:
 
     ```bash
@@ -74,6 +78,31 @@ This lab assumes you have:
     <copy>sudo dnf clean all</copy>
     ```
 
+6. List the configured repositories and verify that the required repositories are enabled.
+
+    ```bash
+    <copy>sudo dnf repolist</copy>
+    ```
+
+7. **Repositories required for this lab:**
+
+    - `ol8_baseos_latest`
+    - `ol8_appstream`
+    - `ol8_kvm_appstream`
+    - `ol8_addons`
+    - `ovirt-4.5`
+    - `ovirt-4.5-extra`
+    - `ol8_gluster_appstream`
+    - `ol8_UEKR7`
+
+    If a required repository is not enabled, use the `dnf config-manager` command to enable it.
+
+    ```bash
+    <copy>sudo dnf config-manager --enable <repository_name></copy>
+    ```
+
+8. Run the OLVM pre-check script:
+
     ```bash
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
@@ -89,8 +118,9 @@ This lab assumes you have:
     ```bash
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
+  ![Olkvm01 Clean pre-check](./images/olkvm01-clean-pre-check.png "Show Olkvm01 Clean pre-check")
 
-6. Exit back to the manager host:
+9. Exit back to the manager host:
 
     ```bash
     <copy>exit</copy>
@@ -102,7 +132,7 @@ This lab assumes you have:
 
 2. Navigate to **Compute -> Hosts**.
 
-    ![Show OLVM Administration Portal](./images/olvm-admin-portal.png "Show OLVM Administration Portal")
+    ![OLVM KVM Host Menu](./images/olvm-kvm-host.png "Show OLVM KVM Host Menu")
 
 3. Click **New**.
 
@@ -116,13 +146,15 @@ This lab assumes you have:
 
 6. For **Hostname**, enter the private management FQDN:
 
-    ```
+    ```bash
     <copy>vdsm01.priv.olv.oraclevcn.com</copy>
     ```
 
     Do not use the `olkvm01.pub.olv.oraclevcn.com` name in this field. OLVM must manage the KVM host through the private management network.
 
-    If you accidentally use the public hostname and the host becomes **Non Responsive**, remove that host entry from OLVM and add `olkvm01` again with `vdsm01.priv.olv.oraclevcn.com`.
+    If you accidentally use the public hostname and the host becomes **Non Responsive**, remove that host entry from OLVM and add `olkvm02` again with `vdsm02.priv.olv.oraclevcn.com`.
+
+    >**Note**: The private management FQDN vdsm01.priv.olv.oraclevcn.com was automatically created by OCI when the Ansible playbook ran in Lab 1. The playbook named the KVM host's private network interface vdsm01 and placed it on a subnet labeled priv inside a VCN labeled olv. OCI combines these names to create a fixed, predictable hostname.
 
 7. Under **Authentication**, select **SSH Public Key**.
 
@@ -131,6 +163,8 @@ This lab assumes you have:
     ```bash
     <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm01 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
     ```
+
+ ![Olkvm01 Host Setup](./images/olvmk01-host-setup.png "Show Olkvm01 Host Setup")
 
 9. Return to the browser and click **OK**.
 
@@ -180,6 +214,20 @@ This lab assumes you have:
     <copy>sudo dnf clean all</copy>
     ```
 
+5. List the configured repositories and verify that the required repositories are enabled.
+
+    ```bash
+    <copy>sudo dnf repolist</copy>
+    ```
+
+    If a required repository is not enabled, use the `dnf config-manager` command to enable it.
+
+    ```bash
+    <copy>sudo dnf config-manager --enable <repository_name></copy>
+    ```
+
+6. Run the OLVM pre-check script:
+
     ```bash
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
@@ -196,7 +244,7 @@ This lab assumes you have:
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
 
-5. Exit back to the manager host:
+7. Exit back to the manager host:
 
     ```bash
     <copy>exit</copy>
