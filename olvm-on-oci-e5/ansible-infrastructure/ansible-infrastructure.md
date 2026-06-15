@@ -124,7 +124,7 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
 5. From a local terminal (Windows PowerShell, macOS Terminal, or Linux terminal) connect to the bootstrap instance:
 
-    ```powershell
+    ```bash
     <copy>ssh -i ~/.ssh/<your-key> opc@<bootstrap-public-ip></copy>
     ```
 
@@ -220,6 +220,16 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
     - Paste the full contents of `/home/opc/.oci/oci_api_key_public.pem` into the dialog.
     - Save the key and wait 2-5 minutes for the new API key to propagate.
 
+    ![Profile Menu User Settings](./images/user-settings.png "Show Profile Menu User Settings")
+
+    ![Add API key button](./images/add-api-key-button.png "Show Add API key button")
+
+    ![Add API key page](./images/add-api-key-page.png "Show Add API key page")
+
+    ![Add API key config](./images/add-api-key-config.png "Show Add API key config")
+
+    ![Saved API key](./images/saved-api-key.png "Show Saved API key")
+
 4. Run a quick validation command. If the command returns a short list of regions, the OCI CLI authentication is working correctly.
 
     ```bash
@@ -228,6 +238,8 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
     If this command fails immediately after `oci setup config`, wait 2-5 minutes for the key registration to propagate and try again.
     If it still fails, confirm the key appears under **User Settings** -> **Token and Keys** -> **API Keys**, then rerun the command.
+
+    ![OCI IAM List](./images/oci-iam-list.png "Show OCI IAM List")
 
 ## Task 6: Create OCI Components and Run the Playbook
 
@@ -282,8 +294,6 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
     - `use_vnc_on_engine: false` disables VNC on the OLVM manager. This lab uses SSH tunneling to access the OLVM portal instead.
     - **Block volume sizing:** `blk_volume_size_in_gbs` makes the provisioned block volume size configurable during deployment. This workshop uses `512` GB as a defined, lower-cost value instead of the larger default allocation of `1 TB`, while still providing enough capacity for the lab environment. If your environment requires more storage, you can increase this value before running the playbook.
 
-
-
 5. Create the `hosts` inventory so Ansible uses the virtual environment Python:
 
     ```bash
@@ -319,6 +329,8 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
     If you abort at the pause prompt to preserve the environment, the recap may show `failed=1` for `olvm` with `user requested abort`. This is expected and does not indicate a deployment failure.
 
+    ![Playbook output](./images/playbook-output.png "Show Playbook output")
+
 7. Record **both public and private IPs** for:
 
     - `olvm`
@@ -327,26 +339,29 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
 ## Task 7: Verify and Access Deployed Instances
 
-1. From a local terminal (Windows PowerShell, macOS Terminal, or Linux terminal) copy the cluster SSH keys from the bootstrap host:
+1. From a local terminal copy the cluster SSH private key from the bootstrap host:
 
-    ```powershell
-    <copy>scp -i ~/.ssh/id_rsa opc@<bootstrap-public-ip>:~/.ssh/id_rsa C:\Users\Perside\.ssh\olvm-cluster-id_rsa_01
-
-    scp -i ~/.ssh/id_rsa opc@<bootstrap-public-ip>:~/.ssh/id_rsa.pub C:\Users\Perside\.ssh\olvm-cluster-id_rsa_01.pub</copy>
+    ```bash
+    <copy>scp -i ~/.ssh/<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa ~/.ssh/olvm-cluster-id_rsa</copy>
     ```
 
-2. Verify that you can SSH to the OLVM manager from your local machine:
+2. Copy the cluster SSH public key:
 
-    ```powershell
+    ```bash
+    <copy>scp -i ~/.ssh/<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa.pub ~/.ssh/olvm-cluster-id_rsa.pub</copy>
+    ```
+
+3. Verify that you can SSH to the OLVM manager from your local machine:
+
+    ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip> "hostname -f"</copy>
     ```
 
-3. Add an ingress rule to allow HTTPS access to the OLVM Administration Portal from your local browser. Navigate using this path:
+4. Add an ingress rule to allow HTTPS access to the OLVM Administration Portal from your local browser. Navigate using this path:
 
     **OLV-VCN -> Subnets -> Public Subnet -> Security -> Default Security List -> Security Rules -> Add Ingress Rules**
 
     **Select Default Security List for OLV-VCN**. If two entries appear with the same name, select the one created most recently.
-
 
     Enter the following values:
 
@@ -363,25 +378,25 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
     > **Note:** OCI security list changes take effect immediately — no reboot is required.
 
-4. Connect to `olvm` as `oracle`.
+5. Connect to `olvm` as `oracle`.
 
-    ```powershell
+    ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
-5. From the `olvm` terminal, verify passwordless SSH to `olkvm01`:
+6. From the `olvm` terminal, verify passwordless SSH to `olkvm01`:
 
     ```bash
-        <copy>ssh olkvm01 hostname -f</copy>
+    <copy>ssh olkvm01 hostname -f</copy>
     ```
 
-6. Verify passwordless SSH to `olkvm02`:
+7. Verify passwordless SSH to `olkvm02`:
 
     ```bash
-        <copy>ssh olkvm02 hostname -f</copy>
+    <copy>ssh olkvm02 hostname -f</copy>
     ```
 
-7. After you confirm SSH access to `olvm` and both KVM hosts, you are ready to terminate the bootstrap instance in the next task. **You can skip the Terminate task for later.**
+8. After you confirm SSH access to `olvm` and both KVM hosts, you are ready to terminate the bootstrap instance in the next task. **You can skip the Terminate task for later.**
 
 ## Task 8: Terminate the Bootstrap Instance
 
