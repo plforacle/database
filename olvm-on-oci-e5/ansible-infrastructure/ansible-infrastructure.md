@@ -378,6 +378,10 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
     > **Note:** OCI security list changes take effect immediately — no reboot is required.
 
+    ![olv-vcn](./images/olvcn.png "Show olv-vcn")
+
+    ![olv-vcn Ingress](./images/olvcn-ingress.png "Show olv-vcn Ingress")
+
 5. Connect to `olvm` as `oracle`.
 
     ```bash
@@ -395,6 +399,8 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
     ```bash
     <copy>ssh olkvm02 hostname -f</copy>
     ```
+
+    ![Verified connections](./images/verified-connections.png "Show Verified connections")
 
 8. After you confirm SSH access to `olvm` and both KVM hosts, you are ready to terminate the bootstrap instance in the next task. **You can skip the Terminate task for later.**
 

@@ -123,7 +123,7 @@ This lab assumes you have:
 
 3. For **Name**, enter:
 
-    ```
+    ```text
     <copy>amd-storage-domain-01</copy>
     ```
 

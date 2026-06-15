@@ -232,13 +232,13 @@ This lab assumes you have:
 
     If `ol9-webapp` is running on `olkvm01`, run:
 
-    ```powershell
+    ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm01</copy>
     ```
 
     If you intentionally kept `ol9-webapp` on `olkvm02`, run:
 
-    ```powershell
+    ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm02</copy>
     ```
 

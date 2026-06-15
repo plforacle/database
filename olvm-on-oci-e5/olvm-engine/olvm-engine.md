@@ -51,7 +51,7 @@ Use these connection paths throughout this and later labs:
 
 2. Connect to the OLVM manager:
 
-    ```powershell
+    ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
@@ -60,6 +60,8 @@ Use these connection paths throughout this and later labs:
     ```bash
     <copy>hostname -f</copy>
     ```
+
+    ![Correct host](./images/hostname.png "Verify correct host")
 
     Record the FQDN output. You will need it in Task 3 to access the Administration Portal.
 
@@ -92,18 +94,27 @@ Use these connection paths throughout this and later labs:
     sudo dnf repolist | egrep 'ovirt|kvm|gluster|UEKR7|baseos|appstream|addons'</copy>
     ```
 
+    ![Clean Pre-check](./images/dnf-repolist.png "Show Clean Pre-check]")
+
 5. Run the OLVM pre-check script:
 
     ```bash
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
 
-    If the pre-check reports extra enabled repositories, disable them and rerun the check:
+    - If the pre-check reports extra enabled repositories, disable them and rerun the check:
 
     ```bash
-    <copy>sudo dnf config-manager --set-disabled ol8_MySQL84 ol8_MySQL84_tools_community ol8_MySQL_connectors_community ol8_ksplice ol8_oci_included
-    sudo /usr/local/bin/olvm-pre-check.py</copy>
+    <copy>sudo dnf config-manager --set-disabled ol8_MySQL84 ol8_MySQL84_tools_community ol8_MySQL_connectors_community ol8_ksplice ol8_oci_included</copy>
     ```
+
+    - Rerun the check:
+
+    ```bash
+    <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
+    ```
+
+    ![DNF Repolist](./images/clean-precheck.png "Show DNF Repolist]")
 
 6. Install the OLVM engine package:
 
@@ -124,6 +135,15 @@ Use these connection paths throughout this and later labs:
     `engine-setup` still prompts you to set the `admin@ovirt` password. Use a strong password that includes uppercase, lowercase, a number, and a special character.
 
     > **Critical:** Write down the `admin@ovirt` password before you continue.
+
+    **Behind the scenes, engine-setup:**
+    - **Configures PostgreSQL database** - Creates ovirt_engine database, sets up users and permissions
+    - **Configures Apache and WildFly** - Sets up the web and application server components for the Administration Portal and REST API
+    - **Generates SSL certificates** - Creates CA and host certificates for secure communications
+    - **Configures firewall** - Opens required ports (443 for HTTPS, 5432 for PostgreSQL)
+    - **Creates admin user** - Sets up admin@ovirt user in the internal authentication domain
+    - **Initializes oVirt Engine** - Deploys the engine web application and starts services
+    - **Creates default data center and cluster** - Named "Default" by default
 
 8. Open port 443 on the OS firewall to allow browser access to the Administration Portal:
 
@@ -180,13 +200,14 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
     <copy><olvm-public-ip>   <olvm-fqdn></copy>
     ```
 
-    **Example:** 141.148.13.243   olvm.pub.olv.oraclevcn.com
+    **Example:** 141.148.xx.xxx   olvm.pub.olv.oracxxxx.com
   
 4. Save the file and close the editor.
 
 ## Task 4: Log in to the Administration Portal
 
 1. Open your local browser. Firefox is recommended for this lab.
+
 
 2. Navigate to the Administration Portal using the engine FQDN:
 
@@ -196,7 +217,10 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
 
     For example: `https://olvm.pub.olv.oraclevcn.com/ovirt-engine`
 
-3. Your browser displays a certificate warning because the lab uses a self-signed certificate. Click **Advanced -> Accept the Risk and Continue** (Firefox) or **Advanced -> Proceed** (Chrome/Edge).
+3. Your browser displays a certificate warning because the lab uses a self-signed certificate. Click **Advanced -> Accept the Risk and Continue** (_Firefox is recommended_) or **Advanced -> Proceed** (Chrome).
+
+
+  ![Warning page](./images/warning-page.png "Show Warning page]")
 
 4. On the landing page, click **Engine CA Certificate** to download it.
 

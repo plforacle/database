@@ -43,9 +43,15 @@ This lab assumes you have:
 2. Connect to `olkvm01` and install the required packages:
 
     ```bash
-    <copy>ssh olkvm01
-    sudo dnf install -y oracle-ovirt-release-45-el8 kernel-uek-modules-extra
-    sudo dnf update -y oracle-ovirt-release-45-el8</copy>
+    <copy>ssh olkvm01</copy>
+    ```
+
+    ```bash
+    <copy>sudo dnf install -y oracle-ovirt-release-45-el8 kernel-uek-modules-extra</copy>
+    ```
+
+    ```bash
+    <copy>sudo dnf update -y oracle-ovirt-release-45-el8</copy>
     ```
 
 3. Reboot `olkvm01`:
@@ -72,11 +78,16 @@ This lab assumes you have:
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
 
-    If the pre-check reports extra enabled repositories, disable them and rerun the check:
+    - If the pre-check reports extra enabled repositories, disable them:
 
     ```bash
-    <copy>sudo dnf config-manager --set-disabled ol8_MySQL84 ol8_MySQL84_tools_community ol8_MySQL_connectors_community ol8_ksplice ol8_oci_included
-    sudo /usr/local/bin/olvm-pre-check.py</copy>
+    <copy>sudo dnf config-manager --set-disabled ol8_MySQL84 ol8_MySQL84_tools_community ol8_MySQL_connectors_community ol8_ksplice ol8_oci_included</copy>
+    ```
+
+    - Rerun the check:
+
+    ```bash
+    <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
 
 6. Exit back to the manager host:
@@ -138,9 +149,15 @@ This lab assumes you have:
 1. From the manager terminal, connect to `olkvm02` and install the required packages:
 
     ```bash
-    <copy>ssh olkvm02
-    sudo dnf install -y oracle-ovirt-release-45-el8 kernel-uek-modules-extra
-    sudo dnf update -y oracle-ovirt-release-45-el8</copy>
+    <copy>ssh olkvm02</copy>
+    ```
+
+    ```bash
+    <copy>sudo dnf install -y oracle-ovirt-release-45-el8 kernel-uek-modules-extra</copy>
+    ```
+
+    ```bash
+    <copy>sudo dnf update -y oracle-ovirt-release-45-el8</copy>
     ```
 
 2. Reboot `olkvm02`:
@@ -167,11 +184,16 @@ This lab assumes you have:
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
 
-    If the pre-check reports extra enabled repositories, disable them and rerun the check:
+    - If the pre-check reports extra enabled repositories, disable them :
 
     ```bash
-    <copy>sudo dnf config-manager --set-disabled ol8_MySQL84 ol8_MySQL84_tools_community ol8_MySQL_connectors_community ol8_ksplice ol8_oci_included
-    sudo /usr/local/bin/olvm-pre-check.py</copy>
+    <copy>sudo dnf config-manager --set-disabled ol8_MySQL84 ol8_MySQL84_tools_community ol8_MySQL_connectors_community ol8_ksplice ol8_oci_included</copy>
+    ```
+
+    -Rerun the check:
+
+    ```bash
+    <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
 
 5. Exit back to the manager host:
