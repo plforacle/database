@@ -84,9 +84,9 @@ In this lab, you will:
 9. Record the resource names needed in later labs.
 
     ```text
-    Replication bucket:
-    Vault:
-    KMS key:
+    Replication bucket: ocm_replication
+    Vault: ocm-secrets
+    KMS key: ocm-key
     Tag namespace:
     ```
 

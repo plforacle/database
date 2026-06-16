@@ -65,7 +65,7 @@ Do not use the latest VDDK version unless it matches one of the supported versio
     ```text
     Object Storage namespace:
     VDDK bucket: ocm_replication
-    VDDK object:
+    VDDK object:VMwarexxxxxxx.gz
     ```
 
 ## Task 2: Register the VDDK as an Agent Dependency
@@ -96,8 +96,8 @@ Do not use the latest VDDK version unless it matches one of the supported versio
 11. Record the dependency details.
 
     ```text
-    Agent dependency:
-    Dependency status:
+    Agent dependency: vddk-package
+    Dependency status: Active
     ```
 
 ## Learn More
