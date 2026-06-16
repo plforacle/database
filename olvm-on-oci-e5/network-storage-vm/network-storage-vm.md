@@ -51,6 +51,8 @@ This lab assumes you have:
 
 5. Leave **VM Network** selected.
 
+    ![Create Logical Network page](./images/create-logical-network.png "Show Create Logical Network page")
+
 6. Click **OK**.
 
 ## Task 2: Assign the Logical Network to `olkvm01`
@@ -60,6 +62,8 @@ This lab assumes you have:
 2. Click the `olkvm01` host name.
 
 3. Open the **Network Interfaces** tab.
+
+    ![Network Interface](./images/network-interface.png "Show Network Interface")
 
 4. Click **Setup Host Networks**.
 
@@ -84,6 +88,8 @@ This lab assumes you have:
     | DNS Servers | Leave blank |
 
     This address is used as the KVM-host access and test address for the VM network. Do not configure a gateway or DNS server on `l2-vm-network`.
+
+    ![Edit Network](./images/edit-network.png "Show Edit Network")
 
 7. Click **OK** and wait for the network setup task to finish before you continue.
 
@@ -121,6 +127,8 @@ This lab assumes you have:
 
 2. Click **New Domain**.
 
+    ![Storage Domain](./images/storage-domain.png "Show Storage Domain")
+
 3. For **Name**, enter:
 
     ```text
@@ -136,6 +144,8 @@ This lab assumes you have:
 7. Set **Host to Use** to **olkvm01**.
 
 8. When the available LUNs appear, click **Add** next to the first LUN ID.
+
+    ![Add Storage Domain](./images/add-storage-domain.png "Show Add Storage Domain")
 
 9. Click **OK**.
 
@@ -160,6 +170,8 @@ This lab assumes you have:
     ```
 
     **Expected time:** 10-20 minutes, depending on download speed. Wait for the `curl` command to complete and return you to the shell prompt before continuing.
+
+    ![OVA Template](./images/ova-template.png "Show Download OVA Template")
 
 3. Navigate to **Compute -> Templates -> Import**.
 
@@ -187,6 +199,8 @@ This lab assumes you have:
 
     **Expected time:** 10-20 minutes.
 
+    ![OVA Template Import Complete](./images/template-import-complete.png "Show OVA Template Import Complete")
+
     Do not create the test VM until the import finishes successfully.
 
 ## Task 6: Create a Test Virtual Machine (`ol9-vm1`)
@@ -202,6 +216,8 @@ This lab assumes you have:
 5. Set `nic1` to `l2-vm-network`.
 
     If the dialog shows **vNIC Profile**, select `l2-vm-network` there.
+
+    ![Virtual Machine General](./images/virtual-machine-general.png "Show Virtual Machine General")
 
 6. Click **Show Advanced Options**.
 
@@ -226,6 +242,8 @@ This lab assumes you have:
 
     `10.0.10.1` is the VLAN gateway for the VM network. Use it as the gateway, not as the DNS server.
 
+    ![Virtual Machine Init](./images/virtual-machine-init.png "Show Virtual Machine Init")
+
 10. Click **OK**.
 
 11. Use **Tasks** in the upper-right corner to monitor VM creation.
@@ -240,6 +258,8 @@ This lab assumes you have:
 
 2. Wait for the VM status to change to **Up**.
 
+    ![Virtual Machine Up](./images/virtual-machine-up.png "Show Virtual Machine Up")
+
 3. In the Virtual Machines list, check the **Host** column for `ol9-vm1`.
 
     The VM can run on either `olkvm01` or `olkvm02`. If the VM is running on `olkvm02`, verifying only `olkvm01` is not enough. The host shown in this column must have `l2-vm-network` assigned and up.
@@ -247,6 +267,8 @@ This lab assumes you have:
 4. Open the `ol9-vm1` **Network Interfaces** tab and confirm `nic1` is using `l2-vm-network`.
 
     The interface should be plugged and linked. If `nic1` is missing, unplugged, unlinked, or using the wrong profile, shut down the VM, edit the VM network interface, select `l2-vm-network`, then start the VM again.
+
+    ![Virtual Machine NIC1](./images/virtual-machine-nic1.png "Show Virtual Machine NIC1")
 
 5. From your local terminal, connect to the OLVM manager.
 
@@ -324,9 +346,13 @@ This lab assumes you have:
     <copy>ping -c 3 <kvm-l2-ip></copy>
     ```
 
+    **Example:**  ping -c 3 10.0.10.254
+
     Replace `<kvm-l2-ip>` with the address you recorded in step 6.
 
     This ping should succeed. Do not use `10.0.10.1`, DNS, or internet access as the success test in this lab. Guest internet access is not required for Lab 5.
+
+    ![Virtual Machine Test](./images/ol9-vm1-test.png "Show Virtual Machine Test")
 
 10. Exit the VM:
 

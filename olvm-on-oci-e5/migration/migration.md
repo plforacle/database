@@ -85,6 +85,8 @@ This lab assumes you have:
 
 4. Click **Migrate**.
 
+    ![Migrate VM](./images/migrate-vm.png "Show Migrate VM")
+
 5. Watch the VM status while migration runs. It may show **Migrating From** or **Migrating To**.
 
     **Expected time:** 30-90 seconds.
@@ -94,6 +96,8 @@ This lab assumes you have:
 ## Task 4: Verify Migration Success
 
 1. In the Virtual Machines list, confirm that `ol9-vm1` now shows the destination host in the **Host** column.
+
+    ![Migrate VM Complete](./images/migrate-vm-complete.png "Show Migrate VM Complete")
 
 2. From the `olvm` terminal, test connectivity through the destination KVM host.
 
@@ -129,6 +133,8 @@ This lab assumes you have:
     <copy>hostname
     ip -br addr</copy>
     ```
+
+    ![Migrate VM Test](./images/migrate-vm-test.png "Show Migrate VM Test")
 
 5. Exit the VM:
 

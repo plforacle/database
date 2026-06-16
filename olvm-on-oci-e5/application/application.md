@@ -60,7 +60,7 @@ This lab assumes you have:
 
 4. Set **Host** to **olkvm01**.
 
-5. Set **File Path** to `/tmp`.
+5. Set **File Path** to `/tmp`
 
 6. Click **Load**.
 
@@ -68,9 +68,13 @@ This lab assumes you have:
 
 8. Move it to **Virtual Machines to Import** with the arrow button.
 
+    ![ol9-mysql Import](./images/ol9-mysql-import.png "Show ol9-mysql Import")
+
 9. Click **Next**.
 
 10. Select `ol9-mysql`, open **Network Interfaces**, and set both **Network Name** and **Profile Name** to `l2-vm-network`.
+
+    ![ol9-mysql Import Network](./images/ol9-mysql-import-network.png "Show ol9-mysql Import Network")
 
 11. Click **OK**.
 
@@ -85,6 +89,8 @@ This lab assumes you have:
 2. Click the drop-down arrow next to **Run**, then click **Run Once**.
 
 3. In the **Run Once** dialog, select the host option and choose `olkvm01`.
+
+    ![ol9-mysql Run Once](./images/ol9-mysql-run-once.png "Show ol9-mysql Run Once")
 
 4. Click **OK**.
 
@@ -125,6 +131,8 @@ This lab assumes you have:
 
     You should see a count of **8** employee records.
 
+    ![ol9-mysql Test](./images/ol9-mysql-test.png "Show ol9-mysql Test")
+
 9. Exit the database VM:
 
     ```bash
@@ -151,7 +159,7 @@ This lab assumes you have:
 
 4. Set **Host** to **olkvm01**.
 
-5. Set **File Path** to `/tmp`.
+5. Set **File Path** to `/tmp`
 
 6. Click **Load**.
 
@@ -176,6 +184,8 @@ This lab assumes you have:
 2. Click the drop-down arrow next to **Run**, then click **Run Once**.
 
 3. In the **Run Once** dialog, select the host option and choose `olkvm01`.
+
+    ![ol9-webapp Run Once](./images/ol9-webapp-run-once.png "Show ol9-webapp Run Once")
 
 4. Click **OK**.
 
@@ -205,13 +215,18 @@ This lab assumes you have:
     <copy>curl -s http://localhost:8080/employee-app/ | grep -q "Welcome to Employee Directory" && echo "Application is responding" || echo "Application check failed"</copy>
     ```
 
+    ![ol9-webapp Test](./images/ol9-webapp-test.png "Show ol9-webapp Test")
+
     If this check fails immediately after boot, wait 2-3 minutes for Tomcat to finish starting and try again.
+
 
 9. Verify connectivity to the MySQL VM:
 
     ```bash
     <copy>ping -c 3 10.0.10.100</copy>
     ```
+
+    ![ol9-webapp MySQL Connect Test](./images/mysql-connect-test.png "Show ol9-webapp MySQL Connect Test")
 
 10. Exit the application VM:
 
@@ -235,6 +250,8 @@ This lab assumes you have:
     ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm01</copy>
     ```
+
+    ![Application Tunnel](./images/application-tunnel.png "Show Application Tunnel")
 
     If you intentionally kept `ol9-webapp` on `olkvm02`, run:
 
