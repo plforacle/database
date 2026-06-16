@@ -6,11 +6,11 @@ In this lab, you will import two prebuilt OVAs: one for a MySQL database VM and 
 
 Estimated Time: 15-30 minutes, including OVA download, import, and application startup time.
 
-### Video Walkthrough
+<!-- ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
 
-<!-- [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab6-no-presenter.mp4) -->
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab6-no-presenter.mp4) -->
 
 ### Objectives
 
@@ -219,7 +219,6 @@ This lab assumes you have:
 
     If this check fails immediately after boot, wait 2-3 minutes for Tomcat to finish starting and try again.
 
-
 9. Verify connectivity to the MySQL VM:
 
     ```bash
@@ -233,7 +232,6 @@ This lab assumes you have:
     ```bash
     <copy>exit</copy>
     ```
-
 
 ## Task 7: Access the Application from Your Local Browser
 
