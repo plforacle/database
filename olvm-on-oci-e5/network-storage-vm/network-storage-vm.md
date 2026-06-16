@@ -6,11 +6,10 @@ In this lab, you will create the logical network for guest traffic, add shared s
 
 Estimated Time: 40-60 minutes, including OVA download and template import time.
 
-### Video Walkthrough
+<!-- ### Video Walkthrough
 
 This walkthrough video is silent and does not include audio narration.
-
-<!-- [](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab4-no-presenter.mp4) -->
+[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab4-no-presenter.mp4) -->
 
 ### Objectives
 
@@ -346,7 +345,7 @@ This lab assumes you have:
     <copy>ping -c 3 <kvm-l2-ip></copy>
     ```
 
-    **Example:**  ping -c 3 10.0.10.254
+    **Example:** `ping -c 3 10.0.10.254`
 
     Replace `<kvm-l2-ip>` with the address you recorded in step 6.
 
