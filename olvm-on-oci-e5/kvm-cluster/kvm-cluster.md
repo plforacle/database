@@ -34,7 +34,7 @@ This lab assumes you have:
 
 ## Task 1: Configure the First KVM Host (`olkvm01`)
 
-1. From your local PowerShell window, connect to the OLVM manager:
+1. From your local terminal, connect to the OLVM manager:
 
     ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
@@ -118,7 +118,8 @@ This lab assumes you have:
     ```bash
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
-  ![Olkvm01 Clean pre-check](./images/olkvm01-clean-pre-check.png "Show Olkvm01 Clean pre-check")
+
+    ![Olkvm01 Clean pre-check](./images/olkvm01-clean-pre-check.png "Show Olkvm01 Clean pre-check")
 
 9. Exit back to the manager host:
 
@@ -152,7 +153,7 @@ This lab assumes you have:
 
     Do not use the `olkvm01.pub.olv.oraclevcn.com` name in this field. OLVM must manage the KVM host through the private management network.
 
-    If you accidentally use the public hostname and the host becomes **Non Responsive**, remove that host entry from OLVM and add `olkvm02` again with `vdsm02.priv.olv.oraclevcn.com`.
+    If you accidentally use the public hostname and the host becomes **Non Responsive**, remove that host entry from OLVM and add `olkvm01` again with `vdsm01.priv.olv.oraclevcn.com`.
 
     >**Note**: The private management FQDN vdsm01.priv.olv.oraclevcn.com was automatically created by OCI when the Ansible playbook ran in Lab 1. The playbook named the KVM host's private network interface vdsm01 and placed it on a subnet labeled priv inside a VCN labeled olv. OCI combines these names to create a fixed, predictable hostname.
 
@@ -164,7 +165,7 @@ This lab assumes you have:
     <copy>sudo ssh-keygen -y -f /etc/pki/ovirt-engine/keys/engine_id_rsa | ssh olkvm01 -T "sudo tee -a /root/.ssh/authorized_keys"</copy>
     ```
 
- ![Olkvm01 Host Setup](./images/olvmk01-host-setup.png "Show Olkvm01 Host Setup")
+    ![olvmk01 Host Setup](./images/olvmk01-host-setup.png "Show olvmk01 Host Setup")
 
 9. Return to the browser and click **OK**.
 
@@ -232,13 +233,13 @@ This lab assumes you have:
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
 
-    - If the pre-check reports extra enabled repositories, disable them :
+    - If the pre-check reports extra enabled repositories, disable them:
 
     ```bash
     <copy>sudo dnf config-manager --set-disabled ol8_MySQL84 ol8_MySQL84_tools_community ol8_MySQL_connectors_community ol8_ksplice ol8_oci_included</copy>
     ```
 
-    -Rerun the check:
+    - Rerun the check:
 
     ```bash
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
