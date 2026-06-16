@@ -94,7 +94,7 @@ Use these connection paths throughout this and later labs:
     sudo dnf repolist | egrep 'ovirt|kvm|gluster|UEKR7|baseos|appstream|addons'</copy>
     ```
 
-    ![Clean Pre-check](./images/dnf-repolist.png "Show Clean Pre-check]")
+    ![DNF repolist output](./images/dnf-repolist.png "Show DNF repolist output")
 
 5. Run the OLVM pre-check script:
 
@@ -114,7 +114,7 @@ Use these connection paths throughout this and later labs:
     <copy>sudo /usr/local/bin/olvm-pre-check.py</copy>
     ```
 
-    ![DNF Repolist](./images/clean-precheck.png "Show DNF Repolist]")
+    ![OLVM pre-check script output](./images/clean-precheck.png "Show OLVM pre-check script output")
 
 6. Install the OLVM engine package:
 
@@ -208,7 +208,6 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
 
 1. Open your local browser. Firefox is recommended for this lab.
 
-
 2. Navigate to the Administration Portal using the engine FQDN:
 
     ```bash
@@ -219,8 +218,7 @@ The OLVM Administration Portal must be accessed using the engine's fully qualifi
 
 3. Your browser displays a certificate warning because the lab uses a self-signed certificate. Click **Advanced -> Accept the Risk and Continue** (_Firefox is recommended_) or **Advanced -> Proceed** (Chrome).
 
-
-  ![Warning page](./images/warning-page.png "Show Warning page]")
+    ![Warning page](./images/warning-page.png "Show Warning page")
 
 4. On the landing page, click **Engine CA Certificate** to download it.
 
