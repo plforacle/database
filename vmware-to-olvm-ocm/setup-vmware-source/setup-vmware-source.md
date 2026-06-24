@@ -56,7 +56,7 @@ In this lab, you will:
 
 ## Task 2: Create the Source Environment
 
-1. Open **Migration & Recovery**, then open **Cloud Migrations**.
+1. Open Menu **Migration & Recovery**, **Cloud Migrations**, **Remote Connections**.
 
 2. Open **Remote Connections**.
 
