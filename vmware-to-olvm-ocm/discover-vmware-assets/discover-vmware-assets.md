@@ -17,7 +17,7 @@ In this lab, you will:
 
 ## Task 1: Create a VMware Asset Source
 
-1. In the OCI Console, open **Migration & Disaster Recovery**, then open **Cloud Migrations**.
+1. In the OCI Console Menu, open **Migration & Disaster Recovery**, then open **Cloud Migrations**.
 
 2. Open **Asset Sources**.
 

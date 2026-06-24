@@ -17,7 +17,7 @@ In this lab, you will:
 
 ## Task 1: Store OLVM Credentials in Vault
 
-1. In the OCI Console, open **Identity & Security**, then open **Vault**.
+1. In the OCI Console Menu, open **Identity & Security**, then open **Vault**.
 
 2. Open the migration Vault.
 

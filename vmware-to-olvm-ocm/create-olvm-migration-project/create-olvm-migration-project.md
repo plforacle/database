@@ -18,7 +18,7 @@ In this lab, you will:
 
 ## Task 1: Start the Migration Project Wizard
 
-1. In the OCI Console, open **Migration & Disaster Recovery**, then open **Cloud Migrations**.
+1. In the OCI Console Menu, open **Migration & Disaster Recovery**, then open **Cloud Migrations**.
 
 2. Open **Migrations**.
 
