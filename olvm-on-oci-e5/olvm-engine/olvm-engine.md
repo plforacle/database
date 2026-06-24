@@ -270,6 +270,6 @@ You may now **proceed to the next lab**
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, Perside Foster
+- **Author** - Shawn Kelley, John Priest, Perside Foster
 - **Contributor** - Marvin Kim
 - **Last Updated By/Date** - Perside Foster, May 20, 2026

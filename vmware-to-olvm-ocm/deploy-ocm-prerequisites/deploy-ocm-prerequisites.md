@@ -76,6 +76,7 @@ In this lab, you will:
     This retry handles a Vault endpoint propagation timing condition after the Vault is created. Do not delete the stack or recreate the prerequisite resources unless instructed by Oracle Support.
 
 6. Confirm that the apply job shows **Succeeded**.
+    ![ Job Success](images/job-success.png " Show Job Success ")
 
 7. Open **Stack Resources**.
 

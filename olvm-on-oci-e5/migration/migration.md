@@ -162,6 +162,6 @@ Congratulations. You completed the beginner OLVM on OCI E5 workshop. You built t
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, Perside Foster
+- **Author** - Shawn Kelley, John Priest, Perside Foster
 - **Contributor** - Marvin Kim
 - **Last Updated By/Date** - Perside Foster, May 20, 2026

@@ -4,6 +4,8 @@
 
 Oracle Linux Virtualization Manager (OLVM) provides KVM-based virtualization and centralized management for Oracle Linux environments. In this beginner workshop, you will deploy OLVM on Oracle Cloud Infrastructure (OCI), configure a two-host KVM cluster, set up networking and storage, deploy a multi-tier application, and perform live migration.
 
+> **Note: This tutorial is only for testing and evaluation purposes; Oracle Linux Virtualization Manager support for OCI is under development and is not supported to manage OCI systems.**
+
 **Estimated Workshop Time:** 5-6 hours of hands-on work, including the Ansible setup lab.
 
 ### Audience and Delivery Model
@@ -126,6 +128,6 @@ If VLANs are not available, submit a support or service-limit request before sta
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, Perside Foster
+- **Author** - Shawn Kelley, John Priest, Perside Foster
 - **Contributor** - Marvin Kim
 - **Last Updated By/Date** - Perside Foster, May 20, 2026
