@@ -19,21 +19,40 @@ In this lab, you will:
 
 ## Task 1: Store vCenter Credentials in Vault
 
-1. In the OCI Console Menu, open **Identity & Security**, then open **Vault**.
+1. In the OCI Console Menu, open **Identity & Security**, **Key Management**, **Vault**.
 
-2. Open the Vault created by the prerequisites stack.
+2. select the compartment  **olvm-migrations -> Migration -> MigrationSecrets**.
 
-3. Open **Secrets**.
+3. Open the Vault created by the prerequisites stack **ocm-secrets**.
 
-4. Click **Create Secret**.
+4. Click on **Key Management** Menu
+    ![ Key Management Menu](images/key-management-menu.png "Select Key Management")
 
-5. For **Name**, enter **vcenter-password** or your approved secret name.
+5. Click on **Secret Management** Menu then click the  **Create Secret** button.
+    ![ Secret Management Menu](images/secret-management-menu.png "Select Secret Management")
 
-6. Enter the vCenter service account password as the secret content.
+6. On the **Create Secret** page, use the following values.
+    > Note: Be sure to follow the example for the Secret contents format
 
-7. Click **Create Secret**.
+    | Field | Value |
+    | --- | --- |
+    | Name | vcenter-password |
+    | Description | vCenter service account password |
+    | Vault Compartment | Migration Secrets |
+    | Vault | ocm-secrets |
+    | Encryption key compartment | MigrationSecrets |
+    | Encryption key | ocm-key |
+    | Secret Generation | Manual secret generation |
+    | Secret type template | Plain-Text |
+    | Secret contents (Must be in this format) | {"username":"USER_","password":"PASSWORD"} |
 
-8. Confirm that the secret status is **Active**.
+    **Example:** {"username":"sidneyglick@vsphere.local","password":"GXf0gxijfkfuJDIe84484"}
+
+    ![ Create Secret Page ](images/create-secret.png "Enter Create Secret values")
+
+7. Click the **Create secret**
+
+8. Wait for the secret status to become  **Active**.
 
 ## Task 2: Create the Source Environment
 
