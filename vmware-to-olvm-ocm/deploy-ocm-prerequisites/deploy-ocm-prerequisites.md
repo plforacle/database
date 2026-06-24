@@ -21,9 +21,9 @@ In this lab, you will:
 
 2. Go to **Migration & Disaster Recovery**, then open **Cloud Migrations** + **Overview**.
 
-4. Use the compartment picker to select the `olvm-migrations` compartment.
+3. Use the compartment picker to select the `olvm-migrations` compartment.
 
-5. Click **Create Prerequisites**.
+4. Click **Create Prerequisites**.
     ![Prerequisite Overview](images/prerequisite-overview.png "Show Prerequisite Overview")
 
 ## Task 2: Configure the Stack
@@ -55,12 +55,11 @@ In this lab, you will:
 
 7. Click **Create**.
 
-
 ## Task 3: Apply the Stack
 
 1. From the Resource Manager stack created by the prerequisites wizard.
-    - Click the **Actions** Menu
-    - Click **Apply**.
+    * Click the **Actions** Menu
+    * Click **Apply**.
     ![ Resource Stack Apply](images/stack-apply.png " Click on Stack Apply action ")
 
 2. From the apply page, click **Apply**.

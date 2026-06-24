@@ -22,30 +22,25 @@ Use one of the VDDK Linux tarball versions supported by Oracle Cloud Migrations:
 
 | Source VMware version | Broadcom VDDK version | File name | MD5 |
 | --- | --- | --- | --- |
-| vSphere 6.7, 7.0, or 8.0 | 8.0U3 | `VMware-vix-disklib-8.0.3-23950268.x86_64.tar.gz` | `007ab979e52f52401f02278b75ab5c74` |
-| vSphere 6.5 | 7.0U2 | `VMware-vix-disklib-7.0.2-17696664.x86_64.tar.gz` | `ce2c7c15ec83024500284ddf613d47a4` |
+| vSphere 8.0 | 8.0U3 | `VMware-vix-disklib-8.0.3-23950268.x86_64.tar.gz` | `007ab979e52f52401f02278b75ab5c74` |
 
 Do not use the latest VDDK version unless it matches one of the supported versions in this table.
 
 ## Task 1: Upload the VDDK to Object Storage
 
-1. In the OCI Console, open **Storage**, then open **Buckets**.
+1. In the OCI Console Menu, open **Storage**, **Object Storage & Archive Storage** , **Buckets**.
 
-2. Select the `Migration` subcompartment under `olvm-migrations`.
+2. Select the **Migration** subcompartment under **olvm-migrations**.
     ![Bucket compartment](images/bucket-compartment.png "Select Bucket compartment")
 
-3. Open the `ocm_replication` bucket created by the prerequisites stack.
+3. Open the **ocm_replication** bucket created by the prerequisites stack.
 
 4. Click **Upload**.
     ![Bucket upload](images/bucket-upload.png "Select Bucket upload")
 
 5. Download the VDDK package from the Broadcom VMware Developer Portal.
-
-    - Open [VMware Virtual Disk Development Kit (VDDK)](https://developer.broadcom.com/sdks/vmware-virtual-disk-development-kit-vddk/latest).
-    - Select `v8.0` and download the VDDK `8.0U3` Linux tarball package for most source environments. This is not the same as the earlier `8.0` or `8.0.1` rows.
-    - Select `v7.0` and download the VDDK `7.0U2` Linux tarball package only when the source environment is vSphere 6.5.
-    - Sign in to Broadcom if the download button shows **Login Required**.
-    - If you cannot access the download, use the approved VDDK Linux tarball provided by your instructor or VMware administrator.
+    * Open [VMware Virtual Disk Development Kit (VDDK)](https://developer.broadcom.com/sdks/vmware-virtual-disk-development-kit-vddk/latest).
+    * Select `v8.0` and download the VDDK `8.0U3` Linux tarball package for most source environments. This is not the same as the earlier `8.0` or `8.0.1` rows.
 
 6. Select the VDDK Linux tarball package file that you downloaded.
 
@@ -78,11 +73,11 @@ Do not use the latest VDDK version unless it matches one of the supported versio
 
 4. Click **Create Agent Dependency**.
     ![Agent dependency](images/agent-dependency.png "Select Agent dependency button")
-5. For **Name**, enter `vddk-package` or your approved dependency name.
+5. For **Name**, enter **vddk-package** or your approved dependency name.
 
-6. Select the `Migration` subcompartment under `olvm-migrations`.
+6. Select the **Migration** subcompartment under **olvm-migrations**.
 
-7. Select the `ocm_replication` Object Storage bucket that contains the VDDK package.
+7. Select the **ocm_replication** Object Storage bucket that contains the VDDK package.
 
 8. Select the VDDK object.
 
@@ -91,7 +86,7 @@ Do not use the latest VDDK version unless it matches one of the supported versio
 
 10. Confirm that the agent dependency appears with a status of **Available**.
 
-    If the dependency fails with `Invalid Checksum`, the uploaded object does not match an approved VDDK dependency package. Delete the failed dependency, confirm that you downloaded one of the supported VDDK Linux tarball packages listed in the prerequisites, upload the correct tarball object, and create the agent dependency again.
+    If the dependency fails with **Invalid Checksum**, the uploaded object does not match an approved VDDK dependency package. Delete the failed dependency, confirm that you downloaded one of the supported VDDK Linux tarball packages listed in the prerequisites, upload the correct tarball object, and create the agent dependency again.
 
 11. Record the dependency details.
 

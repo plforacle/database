@@ -27,7 +27,7 @@ In this lab, you will:
 
 4. Click **Create Secret**.
 
-5. For **Name**, enter `vcenter-password` or your approved secret name.
+5. For **Name**, enter **vcenter-password** or your approved secret name.
 
 6. Enter the vCenter service account password as the secret content.
 
@@ -45,7 +45,7 @@ In this lab, you will:
 
 4. Click **Create Source Environment**.
 
-5. For **Name**, enter `vmware-source-01` or a name that identifies the source vCenter.
+5. For **Name**, enter **vmware-source-01** or a name that identifies the source vCenter.
 
 6. Select the migration compartment.
 
@@ -87,7 +87,7 @@ In this lab, you will:
 
 2. Start **Deploy OVF Template** from the content library item.
 
-3. For **Name**, enter `OCM-Agent-01`.
+3. For **Name**, enter **OCM-Agent-01**.
 
 4. Select the target cluster and datastore.
 
@@ -125,7 +125,7 @@ In this lab, you will:
 
 3. Accept the certificate warning if your browser displays one.
 
-4. If the browser reports that the client sent an HTTP request to an HTTPS server, change `http://` to `https://` in the address bar.
+4. If the browser reports that the client sent an HTTP request to an HTTPS server, change **http://** to **https://** in the address bar.
 
 5. Confirm that the registration status page loads without a connection error.
 
@@ -139,7 +139,7 @@ In this lab, you will:
 
 4. Keep the new browser tab open while the key exchange completes.
 
-5. Enter the agent name, such as `OCM-Agent-01`.
+5. Enter the agent name, such as **OCM-Agent-01**.
 
 6. Click **Register**.
 

@@ -53,12 +53,12 @@ In this lab, you will:
 
     | Field | Value |
     | --- | --- |
-    | Name | `olvm-target-01` |
+    | Name | **olvm-target-01** |
     | Compartment | Migration compartment |
     | OLVM Manager URL | OLVM Manager FQDN or IP |
     | Username | OLVM admin or migration user |
-    | Password secret | `olvm-password` |
-    | Certificate secret | `olvm-certificate` |
+    | Password secret | olvm-password |
+    | Certificate secret | olvm-certificate |
 
 6. Click **Create Asset Source**.
 
@@ -85,7 +85,7 @@ In this lab, you will:
     Network profiles:
     ```
 
-7. If the OLVM Manager is not reachable from OCI, use standalone discovery through the OCM API with the `CreateDiscoverySchedule` operation.
+7. If the OLVM Manager is not reachable from OCI, use standalone discovery through the OCM API with the **CreateDiscoverySchedule** operation.
 
 ## Learn More
 

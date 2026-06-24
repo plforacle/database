@@ -25,11 +25,13 @@ In this lab, you will:
 4. Click **Create Compartment**.
 
 5. For **Name**, enter:
+
     ```text
     <copy>olvm-migrations</copy>
     ```
 
 6. For **Description**, enter:
+
     ```text
     <copy>Compartment for VMware to OLVM migration activities.</copy>
     ```
@@ -41,9 +43,9 @@ In this lab, you will:
 
 9. Refresh your browser after the compartment is created.
 
-10. Confirm that the new compartment appears in the list before continuing. 
-    - Go to **Identity & Security**, then open **Compartments**.
-    - Search for the Parent Compartment and look for `olvm-migrations`
+10. Confirm that the new compartment appears in the list before continuing.
+    * Go to **Identity & Security**, then open **Compartments**.
+    * Search for the Parent Compartment and look for `olvm-migrations`
 
 11. Record the compartment details.
 
