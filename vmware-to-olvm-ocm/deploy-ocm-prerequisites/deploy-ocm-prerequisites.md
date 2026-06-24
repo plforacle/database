@@ -13,7 +13,7 @@ In this lab, you will:
 * Open the OCM prerequisites wizard.
 * Configure and Review prerequisite stack options for VMware to OLVM migrations.
 * Apply the stack and handle the expected tag retry condition if it appears.
-* Verify created stack resources.
+* Verify created stack completed successfully.
 
 ## Task 1: Open the Prerequisites Wizard
 
@@ -78,19 +78,6 @@ In this lab, you will:
 6. Confirm that the apply job shows **Succeeded**.
     ![ Job Success](images/job-success.png " Show Job Success ")
 
-7. Open **Stack Resources**.
-
-8. Confirm that compartments, dynamic groups, user groups, policies, tag namespace, Vault, KMS key, and Object Storage bucket resources show **Available**, **Active**, or the expected terminal state.
-
-9. Record the resource names needed in later labs.
-
-    ```text
-    Replication bucket: ocm_replication
-    Vault: ocm-secrets
-    KMS key: ocm-key
-    Tag namespace:
-    ```
-
 ## Learn More
 
 * [Oracle Cloud Migrations documentation](https://docs.oracle.com/en-us/iaas/Content/cloud-migration/home.htm)
@@ -98,5 +85,6 @@ In this lab, you will:
 
 ## Acknowledgements
 
-* **Author** - Mark Atkinson, Evgeny Golenkov, Perside Foster
+* **Author** - Mark Atkinson, Evgeny Golenkov, Andrey Sokolov, Perside Foster
+* **Contributor** - Keya Balutkar
 * **Last Updated By/Date** - Perside Foster, June 2026

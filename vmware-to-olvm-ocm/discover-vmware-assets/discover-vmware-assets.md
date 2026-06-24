@@ -71,5 +71,6 @@ In this lab, you will:
 
 ## Acknowledgements
 
-* **Author** - Mark Atkinson, Evgeny Golenkov, Perside Foster
+* **Author** - Mark Atkinson, Evgeny Golenkov, Andrey Sokolov, Perside Foster
+* **Contributor** - Keya Balutkar
 * **Last Updated By/Date** - Perside Foster, June 2026

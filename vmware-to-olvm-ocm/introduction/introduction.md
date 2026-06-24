@@ -58,5 +58,6 @@ The remote agent appliance runs in the VMware environment and needs network acce
 
 ## Acknowledgements
 
-* **Author** - Mark Atkinson, Evgeny Golenkov, Perside Foster
+* **Author** - Mark Atkinson, Evgeny Golenkov, Andrey Sokolov, Perside Foster
+* **Contributor** - Keya Balutkar
 * **Last Updated By/Date** - Perside Foster, June 2026
