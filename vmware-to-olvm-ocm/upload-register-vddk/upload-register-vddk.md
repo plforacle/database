@@ -65,7 +65,7 @@ Do not use the latest VDDK version unless it matches one of the supported versio
 
 ## Task 2: Register the VDDK as an Agent Dependency
 
-1. Open **Migration & Disaster Recovery**, then open **Cloud Migrations**.
+1. Open **Migration & Recovery**, then open **Cloud Migrations**.
 
 2. Open **Remote Connections**.
 

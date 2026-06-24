@@ -19,7 +19,7 @@ In this lab, you will:
 
 1. Open the OCI Console navigation menu.
 
-2. Go to **Migration & Disaster Recovery**, then open **Cloud Migrations** + **Overview**.
+2. Go to **Migration & Recovery**, then open **Cloud Migrations** + **Overview**.
 
 3. Use the compartment picker to select the `olvm-migrations` compartment.
 

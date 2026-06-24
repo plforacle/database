@@ -41,7 +41,7 @@ In this lab, you will:
 
 ## Task 2: Create the OLVM Asset Source
 
-1. Open **Migration & Disaster Recovery**, then open **Cloud Migrations**.
+1. Open **Migration & Recovery**, then open **Cloud Migrations**.
 
 2. Open **Asset Sources**.
 
