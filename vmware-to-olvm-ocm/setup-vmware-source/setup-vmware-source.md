@@ -65,12 +65,26 @@ In this lab, you will:
     * **Name**, enter **vmware-source-01**
     * **Migration Compartment, select  **Migration**
     * Click **Create** button
+
     ![Create Source Environment](images/create-source-environment.png "Show Create Source Environment page")
 
 4. Confirm that the source environment appears with an **active** status.
-    ![Source Environment Active](images/source-environment-active.png "Show Active Source Environment")
+    ![Source Environment Active](images/source-environment-active.png "Show Active Source Environment Active Status")
 
-5. Create Agent Depnedenty ... see recording
+5. Create Agent Dependency now. From the OCI Console Menu, open Menu **Migration & Recovery**, **Cloud Migrations**,**Resource Environments**
+
+6. Select the **Source Environments** menu and click on **Add agent dependencies** button.
+    ![Source Environment Menu](images/source-environment-menu.png "Show Active Source Environment Menu")
+
+7. Configure the "Create Agent Dependency" page as follows:
+    * Click on Select from existing agent dependencies box
+    * Source environment compartment:  Migration
+    * Select the **vddk-package**
+    * Click on **Add agent dependencies** button
+
+    ![Create Agent Dependency](images/create-agency-dependency.png "Show Create Agent Dependency page")
+
+8. Wait for the **vmware-source-01* Agent Depency to become **Active**.
 
 ## Task 3: Download the Remote Agent Appliance OVA
 
