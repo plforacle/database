@@ -38,7 +38,7 @@ In this lab, you will:
     | --- | --- |
     | Name | vcenter-password |
     | Description | vCenter service account password |
-    | Vault Compartment | Migration Secrets |
+    | Vault Compartment | MigrationSecrets |
     | Vault | ocm-secrets |
     | Encryption key compartment | MigrationSecrets |
     | Encryption key | ocm-key |
@@ -69,6 +69,8 @@ In this lab, you will:
 
 4. Confirm that the source environment appears with an **active** status.
     ![Source Environment Active](images/source-environment-active.png "Show Active Source Environment")
+
+5. Create Agent Depnedenty ... see recording
 
 ## Task 3: Download the Remote Agent Appliance OVA
 
@@ -125,6 +127,7 @@ In this lab, you will:
 11. Press **Enter** to refresh diagnostics.
 
 12. Confirm that the appliance reports healthy and not registered.
+
 
 ## Task 6: Verify Agent Console Accessibility
 
