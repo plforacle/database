@@ -77,12 +77,14 @@ In this lab, you will:
 2. Click **Actions**.
 
 3. Click **Download Agent VM**.
+    ![Source Environment Download Action](images/source-environment-download-action.png "Select Source Environment Download Action")
 
 4. Select the most recent agent version.
 
 5. Download the OVA file.
+    ![Download Agent VM](images/download-agent-vm.png "Select Download Agent VM")
 
-6. Confirm that the OVA download completes successfully.
+6. Confirm that the OVA download completes successfully then close the page.
 
 ## Task 4: Add the OVA to the vCenter Content Library
 
