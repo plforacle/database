@@ -56,23 +56,19 @@ In this lab, you will:
 
 ## Task 2: Create the Source Environment
 
-1. Open Menu **Migration & Recovery**, **Cloud Migrations**, **Remote Connections**.
+1. In the OCI Console Menu, open Menu **Migration & Recovery**, **Cloud Migrations**, **Remote Connections**.
 
-2. Open **Remote Connections**.
+2. Open **Source Environments**.
+    ![Source Environment](images/source-environment.png "Open Source Environment page")
 
-3. Open **Source Environments**.
+3. Click **Create Source Environment** button and do  the followings:
+    * **Name**, enter **vmware-source-01**
+    * **Migration Compartment, select  **Migration**
+    * Click **Create** button
+    ![Create Source Environment](images/create-source-environment.png "Show Create Source Environment page")
 
-4. Click **Create Source Environment**.
-
-5. For **Name**, enter **vmware-source-01** or a name that identifies the source vCenter.
-
-6. Select the migration compartment.
-
-7. Select the VDDK agent dependency if the workflow prompts for it.
-
-8. Click **Create**.
-
-9. Confirm that the source environment appears with an active status.
+4. Confirm that the source environment appears with an **active** status.
+    ![Source Environment Active](images/source-environment-active.png "Show Active Source Environment")
 
 ## Task 3: Download the Remote Agent Appliance OVA
 
