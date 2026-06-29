@@ -105,6 +105,7 @@ In this lab, you will:
 ## Task 4: Add the OVA to the vCenter Content Library
 
 1. Sign in to vCenter.
+    ![vCenter Login](images/vcenter-login.png "Show vCenter Login")
 
 2. Open your vCenter content library.
 
@@ -157,10 +158,9 @@ In this lab, you will:
     ```
 
 3. Accept the certificate warning if your browser displays one.
+    ![Verify Remote Agent](images/remote-agent-verify.png "Show Verify Remote Agent")
 
 4. If the browser reports that the client sent an HTTP request to an HTTPS server, change **http://** to **https://** in the address bar.
-
-5. Confirm that the registration status page loads without a connection error.
 
 ## Task 7: Register the Agent
 
@@ -172,32 +172,36 @@ In this lab, you will:
     ![Register Agent Menu](images/register-agent-menu.png "Select Register Agent Menu")
 
 4. From **Register agent** page  enter the followings:
-    * Name: keep default value
-    * Agent host name or IP: external IP address of the VMware agent appliance
-    * Generate HTTPS Redirect URL (for ocb-appliance version > 1.0.4081): check mark to generate HTTPS Redirect URL 
+    * **Name:** keep default value
+    * **Agent host name or IP:** external IP address of the VMware agent appliance
+    * **Generate HTTPS Redirect URL (for ocb-appliance version > 1.0.4081):** Set check mark to generate HTTPS Redirect URL
     * Click Register button
+    ![Register Agent Details](images/register-agent-details.png "Enter Register Agent Details")
 
-5. Verify availability of remote agent web console.  Open new Chrome tab enter https://<VMware agent public IP Adress>:3000/ocb/register
+5. From  vCenter verify availability of remote agent web console.  Open new Chrome tab enter https://<agent-external-ip>:3000/ocb/register
 
 6. Keep the new browser tab open while the key exchange completes.
 
-5. Enter the agent name, such as **OCM-Agent-01**.
+7. Enter the agent name, such as **OCM-Agent-01**.
 
-7. Click **Register**.
+8. Click **Register**.
 
-7. Click **Confirm** when prompted.
+9. Click **Confirm** when prompted.
 
-8. Click **Close**.
+10. Click **Close**.
 
-9. Open the appliance VM console in vCenter.
+11. Open the appliance VM console in vCenter.
 
-10. Press **Enter** to refresh diagnostics.
+12. Press **Enter** to refresh diagnostics.
 
-11. Confirm that the status changes to healthy and registered.
+13. Confirm that the status changes to healthy and registered.
 
-12. In the OCI Console, confirm that the agent shows a recent heartbeat.
+14. In the OCI Console, confirm that the agent shows a recent heartbeat.
+    ![Source Environment Remote connection Status](images/source-environment-remote-connection-status.png "Source Environment Remote connection Status")
 
-13. Confirm plugin status.
+    ![Agent Heartbeat](images/agent-remote-connect-heartbeat.png "Show Agent Heartbeat")
+
+15. Confirm plugin status.
 
     ```text
     Agent Monitoring:
