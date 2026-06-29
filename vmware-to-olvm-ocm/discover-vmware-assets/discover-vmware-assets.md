@@ -17,7 +17,7 @@ In this lab, you will:
 
 ## Task 1: Create a VMware Asset Source
 
-1. In the OCI Console Menu, open **Migration & Recovery**, then open **Cloud Migrations**.
+1. In the OCI Console Menu, open **Migration & Recovery**, **Cloud Migrations** then open **Discovery**.
 
 2. Open **Asset Sources**.
 
@@ -35,7 +35,7 @@ In this lab, you will:
     | Username | vCenter service account |
     | Password secret | `vcenter-password` |
     | Source environment | `vmware-source-01` |
-    | Agent dependency | `vddk-package` |
+
 
 6. Click **Create Asset Source**.
 
@@ -45,7 +45,7 @@ In this lab, you will:
 
 1. Open the VMware asset source details page.
 
-2. Click **Discover Assets**.
+2. Click **Actions** **Run Discovery**.
 
 3. Wait for the discovery job to complete.
 

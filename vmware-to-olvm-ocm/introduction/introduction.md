@@ -29,6 +29,7 @@ This workshop assumes you have:
 * The VDDK package downloaded from the VMware portal.
 * A workstation that can reach OCI over HTTPS and the remote agent appliance registration endpoint.
 * Network connectivity from the remote agent appliance to vCenter, ESXi hosts, OCI service endpoints, Object Storage, and OLVM.
+* Users are expected to know how to manage VMware vCenter and OLVM environments.
 
 ## Workshop Architecture
 

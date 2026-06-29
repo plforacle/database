@@ -15,29 +15,14 @@ In this lab, you will:
 * Discover OLVM target assets.
 * Confirm that target clusters, storage domains, templates, and network profiles are visible in inventory.
 
-## Task 1: Store OLVM Credentials in Vault
+## Task 1: Download Engine CA Certificate 
 
-1. In the OCI Console Menu, open **Identity & Security**, then open **Vault**.
+1. from OLVM  https://157....nip.io/ovirt-engine/
 
-2. Open the migration Vault.
+2. Download certificate
 
-3. Open **Secrets**.
+3. Open certificate with notepad  and copy  
 
-4. Create a secret for the OLVM password.
-
-    ```text
-    Secret name: olvm-password
-    ```
-
-5. Create a second secret for the OLVM TLS certificate.
-
-    ```text
-    Secret name: olvm-certificate
-    ```
-
-6. Paste the certificate content as the secret value.
-
-7. Confirm that both secrets show **Active**.
 
 ## Task 2: Create the OLVM Asset Source
 
@@ -56,6 +41,7 @@ In this lab, you will:
     | Name | **olvm-target-01** |
     | Compartment | Migration compartment |
     | OLVM Manager URL | OLVM Manager FQDN or IP |
+    | Remote connections source environment | vmware-source-01 |
     | Username | OLVM admin or migration user |
     | Password secret | olvm-password |
     | Certificate secret | olvm-certificate |

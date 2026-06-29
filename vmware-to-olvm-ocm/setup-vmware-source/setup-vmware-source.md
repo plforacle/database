@@ -63,7 +63,7 @@ In this lab, you will:
 
 3. Click **Create Source Environment** button and do  the followings:
     * **Name**, enter **vmware-source-01**
-    * **Migration Compartment, select  **Migration**
+    * **Migration Compartment**, select  **Migration**
     * Click **Create** button
 
     ![Create Source Environment](images/create-source-environment.png "Show Create Source Environment page")
@@ -84,7 +84,7 @@ In this lab, you will:
 
     ![Create Agent Dependency](images/create-agency-dependency.png "Show Create Agent Dependency page")
 
-8. Wait for the **vmware-source-01* Agent Depency to become **Active**.
+8. Wait for the **vmware-source-01** Agent Depency to become **Active**.
 
 ## Task 3: Download the Remote Agent Appliance OVA
 
@@ -142,7 +142,6 @@ In this lab, you will:
 
 12. Confirm that the appliance reports healthy and not registered.
 
-
 ## Task 6: Verify Agent Console Accessibility
 
 1. Record the external IP address shown in the appliance console or in vCenter network details.
@@ -165,17 +164,26 @@ In this lab, you will:
 
 ## Task 7: Register the Agent
 
-1. Return to the source environment in the OCI Console.
+1. Return to the source environment in the OCI Console. In the OCI Console Menu, open Menu **Migration & Recovery**, **Cloud Migrations**, **Remote Connections**.
 
-2. Click **Register Agent**.
+2. From the **Source environment** page Click source environment name **vmware-source-01**.
 
-3. Enter the external IP address of the agent appliance.
+3. From the **vmware-source-01** page click **Action** Menu select **Register agent**
+    ![Register Agent Menu](images/register-agent-menu.png "Select Register Agent Menu")
 
-4. Keep the new browser tab open while the key exchange completes.
+4. From **Register agent** page  enter the followings:
+    * Name: keep default value
+    * Agent host name or IP: external IP address of the VMware agent appliance
+    * Generate HTTPS Redirect URL (for ocb-appliance version > 1.0.4081): check mark to generate HTTPS Redirect URL 
+    * Click Register button
+
+5. Verify availability of remote agent web console.  Open new Chrome tab enter https://<VMware agent public IP Adress>:3000/ocb/register
+
+6. Keep the new browser tab open while the key exchange completes.
 
 5. Enter the agent name, such as **OCM-Agent-01**.
 
-6. Click **Register**.
+7. Click **Register**.
 
 7. Click **Confirm** when prompted.
 

@@ -28,14 +28,14 @@
       "filename": "../../setup-vmware-source/setup-vmware-source.md"
     },
     {
-      "title": "Lab 5: Set Up the OLVM Target Environment",
-      "description": "Store OLVM credentials and certificate material, create the OLVM asset source, and discover target assets.",
-      "filename": "../../setup-olvm-target/setup-olvm-target.md"
-    },
-    {
-      "title": "Lab 6: Run VMware Asset Discovery",
+      "title": "Lab 5: Run VMware Asset Discovery",
       "description": "Create the VMware asset source and discover source VMs in Oracle Cloud Migrations inventory.",
       "filename": "../../discover-vmware-assets/discover-vmware-assets.md"
+    },
+    {
+      "title": "Lab 6: Set Up the OLVM Target Environment",
+      "description": "Store OLVM credentials and certificate material, create the OLVM asset source, and discover target assets.",
+      "filename": "../../setup-olvm-target/setup-olvm-target.md"
     },
     {
       "title": "Lab 7: Create the OLVM Migration Project",
