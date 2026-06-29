@@ -29,27 +29,41 @@ In this lab, you will:
 
     | Field | Value |
     | --- | --- |
-    | Name | `vsphere-source-01` |
-    | Compartment | Migration compartment |
-    | vCenter URL | vCenter FQDN or IP |
-    | Username | vCenter service account |
-    | Password secret | `vcenter-password` |
-    | Source environment | `vmware-source-01` |
+    | Asset source type | VMware |
+    | Name | vsphere-source-01 |
+    | Remote endpoint | vCenter FQDN or public IP |
+    | Compartment | Migration |
+    | Target compartment | Migration |
+    | Remote connections source environment compartment | Migration |
+    | Remote connections source environment | vmware-source-01 |
+    | Discovery credentials | select Use existing secret |
+    | Vault compartment | MigrationSecrets |
+    | Vault | ocm-secrets |
+    | Secret | vcenter-password |
 
+    * Ignore Discovery schedules
+    * Metrics:Turn Off - Enable collection of historical metrics
+    * Metrics:Turn Off - Enable collection of real-time metrics
+
+    ![Create Asset Source](images/create-asset-source.png "Create Asset Source page")
 
 6. Click **Create Asset Source**.
 
 7. Confirm that the VMware asset source status is **Active**.
+    ![Asset Source Status](images/asset-source-status.png "Asset Source Status page")
 
 ## Task 2: Discover VMware Source VMs
 
-1. Open the VMware asset source details page.
+1. In the OCI Console Menu, open **Migration & Recovery**, **Cloud Migrations** then open **Discovery**.
+2. Click on the **vsphere-source-01** Asset Source to open the VMware asset source details page. Click **Actions** **Run Discovery**.
+    ![VMware Source Run Discovery](images/vmware-source-run-discovery.png "VMware Source Run Discovery menu")
 
-2. Click **Actions** **Run Discovery**.
+    ![VMware Source Run Discovery Popup](images/vmware-source-run-discovery-popup.png "VMware Source Run Discovery Popup")
 
 3. Wait for the discovery job to complete.
 
-4. Open **Inventory**.
+4. Open **Asset Inventory**.
+    ![VMware Asset Inventory](images/vmware-asset-inventory.png "VMware Asset Inventorypage")
 
 5. Confirm that VMware VMs appear in inventory.
 
