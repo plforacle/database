@@ -14,8 +14,8 @@ In this workshop, you will:
 * Deploy the OCM prerequisites Resource Manager stack.
 * Upload and register the VDDK package as an agent dependency.
 * Configure the VMware source environment and remote agent appliance.
-* Configure the OLVM target asset source.
 * Discover VMware source VMs and OLVM target assets.
+* Configure the OLVM target asset source.
 * Create an OLVM migration project and migration plan.
 * Replicate, migrate, validate, cut over, and clean up a migrated VM.
 
@@ -45,8 +45,8 @@ The remote agent appliance runs in the VMware environment and needs network acce
 * Lab 2 deploys the OCM prerequisites stack.
 * Lab 3 uploads and registers the VDDK.
 * Lab 4 sets up the VMware source environment and remote agent.
-* Lab 5 sets up the OLVM target environment.
-* Lab 6 discovers VMware source VMs.
+* Lab 5 discovers VMware source VMs.
+* Lab 6 sets up the OLVM target environment.
 * Lab 7 creates the OLVM migration project.
 * Lab 8 replicates, migrates, validates, and cuts over the VM.
 * Lab 9 marks the project complete and cleans up temporary resources.
