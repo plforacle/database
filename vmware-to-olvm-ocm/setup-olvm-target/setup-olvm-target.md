@@ -15,18 +15,24 @@ In this lab, you will:
 * Discover OLVM target assets.
 * Confirm that target clusters, storage domains, templates, and network profiles are visible in inventory.
 
-## Task 1: Download Engine CA Certificate 
+## Task 1: Download Engine CA Certificate
 
-1. from OLVM  https://157....nip.io/ovirt-engine/
+1. Open your local browser. Navigate to the Administration Portal using the OLVM engine FQDN or Public IP adress:
 
-2. Download certificate
+    ```bash
+    <copy>https://<olvm-fqdn>/ovirt-engine</copy>
+    ```
 
-3. Open certificate with notepad  and copy  
+2. On the landing page, click **Engine CA Certificate** to download it.
 
+    ![Show OLVM welcome page showing the Engine CA Certificate](./images/olvm-welcome.png "Show OLVM welcome page showing the Engine CA Certificate")
+
+3. Open certificate with notepad  and copy its value
+    ![Notepad Ca Certficate](./images/notepad-ca-certificate.png "Show Notepad Ca Certficate")
 
 ## Task 2: Create the OLVM Asset Source
 
-1. Open **Migration & Recovery**, then open **Cloud Migrations**.
+1. In the OCI Console Menu, open **Migration & Recovery**, **Cloud Migrations** then open **Discovery**.
 
 2. Open **Asset Sources**.
 
@@ -38,31 +44,49 @@ In this lab, you will:
 
     | Field | Value |
     | --- | --- |
-    | Name | **olvm-target-01** |
-    | Compartment | Migration compartment |
-    | OLVM Manager URL | OLVM Manager FQDN or IP |
+    | Asset source type | OLVM |
+    | Name | olvm-target-01 |
+    | Remote endpoint | OLVM Manager FQDN or IP |
+    | Compartment | Migration |
+    | Target compartment | Migration |
+    | Remote connections source environment compartment | Migration |
     | Remote connections source environment | vmware-source-01 |
-    | Username | OLVM admin or migration user |
-    | Password secret | olvm-password |
-    | Certificate secret | olvm-certificate |
+    | Discovery credentials | Create secret |
+    | Choose compartment | MigrationSecrets |
+    | Vault compartment | MigrationSecrets |
+    | Vault | ocm-secrets |
+    | Username | admin |
+    | User password | olvm-password |
+    | Confirm user password secret | olvm-password |
+    | Public key certificate | Notepad Ca Certficate copy from Task1 |
+
+    ![OLVM Asset Source](./images/create-olvm-asset-source.png "Create OLVM Asset Source")
 
 6. Click **Create Asset Source**.
+    ![OLVM Asset Source Build](./images/olvm-asset-source-build.png "Show OLVM Asset Source Build")
 
 7. Confirm that the asset source status is **Active**.
+    ![OLVM Asset Source Status](./images/olvm-asset-source-status.png "Show OLVM Asset Source Status")
 
 ## Task 3: Discover OLVM Target Assets
 
-1. Open the OLVM asset source details page.
+1. In the OCI Console Menu, open **Migration & Recovery**, **Cloud Migrations** then open **Discovery**.
+2. Click on the **olvm-target-01** Asset Source to open the OLVM asset source details page. Click **Actions** **Run Discovery**.
+    ![OLVM Source Run Discovery](images/olvm-source-run-discovery.png "OLVM Source Run Discovery menu")
 
-2. Click **Discover Assets**.
+    ![OLVM Source Run Discovery Popup](images/olvm-source-run-discovery-popup.png "OLVM Source Run Discovery Popup")
 
 3. Wait for the discovery job to complete.
 
-4. Open **Inventory**.
+4. In the OCI Console Menu, open **Migration & Recovery**, **Cloud Migrations** then open **Inventory**.
 
-5. Filter for OLVM assets.
+5. Open **Inventory assets**.
+    ![OLVM Asset Inventory Menu](images/inventory-assets-menu.png "Show OLVM Asset Inventory Menu")
 
-6. Confirm that the inventory contains the target resources needed by the migration plan.
+6. Filter for OLVM assets.
+    ![OLVM Asset Inventory Filter](images/inventory-assets-filter.png "Show OLVM Asset Inventory Filter")
+
+7. Confirm that the inventory contains the target resources needed by the migration plan.
 
     ```text
     OLVM cluster:
@@ -71,7 +95,7 @@ In this lab, you will:
     Network profiles:
     ```
 
-7. If the OLVM Manager is not reachable from OCI, use standalone discovery through the OCM API with the **CreateDiscoverySchedule** operation.
+8. If the OLVM Manager is not reachable from OCI, use standalone discovery through the OCM API with the **CreateDiscoverySchedule** operation.
 
 ## Learn More
 
