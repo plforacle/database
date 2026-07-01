@@ -30,7 +30,7 @@ In this lab, you will:
 
 6. Confirm that the replication job completes with a status of **Succeeded**.
 
-7. Confirm that the migration asset shows a **Last Replicated** timestamp.
+7. Confirm that the migration asset shows a **Time Finished** timestamp.
 
 ## Task 2: Run the Migration Plan for Testing
 
@@ -38,13 +38,25 @@ In this lab, you will:
 
 2. Select your migration plan.
 
-3. Click **Run Migration Plan**.
+3. Click **Migration Plan**.
 
-4. Monitor the job until it completes.
+4. Select Action Button  **Generate RMSStack**
 
-5. Sign in to OLVM Manager.
+5. Wait until work request completes
 
-6. Confirm that the VM appears in the target cluster.
+6. Navigate to the **RMS Stack** link  and click in plan Details page
+
+7. From RMS Stack page Open Action Menu and click Plan
+
+8. Wait for finish
+
+9. Return to RMS Stack page Open Action Menu and click Apply
+
+10. Monitor the job until it completes.
+
+11. Sign in to OLVM Manager.
+
+12. Confirm that the VM appears in the target cluster.
 
 ## Task 3: Validate the Migrated VM
 

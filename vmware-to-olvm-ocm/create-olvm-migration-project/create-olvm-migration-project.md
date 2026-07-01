@@ -44,7 +44,7 @@ In this lab, you will:
 
 ## Task 3: Add Assets
 
-1. Click **Add Assets**.
+1. Click **Add Assets** info ... select  **OCM Invetory** button.
 
 2. Select the VMware VMs from inventory that you want to include in the migration wave.
 

@@ -20,7 +20,7 @@ In this lab, you will:
 
 2. Open the navigation menu.
 
-3. Go to **Identity & Security**, then open **Compartments**.
+3. Go to **Identity & Security**, then open **Compartments**. .... compartment should be Migration...
 
 4. Click **Create Compartment**.
 
