@@ -17,22 +17,28 @@ In this lab, you will:
 * Verify the appliance registration endpoint on port 3000.
 * Register the remote agent and confirm health.
 
+### Note: Prepare Source Windows VMs
+
+Before you migrate Windows VMs to OLVM, install the required VirtIO network and storage drivers on each source Windows VM. Windows VMs that do not have the required VirtIO drivers may fail to boot after they are replicated and launched in the OLVM environment.
+
+If this workshop migration uses only Linux source VMs, no Windows VirtIO driver preparation is required.
+
 ## Task 1: Store vCenter Credentials in Vault
 
-1. In the OCI Console Menu, open **Identity & Security**, **Key Management**, **Vault**.
+1. In the OCI Console menu, open **Identity & Security**, **Key Management**, **Vault**.
 
-2. select the compartment  **olvm-migrations -> Migration -> MigrationSecrets**.
+2. Select the compartment **olvm-migrations -> Migration -> MigrationSecrets**.
 
 3. Open the Vault created by the prerequisites stack **ocm-secrets**.
 
-4. Click on **Key Management** Menu
-    ![ Key Management Menu](images/key-management-menu.png "Select Key Management")
+4. Click **Key Management**.
+    ![Key Management Menu](images/key-management-menu.png "Select Key Management")
 
-5. Click on **Secret Management** Menu then click the  **Create Secret** button.
-    ![ Secret Management Menu](images/secret-management-menu.png "Select Secret Management")
+5. Click **Secret Management**, then click **Create Secret**.
+    ![Secret Management Menu](images/secret-management-menu.png "Select Secret Management")
 
 6. On the **Create Secret** page, use the following values.
-    > Note: Be sure to follow the example for the Secret contents format
+    > Note: Be sure to follow the example format for the secret contents.
 
     | Field | Value |
     | --- | --- |
@@ -44,47 +50,47 @@ In this lab, you will:
     | Encryption key | ocm-key |
     | Secret Generation | Manual secret generation |
     | Secret type template | Plain-Text |
-    | Secret contents (Must be in this format) | {"username":"USER_","password":"PASSWORD"} |
+    | Secret contents | `{"username":"USER_","password":"PASSWORD"}` |
 
-    **Example:** {"username":"sidneyglick@vsphere.local","password":"GXf0gxijfkfuJDIe84484"}
+    **Example:** `{"username":"sidneyglick@vsphere.local","password":"GXf0gxijfkfuJDIe84484"}`
 
-    ![ Create Secret Page ](images/create-secret.png "Enter Create Secret values")
+    ![Create Secret Page](images/create-secret.png "Enter Create Secret values")
 
-7. Click the **Create secret**
+7. Click **Create secret**.
 
-8. Wait for the secret status to become  **Active**.
+8. Wait for the secret status to become **Active**.
 
 ## Task 2: Create the Source Environment
 
-1. In the OCI Console Menu, open Menu **Migration & Recovery**, **Cloud Migrations**, **Remote Connections**.
+1. In the OCI Console menu, open **Migration & Recovery**, **Cloud Migrations**, **Remote Connections**.
 
 2. Open **Source Environments**.
     ![Source Environment](images/source-environment.png "Open Source Environment page")
 
-3. Click **Create Source Environment** button and do  the followings:
-    * **Name**, enter **vmware-source-01**
-    * **Migration Compartment**, select  **Migration**
-    * Click **Create** button
+3. Click **Create Source Environment**, and use the following values:
+    * **Name:** enter **vmware-source-01**
+    * **Migration Compartment:** select **Migration**
+    * Click **Create**.
 
     ![Create Source Environment](images/create-source-environment.png "Show Create Source Environment page")
 
 4. Confirm that the source environment appears with an **active** status.
     ![Source Environment Active](images/source-environment-active.png "Show Active Source Environment Active Status")
 
-5. Create Agent Dependency now. From the OCI Console Menu, open Menu **Migration & Recovery**, **Cloud Migrations**,**Resource Environments**
+5. Create the agent dependency. In the OCI Console menu, open **Migration & Recovery**, **Cloud Migrations**, **Resource Environments**.
 
-6. Select the **Source Environments** menu and click on **Add agent dependencies** button.
+6. Select **Source Environments**, then click **Add agent dependencies**.
     ![Source Environment Menu](images/source-environment-menu.png "Show Active Source Environment Menu")
 
 7. Configure the "Create Agent Dependency" page as follows:
-    * Click on Select from existing agent dependencies box
-    * Source environment compartment:  Migration
+    * Select **Select from existing agent dependencies**.
+    * Source environment compartment: **Migration**
     * Select the **vddk-package**
-    * Click on **Add agent dependencies** button
+    * Click **Add agent dependencies**.
 
     ![Create Agent Dependency](images/create-agency-dependency.png "Show Create Agent Dependency page")
 
-8. Wait for the **vmware-source-01** Agent Depency to become **Active**.
+8. Wait for the **vmware-source-01** agent dependency to become **Active**.
 
 ## Task 3: Download the Remote Agent Appliance OVA
 
@@ -164,21 +170,21 @@ In this lab, you will:
 
 ## Task 7: Register the Agent
 
-1. Return to the source environment in the OCI Console. In the OCI Console Menu, open Menu **Migration & Recovery**, **Cloud Migrations**, **Remote Connections**.
+1. Return to the source environment in the OCI Console. In the OCI Console menu, open **Migration & Recovery**, **Cloud Migrations**, **Remote Connections**.
 
-2. From the **Source environment** page Click source environment name **vmware-source-01**.
+2. From the **Source environment** page, click the source environment name **vmware-source-01**.
 
-3. From the **vmware-source-01** page click **Action** Menu select **Register agent**
+3. From the **vmware-source-01** page, click **Actions**, then select **Register agent**.
     ![Register Agent Menu](images/register-agent-menu.png "Select Register Agent Menu")
 
-4. From **Register agent** page  enter the followings:
-    * **Name:** keep default value
+4. From the **Register agent** page, enter the following values:
+    * **Name:** keep the default value
     * **Agent host name or IP:** external IP address of the VMware agent appliance
-    * **Generate HTTPS Redirect URL (for ocb-appliance version > 1.0.4081):** Set check mark to generate HTTPS Redirect URL
-    * Click Register button
+    * **Generate HTTPS Redirect URL (for ocb-appliance version > 1.0.4081):** select this option to generate the HTTPS redirect URL
+    * Click **Register**.
     ![Register Agent Details](images/register-agent-details.png "Enter Register Agent Details")
 
-5. From  vCenter verify availability of remote agent web console.  Open new Chrome tab enter https://<agent-external-ip>:3000/ocb/register
+5. From vCenter, verify that the remote agent web console is available. Open a new Chrome tab and enter `https://<agent-external-ip>:3000/ocb/register`.
 
 6. Keep the new browser tab open while the key exchange completes.
 
@@ -219,4 +225,4 @@ In this lab, you will:
 
 * **Author** - Mark Atkinson, Evgeny Golenkov, Andrey Sokolov, Perside Foster
 * **Contributor** - Keya Balutkar
-* **Last Updated By/Date** - Perside Foster, June 2026
+* **Last Updated By/Date** - Perside Foster, July 2026

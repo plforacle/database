@@ -2,7 +2,9 @@
 
 ## Introduction
 
-Oracle Cloud Migrations uses a Resource Manager stack to create or configure the tenancy resources required for VMware to OLVM migrations. In this lab, you create the prerequisites stack, review the plan, apply the stack, and verify the resources.
+Oracle Cloud Migrations uses a Resource Manager stack to create or configure the tenancy resources required for VMware to OLVM migrations. This stack is a required setup step. It prepares the OCI tenancy resources that OCM needs before discovery, replication, and migration jobs can run smoothly.
+
+In this lab, you create the prerequisites stack, review the plan, apply the stack, and verify the resources. The steps call out which selections are mandatory for the workshop and which selections are optional or environment-specific.
 
 Estimated Time: 30 minutes
 
@@ -11,9 +13,9 @@ Estimated Time: 30 minutes
 In this lab, you will:
 
 * Open the OCM prerequisites wizard.
-* Configure and Review prerequisite stack options for VMware to OLVM migrations.
+* Configure mandatory and optional prerequisite stack options for VMware to OLVM migrations.
 * Apply the stack and handle the expected tag retry condition if it appears.
-* Verify created stack completed successfully.
+* Verify that the stack apply job completed successfully.
 
 ## Task 1: Open the Prerequisites Wizard
 
@@ -26,7 +28,7 @@ In this lab, you will:
 4. Click **Create Prerequisites**.
     ![Prerequisite Overview](images/prerequisite-overview.png "Show Prerequisite Overview")
 
-## Task 2: Configure the Stack
+## Task 2: Configure the Required Stack Settings
 
 1. Accept the Oracle terms of use.
 
@@ -35,32 +37,34 @@ In this lab, you will:
 
 3. On the configuration page, use the following baseline selections.
 
-    | Option | Action |
-    | --- | --- |
-    | Primary Prerequisite Stack | Enable |
-    | Enabled Migrations | Select VMware to OLVM |
-    | Replication bucket name| ocm_replication |
-    | Create a new replication bucket? | Enable |
-    | Enable Remote Agent Appliance logging| Enable |
-    | Migration root compartment | olvm-migrations |
+    For this workshop, use the mandatory values as shown. Optional or environment-specific settings can vary in a customer environment, but the workshop uses the listed baseline to keep the migration flow consistent.
 
-    ![ Create Stack Configuration ](images/create-stack-configure.png "Configure Stack values")
+    | Option | Requirement | Workshop action |
+    | --- | --- | --- |
+    | Primary Prerequisite Stack | Mandatory | Enable |
+    | Enabled Migrations | Mandatory | Select VMware to OLVM |
+    | Replication bucket name | Mandatory | Enter `ocm_replication` |
+    | Create a new replication bucket? | Mandatory for this workshop baseline | Enable |
+    | Enable Remote Agent Appliance logging | Recommended | Enable |
+    | Migration root compartment | Mandatory | Select `olvm-migrations` |
+
+    ![ Create Stack Configuration](images/create-stack-configure.png "Configure Stack values")
 
 4. Click **Next**.
 
 5. Scroll to the bottom of the review page.
 
 6. Clear **Apply** so the stack is created without immediately changing resources.
-    ![ Create Stack Review](images/create-stack-review.png "Review Stack values")
+    ![Create Stack Review](images/create-stack-review.png "Review Stack values")
 
 7. Click **Create**.
 
 ## Task 3: Apply the Stack
 
-1. From the Resource Manager stack created by the prerequisites wizard.
+1. Open the Resource Manager stack created by the prerequisites wizard.
     * Click the **Actions** Menu
     * Click **Apply**.
-    ![ Resource Stack Apply](images/stack-apply.png " Click on Stack Apply action ")
+    ![Resource Stack Apply](images/stack-apply.png " Click on Stack Apply action ")
 
 2. From the apply page, click **Apply**.
 
@@ -75,7 +79,7 @@ In this lab, you will:
     This retry handles a Vault endpoint propagation timing condition after the Vault is created. Do not delete the stack or recreate the prerequisite resources unless instructed by Oracle Support.
 
 6. Confirm that the apply job shows **Succeeded**.
-    ![ Job Success](images/job-success.png " Show Job Success ")
+    ![Job Success](images/job-success.png " Show Job Success ")
 
 ## Learn More
 
@@ -86,4 +90,4 @@ In this lab, you will:
 
 * **Author** - Mark Atkinson, Evgeny Golenkov, Andrey Sokolov, Perside Foster
 * **Contributor** - Keya Balutkar
-* **Last Updated By/Date** - Perside Foster, June 2026
+* **Last Updated By/Date** - Perside Foster, July 2026

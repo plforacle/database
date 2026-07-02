@@ -53,6 +53,11 @@
       "filename": "../../mark-complete-cleanup/mark-complete-cleanup.md"
     },
     {
+      "title": "Lab 10: Advanced Topics and Troubleshooting",
+      "description": "Review discovery schedules, replication schedules, incremental replications, Windows VirtIO readiness, and common migration troubleshooting steps.",
+      "filename": "../../advanced-topics-troubleshooting/advanced-topics-troubleshooting.md"
+    },
+    {
       "title": "Need Help?",
       "description": "Troubleshooting resources and directions for receiving LiveLabs help.",
       "filename": "https://oracle-livelabs.github.io/common/labs/need-help/need-help-freetier.md"
