@@ -31,63 +31,63 @@ In this lab, you will:
 
 1. For **Display Name**, enter `olvm-migration-wave-01` or your migration wave name.
 
-2. Select the migration compartment.
+2. Select the **Migration** compartment.
 
 3. Enable the **OLVM Migration Project** option.
 
     This option is required. Without it, the project targets OCI Compute instead of OLVM and the OLVM-specific target fields will not appear.
 
-4. Select a replication schedule or leave the schedule as manual for a first test.
+4. Select **No replication schedule** for a first test.
 
+    ![Migrations project basic info](images/migration-project-basic-info.png "Create Migrations project basic info")
 5. Click **Next**.
 
 ## Task 3: Add Assets
 
-1. Click **Add Assets** info ... select  **OCM Invetory** button.
+1. From **Create migration project, Assets**,  Click **Add from OCM Inventory** button
+    ![Migrations project assets](images/migration-project-assets.png "Click Migrations project assets")
 
-2. Select the VMware VMs from inventory that you want to include in the migration wave.
+2. Select (checkbox) the VMware VMs from inventory that you want to include in the migration wave. Then Click **Add from OCM Inventory** button
+    ![Migrations assets inventory](images/migration-assets-inventory-add.png "Add Migrations assets inventory")
 
-3. Click **Add Selected Assets**.
+3. Confirm that the selected VMs appear in the assets list.
+    ![Invetory assets in list](images/invetory-assets-in-list.png "Confirm Invetory assets in list")
 
-4. Confirm that the selected VMs appear in the assets list.
-
-5. Click **Next**.
+4. Click **Next**.
 
 ## Task 4: Set the Replication Location
 
 1. Under **Default Replication Location**, select the target availability domain.
+    ![Replication Location](images/replication-location.png "Select Replication Location")
 
-2. Select the replication compartment.
+2. Select the replication compartment **Migration**.
 
-3. Select the replication bucket created by the prerequisites stack.
+3. Select the replication bucket created by the prerequisites stack **data-nfs-1**. Then click the **Save** button
+    ![Replication Storage](images/replication-storage.png "Select Replication Storage")
 
-4. Click **Select**.
+4. Confirm that all assets show the selected replication location.
+    ![Asset Replication Location](images/asset-replication-location.png "Confirm Asset Replication Location")
 
-5. Confirm that all assets show the selected replication location.
+5. Click **Next**.
 
-6. Click **Next**.
-
-## Task 5: Configure the Initial Migration Plan
+## Task 5: Configure Initial Migration Plan and Taget Environment 
 
 1. Enter a display name for the migration plan, such as `olvm-plan-wave-01`.
 
-2. Select the target compartment.
+2. Select compartment **Migration**. Then select the target compartment **Migration**.
 
-3. Click **Next**.
+3. Select the OLVM cluster where migrated VMs will be provisioned.
 
-## Task 6: Configure the OLVM Target Environment
+4. Select the VnicProfile to assign to migrated VM network adapters.
 
-1. Select the OLVM cluster where migrated VMs will be provisioned.
+5. Select the template to use as the base for provisioned VMs in OLVM.
+    ![Configure Migration Plan and Traget Environment](images/comfigure-migration-target.png "Configure Migration Plan and Traget Environment")
 
-2. Select the VnicProfile to assign to migrated VM network adapters.
+6. Click **Submit**.
 
-3. Select the template to use as the base for provisioned VMs in OLVM.
+7. Confirm that the migration project and initial migration plan appear with an active status.
 
-4. Click **Submit**.
-
-5. Confirm that the migration project and initial migration plan appear with an active status.
-
-6. Record the project and plan names.
+8. Record the project and plan names.
 
     ```text
     Migration project:
