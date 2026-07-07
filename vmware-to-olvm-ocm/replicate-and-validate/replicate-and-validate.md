@@ -18,19 +18,31 @@ In this lab, you will:
 
 ## Task 1: Trigger Replication
 
-1. Open your migration project in OCM.
+1. In the OCI Console Menu, open **Migration & Recovery**,**Cloud Migrations**, **Migrations**.
+    ![Migrations Menu](images/migrations-menu.png "Select Migrations Menu")
 
-2. Open the **Migration Assets** tab.
+2. Open the Migration project item ****olvm-migration-wave-01**.
+    ![Open Migration  project](images/open-migration-project.png "Open Migration  project")
 
-3. Select one VM to test replication first.
+3. Click the **Migration Assets** tab.
+    ![Migration assets tab](images/migration-assets-tab.png "Click Migration assets tab")
+4. Select one VM to test replication first.
 
-4. Click **Replicate**.
+5. Click **Replicate**.
+    ![Migration assets replicate menu](images/migration-asset-replicate-menu.png "Select Migration assets replicate menu")
 
-5. Monitor the replication job in **Work Requests**.
+    ![Migration assets replicate ](images/migration-asset-replicate.png "Select Migration assets replicate")
 
-6. Confirm that the replication job completes with a status of **Succeeded**.
+6. Monitor the replication job in **Work Requests**.
 
-7. Confirm that the migration asset shows a **Time Finished** timestamp.
+7. Click the Migration asset item
+    ![Migration asset active](images/migration-asset-active.png "Click Migration asset active")
+
+8. From the migration asset **Genera Information** page Click the **Work requests** tab
+    ![Migration asset information](images/migration-asset-information.png "Click Migration asset information")
+
+9. Confirm that the replication job completes with a state of **Succeeded** and a **Time Finished** timestamp.
+    ![Migration asset work request](images/migration-asset-work-request.png "Click Migration asset work request")
 
 ## Task 2: Run the Migration Plan for Testing
 
