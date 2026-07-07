@@ -20,7 +20,7 @@ In this lab, you will:
 
 2. Open the navigation menu.
 
-3. Go to **Identity & Security**, then open **Compartments**. .... compartment should be Migration...
+3. Go to **Identity & Security**, then open **Compartments**. Select the compartment that will be the parent of the new migration compartment.
 
 4. Click **Create Compartment**.
 
@@ -36,10 +36,10 @@ In this lab, you will:
     <copy>Compartment for VMware to OLVM migration activities.</copy>
     ```
 
-7. Select **Parent Compartment** from drop-down list
+7. For **Parent Compartment**, select the approved parent compartment.
 
 8. Click **Create Compartment**.
-    ![Migration compartment](images/create-compartment.png "Create Migration compartmen")
+    ![Migration compartment](images/create-compartment.png "Create migration compartment")
 
 9. Refresh your browser after the compartment is created.
 

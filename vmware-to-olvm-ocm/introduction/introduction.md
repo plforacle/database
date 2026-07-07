@@ -13,8 +13,8 @@ Estimated Workshop Time: 3 hours, plus replication and migration execution time
 In this workshop, you will:
 
 * Create a dedicated OCI compartment for migration activity.
+* Prepare Windows and Linux source VMs with VirtIO driver readiness before replication.
 * Deploy the OCM prerequisites Resource Manager stack.
-* Prepare selected source VMs, including VirtIO drivers for Windows VMs.
 * Upload and register the VDDK package as an agent dependency.
 * Configure the VMware source environment and remote agent appliance.
 * Discover VMware source VMs and OLVM target assets.
@@ -70,17 +70,17 @@ The remote agent appliance runs in the VMware environment and needs network acce
 
 ## Workshop Flow
 
-* Before Lab 1, prepare the selected source VMs, including VirtIO drivers for Windows VMs.
 * Lab 1 creates the migration compartment.
-* Lab 2 deploys the OCM prerequisites stack.
-* Lab 3 uploads and registers the VDDK.
-* Lab 4 sets up the VMware source environment and remote agent.
-* Lab 5 discovers VMware source VMs.
-* Lab 6 sets up the OLVM target environment.
-* Lab 7 creates the OLVM migration project.
-* Lab 8 replicates, migrates, validates, and cuts over the VM.
-* Lab 9 marks the project complete and cleans up temporary resources.
-* Lab 10 reviews advanced scheduling and common troubleshooting scenarios for field teams.
+* Lab 2 prepares Windows and Linux source VMs for OLVM migration.
+* Lab 3 deploys the OCM prerequisites stack.
+* Lab 4 uploads and registers the VDDK.
+* Lab 5 sets up the VMware source environment and remote agent.
+* Lab 6 discovers VMware source VMs.
+* Lab 7 sets up the OLVM target environment.
+* Lab 8 creates the OLVM migration project.
+* Lab 9 replicates, migrates, validates, and cuts over the VM.
+* Lab 10 marks the project complete and cleans up temporary resources.
+* Lab 11 reviews advanced scheduling and common troubleshooting scenarios for field teams.
 
 ## Learn More
 
