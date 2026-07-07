@@ -22,7 +22,7 @@ In this lab, you will:
     ![Migrations Menu](images/migrations-menu.png "Select Migrations Menu")
 
 2. Open the Migration project item ****olvm-migration-wave-01**.
-    ![Open Migration  project](images/open-migration-project.png "Open Migration  project")
+    ![Open Migration project](images/open-migration-project.png "Open Migration  project")
 
 3. Click the **Migration Assets** tab.
     ![Migration assets tab](images/migration-assets-tab.png "Click Migration assets tab")
@@ -46,23 +46,30 @@ In this lab, you will:
 
 ## Task 2: Run the Migration Plan for Testing
 
-1. Open the **Migration Plans** tab.
+1. In the OCI Console Menu, open **Migration & Recovery**,**Cloud Migrations**, **Migrations**.
+    ![Migrations Menu](images/migrations-menu.png "Select Migrations Menu")
 
-2. Select your migration plan.
+2. Open the Migration project item ****olvm-migration-wave-01**.
+    ![Open Migration project](images/open-migration-project.png "Open Migration project")
 
-3. Click **Migration Plan**.
+3. Open the **Migration Plans** tab.
+    ![Open Migration project plans](images/migration-project-plans.png "Open Migration project plans")
 
-4. Select Action Button  **Generate RMSStack**
+4. Select your migration plan `olvm-plan-wave-01`.
 
-5. Wait until work request completes
+5. Click **Migration Plan**. Then select Action Button  **Generate RMSStack**
+    ![Migration plan menu](images/migration-plan-menu.png "Select Migration plan menu")
 
-6. Navigate to the **RMS Stack** link  and click in plan Details page
+6. Select **Work Request** tab. Wait until work request completes
 
-7. From RMS Stack page Open Action Menu and click Plan
+7. Select the **Details** tab, Navigate to the **RMS Stack** link,  and click in plan Details page
+    ![Migration plan details](images/migration-plan-details-tab.png "Select Migration plan details")
 
-8. Wait for finish
+8. From the RMS Stack page Open Action Menu and click Plan. Wait for plan finish
+    ![Migration stack menu plan](images/migrations-stack-menu-plan.png "Select Migration stack menu plan")
 
 9. Return to RMS Stack page Open Action Menu and click Apply
+    ![Migration stack menu apply](images/migrations-stack-menu-apply.png "Select Migration stack menu apply")
 
 10. Monitor the job until it completes.
 
@@ -72,9 +79,12 @@ In this lab, you will:
 
 ## Task 3: Validate the Migrated VM
 
-1. In OLVM Manager, confirm that the VM powers on successfully.
+> **NOTE:**  OLVM experience required  for this lab
 
-2. Confirm that the network adapter is configured.
+1. In OLVM Manager, confirm that the VM powers on successfully.
+    ![OLVM Manager](images/olvm-manager-login.png "Login to OLVM Manager")
+
+2. Confirm that the network adapter is configured .
 
 3. Confirm that the VM is reachable by IP address.
 
@@ -98,6 +108,8 @@ In this lab, you will:
     ```
 
 ## Task 4: Run Production Cutover When Ready
+
+> **NOTE:**  Vcenter experience required  for this lab
 
 1. Confirm that the test migration has been accepted.
 
