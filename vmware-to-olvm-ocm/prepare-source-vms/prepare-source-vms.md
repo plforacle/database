@@ -1,4 +1,4 @@
-# Prepare Source VMs for OLVM Migration
+# Prepare VMware Source VMs  for Migration  to OLVM
 
 ## Introduction
 
@@ -40,35 +40,35 @@ Perform these steps with the Windows or Linux administrator responsible for each
 
     At the time this lab was authored, Oracle documents version 2.3.2. Confirm the current release before each workshop delivery.
 
-2. Review the release notes and confirm that the driver release supports the Windows version in the source VM. Pay particular attention to the storage and network drivers required after the VM is migrated to OLVM.
+2. Review the release notes and confirm that the driver release supports the Windows version in the source VM.
 
-3. Sign in to the Windows source VM with an account that can install drivers.
+3. Sign in to the Windows source VM with the administrator account that can install drivers.
 
 4. Follow Oracle's download instructions to obtain the driver package or ISO.
 
 5. Create a restore point or confirm that the approved VM backup is available.
 
-6. Install the Oracle VirtIO drivers by following the installation instructions included with the downloaded package.
+6. Reboot Windows VM before installation.
 
-7. Reboot the Windows VM when the installer requests it.
+7. Install the Oracle VirtIO drivers by following the installation instructions included with the downloaded package.
 
-8. After the reboot, confirm that Windows starts normally and that the driver installation completed without errors.
+8. Reboot the Windows VM when the installer requests it.
 
-9. Optionally validate the installation by checking for the driver binaries and service entries. For example, confirm that the expected files exist and that the related services are present under `HKLM\\SYSTEM\\CurrentControlSet\\Services`.
+9. After the reboot, confirm that Windows starts normally and that the driver installation completed without errors.
 
-    ```text
-    C:\\Windows\\System32\\drivers\\viostor.sys
-    C:\\Windows\\System32\\drivers\\vioscsi.sys
-    C:\\Windows\\System32\\drivers\\NetKVM.sys
+10. Optionally validate the installation by checking for the driver binaries and service entries. For example, confirm that the expected files exist and that the related services are present under `HKLM\\SYSTEM\\CurrentControlSet\\Services`.
+
+    ```bash
+    C:\Windows\System32\drivers\vioscsiorc.sys
     ```
 
-10. Record the Windows readiness result.
+11. Record the Windows readiness result.
 
-    ```text
-    Windows VirtIO release:
+    ```bash
+    <copy>Windows VirtIO release:
     Storage driver validated: Yes/No
     Network driver validated: Yes/No
-    Reboot completed: Yes/No
+    Reboot completed: Yes/No</copy>
     ```
 
 ## Task 3: Prepare VirtIO Drivers in Linux initramfs
@@ -78,22 +78,22 @@ Perform these steps with the Windows or Linux administrator responsible for each
 2. Check whether VirtIO modules are already included in the initramfs.
 
     ```bash
-    lsinitrd /boot/initramfs-$(uname -r).img | grep -E 'virtio(_pci|_blk|_scsi|_net)?'
+    <copy>lsinitrd|grep virtio</copy>
     ```
 
-3. If the required modules are not present, rebuild the initramfs with the VirtIO drivers required by the migration target. On Oracle Linux, use the distribution-approved `dracut` syntax for the installed release. For example:
+3. If the required modules are not present, rebuild the initramfs with the `qemu` dracut module so the VirtIO drivers required by the migration target are included. On Oracle Linux, use the distribution-approved `dracut` syntax for the installed release. For example:
 
     ```bash
-    dracut -f --add-drivers "virtio virtio_pci virtio_blk virtio_scsi virtio_net" /boot/initramfs-$(uname -r).img $(uname -r)
+    <copy>dracut -f --add qemu</copy>
     ```
 
 4. Run the validation command again and confirm that the expected VirtIO modules are listed.
 
     ```bash
-    lsinitrd /boot/initramfs-$(uname -r).img | grep -E 'virtio(_pci|_blk|_scsi|_net)?'
+    <copy>lsinitrd|grep virtio</copy>
     ```
 
-5. Reboot the Linux VM during an approved maintenance window.
+5. Reboot the Linux VM now.
 
 6. Confirm that Linux starts normally and that the source VM's disks and network interfaces are available.
 

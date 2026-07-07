@@ -18,15 +18,14 @@ In this lab, you will:
 
 ## Task 1: Start the Migration Project Wizard
 
-1. In the OCI Console Menu, open **Migration & Recovery**, then open **Cloud Migrations**.
+1. In the OCI Console Menu, open **Migration & Recovery**,**Cloud Migrations**, **Migrations**.
+    ![Migrations Menu](images/migrations-menu.png "Select Migrations Menu")
 
-2. Open **Migrations**.
+2. From **Migration projects** page click **Create migration project** button.
+    ![Create migrations project button](images/create-migrations-project-button.png "Click Create migrations project  button")
 
-3. Click **Create Migration Project**.
-
-4. Select **Create a migration project with initial migration plan**.
-
-5. Click **Create Migration Project**.
+3. Select **Create a migration project with initial migration plan**. Then click **Create Migration Project**.
+    ![Create migrations project initial plan](images/migration-project-initial-plan.png "Select  Create migrations project initial plan")
 
 ## Task 2: Enter Basic Information
 
