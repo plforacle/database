@@ -36,11 +36,11 @@ Discovery refreshes the OCM inventory for source VMware assets and target OLVM a
 5. Record the discovery decision in the migration worksheet.
 
     ```text
-    VMware discovery mode: Manual/Scheduled
+    <copy>VMware discovery mode: Manual/Scheduled
     OLVM discovery mode: Manual/Scheduled
     Last VMware discovery work request:
     Last OLVM discovery work request:
-    Discovery blockers:
+    Discovery blockers:</copy>
     ```
 
 ## Task 2: Review Replication Schedules and Incremental Replications
@@ -69,11 +69,11 @@ Replication copies source VM disk data into the OCI replication location used by
 7. Record the replication decision in the migration worksheet.
 
     ```text
-    Replication mode: Manual/Scheduled
+    <copy>Replication mode: Manual/Scheduled
     Replication bucket:
     First full replication work request:
     Latest incremental replication work request:
-    Final cutover replication completed: Yes/No
+    Final cutover replication completed: Yes/No</copy>
     ```
 
 ## Task 3: Confirm Source Windows VM Driver Readiness
@@ -91,10 +91,10 @@ Windows VMs require VirtIO drivers before migration to OLVM. This check should h
 5. If the migration wave includes only Linux source VMs, record that Windows VirtIO preparation is not applicable.
 
     ```text
-    Windows VMs in wave: Yes/No
+    <copy>Windows VMs in wave: Yes/No
     VirtIO network drivers installed: Yes/No/Not applicable
     VirtIO storage drivers installed: Yes/No/Not applicable
-    Owner who confirmed readiness:
+    Owner who confirmed readiness:</copy>
     ```
 
 ## Task 4: Troubleshoot Common Pre-Migration Issues
@@ -130,12 +130,12 @@ Use this checklist after a VM is created in OLVM but before marking the migratio
 6. Capture work request IDs, screenshots, and runbook notes for any issue that must be escalated.
 
     ```text
-    VM boots successfully: Yes/No
+    <copy>VM boots successfully: Yes/No
     Network validated: Yes/No
     Disks and filesystems validated: Yes/No
     Applications validated: Yes/No
     Issues requiring escalation:
-    Work request IDs:
+    Work request IDs:</copy>
     ```
 
 ## Learn More

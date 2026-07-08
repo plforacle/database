@@ -90,12 +90,12 @@ In this lab, you will:
 8. Record the project and plan names.
 
     ```text
-    Migration project:
+    <copy>Migration project:
     Migration plan:
     Replication bucket:
     Target cluster:
     Target VnicProfile:
-    Target template:
+    Target template:</copy>
     ```
 
 ## Learn More

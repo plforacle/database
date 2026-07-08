@@ -28,17 +28,16 @@ In this lab, you will:
     ![Migration assets tab](images/migration-assets-tab.png "Click Migration assets tab")
 4. Select one VM to test replication first.
 
-5. Click **Replicate**.
+5. Click **Replicate** from Actions Menu.
     ![Migration assets replicate menu](images/migration-asset-replicate-menu.png "Select Migration assets replicate menu")
 
-    ![Migration assets replicate ](images/migration-asset-replicate.png "Select Migration assets replicate")
-
-6. Monitor the replication job in **Work Requests**.
+6. Click the **Replicate** button from the popup box.
+    ![Replicate Migration Asset button](images/replicate-asset.png "Click Replicate Migration Asset button")
 
 7. Click the Migration asset item
     ![Migration asset active](images/migration-asset-active.png "Click Migration asset active")
 
-8. From the migration asset **Genera Information** page Click the **Work requests** tab
+8. From the migration asset **General Information** page Click the **Work requests** tab
     ![Migration asset information](images/migration-asset-information.png "Click Migration asset information")
 
 9. Confirm that the replication job completes with a state of **Succeeded** and a **Time Finished** timestamp.
@@ -99,12 +98,12 @@ In this lab, you will:
 8. Record validation results.
 
     ```text
-    VM powers on:
+    <copy>VM powers on:
     Network reachable:
     Disks attached:
     Application check:
     Driver check:
-    Issues:
+    Issues:</copy>
     ```
 
 ## Task 4: Run Production Cutover When Ready

@@ -37,9 +37,9 @@ In this lab, you will:
 7. Record the completion details.
 
     ```text
-    Migration project:
+    <copy>Migration project:
     Completion date:
-    Approver:
+    Approver:</copy>
     ```
 
 ## Task 2: Complete Post-Migration Cleanup
@@ -65,11 +65,11 @@ In this lab, you will:
 10. Record cleanup results.
 
     ```text
-    Remote agent removed:
+    <copy>Remote agent removed:
     Credentials rotated or revoked:
     Replication bucket checked:
     Migration compartment cleanup:
-    Remaining resources:
+    Remaining resources:</copy>
     ```
 
 ## Learn More
