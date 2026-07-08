@@ -15,6 +15,9 @@ In this lab, you will:
 * Discover OLVM target assets.
 * Confirm that target clusters, storage domains, templates, and network profiles are visible in inventory.
 
+*VM replication to Oracle Virtualization: target-side path into Oracle Virtualization storage*
+![VM Replication](./images/vm-replication.png "Show VM Replication")
+
 ## Task 1: Download Engine CA Certificate
 
 1. Open your local browser. Navigate to the Administration Portal using the OLVM engine FQDN or Public IP adress:
@@ -33,14 +36,12 @@ In this lab, you will:
 ## Task 2: Create the OLVM Asset Source
 
 1. In the OCI Console Menu, open **Migration & Recovery**, **Cloud Migrations** then open **Discovery**.
+    ![Migration Discover Menu](images/migration-discovery-menu.png "Select Migration Discover Menu")
 
-2. Open **Asset Sources**.
+2. Click **Create Asset Source**.
+    ![Create Asset Source Menu](images/create-asset-sources-menu.png "Click Create Asset Source Menu")
 
-3. Click **Create Asset Source**.
-
-4. Select **OLVM** as the source type.
-
-5. Enter the OLVM asset source details.
+3. Select **OLVM** as the source type. Enter the OLVM asset source details.
 
     | Field | Value |
     | --- | --- |
@@ -62,10 +63,10 @@ In this lab, you will:
 
     ![OLVM Asset Source](./images/create-olvm-asset-source.png "Create OLVM Asset Source")
 
-6. Click **Create Asset Source**.
+4. Click **Create Asset Source**.
     ![OLVM Asset Source Build](./images/olvm-asset-source-build.png "Show OLVM Asset Source Build")
 
-7. Confirm that the asset source status is **Active**.
+5. Confirm that the asset source status is **Active**.
     ![OLVM Asset Source Status](./images/olvm-asset-source-status.png "Show OLVM Asset Source Status")
 
 ## Task 3: Discover OLVM Target Assets
@@ -89,10 +90,10 @@ In this lab, you will:
 7. Confirm that the inventory contains the target resources needed by the migration plan.
 
     ```text
-    OLVM cluster:
+    <copy>OLVM cluster:
     Storage domains:
     Templates:
-    Network profiles:
+    Network profiles:</copy>
     ```
 
 8. If the OLVM Manager is not reachable from OCI, use standalone discovery through the OCM API with the **CreateDiscoverySchedule** operation.
