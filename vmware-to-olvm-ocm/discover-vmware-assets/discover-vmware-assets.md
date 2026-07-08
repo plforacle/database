@@ -15,17 +15,18 @@ In this lab, you will:
 * Discover VMware source VMs.
 * Confirm source VM inventory metadata.
 
+*Run VMware Asset Discovery”  why the remote appliance and OCM inventory matter*
+![Discover VMware](images/discover-vmware.png "Discover VMware")
+
 ## Task 1: Create a VMware Asset Source
 
 1. In the OCI Console Menu, open **Migration & Recovery**, **Cloud Migrations** then open **Discovery**.
+    ![Migration Discover Menu](images/migration-discovery-menu.png "Select Migration Discover Menu")
 
-2. Open **Asset Sources**.
+2. Open **Asset Sources** , click **Create Asset Source**.
+    ![Create Asset Sources Menu](images/create-asset-sources-menu.png "Select Create Asset Sources")
 
-3. Click **Create Asset Source**.
-
-4. Select **VMware** as the source type.
-
-5. Enter the VMware asset source details.
+3. Select **VMware** as the source type. Enter the VMware asset source details.
 
     | Field | Value |
     | --- | --- |
@@ -47,9 +48,9 @@ In this lab, you will:
 
     ![Create Asset Source](images/create-asset-source.png "Create Asset Source page")
 
-6. Click **Create Asset Source**.
+4. Click **Create Asset Source**.
 
-7. Confirm that the VMware asset source status is **Active**.
+5. Confirm that the VMware asset source status is **Active**.
     ![Asset Source Status](images/asset-source-status.png "Asset Source Status page")
 
 ## Task 2: Discover VMware Source VMs
@@ -74,9 +75,9 @@ In this lab, you will:
 8. Record the selected source VM.
 
     ```text
-    VMware asset source:
+    <copy>VMware asset source:
     Source VM:
-    Discovery job:
+    Discovery job:</copy>
     ```
 
 ## Learn More
