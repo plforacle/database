@@ -26,18 +26,18 @@ If this workshop migration uses only Linux source VMs, no Windows VirtIO driver 
 ## Task 1: Store vCenter Credentials in Vault
 
 1. In the OCI Console menu, open **Identity & Security**, **Key Management**, **Vault**.
+    ![Key Management Vault Menu](images/key-management-vault-menu.png "Open Key Management Vault Menu")
 
-2. Select the compartment **olvm-migrations -> Migration -> MigrationSecrets**.
+2. Select the compartment **olvm-migrations -> Migration -> MigrationSecrets**. Then Open the Vault created by the prerequisites stack **ocm-secrets**.
+    ![Migration Secrets Compartment](images/migration-secrets-vault.png "Migration Secrets Compartment")
 
-3. Open the Vault created by the prerequisites stack **ocm-secrets**.
-
-4. Click **Key Management**.
+3. Click **Key Management** and selet the **Vault Information** tab
     ![Key Management Menu](images/key-management-menu.png "Select Key Management")
 
-5. Click **Secret Management**, then click **Create Secret**.
+4. Click **Secret Management**, then click **Create Secret**.
     ![Secret Management Menu](images/secret-management-menu.png "Select Secret Management")
 
-6. On the **Create Secret** page, use the following values.
+5. On the **Create Secret** page, use the following values.
     > Note: Be sure to follow the example format for the secret contents.
 
     | Field | Value |
@@ -56,9 +56,15 @@ If this workshop migration uses only Linux source VMs, no Windows VirtIO driver 
 
     ![Create Secret Page](images/create-secret.png "Enter Create Secret values")
 
-7. Click **Create secret**.
+6. Click **Create secret** and wait for the secret status to become **Active**.
 
-8. Wait for the secret status to become **Active**.
+7. To Locate the active secret , start at  OCI Console menu, open **Identity & Security**, **Secret Management**
+    ![Identity Secret Management Menu](images/identity-secret-management-menu.png "Select Identity Secret Management Menu")
+
+8. Select Compartment **MigrationSecrets**, Vault **ocm-secrets**, and click the **Apply filter** button. 
+    ![Find secret](images/find-secret.png "Find secret")
+
+    ![Active secret](images/active-secret.png "Show Active secret")
 
 ## Task 2: Create the Source Environment
 
@@ -110,6 +116,8 @@ If this workshop migration uses only Linux source VMs, no Windows VirtIO driver 
 
 ## Task 4: Add the OVA to the vCenter Content Library
 
+>**NOTE:** VMware experience required for this lab
+
 1. Sign in to vCenter.
     ![vCenter Login](images/vcenter-login.png "Show vCenter Login")
 
@@ -122,6 +130,8 @@ If this workshop migration uses only Linux source VMs, no Windows VirtIO driver 
 5. Confirm that the OVA item status is ready.
 
 ## Task 5: Deploy the Agent Appliance
+
+>**NOTE:** VMware experience required for this lab
 
 1. In vCenter, select the target cluster.
 
@@ -210,9 +220,9 @@ If this workshop migration uses only Linux source VMs, no Windows VirtIO driver 
 15. Confirm plugin status.
 
     ```text
-    Agent Monitoring:
+    <copy>Agent Monitoring:
     Discovery:
-    Replication:
+    Replication:</copy>
     ```
 
     Replication may show a needs-attention state until asset sources are configured.
