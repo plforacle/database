@@ -18,17 +18,23 @@ In this lab, you will:
 
 ## Task 1: Mark the Migration Project Complete
 
-1. Open your migration project in OCM.
+1. In the OCI Console Menu, open **Migration & Recovery**,**Cloud Migrations**, **Migrations**.
+    ![Migrations Menu](images/migrations-menu.png "Select Migrations Menu")
 
-2. Confirm that no migration assets or migration plans require changes.
+2. Open the Migration project item ****olvm-migration-wave-01**.
+    ![Migration project active](images/migration-project-active.png "Open Migration  project active")
 
-3. Click **Mark as Complete**.
+3. Confirm that no migration assets or migration plans require changes.
 
-4. Confirm the action.
+4. Click the Migration project item Detail, Click on Action menu and select **Mark as Complete** .
+    ![Migration complete menu](images/migration-complete-menu.png "Select Migration complete menu")
 
-5. Confirm that the project status changes to **Completed**.
+5. Confirm the action.
 
-6. Record the completion details.
+6. Confirm that the project status changes to **Completed**.
+    ![Migration project complete](images/migration-project-complete.png "Open Migration  project complete")
+
+7. Record the completion details.
 
     ```text
     Migration project:

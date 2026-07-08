@@ -109,7 +109,7 @@ In this lab, you will:
 
 ## Task 4: Run Production Cutover When Ready
 
-> **NOTE:**  Vcenter experience required  for this lab
+> **NOTE:**  VMware experience and OLVM experience  are required  for steps 1 through 3
 
 1. Confirm that the test migration has been accepted.
 
@@ -117,19 +117,16 @@ In this lab, you will:
 
 3. Shut down the source VM in vCenter.
 
-4. Return to the migration asset in OCM.
+4. Return to the migration asset in OCM (See Task1 and Task2 of this lab for more details).
+    * Click **Replicate** one final time to capture the latest source VM state.
+    * Wait for the final replication job to complete.
+    * Run the migration plan again to provision the final production instance.
 
-5. Click **Replicate** one final time to capture the latest source VM state.
+5. Validate the VM on OLVM again.
 
-6. Wait for the final replication job to complete.
+6. Confirm that the VM is running on OLVM with current data.
 
-7. Run the migration plan again to provision the final production instance.
-
-8. Validate the VM on OLVM again.
-
-9. Confirm that the VM is running on OLVM with current data.
-
-10. Confirm that the source VM in vCenter remains powered off.
+7. Confirm that the source VM in vCenter remains powered off.
 
 ## Learn More
 
