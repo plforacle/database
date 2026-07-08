@@ -54,7 +54,7 @@ In this lab, you will:
 
 5. Scroll to the bottom of the review page.
 
-6. Clear **Apply** so the stack is created without immediately changing resources.
+6. Clear the **Run Apply** check box, so the stack is created without immediately provisioning resources.
     ![Create Stack Review](images/create-stack-review.png "Review Stack values")
 
 7. Click **Create**.
