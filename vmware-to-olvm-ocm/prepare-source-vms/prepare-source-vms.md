@@ -28,10 +28,10 @@ Perform these steps with the Windows or Linux administrator responsible for each
 3. Use the Windows procedure for Windows VMs and the Linux procedure for Linux VMs.
 
     ```text
-    Source VM:
+    <copy>Source VM:
     Operating system and version:
     VM owner:
-    Backup or rollback point:
+    Backup or rollback point:</copy>
     ```
 
 ## Task 2: Install Oracle VirtIO Drivers on Windows
@@ -59,7 +59,7 @@ Perform these steps with the Windows or Linux administrator responsible for each
 10. Optionally validate the installation by checking for the driver binaries and service entries. For example, confirm that the expected files exist and that the related services are present under `HKLM\\SYSTEM\\CurrentControlSet\\Services`.
 
     ```bash
-    C:\Windows\System32\drivers\vioscsiorc.sys
+    <copy>C:\Windows\System32\drivers\vioscsiorc.sys</copy>
     ```
 
 11. Record the Windows readiness result.
@@ -100,11 +100,11 @@ Perform these steps with the Windows or Linux administrator responsible for each
 7. Record the Linux readiness result.
 
     ```text
-    Kernel version:
+    <copy>Kernel version:
     VirtIO modules present before rebuild: Yes/No
     Initramfs rebuilt: Yes/No/Not required
     VirtIO modules present after rebuild: Yes/No
-    Reboot completed: Yes/No
+    Reboot completed: Yes/No</copy>
     ```
 
 ## Task 4: Confirm Migration Readiness

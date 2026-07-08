@@ -50,9 +50,9 @@ In this lab, you will:
 11. Record the compartment details.
 
     ```text
-    Migration compartment:
+    <copy>Migration compartment:
     Migration compartment OCID:
-    Region:
+    Region:</copy>
     ```
 
 ## Acknowledgements
