@@ -164,13 +164,13 @@ If this workshop migration uses only Linux source VMs, no Windows VirtIO driver 
 1. Record the external IP address shown in the appliance console or in vCenter network details.
 
     ```text
-    Agent external IP:
+    <copy>Agent external IP:</copy>
     ```
 
 2. From your workstation, open a browser to the registration endpoint.
 
     ```text
-    https://<agent-external-ip>:3000
+    <copy>https://<agent-external-ip>:3000</copy>
     ```
 
 3. Accept the certificate warning if your browser displays one.
