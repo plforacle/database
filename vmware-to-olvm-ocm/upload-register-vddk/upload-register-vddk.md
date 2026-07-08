@@ -91,8 +91,8 @@ Do not use the latest VDDK version unless it matches one of the supported versio
 11. Record the dependency details.
 
     ```text
-    Agent dependency: vddk-package
-    Dependency status: Active
+    <copy>Agent dependency: vddk-package
+    Dependency status: Active</copy>
     ```
 
 ## Learn More
