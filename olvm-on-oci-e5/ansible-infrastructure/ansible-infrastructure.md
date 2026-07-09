@@ -356,7 +356,8 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
         --instance-id "$instance_id" \
         --instance-options '{"areLegacyImdsEndpointsDisabled": true}' \
         --force
-    done</copy>
+    done
+    sleep 60</copy>
     ```
 
     > **Note:** `--force` skips the interactive confirmation prompt on `oci compute instance update`. Updating `instance-options` is a lightweight metadata change — it does not reboot or restart the instance.
