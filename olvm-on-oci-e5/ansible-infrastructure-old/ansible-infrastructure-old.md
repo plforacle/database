@@ -28,7 +28,6 @@ In this lab, you will:
 - Install required software on the bootstrap host
 - Configure OCI credentials and generate SSH keys used by automation
 - Run the Ansible playbook that provisions `olvm`, `olkvm01`, and `olkvm02`
-- Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances
 - Verify deployed instances and copy the required SSH keys to your local machine
 - Terminate the temporary bootstrap instance after validation is complete
 
@@ -338,55 +337,6 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
     - `olkvm01`
     - `olkvm02`
 
-8. Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances.
-
-    > **Why:** By default, OCI compute instances accept both the legacy `/v1` and the `/v2` Instance Metadata Service endpoints. IMDSv1 has no built-in request authentication, which makes it a weaker target for SSRF-style attacks. Oracle Linux 9's `cloud-init` and Oracle Cloud Agent both support IMDSv2 by default, so it is safe to disable the legacy `/v1` endpoint immediately after the instances come up. This uses the OCI CLI you already configured in Task 4 and Task 5 — no playbook changes are required.
-
-    ```bash
-    <copy>for name in olvm olkvm01 olkvm02; do
-      instance_id=$(oci compute instance list \
-        --compartment-id "$OCI_COMPARTMENT_OCID" \
-        --display-name "$name" \
-        --lifecycle-state RUNNING \
-        --query "data[0].id" --raw-output)
-
-      echo "Setting IMDSv2-only on $name ($instance_id)"
-
-      oci compute instance update \
-        --instance-id "$instance_id" \
-        --instance-options '{"areLegacyImdsEndpointsDisabled": true}' \
-        --force
-    done</copy>
-    ```
-
-    > **Note:** `--force` skips the interactive confirmation prompt on `oci compute instance update`. Updating `instance-options` is a lightweight metadata change — it does not reboot or restart the instance.
-
-9. Verify that each instance now enforces IMDSv2 only:
-
-    ```bash
-    <copy>for name in olvm olkvm01 olkvm02; do
-      instance_id=$(oci compute instance list \
-        --compartment-id "$OCI_COMPARTMENT_OCID" \
-        --display-name "$name" \
-        --lifecycle-state RUNNING \
-        --query "data[0].id" --raw-output)
-
-      echo "$name:"
-      oci compute instance get --instance-id "$instance_id" \
-        --query "data.\"instance-options\""
-    done</copy>
-    ```
-
-    **Expected output** for each instance:
-
-    ```json
-    {
-      "are-legacy-imds-endpoints-disabled": true
-    }
-    ```
-
-    If any instance shows `false` or `null`, re-run the update command in the previous step for that instance name.
-
 ## Task 7: Verify and Access Deployed Instances
 
 1. From a local terminal copy the cluster SSH private key from the bootstrap host:
@@ -485,7 +435,6 @@ At this point, you should have:
 - OCI credentials configured on the bootstrap host
 - Three deployed instances: `olvm`, `olkvm01`, and `olkvm02`
 - Public and private IPs recorded for all three instances
-- IMDSv2 enforced (legacy `/v1` metadata endpoints disabled) on all three instances
 - The cluster SSH private key copied to your local machine
 - Verified local SSH access to the OLVM manager
 - Verified SSH from `olvm` to both KVM hosts
