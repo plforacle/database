@@ -128,6 +128,6 @@ If VLANs are not available, submit a support or service-limit request before sta
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest, Perside Foster
+- **Author** - Shawn Kelley, Mark Atkinson, John Priest, Perside Foster
 - **Contributor** - Marvin Kim
 - **Last Updated By/Date** - Perside Foster, May 20, 2026

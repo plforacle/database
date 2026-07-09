@@ -144,6 +144,6 @@ In this instructor companion, you will:
 
 ## Acknowledgements
 
-- **Author** - Shawn Kelley, John Priest, Perside Foster
+- **Author** - Shawn Kelley, Mark Atkinson, John Priest, Perside Foster
 - **Contributor** - Marvin Kim
 - **Last Updated By/Date** - Perside Foster, June 10, 2026
