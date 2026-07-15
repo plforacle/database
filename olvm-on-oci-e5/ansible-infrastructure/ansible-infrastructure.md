@@ -1,507 +1,419 @@
-# Build E5 OCI Infrastructure with Bootstrap and Ansible
+# Create Your OLVM on OCI Environment
 
 ## Introduction
 
-In this setup lab, you will use a temporary bootstrap instance as the Ansible controller for the workshop environment. You will create a VCN, launch the bootstrap host, install required software, configure OCI credentials, run the provisioning playbook with `VM.Standard.E5.Flex`, and verify access to the three instances used in later labs: `olvm`, `olkvm01`, and `olkvm02`. 
+In this lab, you create the OCI environment that you will use throughout the workshop. You will build the network, create three servers, connect the servers to the required networks, add storage, and test your environment before installing OLVM.
 
-If your instructor or workshop owner already provided a working E5 environment, skip this lab and begin with Lab 2.
+Take this lab one task at a time. Each task builds one part of the environment, and you will check your work before moving on.
 
-Estimated Time: 45-60 minutes, including 20-35 minutes for the Ansible provisioning run.
-
-![Lab 1 bootstrap flow](./images/lab1-bootstrap-flow.png "Show Lab 1 bootstrap flow")
-
-*A temporary bootstrap instance runs the Ansible playbook that provisions the OLVM manager and two KVM hosts on OCI. The bootstrap instance is terminated after the cluster SSH keys are copied to your local machine.*
-
-<!-- ### Video Walkthrough
-
-This walkthrough video is silent and does not include audio narration.
-
-[](video:https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/videos%2Fvideos_olvm-on-oci-lab1-no-presenter.mp4) -->
+Estimated Time: 90-120 minutes.
 
 ### Objectives
 
 In this lab, you will:
 
-- Verify that VLAN support (Layer 2 network virtualization) is enabled for the tenancy
-- Create a VCN for the bootstrap deployment
-- Launch a temporary bootstrap compute instance
-- Install required software on the bootstrap host
-- Configure OCI credentials and generate SSH keys used by automation
-- Run the Ansible playbook that provisions `olvm`, `olkvm01`, and `olkvm02`
-- Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances
-- Verify deployed instances and copy the required SSH keys to your local machine
-- Terminate the temporary bootstrap instance after validation is complete
+- Create a compartment for the workshop resources
+- Create the network that connects your OLVM servers
+- Create the OLVM manager and two KVM servers
+- Add the private and VM networks to the servers
+- Add shared storage for virtual machines
+- Verify that you are ready for Lab 2
 
 ### Prerequisites
 
-This lab assumes you have:
+- OCI permissions to create networking, compute, VLAN, and block volume resources
+- VLAN or Layer 2 network virtualization enabled in the selected region
+- Capacity for one `2 OCPU, 32 GB` instance, two `8 OCPU, 64 GB` instances, and two `1 TB` block volumes
+- A local computer with Windows PowerShell, macOS Terminal, or a Linux terminal
 
-- An OCI tenancy with sufficient quotas for the workshop instances
-- **VLAN support (Layer 2 network virtualization) enabled for the tenancy and target region** - see Task 1 below
-- A target compartment for lab resources
-- Access to the OCI Console
-- Your SSH public key for the initial bootstrap instance login
-- A local terminal (Windows PowerShell, macOS Terminal, or Linux terminal)
+> **Important:** Use one compartment for all resources in this lab. Do not continue to Lab 2 until you complete the checkpoint in Task 9.
 
-> **Important:** This lab builds the base environment used by every later lab. Continue to Lab 2 only after the setup checkpoint passes.
+## Task 1: Create Your Workshop Compartment
 
-## Task 1: Verify VLAN Support Is Available
+In this task, you create one compartment to keep all workshop resources together.
 
-The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM management, migration, and storage networks. If VLAN support is not available in your target region, the playbook will fail.
+1. In the OCI Console, open the navigation menu, select **Identity & Security**, then select **Compartments**.
 
-1. Sign in to the OCI Console and switch to the workshop target region.
+2. In the compartment list, select the parent compartment where you are allowed to create workshop resources. For many users, this is the tenancy root compartment.
 
-2. Go to **Networking -> Virtual Cloud Networks** and open any existing VCN, or create a temporary one.
-
-3. Under the VCN **Resources** menu, look for **VLANs**.
-
-    - If **VLANs** is visible and you can access or create VLAN resources, continue with Task 2.
-    - If **VLANs** is not visible, first confirm you are in the correct region, compartment, and IAM group. If those are correct, continue with the steps below to request VLAN support before proceeding.
-
-4. To request VLAN support, go to **Governance & Administration -> Tenancy Management -> Limits, Quotas and Usage** and search for **VLAN** under the **Networking** category.
-
-5. If a VLAN limit increase option is available, submit the request. If VLANs are not listed, open an Oracle Support request with the following text:
-
-    > Please enable Layer 2 network virtualization / VLAN support for tenancy `<tenancy-OCID>` in region `<region>`. This is required to deploy Oracle Linux Virtualization Manager (OLVM) on OCI.
-
-6. Wait for confirmation before continuing. Do not proceed to Task 2 until VLANs are visible in the target region.
-
-## Task 2: Create Bootstrap VCN (VCN Wizard)
-
-1. In the OCI Console, navigate to **Networking -> Virtual Cloud Networks**.
-
-2. Click **Actions -> Start VCN Wizard**.
-
-3. Select **Create VCN with Internet Connectivity**.
-
-4. Enter values similar to the following:
+3. Click **Create Compartment** and enter these values.
 
     | Field | Value |
     |---|---|
-    | VCN Name | `bootstrap-vcn` |
-    | Compartment | *your compartment* |
-    | VCN CIDR Block | `10.0.0.0/16` |
-    | Public Subnet CIDR | `10.0.0.0/24` |
-    | Private Subnet CIDR | `10.0.1.0/24` |
+    | Name | `olvm-workshop-<your-initials>` |
+    | Description | `OLVM on OCI workshop resources` |
 
-    **Networking guidance:**
-    - Use the public subnet only for the temporary bootstrap instance.
-    - Leave the route tables, security lists, and DHCP options created by the wizard at their defaults.
-    - Do not add any VNC ingress rule. Lab 2 uses SSH tunneling to the OLVM manager instead.
+4. Click **Create Compartment**. Wait until its lifecycle state is **Active**, then select it from the compartment picker at the top of the OCI Console.
 
-5. Click **Next -> Review -> Create**.
+    If you do not see **Create Compartment** or cannot select the tenancy root compartment, ask your tenancy administrator to create a workshop compartment for you and grant you permission to manage resources inside it. Use that assigned compartment for every remaining task.
 
-6. Wait until all VCN resources show **Available** before you continue. This normally takes 2-5 minutes.
+## Task 2: Create Your Network
 
+In this task, you create the OCI network used by the OLVM manager, KVM hosts, and virtual machines.
 
-## Task 3: Launch Bootstrap Instance
+1. In the OCI Console, open the navigation menu, select **Networking**, and then select **Virtual cloud networks**. Select your workshop compartment and click **Start VCN Wizard**.
 
-1. In the OCI Console, navigate to **Compute -> Instances -> Create Instance**.
-
-2. Use values similar to the following:
+2. Select **Create VCN with Internet Connectivity**, then click **Start VCN Wizard**. Enter these values and leave the other wizard values at their defaults.
 
     | Field | Value |
     |---|---|
-    | Name | `bootstrap` |
-    | Compartment | *your compartment* |
-    | Image | Oracle Linux 9 |
-    | Shape | Flexible VM shape such as `VM.Standard.E5.Flex` with `1 OCPU` and `12-16 GB` memory |
-    | VCN | `bootstrap-vcn` |
-    | Subnet | Public Subnet |
-    | Primary VNIC Name | `bootstrap-vnic` (or keep the autogenerated default if this field is hidden) |
-    | Private IP | Auto-assign |
-    | Assign Public IP | Yes |
-    | SSH Keys | Upload your public key |
+    | VCN name | `OLV-VCN` |
+    | VCN CIDR block | `10.0.0.0/16` |
+    | Public subnet CIDR block | `10.0.0.0/24` |
+    | Private subnet CIDR block | `10.0.1.0/24` |
 
-    **Why these values matter:**
-    - `Assign Public IP = Yes` is required because you will SSH to this temporary host from your local machine.
-    - Leave the bootstrap host on the public subnet and keep the private IP on auto-assign.
-    - Do not add a secondary VNIC or custom private IP for the bootstrap host.
-    - Use the standard Oracle Linux 9 image for the bootstrap host instead of the Cloud Developer image.
+3. Click **Next**, review the values, and click **Create**. Wait for the wizard to finish, then click **View VCN**.
 
-3. Click **Create** and wait for the instance state to become **Running**.
+4. At the top of the `OLV-VCN` page, click the **Subnets** tab. Confirm that the VCN contains one public subnet with `10.0.0.0/24` and one private subnet with `10.0.1.0/24`.
 
-4. Record the bootstrap instance **Public IP**.
+    The wizard normally names these `Public Subnet-OLV-VCN` and `Private Subnet-OLV-VCN`. If your names differ, use the subnet CIDR blocks to identify the public and private subnets in later tasks.
 
-5. From a local terminal (Windows PowerShell, macOS Terminal, or Linux terminal) connect to the bootstrap instance:
+## Task 3: Connect and Protect Your Network
 
-    ```bash
-    <copy>ssh -i ~/.ssh/<your-key> opc@<bootstrap-public-ip></copy>
-    ```
+In this task, you verify the resources created by the VCN wizard, add the required security rules, and create the VM VLAN.
 
-    > **Warning:** The bootstrap instance is temporary. Do not terminate it until the playbook completes, the cluster keys are copied to your local machine, and you have verified SSH access to `olvm`.
+1. At the top of the `OLV-VCN` page, click **Gateways**. Confirm that both the Internet Gateway and Service Gateway show **Available**. The VCN wizard created these gateways.
 
-## Task 4: Set Up Bootstrap Software
+2. Click **Routing**, then open **Default Route Table for OLV-VCN**. Confirm that it contains this public route:
 
-1. Install the prerequisite packages:
+    | Destination | Target type |
+    |---|---|
+    | `0.0.0.0/0` | Internet Gateway |
 
-    ```bash
-    <copy>sudo dnf install -y python3 python3-pip python3-setuptools python3-pip-wheel git
-    python3 --version
-    git --version</copy>
-    ```
+3. Return to **Routing** and open **Route Table for Private Subnet-OLV-VCN**. Confirm that it contains the Oracle Services Network route through the Service Gateway. Do not add an Internet Gateway route to the private route table.
 
-2. Install the OCI CLI:
+4. Click **Security**, then open **Default Security List for OLV-VCN**. This list belongs to the public subnet. Keep its existing egress rules and add these two ingress rules. Replace `<your-public-ip>/32` with your current public IP address.
 
-    ```bash
-    <copy>sudo dnf -y install oraclelinux-developer-release-el9
-    sudo dnf install -y python39-oci-cli
-    oci --version</copy>
-    ```
+    | Source CIDR | IP protocol | Destination port | Description |
+    |---|---|---|---|
+    | `<your-public-ip>/32` | TCP | `22` | `SSH from my computer` |
+    | `<your-public-ip>/32` | TCP | `443` | `OLVM portal from my computer` |
 
-3. Create and activate a Python virtual environment:
+    If your public IP changes, update these two rules. Do not open SSH port `22` to `0.0.0.0/0`.
 
-    ```bash
-    <copy>python3 -m venv --system-site-packages ~/venv-olvm
-    source ~/venv-olvm/bin/activate
-    python --version
-    which python</copy>
-    ```
+5. Return to **Security Lists** and open **security list for private subnet-OLV-VCN**. This list belongs to the private management subnet. Keep its existing egress rules and add this ingress rule:
 
-4. Install the OCI SDK, Ansible, and `jmespath` into the virtual environment:
+    | Source CIDR | IP protocol | Description |
+    |---|---|---|
+    | `10.0.0.0/16` | All Protocols | `Allow internal VCN traffic` |
 
-    ```bash
-    <copy>python -m pip install --upgrade pip
-    pip install oci ansible==6.7.0 jmespath
-    ansible --version
-    python -c "import oci; print(oci.__version__)"</copy>
-    ```
+    This rule allows the three hosts to ping and communicate across their private management VNICs.
 
-5. Clone the lab repository:
+6. On the **Security** page, scroll to **Network Security Groups** and click **Create Network Security Group**. Enter `L2 Network` for the name, leave tags empty, remove the optional blank rule with its **X**, and click **Create**.
 
-    ```bash
-    <copy>git clone https://github.com/oracle-devrel/linux-virt-labs.git
-    cd ~/linux-virt-labs/olvm</copy>
-    ```
+7. Open `L2 Network`, click **Add Security Rules**, and add these rules:
 
-6. Install the required Ansible collections:
+    | Direction | Source or destination | IP protocol | Description |
+    |---|---|---|---|
+    | Ingress | Source CIDR `10.0.0.0/16` | All Protocols | `Allow VCN traffic` |
+    | Egress | Destination CIDR `0.0.0.0/0` | All Protocols | `Allow outbound traffic` |
 
-    ```bash
-    <copy>ansible-galaxy collection install -r requirements.yml --force
-    ansible-galaxy collection install community.general:6.6.0 --force
-    ansible-galaxy collection install community.crypto:1.9.0 --force</copy>
-    ```
-
-## Task 5: Configure OCI Credentials
-
-1. Run the OCI CLI configuration workflow:
-
-    Use this cheat sheet when `oci setup config` prompts for OCI values:
-
-    - **User OCID:** Profile menu -> **User Settings** -> Copy next to the OCID
-    - **Tenancy OCID:** Profile menu -> **Tenancy: _your tenancy_** -> Copy next to the OCID
-    - **Region Identifier:** The region shown in the Console header, for example `us-ashburn-1`
-        > **Note:** During OCI setup, you will be presented with a region index list. Find the matching region and enter its index. Example: `71: us-ashburn-1`.
-
-    - **Compartment OCID:** **Identity & Security -> Compartments -> _your compartment_ -> Copy** next to the OCID
-
-    ```bash
-    <copy>oci setup config</copy>
-    ```
-
-    When the command completes, note the output values:
-
-    - **Fingerprint** identifies the API signing key that was created for this bootstrap host.
-    - **Config written to `/home/opc/.oci/config`** confirms the OCI CLI configuration file was saved locally.
-
-    `oci setup config` also creates the public key that you must upload to your OCI user before the CLI can authenticate successfully.
-
-2. Display and copy the full generated public API key, including the `BEGIN PUBLIC KEY` and `END PUBLIC KEY` lines.
-
-    ```bash
-    <copy>ls /home/opc/.oci
-    cat /home/opc/.oci/oci_api_key_public.pem</copy>
-    ```
-
-3. Upload the copied public API key to your OCI user:
-
-    - In the OCI Console, click the profile menu and open **User Settings**.
-    - Open **Token and Keys** -> **API Keys** -> **Add API Key**.
-    - In the **Add API Key** dialog, choose **Paste Public Keys**.
-    - Paste the full contents of `/home/opc/.oci/oci_api_key_public.pem` into the dialog.
-    - Save the key and wait 2-5 minutes for the new API key to propagate.
-
-    ![Profile Menu User Settings](./images/user-settings.png "Show Profile Menu User Settings")
-
-    ![Add API key button](./images/add-api-key-button.png "Show Add API key button")
-
-    ![Add API key page](./images/add-api-key-page.png "Show Add API key page")
-
-    ![Add API key config](./images/add-api-key-config.png "Show Add API key config")
-
-    ![Saved API key](./images/saved-api-key.png "Show Saved API key")
-
-4. Run a quick validation command. If the command returns a short list of regions, the OCI CLI authentication is working correctly.
-
-    ```bash
-    <copy>oci iam region list | head</copy>
-    ```
-
-    If this command fails immediately after `oci setup config`, wait 2-5 minutes for the key registration to propagate and try again.
-    If it still fails, confirm the key appears under **User Settings** -> **Token and Keys** -> **API Keys**, then rerun the command.
-
-    ![OCI IAM List](./images/oci-iam-list.png "Show OCI IAM List")
-
-## Task 6: Create OCI Components and Run the Playbook
-
-1. Generate the SSH key pair used by the automation:
-
-    ```bash
-    <copy>ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""</copy>
-    ```
-
-2. Set the compartment OCID:
-
-    ```bash
-    <copy>export OCI_COMPARTMENT_OCID="<your-compartment-ocid>"</copy>
-    ```
-
-3. Display the compartment variable to verify it was set:
-
-    ```bash
-    <copy>echo "$OCI_COMPARTMENT_OCID"</copy>
-    ```
-
-4. Create `instances.yml`:
-
-    ```bash
-    <copy>cd ~/linux-virt-labs/olvm
-
-    cat > instances.yml <<'EOF'
-    compute_instances:
-      1:
-        instance_name: "olvm"
-        type: "engine"
-        instance_ocpus: 2
-        instance_memory: 32
-      2:
-        instance_name: "olkvm01"
-        type: "kvm"
-        instance_ocpus: 8
-        instance_memory: 64
-      3:
-        instance_name: "olkvm02"
-        type: "kvm"
-        instance_ocpus: 8
-        instance_memory: 64
-    use_vnc_on_engine: false
-    blk_volume_size_in_gbs: 512
-    EOF
-
-    cat instances.yml</copy>
-    ```
-
-    > **Notes:**
-    - `use_vnc_on_engine: false` disables VNC on the OLVM manager. This lab uses SSH tunneling to access the OLVM portal instead.
-    - **Block volume sizing:** `blk_volume_size_in_gbs` makes the provisioned block volume size configurable during deployment. This workshop uses `512` GB as a defined, lower-cost value instead of the larger default allocation of `1 TB`, while still providing enough capacity for the lab environment. If your environment requires more storage, you can increase this value before running the playbook.
-
-5. Create the `hosts` inventory so Ansible uses the virtual environment Python:
-
-    ```bash
-    <copy>cat <<'EOF' > hosts
-    localhost ansible_connection=local ansible_python_interpreter=/home/opc/venv-olvm/bin/python
-    EOF
-
-    cat hosts</copy>
-    ```
-
-6. Run the Ansible playbook to create the OCI infrastructure and OLVM instances.
-
-    The playbook uses the `instances.yml` file created in the previous step and overrides the compute shape to `VM.Standard.E5.Flex`.
-
-    ```bash
-    <copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml" -e instance_shape=VM.Standard.E5.Flex</copy>
-    ```
-
-    **Expected runtime:** 20-35 minutes. If the playbook runs for more than 45 minutes or shows no new task output for more than 10 minutes, stop and contact the instructor or workshop owner before changing the environment manually.
-
-    > **Critical: Preserve the lab environment.**
-    >
-    > When the playbook finishes, you may see a prompt to remove resources.
-    >
-    > - Do **not** press Enter
-    > - Do **not** type `y`
-    > - Press **Ctrl+C**
-    > - Then press **a** to abort safely
-    >
-    > This preserves the deployed OLVM infrastructure for the remaining labs.
-
-    **Expected result:** A successful run reaches `PLAY [Print instances]` and displays the `olvm`, `olkvm01`, and `olkvm02` public and private IP addresses.
-
-    If you abort at the pause prompt to preserve the environment, the recap may show `failed=1` for `olvm` with `user requested abort`. This is expected and does not indicate a deployment failure.
-
-    ![Playbook output](./images/playbook-output.png "Show Playbook output")
-
-7. Record **both public and private IPs** for:
-
-    - `olvm`
-    - `olkvm01`
-    - `olkvm02`
-
-8. Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances.
-
-    > **Why:** By default, OCI compute instances accept both the legacy `/v1` and the `/v2` Instance Metadata Service endpoints. IMDSv1 has no built-in request authentication, which makes it a weaker target for SSRF-style attacks. Oracle Linux 9's `cloud-init` and Oracle Cloud Agent both support IMDSv2 by default, so it is safe to disable the legacy `/v1` endpoint immediately after the instances come up. This uses the OCI CLI you already configured in Task 4 and Task 5 — no playbook changes are required.
-
-    ```bash
-    <copy>for name in olvm olkvm01 olkvm02; do
-      instance_id=$(oci compute instance list \
-        --compartment-id "$OCI_COMPARTMENT_OCID" \
-        --display-name "$name" \
-        --lifecycle-state RUNNING \
-        --query "data[0].id" --raw-output)
-
-      echo "Setting IMDSv2-only on $name ($instance_id)"
-
-      oci compute instance update \
-        --instance-id "$instance_id" \
-        --instance-options '{"areLegacyImdsEndpointsDisabled": true}' \
-        --force
-    done
-    sleep 60</copy>
-    ```
-
-    > **Note:** `--force` skips the interactive confirmation prompt on `oci compute instance update`. Updating `instance-options` is a lightweight metadata change — it does not reboot or restart the instance.
-
-9. Verify that each instance now enforces IMDSv2 only:
-
-    ```bash
-    <copy>for name in olvm olkvm01 olkvm02; do
-      instance_id=$(oci compute instance list \
-        --compartment-id "$OCI_COMPARTMENT_OCID" \
-        --display-name "$name" \
-        --lifecycle-state RUNNING \
-        --query "data[0].id" --raw-output)
-
-      echo "$name:"
-      oci compute instance get --instance-id "$instance_id" \
-        --query "data.\"instance-options\""
-    done</copy>
-    ```
-
-    **Expected output** for each instance:
-
-    ```json
-    {
-      "are-legacy-imds-endpoints-disabled": true
-    }
-    ```
-
-    If any instance shows `false` or `null`, re-run the update command in the previous step for that instance name.
-
-## Task 7: Verify and Access Deployed Instances
-
-1. From a local terminal copy the cluster SSH private key from the bootstrap host:
-
-    ```bash
-    <copy>scp -i ~/.ssh/<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa ~/.ssh/olvm-cluster-id_rsa</copy>
-    ```
-
-2. Copy the cluster SSH public key:
-
-    ```bash
-    <copy>scp -i ~/.ssh/<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa.pub ~/.ssh/olvm-cluster-id_rsa.pub</copy>
-    ```
-
-3. Verify that you can SSH to the OLVM manager from your local machine:
-
-    ```bash
-    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip> "hostname -f"</copy>
-    ```
-
-4. Add an ingress rule to allow HTTPS access to the OLVM Administration Portal from your local browser. Navigate using this path:
-
-    **OLV-VCN -> Subnets -> Public Subnet -> Security -> Default Security List -> Security Rules -> Add Ingress Rules**
-
-    **Select Default Security List for OLV-VCN**. If two entries appear with the same name, select the one created most recently.
-
-    Enter the following values:
+8. Click **VLANs**, then click **Create VLAN**. Complete the form as follows.
 
     | Field | Value |
     |---|---|
-    | Source CIDR | `0.0.0.0/0` |
-    | IP Protocol | TCP |
-    | Destination Port Range | `443` |
-    | Description | `Allow HTTPS access to OLVM Administration Portal` |
+    | VLAN name | `VLAN-VMs` |
+    | VLAN type | **Regional** |
+    | IEEE 802.1Q VLAN tag | `1` |
+    | VLAN gateway CIDR | `10.0.10.0/24` |
+    | Route table | `Default Route Table for OLV-VCN` |
+    | Network security group | `L2 Network` |
 
-    For a more restrictive rule, use your workstation public IP address with `/32` instead of `0.0.0.0/0`.
+    Enter exactly `1` for the VLAN tag. Leave resource tags empty, then click **Create VLAN**. If **VLANs** is unavailable, stop because your tenancy or region requires VLAN enablement.
 
-    - Click **Add Ingress Rules**
+    **Checkpoint:** The VLAN must show **Available** before you continue.
 
-    > **Note:** OCI security list changes take effect immediately — no reboot is required.
+## Task 4: Create Your Three Servers
 
-    ![olv-vcn](./images/olvcn.png "Show olv-vcn")
+In this task, you create the OLVM manager and the two servers that will run virtual machines.
 
-    ![olv-vcn Ingress](./images/olvcn-ingress.png "Show olv-vcn Ingress")
+1. Create an SSH key pair on your local computer. OCI adds the **public** key to your servers so that you can sign in securely. Keep the private key on your computer and never upload or share it.
 
-5. Connect to `olvm` as `oracle`.
+    In Windows PowerShell, run:
 
-    ```bash
-    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    ```powershell
+    <copy>New-Item -ItemType Directory -Force -Path "$HOME\.ssh" | Out-Null
+    ssh-keygen -t ed25519 -f "$HOME\.ssh\olvm-workshop" -C "olvm-workshop"
+    Get-Content "$HOME\.ssh\olvm-workshop.pub"</copy>
     ```
 
-6. From the `olvm` terminal, verify passwordless SSH to `olkvm01`:
+    In macOS Terminal or a Linux terminal, run:
 
     ```bash
-    <copy>ssh olkvm01 hostname -f</copy>
+    <copy>mkdir -p ~/.ssh
+    ssh-keygen -t ed25519 -f ~/.ssh/olvm-workshop -C "olvm-workshop"
+    cat ~/.ssh/olvm-workshop.pub</copy>
     ```
 
-7. Verify passwordless SSH to `olkvm02`:
+    When `ssh-keygen` asks for a passphrase, you can enter a passphrase or press Enter twice to leave it empty for this temporary workshop key. Copy the one-line output that begins with `ssh-ed25519`. This is your public key.
+
+2. Open the navigation menu, select **Compute**, then **Instances**, and click **Create instance**. Select your workshop compartment, use Oracle Linux 8, click **Change shape**, select `VM.Standard.E5.Flex`, and enter the values below. Under networking, select `OLV-VCN`, the public subnet, and **Assign a public IPv4 address**. Under **Add SSH keys**, choose **Paste public keys** and paste the public key you copied in the previous step.
+
+    | Field | Value |
+    |---|---|
+    | Name | `olvm` |
+    | Shape | `VM.Standard.E5.Flex` |
+    | OCPUs | `2` |
+    | Memory | `32 GB` |
+    | Primary VNIC | `Public Subnet-OLV-VCN` |
+    | Public IP | Yes |
+
+3. Click **Create instance** again and create the first KVM host. Use the same image, public subnet, and SSH public key.
+
+    | Field | Value |
+    |---|---|
+    | Name | `olkvm01` |
+    | Shape | `VM.Standard.E5.Flex` |
+    | OCPUs | `8` |
+    | Memory | `64 GB` |
+    | Primary VNIC | `Public Subnet-OLV-VCN` |
+    | Public IP | Yes |
+
+4. Click **Create instance** again and create `olkvm02` with the same settings as `olkvm01`.
+
+5. Wait for all three instances to show **Running**. Record the public IP address of each instance.
+
+6. From your local terminal, verify SSH access to each instance as `opc` before you continue. Replace `<public-ip>` with each server's recorded public IP address.
 
     ```bash
-    <copy>ssh olkvm02 hostname -f</copy>
+    <copy>ssh -i ~/.ssh/olvm-workshop opc@<public-ip> hostname</copy>
     ```
 
-    ![Verified connections](./images/verified-connections.png "Show Verified connections")
+## Task 5: Add the Private Management Network
 
-8. After you confirm SSH access to `olvm` and both KVM hosts, you are ready to terminate the bootstrap instance in the next task. **You can skip the Terminate task for later.**
+In this task, you give all three servers a private network connection so they can communicate with each other.
 
-## Task 8: Terminate the Bootstrap Instance
+1. In **Compute -> Instances**, click `olvm`. At the top of the instance page, click the **Networking** tab. In the **Attached VNICs** section, click **Create VNIC**. Select **Normal setup: subnet**, select `Private Subnet-OLV-VCN`, keep **Automatically assign private IPv4 address** selected, and do not assign a public IP. Under **DNS**, keep **Assign a private DNS record** selected and enter the hostname shown below.
 
-1. Return to the OCI Console and navigate to **Compute -> Instances**.
+    | VNIC name | DNS hostname | Network | Public IP |
+    |---|---|---|---|
+    | `vdsm` | `vdsm` | `Private Subnet-OLV-VCN` | No |
 
-2. Confirm that all of the following are true before you continue:
+    Before you click **Create VNIC**, record the fully qualified domain name displayed below the **Hostname** field. You use this name later when configuring OLVM.
 
-    - You copied `olvm-cluster-id_rsa` and `olvm-cluster-id_rsa.pub` to your local machine.
-    - You verified local SSH access to `olvm`.
-    - You no longer need any files or shell history from the bootstrap instance.
+2. Repeat the preceding navigation for `olkvm01` and `olkvm02`. Create one private-subnet VNIC on each host. Keep **Assign a private DNS record** selected and enter the matching DNS hostname below.
 
-3. Select the `bootstrap` instance.
+    | Instance | VNIC name | DNS hostname | Network | Public IP |
+    |---|---|---|---|---|
+    | `olkvm01` | `vdsm01` | `vdsm01` | `Private Subnet-OLV-VCN` | No |
+    | `olkvm02` | `vdsm02` | `vdsm02` | `Private Subnet-OLV-VCN` | No |
 
-4. Click **More Actions -> Terminate**.
+    Record the full DNS name displayed below each **Hostname** field. Do not assume it will match an example shown elsewhere in the workshop.
 
-5. In the confirmation dialog, decide whether to delete the boot volume:
+3. Connect to each instance as `opc` and configure its new private VNIC. Run these commands before you add the VLAN VNICs in Task 6.
 
-    - Select **Permanently delete the attached boot volume** if you want to fully clean up the temporary bootstrap resources.
-    - Leave it unchecked only if you want to preserve the instance for troubleshooting.
+    ```bash
+    <copy>sudo oci-network-config configure
+    ip -br addr</copy>
+    ```
 
-6. Click **Terminate Instance**.
+    In the output, find the interface with a `10.0.1.x/24` address. Record both the interface name and address for each host. For example:
 
-7. Wait until the instance state changes to **Terminated**.
+    ```text
+    enp1s0  UP  10.0.1.78/24
+    ```
 
-## Set Up OLVM Infrastructure Checkpoint
+4. On each host, create a persistent NetworkManager connection for the private VNIC. Replace `<private-interface>` and `<private-ip>` with the values you recorded on that host. Run this command only once on each host.
 
-At this point, you should have:
+    ```bash
+    <copy>sudo nmcli connection add \
+      type ethernet \
+      ifname <private-interface> \
+      con-name private-management \
+      ipv4.method manual \
+      ipv4.addresses <private-ip>/24 \
+      ipv4.never-default yes \
+      connection.autoconnect yes
 
-- VLAN support (Layer 2 network virtualization) confirmed active for the tenancy and region
-- OCI credentials configured on the bootstrap host
-- Three deployed instances: `olvm`, `olkvm01`, and `olkvm02`
-- Public and private IPs recorded for all three instances
-- IMDSv2 enforced (legacy `/v1` metadata endpoints disabled) on all three instances
-- The cluster SSH private key copied to your local machine
-- Verified local SSH access to the OLVM manager
-- Verified SSH from `olvm` to both KVM hosts
-- Bootstrap instance terminated, unless you intentionally kept it for troubleshooting
+    sudo nmcli connection up private-management</copy>
+    ```
 
-Continue to Lab 2 after all checkpoint items above are complete.
+    For example, if the private interface is `enp1s0` and its address is `10.0.1.78`, use `enp1s0` for `<private-interface>` and `10.0.1.78` for `<private-ip>`.
 
-You may now **proceed to the next lab**
+5. Confirm that NetworkManager now manages the private interface and that the private address is present.
 
-## Learn More
+    ```bash
+    <copy>nmcli connection show --active
+    ip -br addr</copy>
+    ```
 
-- Oracle Linux Virtualization Manager install lab (official): https://docs.oracle.com/en/learn/olvm-install/index.html
+    **Expected result:** `private-management` is active, and the private interface shows its `10.0.1.x/24` address.
+
+6. Reboot each host to confirm that the private configuration persists. Your SSH connection will close during the reboot.
+
+    ```bash
+    <copy>sudo reboot</copy>
+    ```
+
+    Wait 2-5 minutes, reconnect through the host's public IP, and verify the private address again:
+
+    ```bash
+    <copy>nmcli connection show --active
+    ip -br addr</copy>
+    ```
+
+    Do not continue unless `private-management` is active and the `10.0.1.x/24` address remains after the reboot.
+
+7. From each host, confirm that the other private management addresses respond to ping.
+
+    ```bash
+    <copy>ping -I <private-interface> -c 3 <other-host-private-ip></copy>
+    ```
+
+    Do not continue until all three hosts can reach one another across `10.0.1.0/24`.
+
+## Task 6: Add the Virtual Machine Network
+
+In this task, you add the separate VLAN network used by virtual machines. Complete Task 5 first.
+
+1. In **Compute -> Instances**, open `olkvm01`. At the top of the instance page, click the **Networking** tab. In the **Attached VNICs** section, click **Create VNIC**. In the advanced networking choices, select the `VLAN-VMs` VLAN, do not assign a public IP, and enter the values below.
+
+    | VNIC name | Network | Public IP |
+    |---|---|---|
+    | `l2-vm-network` | `VLAN-VMs` | No |
+
+2. Repeat the preceding step for `olkvm02`.
+
+3. On both KVM hosts, confirm that the new VLAN VNIC appears as a separate interface.
+
+    ```bash
+    <copy>ip -br link
+    nmcli device status</copy>
+    ```
+
+    The new VLAN interface does not need an IP address at this stage. OLVM configures it in a later lab. Do not run `oci-network-config configure` after adding the VLAN VNIC.
+
+4. Confirm that the persistent private-management connection and its `10.0.1.x/24` address are still present on both KVM hosts.
+
+    ```bash
+    <copy>nmcli connection show --active
+    ip -br addr</copy>
+    ```
+
+    If `private-management` is not active, restore it with:
+
+    ```bash
+    <copy>sudo nmcli connection up private-management</copy>
+    ```
+
+    Verify the private address and repeat the private-network ping test from Task 5 before you continue.
+
+## Task 7: Add Shared Storage
+
+In this task, you create storage that both KVM hosts will use later for virtual machines.
+
+1. Open the navigation menu, select **Storage**, then **Block Storage**, and click **Block Volumes**. Select your workshop compartment and click **Create Block Volume**. Create the two volumes below in the same availability domain as the KVM hosts.
+
+    | Name | Size |
+    |---|---|
+    | `amd-storage-domain-01` | `1 TB` |
+    | `amd-storage-domain-02` | `1 TB` |
+
+2. Open each block volume, click **Attached Instances**, then click **Attach to instance**. Attach both volumes to `olkvm01` and then to `olkvm02` using the settings below.
+
+    | Field | Value |
+    |---|---|
+    | Attachment type | Paravirtualized |
+    | Access | Read/write |
+    | Shareable | Yes |
+
+3. Do not format or mount these volumes. OLVM configures them as storage domains in a later lab.
+
+## Task 8: Make It Easy to Connect to Your Servers
+
+In this task, you create the workshop user and configure SSH access for the later labs.
+
+1. On each instance, create the `oracle` workshop user and authorize the same SSH key used for `opc`.
+
+    ```bash
+    <copy>sudo id oracle >/dev/null 2>&1 || sudo useradd -m -G wheel oracle
+    sudo mkdir -p /home/oracle/.ssh
+    sudo cp /home/opc/.ssh/authorized_keys /home/oracle/.ssh/authorized_keys
+    sudo chown -R oracle:oracle /home/oracle/.ssh
+    sudo chmod 700 /home/oracle/.ssh
+    sudo chmod 600 /home/oracle/.ssh/authorized_keys
+    echo 'oracle ALL=(ALL:ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/oracle
+    sudo chmod 440 /etc/sudoers.d/oracle</copy>
+    ```
+
+2. On `olvm`, add the KVM host private management addresses to `/etc/hosts`. Replace the placeholders with the addresses recorded in Task 5.
+
+    ```bash
+    <copy>sudo tee -a /etc/hosts <<'EOF'
+    <olkvm01-private-ip> olkvm01
+    <olkvm02-private-ip> olkvm02
+    EOF</copy>
+    ```
+
+3. On `olvm`, switch to the `oracle` user and create an SSH key.
+
+    ```bash
+    <copy>sudo su - oracle
+    ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""
+    cat ~/.ssh/id_rsa.pub</copy>
+    ```
+
+4. Copy the complete line displayed by `cat ~/.ssh/id_rsa.pub`. It begins with `ssh-rsa`.
+
+5. From your local computer, open an SSH session to `olkvm01` as `opc` using its public IP. Run the following command, paste the copied `ssh-rsa` line, and then press **Ctrl+D**.
+
+    ```bash
+    <copy>sudo tee -a /home/oracle/.ssh/authorized_keys</copy>
+    ```
+
+    Set the correct ownership and permissions:
+
+    ```bash
+    <copy>sudo chown oracle:oracle /home/oracle/.ssh/authorized_keys
+    sudo chmod 600 /home/oracle/.ssh/authorized_keys</copy>
+    ```
+
+6. Repeat the preceding step on `olkvm02`.
+
+7. Return to the `oracle` shell on `olvm` and verify passwordless SSH to both KVM hosts.
+
+    ```bash
+    <copy>ssh olkvm01 hostname -f
+    ssh olkvm02 hostname -f</copy>
+    ```
+
+## Task 9: Check Your Environment
+
+In this task, you confirm that everything needed for the OLVM installation is ready.
+
+1. From your local machine, verify that you can connect to the OLVM manager as `oracle`.
+
+    ```bash
+    <copy>ssh -i ~/.ssh/olvm-workshop oracle@<olvm-public-ip> hostname -f</copy>
+    ```
+
+2. Confirm that `olvm`, `olkvm01`, and `olkvm02` are running, the private management network works, both KVM hosts have a separate VLAN interface, and both shared block volumes are attached to both KVM hosts.
+
+3. Complete this worksheet. You need these values in later labs.
+
+    | Value | `olvm` | `olkvm01` | `olkvm02` |
+    |---|---|---|---|
+    | Public IP |  |  |  |
+    | Primary private IP (`10.0.0.x`) |  |  |  |
+    | Management IP (`10.0.1.x`) |  |  |  |
+    | Management FQDN |  |  |  |
+    | Primary interface |  |  |  |
+    | Management interface |  |  |  |
+
+    Record the local SSH private-key path separately. The default path used in this lab is `~/.ssh/olvm-workshop`.
+
+4. Confirm all of the following before continuing:
+
+    - `private-management` remains active after reboot on all three hosts.
+    - All three management IP addresses respond to ping from the other hosts.
+    - `olkvm01` and `olkvm02` each have a separate VLAN interface without an IP address.
+    - Both shared volumes are attached read/write and shareable to both KVM hosts.
+    - From `olvm`, the `oracle` user can SSH to `olkvm01` and `olkvm02` without a password.
+
+You may now **proceed to the next lab**.
 
 ## Acknowledgements
 
-- - **Author** - Shawn Kelley, Mark Atkinson, John Priest, Perside Foster
+- **Author** - Shawn Kelley, Mark Atkinson, John Priest, Perside Foster
 - **Contributor** - Marvin Kim
-- **Last Updated By/Date** - Perside Foster, May 20, 2026
+- **Last Updated By/Date** - Perside Foster, July 15, 2026
