@@ -327,7 +327,6 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
             timeout: 900
             connect_timeout: 10
             sleep: 10
-
         - name: Get a set of all available facts
           ansible.builtin.setup:
     EOF
