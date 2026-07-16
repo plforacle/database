@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this setup lab, you will use a temporary bootstrap instance as the Ansible controller for the workshop environment. You will create a VCN, launch the bootstrap host, install required software, configure OCI credentials, run the provisioning playbook with `VM.Standard.E5.Flex`, and verify access to the three instances used in later labs: `olvm`, `olkvm01`, and `olkvm02`. 
+In this setup lab, you will use a temporary bootstrap instance as the Ansible controller for the workshop environment. You will create a VCN, launch the bootstrap host, install required software, configure OCI credentials, run the provisioning playbook with `VM.Standard.E5.Flex`, and verify access to the three instances used in later labs: `olvm`, `olkvm01`, and `olkvm02`.
 
 If your instructor or workshop owner already provided a working E5 environment, skip this lab and begin with Lab 2.
 
@@ -305,40 +305,73 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
     cat hosts</copy>
     ```
 
-6. Run the Ansible playbook to create the OCI infrastructure and OLVM instances.
+6. Apply the workshop reliability safeguards before running the playbook.
+
+    The downloaded upstream automation attempts to run its SSH waiting task on the new server. If a server is still starting, Ansible cannot connect to run that task. Replace the task with Ansible's connection-aware waiting module, which safely retries from the Ansible controller for up to 15 minutes.
+
+    ```bash
+    <copy>cat > check_instance_available.yml <<'EOF'
+    ---
+    - name: Configure new instances
+      hosts: engine:kvm:!localhost
+      gather_facts: false
+      any_errors_fatal: true
+      vars_files:
+        - default_vars.yml
+        - oci_vars.yml
+
+      tasks:
+        - name: Wait for systems to become reachable using SSH
+          ansible.builtin.wait_for_connection:
+            delay: 15
+            timeout: 900
+            connect_timeout: 10
+            sleep: 10
+
+        - name: Get a set of all available facts
+          ansible.builtin.setup:
+    EOF
+
+    sed '/    - name: Pause play to interact with the servers/,$d' \
+      create_instance.yml > deploy_instance.yml
+
+    grep -A 6 "wait_for_connection" check_instance_available.yml
+    tail -n 8 deploy_instance.yml</copy>
+    ```
+
+    The generated `deploy_instance.yml` ends after printing the instance details. It cannot enter the upstream automatic resource-removal play. Resource removal remains available separately through `terminate_instance.yml` when the workshop is finished.
+
+7. Run the Ansible playbook to create the OCI infrastructure and OLVM instances.
 
     The playbook uses the `instances.yml` file created in the previous step and overrides the compute shape to `VM.Standard.E5.Flex`.
 
     ```bash
-    <copy>ansible-playbook create_instance.yml -i hosts -e "@instances.yml" -e instance_shape=VM.Standard.E5.Flex</copy>
+    <copy>ansible-playbook deploy_instance.yml -i hosts -e "@instances.yml" -e instance_shape=VM.Standard.E5.Flex</copy>
     ```
 
     **Expected runtime:** 20-35 minutes. If the playbook runs for more than 45 minutes or shows no new task output for more than 10 minutes, stop and contact the instructor or workshop owner before changing the environment manually.
 
-    > **Critical: Preserve the lab environment.**
-    >
-    > When the playbook finishes, you may see a prompt to remove resources.
-    >
-    > - Do **not** press Enter
-    > - Do **not** type `y`
-    > - Press **Ctrl+C**
-    > - Then press **a** to abort safely
-    >
-    > This preserves the deployed OLVM infrastructure for the remaining labs.
+    > **If provisioning fails:** Stop at the failed task and capture the output. The deployment-only playbook will not delete the OCI resources. Do not rerun it against a partially created environment.
+
+    To remove a partial deployment before trying again, run:
+
+    ```bash
+    <copy>ansible-playbook terminate_instance.yml -i hosts -e "@instances.yml"</copy>
+    ```
+
+    Confirm in the OCI Console that the workshop instances, volumes, VCN, gateways, subnets, VLAN, and security resources have been removed. Then begin a clean deployment.
 
     **Expected result:** A successful run reaches `PLAY [Print instances]` and displays the `olvm`, `olkvm01`, and `olkvm02` public and private IP addresses.
 
-    If you abort at the pause prompt to preserve the environment, the recap may show `failed=1` for `olvm` with `user requested abort`. This is expected and does not indicate a deployment failure.
-
     ![Playbook output](./images/playbook-output.png "Show Playbook output")
 
-7. Record **both public and private IPs** for:
+8. Record **both public and private IPs** for:
 
     - `olvm`
     - `olkvm01`
     - `olkvm02`
 
-8. Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances.
+9. Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances.
 
     > **Why:** By default, OCI compute instances accept both the legacy `/v1` and the `/v2` Instance Metadata Service endpoints. IMDSv1 has no built-in request authentication, which makes it a weaker target for SSRF-style attacks. Oracle Linux 9's `cloud-init` and Oracle Cloud Agent both support IMDSv2 by default, so it is safe to disable the legacy `/v1` endpoint immediately after the instances come up. This uses the OCI CLI you already configured in Task 4 and Task 5 — no playbook changes are required.
 
@@ -362,7 +395,7 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
     > **Note:** `--force` skips the interactive confirmation prompt on `oci compute instance update`. Updating `instance-options` is a lightweight metadata change — it does not reboot or restart the instance.
 
-9. Verify that each instance now enforces IMDSv2 only:
+10. Verify that each instance now enforces IMDSv2 only:
 
     ```bash
     <copy>for name in olvm olkvm01 olkvm02; do
