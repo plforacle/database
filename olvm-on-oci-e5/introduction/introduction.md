@@ -126,6 +126,8 @@ If VLANs are not available, submit a support or service-limit request before sta
 
 - Oracle Linux Virtualization Manager install lab (official): <https://docs.oracle.com/en/learn/olvm-install/index.html>
 
+- Oracle Linux Virtualization Manager Documentation: <https://docs.oracle.com/en/virtualization/oracle-linux-virtualization-manager/>
+
 ## Acknowledgements
 
 - **Author** - Shawn Kelley, Mark Atkinson, John Priest, Perside Foster
