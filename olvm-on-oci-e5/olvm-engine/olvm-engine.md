@@ -25,9 +25,9 @@ In this lab, you will:
 
 This lab assumes you have:
 
-- Completed the Lab 1 checkpoint
+- Completed the Lab 1 checkpoint, including Task 7 access validation and the TCP 443 ingress rule for the Administration Portal
 - Recorded the public IP address for `olvm`
-- Created or retained the `olvm-cluster-id_rsa` private key on your local machine
+- Downloaded and retained the `olvm-cluster-id_rsa` private key on your local machine
 - A local terminal (Windows PowerShell, macOS Terminal, or Linux terminal)
 - A local browser (Chrome, Firefox, or Edge)
 
@@ -38,7 +38,8 @@ This lab assumes you have:
 
 Use these connection paths throughout this and later labs:
 
-- **Local machine -> OLVM manager shell:** `ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip>`
+- **Windows PowerShell -> OLVM manager shell:** `ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@<olvm-public-ip>`
+- **macOS or Linux -> OLVM manager shell:** `ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip>`
 - **Manager shell -> KVM hosts:** `ssh olkvm01` or `ssh olkvm02`
 - **Manager shell -> guest VMs in later labs:** check the VM **Host** column, then use `ssh -tt <kvm-host> "ssh opc@<vm-ip>"`
 - **Administration Portal (local browser):** `https://<olvm-fqdn>/ovirt-engine`
@@ -49,7 +50,15 @@ Use these connection paths throughout this and later labs:
 
 1. From your local machine, open a terminal.
 
-2. Connect to the OLVM manager:
+2. Connect to the OLVM manager.
+
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@<olvm-public-ip></copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
 
     ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
@@ -81,9 +90,17 @@ Use these connection paths throughout this and later labs:
 
     **Important:** Your SSH session will disconnect during the reboot. Wait 2-3 minutes for the system to come back online, then reconnect before continuing.
 
-3. Reconnect to the manager after reboot:
+3. Reconnect to the manager after reboot.
+
+    In Windows PowerShell, run:
 
     ```powershell
+    <copy>ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@<olvm-public-ip></copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
+
+    ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
     ```
 
