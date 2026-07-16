@@ -27,6 +27,7 @@ This lab assumes you have:
 
 - Completed the Lab 2 checkpoint
 - Access to the OLVM Administration Portal
+- The local hosts-file mapping created in Lab 2 for the OLVM portal
 - SSH access to the OLVM manager from your local machine
 - SSH connectivity from `olvm` to both KVM hosts
 
@@ -34,7 +35,15 @@ This lab assumes you have:
 
 ## Task 1: Configure the First KVM Host (`olkvm01`)
 
-1. From your local terminal, connect to the OLVM manager:
+1. From your local terminal, connect to the OLVM manager.
+
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@<olvm-public-ip></copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
 
     ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
@@ -126,6 +135,14 @@ This lab assumes you have:
     ```bash
     <copy>exit</copy>
     ```
+
+10. From the manager host, confirm the private management FQDN resolves before you add the host in the Administration Portal:
+
+    ```bash
+    <copy>getent hosts vdsm01.priv.olv.oraclevcn.com</copy>
+    ```
+
+    The command must return a private `10.0.1.x` address. Do not continue if it returns no address or a public address.
 
 ## Task 2: Add `olkvm01` to the Cluster
 
@@ -250,6 +267,14 @@ This lab assumes you have:
     ```bash
     <copy>exit</copy>
     ```
+
+8. From the manager host, confirm the private management FQDN resolves before you add the host in the Administration Portal:
+
+    ```bash
+    <copy>getent hosts vdsm02.priv.olv.oraclevcn.com</copy>
+    ```
+
+    The command must return a private `10.0.1.x` address. Do not continue if it returns no address or a public address.
 
 ## Task 4: Add `olkvm02` to the Cluster
 
