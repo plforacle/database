@@ -30,6 +30,8 @@ This lab assumes you have:
 - `olkvm01` has `10.0.10.254/24` on `l2-vm-network`
 - `olkvm02` has `10.0.10.253/24` on `l2-vm-network`
 - An active shared storage domain
+- A successful `ol9-vm1` test from Lab 4, including guest-to-KVM-host connectivity
+- The `olvm-cluster-id_rsa` private key downloaded in Lab 1
 - Access to the Administration Portal from your local browser
 
 > **Important:** Complete the database VM import and validation before you start the web application VM import. Do not run both imports in parallel during the workshop.
@@ -40,7 +42,21 @@ This lab assumes you have:
 
 ## Task 1: Download the `ol9-mysql` OVA
 
-1. From the manager terminal, download `ol9-mysql.ova` to `olkvm01`:
+1. From your local terminal, connect to the OLVM manager.
+
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@<olvm-public-ip></copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
+
+    ```bash
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    ```
+
+2. From the manager terminal, download `ol9-mysql.ova` to `olkvm01`:
 
     ```bash
     <copy>ssh olkvm01 "curl -L https://objectstorage.us-ashburn-1.oraclecloud.com/n/idhwewbjlvpy/b/olvm-on-oci/o/ova-e4-shape%2Fol9-mysql.ova -o /tmp/ol9-mysql.ova"</copy>
@@ -191,22 +207,22 @@ This lab assumes you have:
 
 5. Wait for the VM status to change to **Up**.
 
-6. In the Virtual Machines list, check the **Host** column for `ol9-webapp`.
+6. In the Virtual Machines list, verify that both application VMs show `olkvm01` in the **Host** column.
 
-    For this lab, `ol9-webapp` should run on `olkvm01`, the same host as `ol9-mysql`.
+    If `ol9-mysql` is on `olkvm01` but `ol9-webapp` is on `olkvm02`, correct the placement before continuing:
+
+    - Select `ol9-webapp` and click **Shutdown**.
+    - Wait for its status to change to **Down**.
+    - Select `ol9-webapp`, click the drop-down arrow next to **Run**, and click **Run Once**.
+    - Select the host option, choose `olkvm01`, and click **OK**.
+    - Wait until `ol9-webapp` shows status **Up**, then verify that its **Host** column now shows `olkvm01`.
+
+    If `ol9-mysql` is not on `olkvm01`, use the same **Shutdown**, **Run Once**, and host-selection steps for `ol9-mysql` before you proceed. Both VMs must be running on `olkvm01`.
 
 7. From the manager terminal, connect to the application VM (username: **opc** / password: **oracle**).
 
-    If `ol9-webapp` is running on `olkvm01`, run:
-
     ```bash
     <copy>ssh -tt olkvm01 "ssh opc@10.0.10.101"</copy>
-    ```
-
-    If `ol9-webapp` is running on `olkvm02`, shut it down and start it again with **Run Once** on `olkvm01`. If you need to connect before restarting it, run:
-
-    ```bash
-    <copy>ssh -tt olkvm02 "ssh opc@10.0.10.101"</copy>
     ```
 
 8. Verify that the application responds:
@@ -243,19 +259,40 @@ This lab assumes you have:
 
     This tunnel is needed because your browser cannot reach the VM VLAN directly. The tunnel connects your laptop to the OLVM manager first, then to the KVM host, and finally forwards local port `8080` to the web application VM.
 
-    If `ol9-webapp` is running on `olkvm01`, run:
+    Run the command for your local operating system.
+
+    In Windows PowerShell, run these two commands separately, in order. Do not combine them on one line.
+
+    ```powershell
+    <copy>$key = "$HOME\.ssh\olvm-cluster-id_rsa"</copy>
+    ```
+
+    ```powershell
+    <copy>ssh -i $key -o IdentitiesOnly=yes -o "ProxyCommand=ssh -i $key -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm01</copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
 
     ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm01</copy>
     ```
 
-    ![Application Tunnel](./images/application-tunnel.png "Show Application Tunnel")
+    **If SSH reports that the host identification for `olkvm01` has changed:** This is expected only if you have rebuilt the Lab 1 infrastructure. Remove the old saved host key, then rerun the tunnel command and accept the new key when prompted.
 
-    If you intentionally kept `ol9-webapp` on `olkvm02`, run:
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>ssh-keygen -R olkvm01</copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
 
     ```bash
-    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -o ProxyCommand="ssh -i ~/.ssh/olvm-cluster-id_rsa -o IdentitiesOnly=yes -W %h:%p oracle@<olvm-public-ip>" -L 8080:10.0.10.101:8080 -N oracle@olkvm02</copy>
+    <copy>ssh-keygen -R olkvm01</copy>
     ```
+
+
+    ![Application Tunnel](./images/application-tunnel.png "Show Application Tunnel")
 
     Leave this window open. The tunnel is active as long as this session remains connected.
 

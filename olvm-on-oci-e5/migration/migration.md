@@ -25,25 +25,40 @@ In this lab, you will:
 
 This lab assumes you have:
 
-- Completed the Lab 5 checkpoint
+- Completed the Lab 5 checkpoint, including a working Employee Directory application
 - Both KVM hosts showing status **Up**
 - A working shared storage domain
-- `ol9-vm1` imported from the Oracle Linux template in Lab 4
+- `ol9-vm1` imported from the Oracle Linux template in Lab 4, connected to `l2-vm-network`, and reachable at `10.0.10.105`
 - Access to the Administration Portal from your local browser
+- The cluster private key downloaded in Lab 1 if you need to open an `olvm` terminal
 
 > **Important:** Do not migrate only one Employee Directory application VM in the beginner path. Lab 5 keeps the application database and web VMs on the same KVM host for reliable application connectivity.
 
 ## Task 1: Refresh the OLVM Engine
 
-1. From the `olvm` terminal, restart the OLVM engine to refresh its internal state before migration:
+1. From your local terminal, connect to the `olvm` manager if you do not already have an `olvm` terminal open.
+
+    **Windows PowerShell:**
+
+    ```powershell
+    <copy>ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@&lt;olvm-public-ip&gt;</copy>
+    ```
+
+    **macOS or Linux:**
+
+    ```bash
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@&lt;olvm-public-ip&gt;</copy>
+    ```
+
+2. From the `olvm` terminal, restart the OLVM engine to refresh its internal state before migration:
 
     ```bash
     <copy>sudo systemctl restart ovirt-engine</copy>
     ```
 
-2. Wait 2-3 minutes for the engine to restart.
+3. Wait 2-3 minutes for the engine to restart.
 
-3. Refresh the Administration Portal in your browser and sign in again if prompted.
+4. Refresh the Administration Portal in your browser and sign in again if prompted.
 
 ## Task 2: Verify Migration Prerequisites
 
@@ -70,7 +85,9 @@ This lab assumes you have:
 
 6. Wait until `ol9-vm1` shows status **Up**.
 
-7. Record the current **Host** column for `ol9-vm1`. You will migrate the VM to the other host.
+7. Select `ol9-vm1`, open the **Network Interfaces** tab, and confirm that `nic1` is connected to `l2-vm-network`.
+
+8. Record the current **Host** column for `ol9-vm1`. You will migrate the VM to the other host.
 
 ## Task 3: Perform Live Migration
 

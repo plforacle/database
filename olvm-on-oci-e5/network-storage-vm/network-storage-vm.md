@@ -27,7 +27,8 @@ This lab assumes you have:
 
 - Completed the Lab 3 checkpoint
 - Both KVM hosts showing status **Up**
-- Access to the Administration Portal
+- Access to the Administration Portal through the local hosts-file mapping created in Lab 2
+- The `olvm-cluster-id_rsa` private key downloaded in Lab 1
 - SSH access to the OLVM manager from your local machine
 
 > **Important:** Do not start this lab while either host is still `Installing`, `Initializing`, or `Non Operational`.
@@ -68,9 +69,9 @@ This lab assumes you have:
 
     ![Show Host Network dialog](./images/olvm-setup-host-networks.png "Show Host Network dialog")
 
-5. Drag `l2-vm-network` from **Unassigned Logical Networks** on the left side into the physical interface box on the right side (for example, `ens5`).
+5. Drag `l2-vm-network` from **Unassigned Logical Networks** on the left side into the unassigned physical interface box on the right side. This is the VLAN VNIC created by Lab 1.
 
-    > **Tip:** Look for the interface that does **not** already have `ovirtmgmt` assigned to it. That is the correct interface for VM traffic.
+    > **Tip:** Look for the interface that does **not** already have `ovirtmgmt` assigned to it. Interface names differ by instance, so do not rely on an example name. The correct interface is the unassigned VLAN VNIC, not the management interface.
 
     ![Show Host Networks dialog after l2-vm-network setup](./images/olvm-setup-host-networks-assigned.png "Show Host Networks dialog after l2-vm-network setup")
 
@@ -102,7 +103,7 @@ This lab assumes you have:
 
 4. Click **Setup Host Networks**.
 
-5. Drag `l2-vm-network` from **Unassigned Logical Networks** to the physical interface box on the right, using the same interface you used for `olkvm01`.
+5. Drag `l2-vm-network` from **Unassigned Logical Networks** to the unassigned VLAN physical interface box on the right. Do not use the `ovirtmgmt` interface. The interface name can differ from the name shown for `olkvm01`.
 
 6. In the same **Setup Host Networks** dialog, configure the `l2-vm-network` address for `olkvm02`.
 
@@ -143,6 +144,8 @@ This lab assumes you have:
 7. Set **Host to Use** to **olkvm01**.
 
 8. When the available LUNs appear, click **Add** next to the first LUN ID.
+
+    The available shared LUNs were created by Lab 1 from the `amd-storage-domain-01` and `amd-storage-domain-02` OCI block volumes. Select one LUN for this data domain. Do not create, format, or attach additional OCI volumes during this lab.
 
     ![Add Storage Domain](./images/add-storage-domain.png "Show Add Storage Domain")
 
@@ -270,6 +273,14 @@ This lab assumes you have:
     ![Virtual Machine NIC1](./images/virtual-machine-nic1.png "Show Virtual Machine NIC1")
 
 5. From your local terminal, connect to the OLVM manager.
+
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@<olvm-public-ip></copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
 
     ```bash
     <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
