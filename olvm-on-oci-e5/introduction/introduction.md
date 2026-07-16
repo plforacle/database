@@ -6,7 +6,7 @@ Oracle Linux Virtualization Manager (OLVM) provides KVM-based virtualization and
 
 > **Note: This tutorial is only for testing and evaluation purposes; Oracle Linux Virtualization Manager support for OCI is under development and is not supported to manage OCI systems.**
 
-**Estimated Workshop Time:** 6-7 hours of hands-on work, including the manual OCI infrastructure setup lab.
+**Estimated Workshop Time:** 5-6 hours of hands-on work, including the Ansible setup lab.
 
 ### Audience and Delivery Model
 
@@ -18,7 +18,7 @@ If you complete the workshop outside a guided session, use each checkpoint befor
 
 This workshop is organized into the following labs:
 
-1. **Lab 1: Create Your OLVM on OCI Environment** - Build the network, servers, storage, and access needed for the workshop.
+1. **Lab 1: Build E5 OCI Infrastructure with Ansible** - Use a temporary bootstrap instance and Ansible to build the E5 OCI environment.
 2. **Lab 2: Deploy OLVM Engine** - Connect to the manager via SSH, install the OLVM engine, and validate portal access.
 3. **Lab 3: Configure KVM Cluster** - Add `olkvm01` and `olkvm02` to the default cluster and wait for both hosts to reach `Up`.
 4. **Lab 4: Set Up Networking, Storage, and VM** - Create the VM network, add shared storage, import the Oracle Linux template, and validate the first VM.
@@ -66,7 +66,7 @@ This workshop assumes you have:
 
 Before starting the workshop, confirm that your OCI user has permission to create the compute, networking, and storage resources used by the lab.
 
-Lab 1 builds the lab infrastructure manually and includes a setup checkpoint for the instances, private management network, VLAN interfaces, shared volumes, and SSH access.
+Lab 1 builds the lab infrastructure with Ansible and includes a setup checkpoint for the generated instances and SSH access.
 
 The simplest IAM policy model is to create a dedicated compartment for the workshop and grant the lab group full access inside only that compartment:
 
@@ -95,7 +95,7 @@ The OLVM hosts are provisioned with `VM.Standard.E5.Flex` shapes:
 - `olkvm01`: `8 OCPUs`, `64 GB` memory
 - `olkvm02`: `8 OCPUs`, `64 GB` memory
 
-This E5 version of the workshop builds the environment manually. E4 shapes are no longer available in many OCI regions, and the E5 path depends on the correct VNIC, VLAN, route-table, and shared-volume layout.
+This E5 version of the workshop builds the environment with Ansible. E4 shapes are no longer available in many OCI regions, and the E5 path depends on the correct VNIC, VLAN, route-table, and shared-volume layout.
 
 The instructor or workshop owner should verify service limits before the workshop. If a quota or service limit is insufficient, OCI may fail while creating the compute, networking, VLAN, or block volume resources before class.
 
@@ -115,7 +115,7 @@ If VLANs are not available, submit a support or service-limit request before sta
 
 **Oracle Cloud Infrastructure (OCI)** is Oracle's cloud platform. In this workshop, OCI provides the compute instances, networking, and storage resources used to host the OLVM environment.
 
-**Oracle Cloud Infrastructure (OCI)** provides the network, compute, storage, and VLAN resources used by this workshop. Lab 1 guides you through creating and validating those resources before you install OLVM.
+**Ansible** is an automation tool used to define and provision infrastructure consistently. Lab 1 uses an Ansible playbook to create the workshop infrastructure so each participant starts with a consistent environment.
 
 **OCI VLANs** provide the Layer 2 network used by guest virtual machines. This network allows VMs running on the KVM hosts to communicate through the workshop's virtualized network path.
 
