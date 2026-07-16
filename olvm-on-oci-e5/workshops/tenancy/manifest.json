@@ -13,7 +13,7 @@
       "filename": "https://livelabs.oracle.com/cdn/common/labs/cloud-login/cloud-login.md"
     },
     {
-      "title": "Lab 1: Create Your OLVM on OCI Environment",
+      "title": "Lab 1: Build E5 OCI Infrastructure with Ansible",
       "description": "Build the network, servers, storage, and access needed for the workshop.",
       "filename": "../../ansible-infrastructure/ansible-infrastructure.md"
     },

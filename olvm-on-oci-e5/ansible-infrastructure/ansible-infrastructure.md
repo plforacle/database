@@ -28,8 +28,8 @@ In this lab, you will:
 - Install required software on the bootstrap host
 - Configure OCI credentials and generate SSH keys used by automation
 - Run the Ansible playbook that provisions `olvm`, `olkvm01`, and `olkvm02`
-- Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances
 - Verify deployed instances and copy the required SSH keys to your local machine
+- Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances
 - Terminate the temporary bootstrap instance after validation is complete
 
 ### Prerequisites
@@ -47,7 +47,7 @@ This lab assumes you have:
 
 ## Task 1: Verify VLAN Support Is Available
 
-The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM management, migration, and storage networks. If VLAN support is not available in your target region, the playbook will fail.
+The Ansible provisioning playbook creates an OCI VLAN for the Layer 2 network used by guest virtual machines. If VLAN support is not available in your target region, the playbook will fail.
 
 1. Sign in to the OCI Console and switch to the workshop target region.
 
@@ -370,9 +370,106 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
     - `olkvm01`
     - `olkvm02`
 
-9. Enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances.
+## Task 7: Verify and Access Deployed Instances
 
-    > **Why:** By default, OCI compute instances accept both the legacy `/v1` and the `/v2` Instance Metadata Service endpoints. IMDSv1 has no built-in request authentication, which makes it a weaker target for SSRF-style attacks. Oracle Linux 9's `cloud-init` and Oracle Cloud Agent both support IMDSv2 by default, so it is safe to disable the legacy `/v1` endpoint immediately after the instances come up. This uses the OCI CLI you already configured in Task 4 and Task 5 — no playbook changes are required.
+1. From your local computer, copy the cluster SSH private key from the bootstrap host. Replace `<bootstrap-login-key>` with the filename of the private key that you used to sign in to the bootstrap instance. Do not use `olvm-cluster-id_rsa` as the bootstrap login key because that is the file you are downloading.
+
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>scp -i "$HOME\.ssh\<bootstrap-login-key>" "opc@<bootstrap-public-ip>:~/.ssh/id_rsa" "$HOME\.ssh\olvm-cluster-id_rsa"</copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
+
+    ```bash
+    <copy>scp -i ~/.ssh/<bootstrap-login-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa ~/.ssh/olvm-cluster-id_rsa</copy>
+    ```
+
+2. Copy the cluster SSH public key:
+
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>scp -i "$HOME\.ssh\<bootstrap-login-key>" "opc@<bootstrap-public-ip>:~/.ssh/id_rsa.pub" "$HOME\.ssh\olvm-cluster-id_rsa.pub"</copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
+
+    ```bash
+    <copy>scp -i ~/.ssh/<bootstrap-login-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa.pub ~/.ssh/olvm-cluster-id_rsa.pub</copy>
+    ```
+
+3. Verify that you can SSH to the OLVM manager from your local machine:
+
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@<olvm-public-ip> "hostname -f"</copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
+
+    ```bash
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip> "hostname -f"</copy>
+    ```
+
+4. Add an ingress rule to allow HTTPS access to the OLVM Administration Portal from your local browser. Navigate using this path:
+
+    **MENU -> Networking -> Virtual cloud networks -> OLV-VCN -> Subnets -> Public Subnet -> Security -> Default Security List -> Security Rules -> Add Ingress Rules**
+
+    **Select Default Security List for OLV-VCN**. If two entries appear with the same name, select the one created most recently.
+
+    Enter the following values:
+
+    | Field | Value |
+    |---|---|
+    | Source CIDR | `0.0.0.0/0` |
+    | IP Protocol | TCP |
+    | Destination Port Range | `443` |
+    | Description | `Allow HTTPS access to OLVM Administration Portal` |
+
+    For a more restrictive rule, use your workstation public IP address with `/32` instead of `0.0.0.0/0`.
+
+    - Click **Add Ingress Rules**
+
+    > **Note:** OCI security list changes take effect immediately — no reboot is required.
+
+    ![olv-vcn](./images/olvcn.png "Show olv-vcn")
+
+    ![olv-vcn Ingress](./images/olvcn-ingress.png "Show olv-vcn Ingress")
+
+5. Connect to `olvm` as `oracle`.
+
+    In Windows PowerShell, run:
+
+    ```powershell
+    <copy>ssh -i "$HOME\.ssh\olvm-cluster-id_rsa" oracle@<olvm-public-ip></copy>
+    ```
+
+    In macOS Terminal or a Linux terminal, run:
+
+    ```bash
+    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
+    ```
+
+6. From the `olvm` terminal, verify passwordless SSH to `olkvm01`:
+
+    ```bash
+    <copy>ssh olkvm01 hostname -f</copy>
+    ```
+
+7. Verify passwordless SSH to `olkvm02`:
+
+    ```bash
+    <copy>ssh olkvm02 hostname -f</copy>
+    ```
+
+    ![Verified connections](./images/verified-connections.png "Show Verified connections")
+
+8. After you confirm SSH access to `olvm` and both KVM hosts, return to the bootstrap instance and enforce Instance Metadata Service Version 2 (IMDSv2) only on all three deployed instances.
+
+    > **Why:** OCI instances accept both the legacy `/v1` and the `/v2` Instance Metadata Service endpoints by default. IMDSv1 has no built-in request authentication, which makes it more vulnerable to SSRF-style attacks. Oracle Linux 8 platform images support IMDSv2. Because you have now verified access to all three hosts, you can safely disable the legacy `/v1` endpoint. This command uses the OCI CLI already configured on the bootstrap instance and does not reboot the instances.
 
     ```bash
     <copy>for name in olvm olkvm01 olkvm02; do
@@ -392,9 +489,7 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
     sleep 60</copy>
     ```
 
-    > **Note:** `--force` skips the interactive confirmation prompt on `oci compute instance update`. Updating `instance-options` is a lightweight metadata change — it does not reboot or restart the instance.
-
-10. Verify that each instance now enforces IMDSv2 only:
+9. Verify that each instance now enforces IMDSv2 only:
 
     ```bash
     <copy>for name in olvm olkvm01 olkvm02; do
@@ -420,72 +515,7 @@ The Ansible provisioning playbook creates OCI VLAN resources to provide the OLVM
 
     If any instance shows `false` or `null`, re-run the update command in the previous step for that instance name.
 
-## Task 7: Verify and Access Deployed Instances
-
-1. From a local terminal copy the cluster SSH private key from the bootstrap host:
-
-    ```bash
-    <copy>scp -i ~/.ssh/<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa ~/.ssh/olvm-cluster-id_rsa</copy>
-    ```
-
-2. Copy the cluster SSH public key:
-
-    ```bash
-    <copy>scp -i ~/.ssh/<your-key> opc@<bootstrap-public-ip>:~/.ssh/id_rsa.pub ~/.ssh/olvm-cluster-id_rsa.pub</copy>
-    ```
-
-3. Verify that you can SSH to the OLVM manager from your local machine:
-
-    ```bash
-    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip> "hostname -f"</copy>
-    ```
-
-4. Add an ingress rule to allow HTTPS access to the OLVM Administration Portal from your local browser. Navigate using this path:
-
-    **OLV-VCN -> Subnets -> Public Subnet -> Security -> Default Security List -> Security Rules -> Add Ingress Rules**
-
-    **Select Default Security List for OLV-VCN**. If two entries appear with the same name, select the one created most recently.
-
-    Enter the following values:
-
-    | Field | Value |
-    |---|---|
-    | Source CIDR | `0.0.0.0/0` |
-    | IP Protocol | TCP |
-    | Destination Port Range | `443` |
-    | Description | `Allow HTTPS access to OLVM Administration Portal` |
-
-    For a more restrictive rule, use your workstation public IP address with `/32` instead of `0.0.0.0/0`.
-
-    - Click **Add Ingress Rules**
-
-    > **Note:** OCI security list changes take effect immediately — no reboot is required.
-
-    ![olv-vcn](./images/olvcn.png "Show olv-vcn")
-
-    ![olv-vcn Ingress](./images/olvcn-ingress.png "Show olv-vcn Ingress")
-
-5. Connect to `olvm` as `oracle`.
-
-    ```bash
-    <copy>ssh -i ~/.ssh/olvm-cluster-id_rsa oracle@<olvm-public-ip></copy>
-    ```
-
-6. From the `olvm` terminal, verify passwordless SSH to `olkvm01`:
-
-    ```bash
-    <copy>ssh olkvm01 hostname -f</copy>
-    ```
-
-7. Verify passwordless SSH to `olkvm02`:
-
-    ```bash
-    <copy>ssh olkvm02 hostname -f</copy>
-    ```
-
-    ![Verified connections](./images/verified-connections.png "Show Verified connections")
-
-8. After you confirm SSH access to `olvm` and both KVM hosts, you are ready to terminate the bootstrap instance in the next task. **You can skip the Terminate task for later.**
+10. After the IMDSv2 verification succeeds, you are ready to terminate the bootstrap instance in the next task. You can skip the Terminate task for later if you intentionally want to retain the bootstrap instance for troubleshooting.
 
 ## Task 8: Terminate the Bootstrap Instance
 
