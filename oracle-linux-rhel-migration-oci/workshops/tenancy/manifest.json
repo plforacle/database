@@ -1,0 +1,50 @@
+{
+  "workshoptitle": "Migrate Red Hat Enterprise Linux to Oracle Linux on OCI",
+  "help": "livelabs-help-linux_us@oracle.com",
+  "variables": [
+    "../../variables/variables.json"
+  ],
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "description": "Review the complete migration journey, architecture, prerequisites, and success criteria.",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Lab 1: Acquire and Import the RHEL Source Image",
+      "description": "Download an authorized RHEL KVM guest image and import it into OCI.",
+      "filename": "../../acquire-import-rhel/acquire-import-rhel.md"
+    },
+    {
+      "title": "Lab 2: Launch and Baseline the RHEL Workload",
+      "description": "Launch an actual RHEL source VM, deploy Apache, and capture baseline evidence.",
+      "filename": "../../launch-baseline-rhel/launch-baseline-rhel.md"
+    },
+    {
+      "title": "Lab 3: Assess Readiness and Protect the Source",
+      "description": "Run migration readiness checks and create a boot-volume recovery point.",
+      "filename": "../../assess-protect-source/assess-protect-source.md"
+    },
+    {
+      "title": "Lab 4: Migrate to Oracle Linux",
+      "description": "Convert RHEL 9.8 to Oracle Linux 9.8 in place and reboot into RHCK.",
+      "filename": "../../migrate-to-oracle-linux/migrate-to-oracle-linux.md"
+    },
+    {
+      "title": "Lab 5: Manage and Patch Oracle Linux",
+      "description": "Configure OCI management and examine Ksplice live patching.",
+      "filename": "../../manage-patch-oracle-linux/manage-patch-oracle-linux.md"
+    },
+    {
+      "title": "Lab 6: Validate and Clean Up",
+      "description": "Compare before-and-after evidence, validate the workload, and remove resources.",
+      "filename": "../../validate-cleanup/validate-cleanup.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Review common solutions and options for assistance.",
+      "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-freetier.md"
+    }
+  ]
+}
+
