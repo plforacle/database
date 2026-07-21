@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and remove every workshop resource.
+A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and remove every workshop resource. The final validation gate is a checklist that must pass before you declare the migration successful.
 
 ### Objectives
 
@@ -13,6 +13,17 @@ In this lab, you will:
 - Validate the workload, services, networking, firewall, and SELinux.
 - Review package-migration exceptions.
 - Remove OCI resources and Red Hat registration artifacts.
+
+### Prerequisites
+
+Before beginning this lab, confirm that you have:
+
+- Completed Lab 5.
+- SSH access to the managed Oracle Linux 9.8 instance.
+- The RHEL baseline evidence bundle from Lab 2.
+- A healthy post-migration Apache workload.
+- Permission to unregister services and delete every OCI resource created by the workshop.
+- Approval to perform the cleanup tasks, which permanently delete the workshop resources.
 
 Estimated Lab Time: 35 minutes
 
@@ -269,7 +280,7 @@ Estimated Lab Time: 35 minutes
 
 7. Delete the OS Management Hub profile if it was created only for this workshop.
 
-8. Delete `ol-migrate-nsg` and the VCN resources created by the VCN wizard.
+8. Delete the VCN resources created by the VCN wizard.
 
 9. Delete the `ol-migrate-lab` compartment when your organization permits it.
 

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-You are ready to convert the RHEL source VM in place. The migration script replaces distribution release packages and repositories, synchronizes packages with Oracle Linux 9.8, installs Oracle Linux RHCK, and creates detailed migration reports.
+You are ready to convert the RHEL source VM in place. The migration script replaces distribution release packages and repositories, synchronizes packages with Oracle Linux 9.8, installs the Red Hat Compatible Kernel (RHCK), and creates detailed migration reports. RHCK is an Oracle Linux kernel designed for compatibility with applications that run on the corresponding RHEL kernel.
 
 The VM remains the same OCI instance. Its operating-system identity, repositories, packages, and kernel change.
 
@@ -14,6 +14,16 @@ In this lab, you will:
 - Review package and repository changes.
 - Reboot into an Oracle Linux RHCK.
 - Confirm that SSH and the workload survived the conversion.
+
+### Prerequisites
+
+Before beginning this lab, confirm that you have:
+
+- Completed Lab 3 and passed its migration checkpoint.
+- A dry run with no unresolved migration blocker.
+- A verified, unchanged migration script in `$HOME/ol-migration`.
+- An `ol-migrate-before-conversion` boot-volume backup in the Available state.
+- A healthy Apache workload and working SSH access to the RHEL source VM.
 
 Estimated Lab Time: 40 minutes
 

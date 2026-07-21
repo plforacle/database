@@ -6,6 +6,8 @@ The converted VM originated from a RHEL custom image, so it might not contain th
 
 Ksplice applies selected critical security updates to a supported running kernel. On Oracle Linux, the Enhanced Client can also patch Ksplice-aware `glibc` and OpenSSL libraries. You must still keep on-disk packages current, and some updates still require conventional maintenance.
 
+Oracle Linux provides two kernel choices. RHCK is the Red Hat Compatible Kernel used for the core migration path. The Unbreakable Enterprise Kernel (UEK) is Oracle's optimized kernel for Oracle Linux. OS Management Hub is the OCI service used to monitor and manage operating-system updates across registered instances.
+
 ### Objectives
 
 In this lab, you will:
@@ -15,6 +17,16 @@ In this lab, you will:
 - Register the converted VM with OS Management Hub.
 - Install Ksplice for an OCI bring-your-own-image instance.
 - Distinguish live updates from on-disk package updates.
+
+### Prerequisites
+
+Before beginning this lab, confirm that you have:
+
+- Completed Lab 4.
+- SSH access to the converted Oracle Linux 9.8 instance.
+- A healthy Apache workload after conversion and reboot.
+- Permission to configure OCI Identity and Access Management policies and OS Management Hub resources.
+- Outbound network access from the instance to Oracle repositories and OCI services.
 
 Estimated Lab Time: 35 minutes
 

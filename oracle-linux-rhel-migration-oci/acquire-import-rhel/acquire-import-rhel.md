@@ -4,16 +4,28 @@
 
 OCI does not provide a directly selectable RHEL platform image in the standard image list. For the certified bring-your-own-image path, obtain a supported RHEL KVM guest image from Red Hat, upload it to Object Storage, and import it as a custom image.
 
+QCOW2, which stands for QEMU Copy-On-Write version 2, is a virtual disk file format commonly used with QEMU (Quick Emulator), an open source machine emulator and virtualizer, and KVM (Kernel-based Virtual Machine), the Linux kernel's built-in virtualization technology. A Red Hat Enterprise Linux (RHEL) KVM guest image is a bootable QCOW2 virtual disk that contains a preinstalled RHEL operating system and cloud initialization components. It is not an installation ISO. Oracle Cloud Infrastructure (OCI) imports this virtual disk as a custom image and uses it to create the boot volume for a new RHEL Compute instance.
+
 This lab uses RHEL 9.8 for x86_64. The OCI documentation requires the KVM guest image, QCOW2 image type, and paravirtualized launch mode for this workflow.
 
 ### Objectives
 
 In this lab, you will:
 
-- Download an authorized RHEL 9.8 KVM guest image.
+- Download and verify an authorized RHEL 9.8 KVM guest image.
 - Create a dedicated OCI compartment and Object Storage bucket.
 - Upload the QCOW2 image to OCI.
 - Import and verify a compatible custom image.
+
+### Prerequisites
+
+Before beginning this lab, confirm that you have:
+
+- Completed the workshop introduction and reviewed the architecture and conventions.
+- An OCI tenancy with permission to create compartments, Object Storage buckets, and custom Compute images.
+- A Red Hat account with access to the RHEL 9.8 x86_64 KVM guest image and an entitlement authorized for this workshop VM.
+- At least 15 GB of temporary local storage and a reliable internet connection.
+- Access to an x86_64 OCI VM shape certified for the selected RHEL release.
 
 Estimated Lab Time: 60 to 90 minutes
 
@@ -41,31 +53,37 @@ Estimated Lab Time: 60 to 90 minutes
     - Version: 9.8
     - Image: KVM Guest Image
 
-3. Download the QCOW2 image to your local computer.
+3. Download `rhel-9.8-x86_64-kvm.qcow2` to your local computer.
 
     Do not select the Boot ISO, Binary DVD ISO, or source image. OCI's documented RHEL workflow requires the KVM guest image.
 
-4. Record the exact filename and file size.
+4. Confirm that the downloaded file is approximately 1.29 GB. The exact published file size for the tested image is 1,383,071,744 bytes.
 
-5. If Red Hat provides a checksum beside the download, calculate the local SHA-256 checksum and compare it with the published value.
+5. Calculate the local SHA-256 checksum and compare it with the value published by Red Hat.
 
     On Windows PowerShell, run:
 
     ```powershell
-    <copy>
-    Get-FileHash -Algorithm SHA256 <path-to-rhel-qcow2>
-    </copy>
+    <copy>Get-FileHash -Algorithm SHA256 "$env:USERPROFILE\Downloads\rhel-9.8-x86_64-kvm.qcow2"</copy>
     ```
 
     On macOS or Linux, run:
 
     ```bash
-    <copy>
-    sha256sum <path-to-rhel-qcow2>
-    </copy>
+    <copy>sha256sum ~/Downloads/rhel-9.8-x86_64-kvm.qcow2</copy>
     ```
 
+6. Confirm that the calculated checksum matches the tested Red Hat-published value:
+
+    ```text
+    b99091f1b4489111004d449398d9cc6aa024cb48b02c72fa99e6ca1fc48a7e4e
+    ```
+
+    Letter case does not matter. Do not continue if the checksum differs.
+
 ## Task 3: Create the workshop compartment
+
+A compartment keeps the workshop resources together and makes them easier to find and remove later.
 
 1. In the OCI Console, open the navigation menu and select **Identity & Security**, then **Compartments**.
 
@@ -82,6 +100,8 @@ Estimated Lab Time: 60 to 90 minutes
 5. Wait until the compartment is available, then select it and record its name.
 
 ## Task 4: Create a private Object Storage bucket
+
+An Object Storage bucket holds files as objects. You use a private bucket so the licensed RHEL image is not publicly accessible.
 
 1. Open the navigation menu and select **Storage**, then **Buckets**.
 
@@ -113,13 +133,15 @@ Estimated Lab Time: 60 to 90 minutes
 
 ## Task 6: Import the custom image
 
+A custom image is the reusable OCI Compute image created from the uploaded QCOW2 virtual disk. You will use it in Lab 2 to launch the RHEL source VM.
+
 1. Open the navigation menu and select **Compute**, then **Custom images**.
 
 2. Select the `ol-migrate-lab` compartment and then select **Import image**.
 
-3. Enter `ol-migrate-rhel-9-8` for the image name.
+3. Enter `ol-migrate-rhel-9.8` for the image name.
 
-4. Select **Linux** as the operating system.
+4. Select **RHEL** as the operating system. After import, OCI might display the operating system as **Custom** because the image originated outside OCI.
 
 5. Select **Import from an Object Storage bucket**.
 
@@ -138,11 +160,11 @@ Estimated Lab Time: 60 to 90 minutes
 
 ## Task 7: Configure and verify shape compatibility
 
-1. Open the `ol-migrate-rhel-9-8` custom image.
+1. Open the `ol-migrate-rhel-9.8` custom image.
 
 2. Under **Resources**, select **Compatible shapes**.
 
-3. Add `VM.Standard.E5.Flex` if it is not already listed and the current Red Hat certification catalog supports it.
+3. Confirm that VM.Standard.E5.Flex, or another compatible x86_64 VM shape available in your region, appears in the compatible-shapes list.
 
 4. Confirm the following checkpoint:
 
@@ -151,6 +173,8 @@ Estimated Lab Time: 60 to 90 minutes
     - Image type is QCOW2.
     - Launch mode is paravirtualized.
     - At least one tested x86_64 flexible shape is compatible.
+
+5. Continue to Lab 2 to create the VCN, launch the RHEL source instance, and validate SSH access. Lab 1 is complete when the custom image is available and its compatibility settings are confirmed.
 
 ## Task 8: Review your knowledge
 

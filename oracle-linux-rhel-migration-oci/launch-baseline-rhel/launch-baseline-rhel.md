@@ -2,17 +2,29 @@
 
 ## Introduction
 
-In this lab, you launch the imported custom image as an actual RHEL VM. You then register and update RHEL, deploy an Apache workload, and capture evidence that will be compared after the migration.
+In this lab, you create a basic OCI network and launch the imported custom image as an actual RHEL VM. You then register and update RHEL, deploy an Apache web server, and capture evidence that will be compared after the migration.
+
+The VCN wizard creates the VCN, public and private subnets, gateways, route tables, and security lists for you. The RHEL VM uses the public subnet so you can connect to it with SSH. A security list acts as a virtual firewall for resources in the subnet.
 
 ### Objectives
 
 In this lab, you will:
 
-- Create a restricted OCI network.
+- Create a basic OCI network.
 - Launch and connect to the RHEL source VM.
 - Register and update the RHEL system securely.
 - Deploy an Apache workload.
 - Capture a repeatable source-system baseline.
+
+### Prerequisites
+
+Before beginning this lab, confirm that you have:
+
+- Completed Lab 1.
+- An `ol-migrate-rhel-9.8` custom image in the Available state.
+- Permission to create networking resources, Compute instances, and boot volumes in the `ol-migrate-lab` compartment.
+- An SSH key pair available on your local computer.
+- A Red Hat entitlement that can register and update the temporary RHEL source VM.
 
 Estimated Lab Time: 35 minutes
 
@@ -33,20 +45,26 @@ Estimated Lab Time: 35 minutes
 
 5. Complete the wizard.
 
-6. Create a network security group named `ol-migrate-nsg` in the VCN.
+6. After the wizard completes, open `ol-migrate-vcn`.
 
-7. Determine your current public client IP address using an approved method from your organization.
+7. Open the default security list for the VCN as follows:
+    - From ol-migrate-vcn page, select **Security -> Default Security List for ol-migrate-vcn -> Security rules**"
 
-8. Add stateful ingress rules to the network security group:
+8. Confirm that an existing stateful ingress rule permits TCP destination port 22. This rule enables SSH access to the RHEL VM.
 
-    - TCP port 22 from `<your-public-ip>/32`
-    - TCP port 80 from `<your-public-ip>/32`
+9. Add a stateful ingress rule with the following values so you can test the Apache web page by clicking the **Add Ingress Rules** button:
 
-    Do not allow SSH from `0.0.0.0/0`.
+    - Source type: **CIDR**
+    - Source CIDR: `0.0.0.0/0`
+    - IP protocol: **TCP**
+    - Destination port range: `80`
+    - Description: `Temporary workshop HTTP access`
+
+    > **Important:** `0.0.0.0/0` permits HTTP connections from any internet address. Use this simple rule only for the temporary workshop VM. Lab 6 removes the network and its rules. In production, restrict the source to approved addresses.
 
 ## Task 2: Launch the RHEL source VM
 
-1. Open **Compute**, then **Instances**, and select **Create instance**.
+1. From OCI Menu Open **Compute**, then **Instances**, and select **Create instance**.
 
 2. Enter `ol-migrate-rhel-source` for the instance name.
 
@@ -54,7 +72,7 @@ Estimated Lab Time: 35 minutes
 
 4. Under **Image and shape**, select **Change image**.
 
-5. Select **My images**, then **Custom images**, and choose `ol-migrate-rhel-9-8`.
+5. Select **My images**, then **Custom images**, and choose `ol-migrate-rhel-9.8`.
 
 6. Select `VM.Standard.E5.Flex` or the tested compatible fallback shape.
 
@@ -62,25 +80,29 @@ Estimated Lab Time: 35 minutes
 
 8. Select the `ol-migrate-vcn` VCN and its public subnet.
 
-9. Assign a public IPv4 address and attach `ol-migrate-nsg`.
+9. for turn on **Public IPv4 address assignment** to assign a public IPv4 address.
 
-10. Add your SSH public key. Save the corresponding private key securely.
+10. Under section **Add SSH keys** add your SSH public key. Save the corresponding private key securely.
 
-11. Set the boot volume to at least 50 GB or the minimum required by the imported image.
+11. Select **Create** and wait until the instance state is Running.
 
-12. Select **Create** and wait until the instance state is Running.
-
-13. Record the public IP address.
+12. Record the public IP address.
 
 ## Task 3: Connect and inspect the imported system
 
-1. From your local terminal, connect using the default RHEL image user:
+1. From your local terminal, connect using the default RHEL image user. If your SSH agent or default SSH key is configured, run:
 
     ```bash
-    <copy>
-    ssh -i <private-key-path> cloud-user@<public-ip>
-    </copy>
+    <copy>ssh cloud-user@<public-ip></copy>
     ```
+
+    If you must identify a specific private key, run:
+
+    ```bash
+    <copy>ssh -i "<private-key-path>" cloud-user@<public-ip></copy>
+    ```
+
+    Replace `<private-key-path>` with the actual path to the private key. Do not enter the placeholder literally.
 
 2. Accept the host key only after confirming that the IP address matches your OCI instance.
 
@@ -114,76 +136,65 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-## Task 4: Register and update RHEL
+## Task 4: Register and prepare RHEL
 
 1. Register the system interactively:
 
     ```bash
-    <copy>
-    sudo subscription-manager register
-    </copy>
+    <copy>sudo subscription-manager register</copy>
     ```
 
     Enter Red Hat credentials only at the protected terminal prompts. Do not place credentials on the command line.
 
-2. If your organization does not use Simple Content Access and no entitlement is attached, run:
+2. Confirm that the system is registered:
 
     ```bash
-    <copy>
-    sudo subscription-manager attach --auto
-    </copy>
+    <copy>sudo subscription-manager identity</copy>
     ```
 
-3. Enable the RHEL 9 BaseOS and AppStream repositories:
+3. Confirm that the RHEL BaseOS and AppStream repositories are available:
 
     ```bash
-    <copy>
-    sudo subscription-manager repos \
-      --enable=rhel-9-for-x86_64-baseos-rpms \
-      --enable=rhel-9-for-x86_64-appstream-rpms
-    </copy>
+    <copy>sudo dnf repolist</copy>
     ```
 
-4. Verify repository access:
+    Verify that the output includes repositories whose IDs contain `baseos` and `appstream`. These repositories provide the operating-system and application packages used in this workshop.
+
+4. Update the source system:
 
     ```bash
-    <copy>
-    sudo dnf repolist
-    sudo dnf makecache
-    </copy>
+    <copy>sudo dnf update -y</copy>
     ```
 
-5. Update the source system:
+5. Reboot so the newest installed source kernel is running:
 
     ```bash
-    <copy>
-    sudo dnf update -y
-    </copy>
+    <copy>sudo reboot</copy>
     ```
 
-6. Reboot so the newest installed source kernel is running:
+    The SSH session closes when the VM restarts.
+
+6. Wait for the instance to return to the Running state, then reconnect:
 
     ```bash
-    <copy>
-    sudo reboot
-    </copy>
+    <copy>ssh cloud-user@<public-ip></copy>
     ```
 
-7. Reconnect after the instance returns to Running.
-
-8. Verify the current kernel and ensure no package transaction remains incomplete:
+7. Verify the running kernel and repository access:
 
     ```bash
-    <copy>
-    uname -r
-    sudo dnf history list | head
-    sudo rpm --verifydb
-    </copy>
+    <copy>uname -r</copy>
+    ```
+
+    ```bash
+    <copy>sudo dnf repolist</copy>
     ```
 
 ## Task 5: Deploy the workshop workload
 
 1. Install the required packages:
+
+    This installs the Apache web server, the RHEL firewall service, a web-testing command, and SELinux management tools.
 
     ```bash
     <copy>
@@ -192,6 +203,8 @@ Estimated Lab Time: 35 minutes
     ```
 
 2. Create the static application page:
+
+    This command creates a simple test webpage. The `MIGRATION_WORKLOAD_OK` marker makes the page easy to verify before and after migration.
 
     ```bash
     <copy>
@@ -211,6 +224,8 @@ Estimated Lab Time: 35 minutes
 
 3. Enable the guest firewall and permit HTTP:
 
+    These commands start the firewall, open the standard HTTP port, and save the rule so it remains active after a reboot.
+
     ```bash
     <copy>
     sudo systemctl enable --now firewalld
@@ -221,6 +236,8 @@ Estimated Lab Time: 35 minutes
 
 4. Restore the default SELinux context and start Apache:
 
+    The first command applies the correct SELinux security labels to the webpage. The second starts Apache now and automatically after future reboots.
+
     ```bash
     <copy>
     sudo restorecon -Rv /var/www/html
@@ -230,6 +247,8 @@ Estimated Lab Time: 35 minutes
 
 5. Test locally:
 
+    This requests the webpage directly from the RHEL VM. A successful response confirms that Apache is serving the page locally.
+
     ```bash
     <copy>
     curl --fail http://127.0.0.1/
@@ -238,7 +257,13 @@ Estimated Lab Time: 35 minutes
 
 6. Open `http://<public-ip>/` in your browser and confirm that `MIGRATION_WORKLOAD_OK` appears.
 
-## Task 6: Create the baseline evidence bundle
+    This final test confirms that the webpage is reachable through the OCI network, security list, operating-system firewall, and Apache service.
+
+    >**Note**: Wait about 30 seconds for the security rule to take effect, then open http://<public-ip>/. If the page does not load, refresh the browser and confirm that the TCP port 80 ingress rule is attached to the instance’s subnet.
+
+## Task 6: Record the RHEL system before migration
+
+In this task, you record important information about the RHEL system and its Apache workload before migration. You will compare these results with the Oracle Linux system after migration to confirm that the operating system changed and the workload still functions correctly.
 
 1. Create an evidence directory:
 

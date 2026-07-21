@@ -2,9 +2,11 @@
 
 ## Introduction
 
-Migration begins with assessment and a recoverable checkpoint. In this lab, you inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and create a boot-volume backup before changing the operating system.
+Migration begins with assessment and a recoverable checkpoint. In this lab, you inspect repositories, packages, disk space, services, and the running kernel. You then run the specific migration script version tested for this workshop in dry-run mode and create a boot-volume backup before changing the operating system. Using a specific version and verifying its SHA-256 checksum ensures that every participant runs the same tested script. A dry run checks migration readiness and reports problems without performing the operating-system conversion.
 
 The migration script is maintained in an Oracle-owned GitHub repository, but the repository states that the scripts are community-based and are not officially supported by Oracle.
+
+Before running migration commands that modify the operating system, you must pass the migration checkpoint in this lab. This confirms that readiness checks succeeded, the workload is healthy, and an available boot-volume backup provides a recovery point.
 
 ### Objectives
 
@@ -15,6 +17,16 @@ In this lab, you will:
 - Run a non-changing migration dry run.
 - Create and verify a boot-volume backup.
 - Document the rollback decision point.
+
+### Prerequisites
+
+Before beginning this lab, confirm that you have:
+
+- Completed Lab 2.
+- SSH access to the running RHEL 9.8 x86_64 source VM.
+- A healthy Apache workload that returns `MIGRATION_WORKLOAD_OK`.
+- The RHEL baseline evidence bundle created in Lab 2.
+- Permission to create and inspect boot-volume backups in OCI.
 
 Estimated Lab Time: 30 minutes
 
@@ -31,7 +43,9 @@ Estimated Lab Time: 30 minutes
 
     Continue only when the source is RHEL 9.8 on x86_64.
 
-2. Verify that the newest installed kernel is running:
+2. Confirm that RHEL is using the newest installed kernel.
+
+    RHEL can keep more than one kernel. A system update may install a newer kernel, but RHEL does not use it until the VM restarts. The following commands show the kernel running now, all installed kernels from oldest to newest, and the kernel selected for the next restart:
 
     ```bash
     <copy>
@@ -41,7 +55,7 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-    If the default or newest kernel differs from the running kernel, reboot and repeat this check.
+    Compare the three results. The version shown by `uname -r` should match the newest installed `kernel-core` version and the version shown in the default kernel path. Older installed kernels are normal and provide fallback options. If the newest version does not match the running version, reboot the VM, reconnect, and repeat this step.
 
 3. Check disk space and the RPM database:
 
@@ -130,6 +144,8 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
+    After reviewing the help text, press the letter **q** to exit the **less** viewer and return to the shell prompt.
+
 ## Task 3: Run the migration dry run
 
 1. Run the non-changing assessment for an Oracle Linux 9.8 RHCK target:
@@ -143,7 +159,11 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-2. Review the final status and the run directory reported by the script.
+2. Review the final dry-run summary.
+
+    Confirm that the script completed its assessment without converting the operating system. Look for messages marked as errors, failures, or blockers. A warning does not always prevent migration, but you must understand and resolve any warning that affects repositories, packages, disk space, or the running kernel before continuing.
+
+    Record the run directory displayed near the end of the output. The directory contains reports and snapshots from this assessment and helps you investigate any reported problem.
 
 3. Locate the newest migration state directory and log:
 
@@ -154,14 +174,27 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-4. Do not continue if the dry run reports an unresolved error involving:
+4. Decide whether it is safe to continue.
 
-    - Unsupported source release or architecture
-    - Cross-major target selection
-    - Broken RPM database
-    - Insufficient disk space
-    - A source kernel newer than the running kernel
-    - Unreachable source or Oracle repositories
+    Do not continue if the dry run reports an unresolved error or blocker. Correct the problem and repeat the dry run before proceeding. Common blockers include:
+
+    The script reports problems in the terminal while the dry run runs and records the same information in the log identified in Step 3. The following command opens the newest migration log:
+
+    ```bash
+    <copy>
+    LATEST_LOG=$(sudo ls -1t /var/log/migrate-to-oracle-linux/*.log | head -1)
+    sudo less "$LATEST_LOG"
+    </copy>
+    ```
+
+    In the `less` viewer, enter `/ERROR` and press Enter to search for errors. You can also search for `/WARN` and `/FAIL`. Press the letter **q** to close the log and return to the shell prompt. The examples below are possible problems, not a separate list or screen that you must locate.
+
+    - A RHEL version or processor architecture that the script does not support.
+    - A target with a different major version, such as RHEL 8 to Oracle Linux 9.
+    - A damaged or inconsistent RPM package database.
+    - Insufficient free disk space.
+    - A newer kernel that is installed but not currently running.
+    - RHEL or Oracle Linux software repositories that the VM cannot reach.
 
 ## Task 4: Record Red Hat registration identity
 
@@ -178,7 +211,7 @@ Estimated Lab Time: 30 minutes
 
 ## Task 5: Create the pre-migration recovery point
 
-1. Flush filesystem changes and stop the workshop application:
+1. Write pending filesystem changes to disk, then temporarily stop the Apache web server before creating the boot-volume backup:
 
     ```bash
     <copy>
@@ -189,15 +222,20 @@ Estimated Lab Time: 30 minutes
 
 2. In the OCI Console, open the `ol-migrate-rhel-source` instance.
 
-3. Under **Resources**, open the boot volume.
+3. On the instance details page, select the **Storage** tab. Under **Boot volumes**, select the boot-volume name attached to the instance.
 
-4. Select **Create manual backup**.
+4. On the boot-volume details page, select **Create backup**.
 
-5. Enter `ol-migrate-before-conversion` as the backup name and create the backup.
+5. Enter the following values:
 
-6. Monitor the backup until its state becomes Available.
+    - Name: `ol-migrate-before-conversion`
+    - Backup type: **Full backup**
 
-7. Return to the SSH session and restart the application:
+6. Select **Create boot volume backup**.
+
+7. Open the boot volume's **Backups** tab and wait until the backup state becomes Available.
+
+8. Return to the SSH session and restart Apache, then verify that the workshop webpage responds:
 
     ```bash
     <copy>
@@ -206,7 +244,7 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-8. Record the backup OCID and creation time in your workshop notes.
+9. Record the backup OCID and creation time in your workshop notes.
 
 ## Task 6: Pass the migration gate
 

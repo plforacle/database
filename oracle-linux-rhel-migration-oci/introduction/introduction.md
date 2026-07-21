@@ -34,6 +34,17 @@ This workshop requires:
 
 > **Important:** Do not paste Red Hat passwords, activation keys, OCI private keys, or other secrets into workshop fields, screenshots, or shared terminals.
 
+## Key Terms
+
+- **Compartment:** An OCI container used to organize resources and control access to them.
+- **Object Storage bucket:** A private OCI storage location used in this workshop to hold the RHEL image file.
+- **Custom image:** A reusable Compute image imported from outside OCI and used to create a VM boot volume.
+- **Virtual cloud network (VCN):** A private network that you create inside OCI.
+- **Subnet:** A smaller address range inside a VCN where OCI resources connect.
+- **Boot volume:** The virtual disk that contains the operating system used to start a Compute instance.
+- **In-place migration:** Changing the operating system on the existing VM instead of creating a replacement VM.
+- **Checkpoint:** A required set of successful checks that you complete before continuing.
+
 ## Workshop Architecture
 
 You will create the following flow:
@@ -63,7 +74,7 @@ Cleanup
 - Resource names use the prefix `ol-migrate`.
 - Run Linux commands as `cloud-user` unless a step explicitly uses `sudo`.
 - Replace values enclosed in angle brackets, such as `<public-ip>`, with values from your environment.
-- Commands that change the operating system appear only after a required checkpoint.
+- Complete each required checkpoint before continuing to operations that modify the system.
 - A successful migration requires application and system evidence, not only a changed `/etc/os-release` file.
 
 ## Learn More
@@ -77,4 +88,3 @@ Cleanup
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
 - **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
-
