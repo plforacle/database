@@ -29,7 +29,13 @@ Estimated Lab Time: 40 minutes
 
 ## Task 1: Reconfirm the migration gate
 
-1. Connect to the RHEL source VM and enter the migration working directory:
+1. Connect to the RHEL source VM:
+
+    ```bash
+    <copy>ssh -i "<private-key-path>" cloud-user@<public-ip></copy>
+    ```
+
+2. Enter the migration working directory:
 
     ```bash
     <copy>
@@ -37,7 +43,7 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-2. Confirm the verified script remains unchanged:
+3. Confirm the verified script remains unchanged:
 
     ```bash
     <copy>
@@ -46,7 +52,7 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-3. Confirm the source and workload state:
+4. Confirm the source and workload state:
 
     ```bash
     <copy>
@@ -57,9 +63,9 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-4. In the OCI Console, confirm that the `ol-migrate-before-conversion` boot-volume backup is Available.
+5. In the OCI Console, confirm that the **ol-migrate-before-conversion** boot-volume backup is Available.
 
-5. Continue only when all checks pass.
+6. Continue only when **all checks pass**.
 
 ## Task 2: Execute the migration
 

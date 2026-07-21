@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The converted VM originated from a RHEL custom image, so it might not contain the Oracle Cloud Agent or Ksplice software included in current Oracle Linux platform images. In this lab, you install and verify the required management components, register the instance with OS Management Hub, and examine rebootless patching with Ksplice.
+The converted VM originated from a RHEL custom image, so it might not contain the Oracle Cloud Agent or Ksplice software included in current Oracle Linux platform images. In this lab, you check which management components are available, use OS Management Hub when the required Oracle Cloud Agent is available, and examine rebootless patching with Ksplice.
 
 Ksplice applies selected critical security updates to a supported running kernel. On Oracle Linux, the Enhanced Client can also patch Ksplice-aware `glibc` and OpenSSL libraries. You must still keep on-disk packages current, and some updates still require conventional maintenance.
 
@@ -13,8 +13,8 @@ Oracle Linux provides two kernel choices. RHCK is the Red Hat Compatible Kernel 
 In this lab, you will:
 
 - Compare RHCK and UEK choices.
-- Install and verify Oracle Cloud Agent.
-- Register the converted VM with OS Management Hub.
+- Check whether Oracle Cloud Agent is available for the converted custom image.
+- Register the converted VM with OS Management Hub when the required agent is available.
 - Install Ksplice for an OCI bring-your-own-image instance.
 - Distinguish live updates from on-disk package updates.
 
@@ -25,8 +25,9 @@ Before beginning this lab, confirm that you have:
 - Completed Lab 4.
 - SSH access to the converted Oracle Linux 9.8 instance.
 - A healthy Apache workload after conversion and reboot.
-- Permission to configure OCI Identity and Access Management policies and OS Management Hub resources.
 - Outbound network access from the instance to Oracle repositories and OCI services.
+
+The optional OS Management Hub tasks also require permission to configure OCI Identity and Access Management policies and OS Management Hub resources.
 
 Estimated Lab Time: 35 minutes
 
@@ -53,7 +54,7 @@ Estimated Lab Time: 35 minutes
 
     RHCK minimizes kernel change during the core migration path. UEK remains an available Oracle Linux choice for workloads that benefit from its features and certifications.
 
-## Task 2: Install and verify Oracle Cloud Agent
+## Task 2: Check for Oracle Cloud Agent
 
 1. Check whether Oracle Cloud Agent is installed:
 
@@ -63,7 +64,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-2. Query the package repository:
+2. If the agent is not installed, query the enabled package repositories:
 
     ```bash
     <copy>
@@ -71,7 +72,21 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-3. Install or update the agent:
+3. If the result is `Error: No matching Packages to list`, check whether an OCI-specific repository is available but disabled:
+
+    ```bash
+    <copy>
+    sudo dnf repolist --all | grep -i oci
+    </copy>
+    ```
+
+4. Follow the result that matches your system:
+
+    - If an approved OCI repository containing `oracle-cloud-agent` is listed but disabled, enable it according to your organization's repository policy, refresh the metadata, and query the package again.
+    - If no OCI repository is listed, Oracle Cloud Agent is not available from the configured repositories. Record the result, skip Tasks 3 and 4, and continue with Task 5.
+    - Do not download an Oracle Cloud Agent RPM from an unverified site. Oracle documentation directs users without access to the required Yum repository to obtain the installation file through Oracle Support.
+
+5. Only when `dnf info` displays an available Oracle Cloud Agent package, install it:
 
     ```bash
     <copy>
@@ -79,9 +94,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-    If the package is unavailable, stop this task and use the Oracle documentation's support path. Do not download an agent RPM from an unverified site.
-
-4. Enable and start the service:
+6. Enable and start the service:
 
     ```bash
     <copy>
@@ -90,7 +103,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-5. Verify the installed version and service state:
+7. Verify the installed version and service state:
 
     ```bash
     <copy>
@@ -102,7 +115,9 @@ Estimated Lab Time: 35 minutes
 
     OS Management Hub requires Oracle Cloud Agent 1.40 or later.
 
-## Task 3: Prepare OS Management Hub
+## Task 3: Prepare OS Management Hub when the agent is available
+
+Complete this optional task only when Task 2 confirms that Oracle Cloud Agent 1.40 or later is installed and active. Otherwise, continue with Task 5.
 
 1. In the OCI Console, open **Observability & Management**, then **OS Management Hub**.
 
@@ -125,7 +140,9 @@ Estimated Lab Time: 35 minutes
 
 7. Create the profile and wait until it is available.
 
-## Task 4: Register the converted instance
+## Task 4: Register the converted instance when the agent is available
+
+Complete this optional task only after successfully completing Tasks 2 and 3. Otherwise, continue with Task 5.
 
 1. In the OCI Console, open **Compute**, then **Instances**, and select `ol-migrate-rhel-source`.
 
@@ -217,7 +234,7 @@ Estimated Lab Time: 35 minutes
 
     If no updates are available, record that valid result. Do not downgrade the kernel to manufacture an update.
 
-## Task 6: Examine Enhanced Client capabilities
+## Task 6: Check the optional Enhanced Client capabilities
 
 1. Check whether the Ksplice Enhanced Client is available:
 
@@ -227,7 +244,13 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-2. If the package is available from the configured OCI repositories, install it:
+2. Follow the result that matches your system:
+
+    - If `dnf info` displays the `ksplice` package, continue with Step 3.
+    - If the result is `Error: No matching Packages to list`, record that the Enhanced Client is unavailable, skip Steps 3 through 5, and continue with Step 6.
+    - Do not add an unapproved repository or download the package from an unverified site.
+
+3. If the package is available from the configured OCI repositories, install it:
 
     ```bash
     <copy>
@@ -235,7 +258,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-3. List Ksplice-aware kernel and user-space targets:
+4. List Ksplice-aware kernel and user-space targets:
 
     ```bash
     <copy>
@@ -243,7 +266,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-4. Show applied updates:
+5. Show applied updates:
 
     ```bash
     <copy>
@@ -251,7 +274,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-5. Explain the difference:
+6. Explain the difference:
 
     - `uname -r` reports the kernel used at boot.
     - Ksplice reports the effective live-patched kernel state.
@@ -268,9 +291,9 @@ Estimated Lab Time: 35 minutes
 
     No. Ksplice live-patches selected supported components. Other updates, configuration changes, hardware operations, and on-disk maintenance can still require a reboot.
 
-3. Why did you install Oracle Cloud Agent manually?
+3. Why might Oracle Cloud Agent require a separate installation path?
 
-    The VM originated from a RHEL KVM guest custom image instead of an OCI Oracle Linux platform image.
+    The VM originated from a RHEL KVM guest custom image instead of an OCI Oracle Linux platform image. If the agent is not available from an approved configured repository, obtain it through the Oracle Support path or treat the OS Management Hub exercise as optional.
 
 ## Learn More
 
