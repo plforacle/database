@@ -152,6 +152,10 @@ A custom image is the reusable OCI Compute image created from the uploaded QCOW2
     - Image type: **QCOW2**
     - Launch mode: **Paravirtualized mode**
 
+    The screenshot shows the required import settings. Select your uploaded `.qcow2` KVM guest image in the **Object name** list. Do not select a RHEL DVD installer ISO, even if it appears in the bucket.
+
+    ![OCI Import image page with QCOW2 and Paravirtualized mode selected](images/import-image-settings.png)
+
 8. Select **Import image**.
 
 9. On the Custom images page, monitor the image until its state changes from **Importing** to **Available**.
@@ -162,7 +166,11 @@ A custom image is the reusable OCI Compute image created from the uploaded QCOW2
 
 1. Open the `ol-migrate-rhel-9.8` custom image.
 
-2. Under **Resources**, select **Compatible shapes**.
+2. Under **Details**, select **Compatible shapes**.
+
+    The compatible-shapes list shows the Compute shapes that can launch this custom image. The example shows `VM.Standard.E5.Flex` in the list.
+
+    ![OCI custom image details page showing VM.Standard.E5.Flex in the Compatible shapes list](images/compatible-shapes.png)
 
 3. Confirm that VM.Standard.E5.Flex, or another compatible x86_64 VM shape available in your region, appears in the compatible-shapes list.
 
