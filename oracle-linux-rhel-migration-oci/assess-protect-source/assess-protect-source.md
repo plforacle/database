@@ -27,6 +27,9 @@ Before beginning this lab, confirm that you have:
 - A healthy Apache workload that returns `MIGRATION_WORKLOAD_OK`.
 - The RHEL baseline evidence bundle created in Lab 2.
 - Permission to create and inspect boot-volume backups in OCI.
+- Outbound HTTPS access from the source VM to `raw.githubusercontent.com` and `yum.oracle.com`.
+
+> **Note:** This workshop uses the public Oracle Linux yum service. In a private or restricted network, use the migration script's `--yum-mirror` option with an approved internal HTTPS mirror, or its `--proxy` option with an HTTP proxy. Do not use both options together. Confirm that the selected path works during the dry run before creating the recovery point.
 
 Estimated Lab Time: 30 minutes
 
@@ -268,6 +271,10 @@ Estimated Lab Time: 30 minutes
 - [Oracle migration repository](https://github.com/oracle/migrate-to-ol)
 - [Migration script documentation](https://github.com/oracle/migrate-to-ol/blob/main/README-migrate-to-oracle-linux.md)
 - [Creating a boot-volume backup](https://docs.oracle.com/en-us/iaas/Content/Block/Tasks/backingupavolume.htm)
+
+### Workshop maintenance note
+
+When refreshing this workshop, test a candidate migration-script commit in a disposable RHEL 9.8 VM before changing the lab. After successful validation, update the pinned commit, SHA-256 checksum, commands, and expected report names as one tested set. Do not substitute an unpinned `main` branch script for the tested commit.
 
 ## Acknowledgements
 
