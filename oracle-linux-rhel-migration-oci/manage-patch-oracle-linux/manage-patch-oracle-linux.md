@@ -62,7 +62,9 @@ Estimated Lab Time: 25 minutes
 
     It is normal for the second command to return no output when UEK is not installed.
 
-4. Keep RHCK as the running kernel for this workshop.
+4. Keep the standard `kernel` packages as the running RHCK for this workshop. No configuration change is required.
+
+    RHCK packages use names such as `kernel`, `kernel-core`, and `kernel-modules`; they do not normally include `rhck` in the package name. Packages whose names begin with `kernel-uek` identify UEK. Do not install UEK or change the default boot kernel in this workshop.
 
 ## Task 2: Review the Oracle Linux repositories
 

@@ -252,13 +252,23 @@ Estimated Lab Time: 35 minutes
 
 ## Task 6: Remove the Red Hat registration
 
-1. Sign in to the Red Hat Hybrid Cloud Console or Customer Portal inventory.
+1. Sign in to the [Red Hat Hybrid Cloud Console](https://console.redhat.com/) with the Red Hat account that you used to register the temporary RHEL VM.
 
-2. Locate the temporary system using the system name or consumer ID recorded in Lab 3.
+2. In the Hybrid Cloud Console, navigate to **RHEL**, then **Inventory**, then **Systems**.
 
-3. Remove the system registration so the temporary VM no longer consumes or appears against your entitlement.
+    Do not use the **Ansible Automation Platform** inventory. The system registered in this workshop is a RHEL system.
 
-    The migration might remove RHEL subscription-management packages, so portal-side removal is an important cleanup step.
+3. Search for `ol-migrate-rhel-source`. If necessary, search for the consumer ID that you recorded in Lab 3.
+
+    The inventory entry can still display **RHEL 9.8** after the migration because it represents the original registration record.
+
+4. Select the checkbox beside the matching system, select **Delete**, and confirm the deletion.
+
+    Confirm that the system no longer appears in the RHEL systems inventory. This removes the Hybrid Cloud Console inventory record.
+
+5. If the system does not appear in the Hybrid Cloud Console inventory, or you cannot delete it there, sign in to [Red Hat Subscription Management](https://access.redhat.com/management/). Open the system list, locate the temporary system by name or consumer ID, and remove it there.
+
+    The migration can remove the RHEL `subscription-manager` packages, so portal-side cleanup might be required. If your Red Hat account cannot view or delete the record, request a subscription-management role with View/Edit permission from your Red Hat organization administrator.
 
 ## Task 7: Delete OCI workshop resources
 

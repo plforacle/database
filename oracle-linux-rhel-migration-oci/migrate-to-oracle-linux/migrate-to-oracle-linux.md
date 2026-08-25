@@ -80,9 +80,11 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-    The operation changes repositories, distribution packages, and the installed kernel. Do not close the SSH session while the command is running.
+2. The operation changes repositories, distribution packages, and the installed kernel. Do not close the SSH session while the command is running.
 
-2. Monitor the major phases:
+    > **Important:** At successful completion, the migration script displays a standard message that tells you to reboot into Oracle Linux. Do not reboot yet. First complete Task 3 to capture the converted system state before rebooting. You reboot in Task 4.
+
+3. Monitor the major phases:
 
     - Source validation and system snapshot
     - Oracle repository bootstrap
@@ -92,9 +94,9 @@ Estimated Lab Time: 40 minutes
     - Oracle Linux RHCK installation
     - Final identity and report checks
 
-3. If the command fails, do not rerun it blindly. Preserve the displayed log path and review the last completed phase.
+4. If the command fails, do not rerun it blindly. Preserve the displayed log path and review the last completed phase.
 
-4. At successful completion, record the run directory and log file.
+5. At successful completion, record the run directory and log file.
 
 ## Task 3: Inspect the converted system before reboot
 
