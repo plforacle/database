@@ -36,7 +36,12 @@
       "filename": "../../manage-patch-oracle-linux/manage-patch-oracle-linux.md"
     },
     {
-      "title": "Lab 6: Validate and Clean Up",
+      "title": "Lab 6: Apply Live Updates with Oracle Ksplice",
+      "description": "Install Ksplice, apply live RHCK updates, and verify the workload without rebooting.",
+      "filename": "../../ksplice-live-updates/ksplice-live-updates.md"
+    },
+    {
+      "title": "Lab 7: Validate and Clean Up",
       "description": "Compare before-and-after evidence, validate the workload, and remove resources.",
       "filename": "../../validate-cleanup/validate-cleanup.md"
     },

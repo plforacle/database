@@ -1,4 +1,4 @@
-# Lab 6: Validate and Clean Up
+# Lab 7: Validate and Clean Up
 
 ## Introduction
 
@@ -18,7 +18,7 @@ In this lab, you will:
 
 Before beginning this lab, confirm that you have:
 
-- Completed Lab 5.
+- Completed Lab 6: Apply Live Updates with Oracle Ksplice.
 - SSH access to the migrated Oracle Linux 9.8 instance.
 - The RHEL baseline evidence bundle from Lab 2.
 - A healthy post-migration Apache workload.

@@ -6,7 +6,7 @@ This workshop takes you through a complete migration lifecycle in your own Oracl
 
 The workshop does not provide or redistribute a RHEL image. You download the image through your own Red Hat account and use your own subscription entitlement.
 
-Estimated Workshop Time: 4 hours 20 minutes
+Estimated Workshop Time: 4 hours 45 minutes
 
 ### Objectives
 
@@ -18,6 +18,7 @@ In this workshop, you will:
 - Assess migration readiness and create a boot-volume recovery point.
 - Convert RHEL 9.8 to Oracle Linux 9.8 within the same VM.
 - Review Oracle Linux repositories and apply standard package updates.
+- Apply Oracle Ksplice live updates to the RHCK kernel without rebooting.
 - Validate the application, packages, services, networking, SELinux, and firewall configuration.
 - Remove the OCI resources and Red Hat registration created for the workshop.
 
@@ -64,7 +65,7 @@ RHEL source VM
         v
 Same VM running Oracle Linux 9.8
         |
-        | Package maintenance and validation
+        | Package maintenance and Ksplice live patching
         v
 Cleanup
 ```
