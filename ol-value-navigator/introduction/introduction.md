@@ -12,6 +12,19 @@ This workshop is also the development guide for the project. Each lab builds a w
 
 Because the documentation grows with the application, the workshop becomes a clean and accessible source of truth. Another developer can follow the labs, reproduce the environment, understand the decisions, and verify the completed application.
 
+### About Product/Technology
+
+Oracle Linux Value Navigator combines Oracle Cloud Infrastructure, Oracle Linux, Apache HTTP Server, PHP, and MySQL HeatWave GenAI in one web application.
+
+* **Oracle Cloud Infrastructure** provides the networking, compute, and managed database services used to run the application.
+* **Oracle Linux** provides the operating system for the application server.
+* **Apache HTTP Server** receives browser requests and serves the application pages.
+* **PHP** controls the application workflow, validates representative decisions, and performs the annual, three-year, and five-year calculations.
+* **MySQL HeatWave** saves the original inputs, formatted lines, representative decisions, calculation results, and workflow history.
+* **MySQL HeatWave GenAI** uses `sys.ML_GENERATE` to convert freeform RHEL and Oracle Linux subscription text into structured suggestions for representative review.
+
+AI assists with formatting the input. It does not approve SKUs, prices, alignments, or final results. The Oracle representative reviews and confirms the data before PHP calculates the comparison.
+
 Estimated Workshop Time: 6 hours 30 minutes
 
 ### Application Flow
