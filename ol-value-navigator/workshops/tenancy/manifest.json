@@ -1,0 +1,51 @@
+{
+  "workshoptitle": "Build Oracle Linux Value Navigator",
+  "help": "TODO: replace with the approved workshop support alias",
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "description": "Learn what you will build, the workshop scope, and the required prerequisites.",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Get Started",
+      "description": "Sign in to your Oracle Cloud account and prepare to use your tenancy.",
+      "filename": "https://livelabs.oracle.com/cdn/common/labs/cloud-login/cloud-login.md"
+    },
+    {
+      "title": "Lab 1: Create the OCI LAMP Environment",
+      "description": "Create an Oracle Linux compute instance and install Apache, PHP, and Oracle MySQL Server.",
+      "filename": "../../oci-lamp-setup/oci-lamp-setup.md"
+    },
+    {
+      "title": "Lab 2: Create the Subscription Catalog Database",
+      "description": "Create the catalog, mapping, comparison, and comparison-line tables.",
+      "filename": "../../catalog-database/catalog-database.md"
+    },
+    {
+      "title": "Lab 3: Build the PHP Calculator",
+      "description": "Build the PHP form and save a comparison in MySQL.",
+      "filename": "../../php-calculator/php-calculator.md"
+    },
+    {
+      "title": "Lab 4: Match SKUs and Calculate Results",
+      "description": "Match reviewed SKUs and calculate traceable subscription-cost results.",
+      "filename": "../../matching-and-results/matching-and-results.md"
+    },
+    {
+      "title": "Lab 5: Add AI-Assisted Input and Representative Review",
+      "description": "Convert pasted demonstration text into validated suggestions for human review.",
+      "filename": "../../ai-assisted-input/ai-assisted-input.md"
+    },
+    {
+      "title": "Lab 6: Test, Deploy, and Demonstrate the Application",
+      "description": "Test the full workflow and rehearse the prototype demonstration.",
+      "filename": "../../test-and-demo/test-and-demo.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Review common problems and find directions for receiving help.",
+      "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-freetier.md"
+    }
+  ]
+}
