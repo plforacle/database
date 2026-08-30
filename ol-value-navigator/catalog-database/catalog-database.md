@@ -1,8 +1,8 @@
-# Lab 2: Create the Saved Comparison Database
+# Lab 2: Create the MySQL HeatWave Database for Inputs, Reviews, Results, and Audit History
 
 ## Introduction
 
-In this lab, you create the MySQL database that gives the Oracle Linux Value Navigator the persistence of an Excel workbook. A representative can save a comparison, reopen it, review the original input and formatted lines, revise decisions, and reproduce the results.
+In this lab, you create the MySQL HeatWave database that gives the Oracle Linux Value Navigator the persistence of an Excel workbook. A representative can save a comparison, reopen it, review the original input and formatted lines, revise decisions, and reproduce the results.
 
 The database stores each comparison as a user-created snapshot. It does not maintain master RHEL or Oracle Linux product catalogs and does not claim that a saved SKU, description, or price is authoritative outside that comparison.
 
@@ -22,7 +22,7 @@ The application follows this flow:
 8. The application saves the inputs, confirmed lines, decisions, rule version, and results.
 9. The representative can reopen, revise, duplicate, or export the comparison.
 
-MySQL acts like the saved workbook file. Product data exists only as part of the comparison in which the representative supplied and confirmed it.
+MySQL HeatWave acts like the saved workbook file. Product data exists only as part of the comparison in which the representative supplied and confirmed it.
 
 ### Objectives
 
@@ -41,9 +41,10 @@ In this lab, you will:
 This lab assumes you have:
 
 * A running Oracle Linux instance from Lab 1.
-* MySQL 8.4 or later installed and running.
+* An active MySQL HeatWave DB System running version 9.0 Innovation or later.
+* An active HeatWave cluster with Lakehouse and GenAI enabled.
 * Terminal access to the instance.
-* The MySQL root password created in Lab 1.
+* The MySQL HeatWave administrator password created in Lab 1.
 
 > **Note:** Use demonstration information only in this prototype. Authentication, ownership, encryption, retention, and deletion controls are required before storing customer information.
 
@@ -51,13 +52,13 @@ This lab assumes you have:
 
 ## Task 1: Create the database and application account
 
-1. Open MySQL as the root user.
+1. Connect to the private HeatWave DB System as its administrator. Replace the private-IP placeholder.
 
     ```bash
-    <copy>mysql -u root -p</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
     ```
 
-2. Enter the MySQL root password when prompted.
+2. Enter the MySQL HeatWave administrator password when prompted.
 
 3. Create the application database and local PHP account. Replace `CHANGE_THIS_PASSWORD` with a private password.
 
@@ -66,7 +67,7 @@ This lab assumes you have:
       CHARACTER SET utf8mb4
       COLLATE utf8mb4_0900_ai_ci;
 
-    CREATE USER 'olvn_app'@'localhost'
+    CREATE USER 'olvn_app'@'%'
       IDENTIFIED BY 'CHANGE_THIS_PASSWORD';
 
     USE ol_value_navigator;</copy>
@@ -222,27 +223,27 @@ This lab assumes you have:
     ```sql
     <copy>GRANT SELECT
       ON ol_value_navigator.calculation_rule_version
-      TO 'olvn_app'@'localhost';
+      TO 'olvn_app'@'%';
 
     GRANT SELECT, INSERT, UPDATE, DELETE
       ON ol_value_navigator.comparison
-      TO 'olvn_app'@'localhost';
+      TO 'olvn_app'@'%';
 
     GRANT SELECT, INSERT, UPDATE, DELETE
       ON ol_value_navigator.comparison_input
-      TO 'olvn_app'@'localhost';
+      TO 'olvn_app'@'%';
 
     GRANT SELECT, INSERT, UPDATE, DELETE
       ON ol_value_navigator.comparison_line
-      TO 'olvn_app'@'localhost';
+      TO 'olvn_app'@'%';
 
     GRANT SELECT, INSERT, UPDATE, DELETE
       ON ol_value_navigator.comparison_result
-      TO 'olvn_app'@'localhost';
+      TO 'olvn_app'@'%';
 
     GRANT SELECT, INSERT
       ON ol_value_navigator.application_event
-      TO 'olvn_app'@'localhost';
+      TO 'olvn_app'@'%';
 
     FLUSH PRIVILEGES;</copy>
     ```
@@ -250,7 +251,7 @@ This lab assumes you have:
 2. Display the application account permissions.
 
     ```sql
-    <copy>SHOW GRANTS FOR 'olvn_app'@'localhost';</copy>
+    <copy>SHOW GRANTS FOR 'olvn_app'@'%';</copy>
     ```
 
     The PHP account can manage comparisons but cannot create, alter, or drop database tables.
@@ -297,20 +298,20 @@ This lab assumes you have:
 
     The query should return an empty result.
 
-4. Exit MySQL.
+4. Exit MySQL HeatWave.
 
     ```sql
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** MySQL can preserve a complete comparison like a saved workbook, but it does not maintain a master RHEL or Oracle Linux SKU catalog.
+    > **Checkpoint:** MySQL HeatWave can preserve a complete comparison like a saved workbook, but it does not maintain a master RHEL or Oracle Linux SKU catalog.
 
 You have created the persistence layer for saved comparisons. In the next lab, you will build the PHP interface for creating, saving, and reopening comparisons.
 
 ## Learn More
 
-* [MySQL 8.4 Reference Manual](https://dev.mysql.com/doc/refman/8.4/en/)
-* [MySQL Access Control and Account Management](https://dev.mysql.com/doc/refman/8.4/en/access-control.html)
+* [MySQL HeatWave GenAI](https://dev.mysql.com/doc/heatwave/en/mys-hw-genai-overview.html)
+* [MySQL HeatWave access control and account management](https://dev.mysql.com/doc/refman/8.4/en/access-control.html)
 * [PHP PDO documentation](https://www.php.net/manual/en/book.pdo.php)
 
 ## Acknowledgements

@@ -1,20 +1,20 @@
-# Lab 4: Match SKUs and Calculate Results
+# Lab 4: Align Confirmed RHEL and Oracle Linux Lines and Build the Cost Results Page
 
 ## Introduction
 
-This lab walks you through matching confirmed RHEL lines to governed Oracle Linux options and presenting traceable subscription-cost results.
+This lab walks you through aligning representative-confirmed RHEL and Oracle Linux lines and presenting traceable subscription-cost results.
 
 Estimated Time: 75 minutes
 
-### About Governed Matching
+### About Representative Alignment
 
-A mapping stored in MySQL may suggest an eligible Oracle Linux option. The representative still reviews the choice. Unknown SKUs remain unresolved, and excluded lines require an explanation.
+AI formats each side but does not declare product equivalence. The representative assigns related lines to the same comparison group, confirms their values, and resolves or excludes uncertain lines before calculation.
 
 ### Objectives
 
 In this lab, you will:
 
-* Retrieve governed SKU mappings.
+* Align related RHEL and Oracle Linux lines.
 * Record confirmed, excluded, and unresolved decisions.
 * Calculate annual, three-year, and five-year totals.
 * Withhold totals when included lines remain unresolved.
@@ -24,22 +24,21 @@ In this lab, you will:
 This lab assumes you have:
 
 * A working PHP calculator connected to the workshop database.
-* Demonstration catalog and mapping rows.
-* A saved comparison containing at least one RHEL line.
+* A saved comparison containing RHEL and Oracle Linux input.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
-## Task 1: Add governed matching
+## Task 1: Add representative alignment
 
-1. Create a PHP function that retrieves mappings from `sku_mapping` by RHEL SKU.
+1. Display the formatted RHEL and Oracle Linux lines side by side.
 
-2. Display each matched Oracle Linux option and its rationale beside the RHEL line.
+2. Allow the representative to assign related lines to the same `comparison_group`.
 
-3. Allow the representative to mark a valid mapped line as `CONFIRMED`.
+3. Allow the representative to correct SKU, description, quantity, and annual unit price before marking a line `CONFIRMED`.
 
 4. Allow the representative to mark a line as `EXCLUDED` only after entering an exclusion reason.
 
-5. Keep an unknown SKU as `UNRESOLVED`. Do not invent a mapping.
+5. Keep uncertain or incomplete values `UNRESOLVED`. Do not invent missing values or equivalence.
 
 ## Task 2: Add the calculation rules
 
@@ -68,7 +67,7 @@ This lab assumes you have:
 
 1. Create `results.php` and load one saved comparison by its identifier.
 
-2. Display each RHEL SKU, quantity, decision, selected Oracle Linux option, and mapping rationale.
+2. Display each confirmed RHEL and Oracle Linux line, its comparison group, quantity, price, and decision.
 
 3. Display the annual, three-year, and five-year totals only when every included line is confirmed.
 
@@ -76,18 +75,18 @@ This lab assumes you have:
 
 ## Task 4: Verify the fail-closed behavior
 
-1. Create a comparison containing one known SKU and one unknown SKU.
+1. Create a comparison containing one confirmed group and one unresolved line.
 
-2. Confirm that the known line is visible and the comparative totals are withheld.
+2. Confirm that the completed group is visible and comparative totals are withheld.
 
-3. Exclude the unknown line with a reason or correct it to a known demonstration SKU.
+3. Exclude the unresolved line with a reason or correct and confirm it.
 
 4. Confirm the remaining lines and verify the displayed totals manually.
 
 ## Learn More
 
 * [PHP arbitrary precision mathematics](https://www.php.net/manual/en/book.bc.php)
-* [MySQL fixed-point data types](https://dev.mysql.com/doc/refman/8.4/en/fixed-point-types.html)
+* [MySQL HeatWave fixed-point data types](https://dev.mysql.com/doc/refman/8.4/en/fixed-point-types.html)
 
 ## Acknowledgements
 

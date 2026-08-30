@@ -1,14 +1,14 @@
-# Lab 3: Build the PHP Calculator
+# Lab 3: Build the PHP Input and Saved Comparison Review Pages
 
 ## Introduction
 
-This lab walks you through replacing the temporary test page with a PHP application that reads the catalog and saves a comparison in MySQL.
+This lab walks you through replacing the temporary test page with a PHP application that saves and reopens dynamic RHEL and Oracle Linux comparison input in MySQL HeatWave.
 
 Estimated Time: 60 minutes
 
 ### About the PHP Application
 
-The prototype uses server-rendered PHP and PDO prepared statements. Database credentials remain outside the public web directory, and catalog choices come from MySQL.
+The prototype uses server-rendered PHP and PDO prepared statements. Database credentials remain outside the public web directory, and the HeatWave DB System is reached through its private IP address.
 
 ### Objectives
 
@@ -17,15 +17,16 @@ In this lab, you will:
 * Create the application directories.
 * Configure a PDO database connection.
 * Build a comparison form.
-* Save a comparison and RHEL line in MySQL.
+* Capture and save both freeform inputs.
+* Reopen a saved comparison.
 
 ### Prerequisites
 
 This lab assumes you have:
 
 * Access to the workshop Oracle Linux instance.
-* A running Apache, PHP, and MySQL environment.
-* The workshop database and demonstration catalog.
+* A running Apache and PHP environment.
+* The private HeatWave DB System and saved-comparison database.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
@@ -49,12 +50,12 @@ This lab assumes you have:
 
 ## Task 2: Configure the database connection
 
-1. Create `/var/www/ol-value-navigator/config.php` and add the local database settings. Replace the password placeholder with the private password created in Lab 2.
+1. Create `/var/www/ol-value-navigator/config.php`. Replace the private IP and password placeholders with values from Labs 1 and 2.
 
     ```php
     <copy>&lt;?php
     return [
-        'dsn' =&gt; 'mysql:host=localhost;dbname=ol_value_navigator;charset=utf8mb4',
+        'dsn' =&gt; 'mysql:host=HEATWAVE_PRIVATE_IP;port=3306;dbname=ol_value_navigator;charset=utf8mb4',
         'user' =&gt; 'olvn_app',
         'password' =&gt; 'CHANGE_THIS_PASSWORD',
     ];</copy>
@@ -85,26 +86,26 @@ This lab assumes you have:
 
 1. Create `/var/www/html/ol-value-navigator/index.php`.
 
-2. Load the active RHEL catalog rows through `database.php` and display the SKU values in a selection list.
+2. Add a comparison name, a freeform RHEL text area, and a freeform Oracle Linux text area.
 
-3. Add fields for the comparison name, RHEL SKU, and quantity.
+3. Submit the form with `POST` and validate that the name and both inputs are present.
 
-4. Submit the form with `POST` and use PDO prepared statements to create one `comparison` row and one `comparison_line` row.
+4. Use one transaction and PDO prepared statements to create one `comparison` row and two `comparison_input` rows.
 
-5. Redirect the learner to a confirmation page that displays the new comparison identifier.
+5. Redirect to a review page that loads the saved comparison by its identifier and displays both original inputs.
 
 ## Task 4: Verify the saved comparison
 
 1. Open `http://PUBLIC_IP_ADDRESS/ol-value-navigator/` in a browser.
 
-2. Create a comparison with one demonstration RHEL SKU and a positive quantity.
+2. Create a comparison with demonstration RHEL and Oracle Linux text.
 
-3. Open MySQL and verify the saved rows.
+3. Open MySQL HeatWave and verify the saved rows.
 
     ```sql
     <copy>USE ol_value_navigator;
     SELECT * FROM comparison;
-    SELECT * FROM comparison_line;</copy>
+    SELECT comparison_id, input_side, raw_text FROM comparison_input;</copy>
     ```
 
 4. Confirm that the page does not display the database password or connection details.
