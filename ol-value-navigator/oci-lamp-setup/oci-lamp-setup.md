@@ -19,7 +19,7 @@ The OCI resources in this lab have clear names so that you can find them later. 
 In this lab, you will:
 
 * Create a compartment for the workshop resources.
-* Create a VCN with public and private subnets.
+* Create a VCN and public subnet for the LAMP server.
 * Configure SSH and web traffic rules.
 * Launch an Oracle Linux 9 compute instance.
 * Connect to the instance with SSH.
@@ -33,7 +33,6 @@ This lab assumes you have:
 * Access to an OCI tenancy.
 * Permission to create compartments, networking resources, and compute instances.
 * An SSH client on your local computer.
-* The public IPv4 address of the computer or network from which you will connect with SSH.
 
 > **Note:** If your organization manages compartments, networks, or security rules for you, ask your OCI administrator to create or approve the values in this lab. Do not create duplicate resources.
 
@@ -69,7 +68,7 @@ A compartment keeps the Oracle Linux Value Navigator resources together. It also
 
 ## Task 2: Create the virtual cloud network
 
-The VCN is the private network for the application. The OCI wizard creates a public subnet for the web server, a private subnet for future expansion, and the gateways and route tables required for internet access.
+The VCN is the private network for the application. The OCI wizard creates the public subnet, gateway, and route required for the LAMP server to reach the internet.
 
 1. Open the navigation menu, select **Networking**, and then select **Virtual cloud networks**.
 
@@ -102,41 +101,19 @@ The VCN is the private network for the application. The OCI wizard creates a pub
 
 9. Select **View VCN**.
 
-10. Under **Subnets**, confirm that the wizard created both subnets.
-
-    The wizard generates the subnet display names. Use the subnet with CIDR `10.0.0.0/24` as the public subnet and the subnet with CIDR `10.0.1.0/24` as the private subnet throughout this workshop.
-
-    > **Checkpoint:** The VCN `ol-value-navigator-vcn` contains one public subnet and one private subnet. The public subnet has a route to the internet gateway.
+    > **Checkpoint:** The VCN `ol-value-navigator-vcn` was created successfully. You will select its public subnet when you create the LAMP server.
 
 ## Task 3: Configure the network security rules
 
-OCI security lists act as a virtual firewall for the subnet. SSH access is restricted to your current public IP address. HTTP access is available to workshop users so they can open the prototype in a browser.
+OCI security lists act as a virtual firewall for the subnet. SSH and HTTP access are available to workshop users so they can connect to the server and open the prototype in a browser.
 
-1. On the `ol-value-navigator-vcn` details page, select **Security Lists** under **Resources**.
+1. On the `ol-value-navigator-vcn` page, select the **Security** tab at the top of the page.
 
-2. Open the security list associated with the public subnet.
+2. In the **Security Lists** section, select **Default Security List** for ol-value-navigator-vcn, and then select **Security Rules**.
 
-    If you are unsure which list is associated, open **Subnets**, select the subnet with CIDR `10.0.0.0/24`, and review its **Security Lists** section.
+3. Under **Ingress Rules**, confirm that the existing stateful TCP rule for destination port `22` uses the source CIDR `0.0.0.0/0`.
 
-3. Under **Ingress Rules**, locate the existing stateful TCP rule for destination port `22`.
-
-4. Restrict the SSH rule to the public IPv4 address of the computer or network from which you will administer the server.
-
-    Enter the address in CIDR notation, such as `198.51.100.25/32`. Replace that example with your real public IPv4 address.
-
-    | Field | Value |
-    | --- | --- |
-    | Stateless | Cleared |
-    | Source type | CIDR |
-    | Source CIDR | `YOUR_PUBLIC_IP_ADDRESS/32` |
-    | IP protocol | TCP |
-    | Source port range | All |
-    | Destination port range | `22` |
-    | Description | `Allow SSH from approved administration address` |
-
-    > **Important:** Do not use `0.0.0.0/0` for SSH unless your OCI administrator explicitly requires it. That value permits connection attempts from every IPv4 address.
-
-5. Select **Add Ingress Rules** and add the following HTTP rule.
+4. Select **Add Ingress Rules** and add the following HTTP rule.
 
     | Field | Value |
     | --- | --- |
@@ -148,16 +125,14 @@ OCI security lists act as a virtual firewall for the subnet. SSH access is restr
     | Destination port range | `80` |
     | Description | `Allow HTTP access to the workshop application` |
 
-6. Confirm that the security list includes these workshop rules.
+5. Confirm that the security list includes these workshop rules.
 
     | Purpose | Protocol | Source | Destination port |
     | --- | --- | --- | --- |
-    | SSH administration | TCP | `YOUR_PUBLIC_IP_ADDRESS/32` | `22` |
+    | SSH administration | TCP | `0.0.0.0/0` | `22` |
     | Prototype web page | TCP | `0.0.0.0/0` | `80` |
 
-    Port `443` is reserved for HTTPS. Do not open it until TLS is configured for the application.
-
-    > **Checkpoint:** The public subnet accepts SSH only from the approved administration address and accepts HTTP traffic on TCP port 80.
+    > **Checkpoint:** The public subnet allows SSH traffic on TCP port 22 and HTTP traffic on TCP port 80.
 
 ## Task 4: Create the Oracle Linux compute instance
 
