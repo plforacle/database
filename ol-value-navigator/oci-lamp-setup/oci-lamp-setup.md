@@ -232,16 +232,16 @@ The compute instance is the server that runs the complete prototype. This worksh
     <copy>sudo dnf module list mysql</copy>
     ```
 
-2. Enable the MySQL 8.4 stream.
+2. Install MySQL 8.4 from the Oracle Linux Application Stream repository.
 
     ```bash
-    <copy>sudo dnf module enable -y mysql:8.4</copy>
+    <copy>sudo dnf module install -y mysql:8.4</copy>
     ```
 
-3. Install Apache, PHP, the PHP MySQL driver, and MySQL Server.
+3. Install Apache, PHP, and the PHP MySQL driver.
 
     ```bash
-    <copy>sudo dnf install -y httpd php php-mysqlnd mysql-server</copy>
+    <copy>sudo dnf install -y httpd php php-mysqlnd</copy>
     ```
 
 4. Enable Apache and MySQL so that they start automatically when the instance starts. Start both services now.
@@ -279,13 +279,33 @@ The compute instance is the server that runs the complete prototype. This worksh
     php --version</copy>
     ```
 
+    The MySQL command must report version 8.4 or later. Do not continue to Lab 2 if it reports MySQL 8.0.
+
 9. Run the MySQL security configuration program.
 
     ```bash
     <copy>sudo mysql_secure_installation</copy>
     ```
 
-    Follow the prompts to set a strong MySQL root password, remove anonymous users, prevent remote root sign-in, remove the test database, and reload the privilege tables. Store the root password securely. Do not add it to the workshop repository.
+    Answer the prompts as follows.
+
+    | Prompt | Answer |
+    | --- | --- |
+    | Set up the VALIDATE PASSWORD component? | `N` |
+    | New password | Enter a strong MySQL root password |
+    | Re-enter new password | Enter the same root password again |
+    | Remove anonymous users? | `Y` |
+    | Disallow root login remotely? | `Y` |
+    | Remove test database and access to it? | `Y` |
+    | Reload privilege tables now? | `Y` |
+
+    Store the MySQL root password securely. Do not add it to the workshop repository.
+
+    Confirm that the program finishes with:
+
+    ```text
+    All done!
+    ```
 
 10. Confirm that the operating-system firewall permits HTTP.
 

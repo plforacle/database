@@ -2,9 +2,9 @@
 
 ## About this Workshop
 
-Oracle Linux Value Navigator is a PHP and MySQL web application that helps an Oracle representative compare a supplied RHEL subscription scenario with governed Oracle Linux support options. The representative enters or pastes sample RHEL SKU information, reviews the matched lines, and receives annual, three-year, and five-year subscription-cost comparisons.
+Oracle Linux Value Navigator is an AI-assisted PHP and MySQL web application that helps an Oracle representative format and compare RHEL and Oracle Linux subscription information. The representative supplies both sides of the comparison, reviews the formatted lines, and receives annual, three-year, and five-year subscription-cost results.
 
-In this workshop, you build the complete prototype on Oracle Cloud Infrastructure. You begin with an Oracle Linux LAMP environment, create the catalog and application, add governed matching and calculations, and finish with AI-assisted input and a tested demonstration.
+In this workshop, you build the complete prototype on Oracle Cloud Infrastructure. You begin with an Oracle Linux LAMP environment, create the saved-comparison database, build the PHP workflow, add AI-assisted formatting and deterministic calculations, and finish with a tested demonstration.
 
 The workshop uses demonstration SKUs, quantities, and prices. Do not enter real customer information. The completed prototype produces a subscription-cost comparison for learning and demonstration. It is not a customer quote, a licensing determination, or a complete TCO analysis.
 
@@ -14,16 +14,34 @@ Because the documentation grows with the application, the workshop becomes a cle
 
 Estimated Workshop Time: 6 hours 30 minutes
 
+### Application Flow
+
+The completed application follows this flow:
+
+1. The representative creates a comparison.
+2. The representative pastes RHEL subscription information.
+3. AI extracts and formats possible RHEL SKUs, descriptions, quantities, and prices.
+4. The representative pastes or enters Oracle Linux subscription information.
+5. AI extracts and formats possible Oracle Linux SKUs, descriptions, quantities, and prices.
+6. The representative reviews, corrects, aligns, and confirms both sides.
+7. PHP calculates annual, three-year, and five-year totals.
+8. MySQL saves the inputs, formatted lines, representative decisions, rule version, and calculated results.
+9. The representative can reopen, revise, duplicate, or export the comparison.
+
+MySQL preserves each comparison like a saved Excel workbook. It does not maintain a master RHEL or Oracle Linux product catalog. A saved SKU, description, or price is part of one representative-confirmed comparison and is not treated as authoritative product data.
+
 ### Objectives
 
 In this workshop, you will:
 
 * Create an Oracle Linux LAMP environment in OCI.
-* Build a MySQL subscription catalog with sample data.
-* Build PHP pages that capture and review RHEL subscription lines.
-* Match RHEL SKUs to governed Oracle Linux options.
+* Build a MySQL database for saving and reopening comparisons.
+* Build PHP pages that capture RHEL and Oracle Linux freeform input.
+* Use AI to format both sides into reviewable subscription lines.
+* Review, correct, align, and confirm the formatted lines.
 * Calculate annual, three-year, and five-year subscription costs.
-* Add AI-assisted line suggestions with representative review.
+* Save representative decisions and calculation-rule versions.
+* Reopen, revise, duplicate, and export saved comparisons.
 * Test and demonstrate the finished prototype.
 
 ### Prerequisites

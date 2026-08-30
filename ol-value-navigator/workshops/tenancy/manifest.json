@@ -18,8 +18,8 @@
       "filename": "../../oci-lamp-setup/oci-lamp-setup.md"
     },
     {
-      "title": "Lab 2: Create the Subscription Catalog Database",
-      "description": "Create the catalog, mapping, comparison, and comparison-line tables.",
+      "title": "Lab 2: Create the Saved Comparison Database",
+      "description": "Create MySQL tables for saved inputs, reviewed lines, results, rule versions, and workflow events.",
       "filename": "../../catalog-database/catalog-database.md"
     },
     {
