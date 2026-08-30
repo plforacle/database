@@ -136,7 +136,7 @@ OCI security lists act as a virtual firewall for the subnet. SSH and HTTP access
 
 ## Task 4: Create the Oracle Linux compute instance
 
-The compute instance is the server that runs the complete prototype. The suggested flexible shape is large enough for the workshop while remaining suitable for many Free Tier tenancies.
+The compute instance is the server that runs the complete prototype. This workshop uses a paid, general-purpose AMD x86 flexible shape with enough memory for Apache, PHP, and MySQL.
 
 1. Open the navigation menu, select **Compute**, and then select **Instances**.
 
@@ -157,11 +157,11 @@ The compute instance is the server that runs the complete prototype. The suggest
     | Field | Value |
     | --- | --- |
     | Image | Oracle Linux 9, latest available platform image |
-    | Shape | `VM.Standard.A1.Flex` |
+    | Shape | `VM.Standard.E5.Flex` |
     | OCPUs | `1` |
-    | Memory | `6 GB` |
+    | Memory | `8 GB` |
 
-    If `VM.Standard.A1.Flex` is unavailable or does not meet your organization's standards, select an approved flexible VM shape with at least 1 OCPU and 4 GB of memory.
+    If `VM.Standard.E5.Flex` is unavailable in your region, select another approved paid x86 flexible VM shape with at least 1 OCPU and 8 GB of memory.
 
 6. In the **Primary VNIC information** or **Networking** section, select **Edit**, and then configure these values.
 
