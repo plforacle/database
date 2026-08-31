@@ -1,8 +1,8 @@
-# Lab 2: Create the MySQL HeatWave Database for Inputs, Reviews, Results, and Audit History
+# Lab 2: Create the Database Schema for Inputs, Reviews, Results, and Audit History
 
 ## Introduction
 
-In this lab, you create the MySQL HeatWave database that gives the Oracle Linux Value Navigator the persistence of an Excel workbook. A representative can save a comparison, reopen it, review the original input and formatted lines, revise decisions, and reproduce the results.
+In this lab, you create a database schema in the MySQL HeatWave DB System that gives the Oracle Linux Value Navigator the persistence of an Excel workbook. A representative can save a comparison, reopen it, review the original input and formatted lines, revise decisions, and reproduce the results.
 
 The database stores each comparison as a user-created snapshot. It does not maintain master RHEL or Oracle Linux product catalogs and does not claim that a saved SKU, description, or price is authoritative outside that comparison.
 
@@ -22,7 +22,7 @@ The application follows this flow:
 8. The application saves the inputs, confirmed lines, decisions, rule version, and results.
 9. The representative can reopen, revise, duplicate, or export the comparison.
 
-MySQL HeatWave acts like the saved workbook file. Product data exists only as part of the comparison in which the representative supplied and confirmed it.
+The database in the MySQL HeatWave DB System acts like the saved workbook file. Product data exists only as part of the comparison in which the representative supplied and confirmed it.
 
 ### Objectives
 
@@ -42,9 +42,9 @@ This lab assumes you have:
 
 * A running Oracle Linux instance from Lab 1.
 * An active MySQL HeatWave DB System running version 9.0 Innovation or later.
-* An active HeatWave cluster with Lakehouse and GenAI enabled.
+* An active MySQL HeatWave Cluster with Lakehouse enabled and support for MySQL HeatWave GenAI.
 * Terminal access to the instance.
-* The MySQL HeatWave administrator password created in Lab 1.
+* The DB System administrator password created in Lab 1.
 
 > **Note:** Use demonstration information only in this prototype. Authentication, ownership, encryption, retention, and deletion controls are required before storing customer information.
 
@@ -52,13 +52,13 @@ This lab assumes you have:
 
 ## Task 1: Create the database and application account
 
-1. Connect to the private HeatWave DB System as its administrator. Replace the private-IP placeholder.
+1. Connect to the private MySQL HeatWave DB System as its administrator. Replace the private-IP placeholder.
 
     ```bash
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
     ```
 
-2. Enter the MySQL HeatWave administrator password when prompted.
+2. Enter the DB System administrator password when prompted.
 
 3. Create the application database and local PHP account. Replace `CHANGE_THIS_PASSWORD` with a private password.
 
@@ -298,20 +298,20 @@ This lab assumes you have:
 
     The query should return an empty result.
 
-4. Exit MySQL HeatWave.
+4. Exit the MySQL client.
 
     ```sql
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** MySQL HeatWave can preserve a complete comparison like a saved workbook, but it does not maintain a master RHEL or Oracle Linux SKU catalog.
+    > **Checkpoint:** The database in the MySQL HeatWave DB System can preserve a complete comparison like a saved workbook, but the application does not maintain a master RHEL or Oracle Linux SKU catalog.
 
 You have created the persistence layer for saved comparisons. In the next lab, you will build the PHP interface for creating, saving, and reopening comparisons.
 
 ## Learn More
 
 * [MySQL HeatWave GenAI](https://dev.mysql.com/doc/heatwave/en/mys-hw-genai-overview.html)
-* [MySQL HeatWave access control and account management](https://dev.mysql.com/doc/refman/8.4/en/access-control.html)
+* [MySQL access control and account management](https://dev.mysql.com/doc/refman/8.4/en/access-control.html)
 * [PHP PDO documentation](https://www.php.net/manual/en/book.pdo.php)
 
 ## Acknowledgements

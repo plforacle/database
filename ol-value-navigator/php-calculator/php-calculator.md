@@ -2,13 +2,13 @@
 
 ## Introduction
 
-This lab walks you through replacing the temporary test page with a PHP application that saves and reopens the complete freeform RHEL and Oracle Linux SKU text in MySQL HeatWave.
+This lab walks you through replacing the temporary test page with a PHP application that saves and reopens the complete freeform RHEL and Oracle Linux SKU text in a database in the MySQL HeatWave DB System.
 
 Estimated Time: 60 minutes
 
 ### About the PHP Application
 
-The prototype uses server-rendered PHP and PDO prepared statements. Database credentials remain outside the public web directory, and the HeatWave DB System is reached through its private IP address.
+The prototype uses server-rendered PHP and PDO prepared statements. Database credentials remain outside the public web directory, and the MySQL HeatWave DB System is reached through its private IP address.
 
 ### Objectives
 
@@ -26,7 +26,7 @@ This lab assumes you have:
 
 * Access to the workshop Oracle Linux instance.
 * A running Apache and PHP environment.
-* The private HeatWave DB System and saved-comparison database.
+* The private MySQL HeatWave DB System and the saved-comparison database schema created in Lab 2.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
@@ -100,7 +100,7 @@ This lab assumes you have:
 
 2. Paste complete demonstration RHEL and Oracle Linux SKU text into their separate freeform inputs. Include example SKUs, descriptions, quantities, prices, and notes.
 
-3. Open MySQL HeatWave and verify the saved rows.
+3. Connect to the MySQL HeatWave DB System with the MySQL client and verify the saved rows.
 
     ```sql
     <copy>USE ol_value_navigator;

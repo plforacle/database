@@ -2,7 +2,7 @@
 
 ## About this Workshop
 
-Oracle Linux Value Navigator is an AI-assisted PHP and MySQL HeatWave web application that helps an Oracle representative format and compare RHEL and Oracle Linux subscription information. The representative supplies both sides of the comparison, reviews the formatted lines, and receives annual, three-year, and five-year subscription-cost results.
+Oracle Linux Value Navigator is an AI-assisted PHP web application backed by MySQL HeatWave. It helps an Oracle representative format and compare RHEL and Oracle Linux subscription information. The representative supplies both sides of the comparison, reviews the formatted lines, and receives annual, three-year, and five-year subscription-cost results.
 
 In this workshop, you build the complete prototype on Oracle Cloud Infrastructure. You begin with an Oracle Linux LAMP environment, create the saved-comparison database, build the PHP workflow, add AI-assisted formatting and deterministic calculations, and finish with a tested demonstration.
 
@@ -14,22 +14,22 @@ Because the documentation grows with the application, the workshop becomes a cle
 
 ### About Product/Technology
 
-Oracle Linux Value Navigator combines Oracle Cloud Infrastructure, Oracle Linux, Apache HTTP Server, PHP, and MySQL HeatWave GenAI in one web application.
+Oracle Linux Value Navigator brings together Oracle Cloud Infrastructure, Oracle Linux, Apache HTTP Server, PHP, and MySQL HeatWave GenAI to create one web application.
 
 * **Oracle Cloud Infrastructure** provides the networking, compute, and managed database services used to run the application.
 * **Oracle Linux** provides the operating system for the application server.
 * **Apache HTTP Server** receives browser requests and serves the application pages.
 * **PHP** controls the application workflow, validates representative decisions, and performs the annual, three-year, and five-year calculations.
-* **MySQL HeatWave** saves the original inputs, formatted lines, representative decisions, calculation results, and workflow history.
+* **MySQL HeatWave DB System** stores the original inputs, formatted lines, representative decisions, calculation results, and workflow history.
 * **MySQL HeatWave GenAI** uses `sys.ML_GENERATE` to convert freeform RHEL and Oracle Linux subscription text into structured suggestions for representative review.
 
 AI assists with formatting the input. It does not approve SKUs, prices, alignments, or final results. The Oracle representative reviews and confirms the data before PHP calculates the comparison.
 
 ### System Architecture
 
-The application uses an Oracle Linux compute instance for Apache and PHP and a private MySQL HeatWave DB System for GenAI formatting and saved-comparison data. The representative remains responsible for reviewing and confirming both sides before PHP calculates the results.
+The application uses an Oracle Linux compute instance for Apache and PHP. A private MySQL HeatWave DB System stores the saved-comparison data and provides MySQL HeatWave GenAI formatting. The representative remains responsible for reviewing and confirming both sides before PHP calculates the results.
 
-![Oracle Linux Value Navigator architecture showing an Oracle representative using a browser, an Oracle Linux Apache and PHP web tier in a public subnet, and a MySQL HeatWave GenAI DB System in a private subnet.](images/ol-value-navigator-architecture.svg)
+![Oracle Linux Value Navigator architecture showing an Oracle representative using a browser, an Oracle Linux Apache and PHP web tier in a public subnet, and a MySQL HeatWave DB System with MySQL HeatWave GenAI in a private subnet.](images/ol-value-navigator-architecture.svg)
 
 Estimated Workshop Time: 6 hours 30 minutes
 
@@ -44,18 +44,18 @@ The completed application follows this flow:
 5. MySQL HeatWave GenAI extracts and formats possible Oracle Linux SKUs, descriptions, quantities, and prices through `sys.ML_GENERATE`.
 6. The representative reviews, corrects, aligns, and confirms both sides.
 7. PHP calculates annual, three-year, and five-year totals.
-8. MySQL HeatWave saves the inputs, formatted lines, representative decisions, rule version, and calculated results.
+8. The MySQL HeatWave DB System stores the inputs, formatted lines, representative decisions, rule version, and calculated results.
 9. The representative can reopen, revise, duplicate, or export the comparison.
 
-MySQL HeatWave preserves each comparison like a saved Excel workbook. It does not maintain a master RHEL or Oracle Linux product catalog. A saved SKU, description, or price is part of one representative-confirmed comparison and is not treated as authoritative product data.
+The database in the MySQL HeatWave DB System preserves each comparison like a saved Excel workbook. The application does not maintain a master RHEL or Oracle Linux product catalog. A saved SKU, description, or price is part of one representative-confirmed comparison and is not treated as authoritative product data.
 
 ### Objectives
 
 In this workshop, you will:
 
 * Create an Oracle Linux LAMP environment in OCI.
-* Create a MySQL HeatWave DB System with GenAI enabled.
-* Build a MySQL HeatWave database for saving and reopening comparisons.
+* Create a MySQL HeatWave DB System and configure it for MySQL HeatWave GenAI.
+* Create a database schema in the MySQL HeatWave DB System for saving and reopening comparisons.
 * Build PHP pages that capture RHEL and Oracle Linux freeform input.
 * Use AI to format both sides into reviewable subscription lines.
 * Review, correct, align, and confirm the formatted lines.

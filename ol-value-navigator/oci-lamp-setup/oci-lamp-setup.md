@@ -1,10 +1,10 @@
-# Lab 1: Create the OCI Oracle Linux, Apache, PHP, and MySQL HeatWave GenAI Environment
+# Lab 1: Create the OCI Oracle Linux, Apache, PHP, and MySQL HeatWave Environment
 
 ## Introduction
 
 In this lab, you create the OCI foundation for the Oracle Linux Value Navigator. You will organize the project resources in a compartment, create a Virtual Cloud Network (VCN), configure network access, launch an Oracle Linux compute instance, and install the LAMP software.
 
-Apache and PHP run on the Oracle Linux compute instance. MySQL HeatWave runs in a private DB System with HeatWave GenAI enabled.
+Apache and PHP run on the Oracle Linux compute instance. A private MySQL HeatWave DB System stores the application data, and its MySQL HeatWave Cluster provides MySQL HeatWave GenAI.
 
 Estimated Time: 90 minutes
 
@@ -23,8 +23,8 @@ In this lab, you will:
 * Configure SSH and web traffic rules.
 * Launch an Oracle Linux 9 compute instance.
 * Connect to the instance with SSH.
-* Install Apache, PHP, and the MySQL HeatWave client.
-* Create a MySQL HeatWave DB System with HeatWave GenAI.
+* Install Apache, PHP, and the MySQL client.
+* Create a MySQL HeatWave DB System and configure it for MySQL HeatWave GenAI.
 * Verify the PHP web page from your browser.
 
 ### Prerequisites
@@ -133,7 +133,7 @@ OCI security lists act as a virtual firewall for the subnet. SSH and HTTP access
     | SSH administration | TCP | `0.0.0.0/0` | `22` |
     | Prototype web page | TCP | `0.0.0.0/0` | `80` |
 
-6. Open the security list associated with the private subnet and add this MySQL HeatWave rule.
+6. Open the security list associated with the private subnet and add this ingress rule for MySQL traffic.
 
     | Field | Value |
     | --- | --- |
@@ -143,7 +143,7 @@ OCI security lists act as a virtual firewall for the subnet. SSH and HTTP access
     | IP protocol | TCP |
     | Source port range | All |
     | Destination port range | `3306` |
-    | Description | `Allow MySQL HeatWave from the application subnet` |
+    | Description | `Allow MySQL traffic from the application subnet` |
 
     > **Checkpoint:** The public subnet allows SSH traffic on TCP port 22 and HTTP traffic on TCP port 80.
 
@@ -222,28 +222,24 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
 4. Confirm that the prompt changes to the remote `opc` account.
 
-5. Update the installed packages.
-
-    ```bash
-    <copy>sudo dnf update -y</copy>
-    ```
-
-6. Confirm the operating system and enabled software repositories.
+5. Confirm the operating system and enabled software repositories.
 
     ```bash
     <copy>cat /etc/os-release
     sudo dnf repolist</copy>
     ```
 
-    > **Checkpoint:** The output identifies Oracle Linux 9 and the package update completes without errors.
+    > **Checkpoint:** The output identifies Oracle Linux 9 and lists the enabled BaseOS and AppStream repositories.
 
-## Task 6: Install and configure Apache, PHP, and the MySQL HeatWave client
+## Task 6: Install and configure Apache, PHP, and the MySQL client
 
-1. Install Apache, PHP, the PHP driver for MySQL HeatWave, and the MySQL HeatWave client.
+1. Install Apache, PHP, the PHP driver for MySQL, and the MySQL command-line client supplied by Oracle Linux 9.
 
     ```bash
     <copy>sudo dnf install -y httpd php php-mysqlnd mysql</copy>
     ```
+
+    The `mysql` package installs the command-line client. It does not install a local MySQL Server on the compute instance.
 
 2. Enable and start Apache.
 
@@ -258,7 +254,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
     sudo firewall-cmd --reload</copy>
     ```
 
-4. Allow Apache to connect to the private HeatWave DB System.
+4. Allow Apache to connect to the private MySQL HeatWave DB System.
 
     ```bash
     <copy>sudo setsebool -P httpd_can_network_connect_db 1</copy>
@@ -272,12 +268,15 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     The command should return `active`.
 
-6. Confirm the installed MySQL HeatWave client and PHP versions.
+6. Confirm the installed MySQL client and PHP versions, and verify that the client supports the required TLS option.
 
     ```bash
     <copy>mysql --version
+    mysql --help | grep ssl-mode
     php --version</copy>
     ```
+
+    The output should report the installed MySQL client version and include `ssl-mode`.
 
 7. Confirm that the operating-system firewall permits HTTP.
 
@@ -287,7 +286,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     The output should include `http`.
 
-    > **Checkpoint:** Apache, PHP, and the MySQL HeatWave client are installed. Apache is active, and TCP port 80 is available.
+    > **Checkpoint:** Apache, PHP, and the Oracle Linux-provided MySQL client are installed. The MySQL client supports TLS connections, Apache is active, and TCP port 80 is available.
 
 ## Task 7: Verify PHP through Apache
 
@@ -326,9 +325,9 @@ The compute instance runs the web application. This workshop uses a paid, genera
     * `systemctl is-active httpd` returns `active`.
     * `sudo firewall-cmd --list-services` includes `http`.
 
-You have created the Oracle Linux web tier. Next, create the managed HeatWave database and verify GenAI.
+You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB System and verify MySQL HeatWave GenAI.
 
-## Task 8: Create the MySQL HeatWave GenAI DB System
+## Task 8: Create the MySQL HeatWave DB System and configure MySQL HeatWave GenAI
 
 1. In the OCI Console, open the navigation menu, select **Databases**, and then select **DB systems** under **MySQL HeatWave**.
 
@@ -340,7 +339,7 @@ You have created the Oracle Linux web tier. Next, create the managed HeatWave da
     | --- | --- |
     | Compartment | `ol-value-navigator` |
     | Name | `ol-value-navigator-db` |
-    | MySQL HeatWave version | 9.0 Innovation or later |
+    | MySQL Server version | 9.0 Innovation or later |
     | Configuration | Standalone |
     | Shape | `MySQL.2` or an approved paid HeatWave-capable shape |
     | Subnet | Private subnet with CIDR `10.0.1.0/24` |
@@ -354,7 +353,7 @@ You have created the Oracle Linux web tier. Next, create the managed HeatWave da
 
 7. Select the `HeatWave.512GB` shape, use one node, enable **MySQL HeatWave Lakehouse**, and select **Add HeatWave cluster**.
 
-8. Wait for the HeatWave cluster state to become **Active**.
+8. Wait for the MySQL HeatWave Cluster state to become **Active**.
 
 9. Record the DB System private IP address in your private notes.
 
@@ -364,7 +363,7 @@ You have created the Oracle Linux web tier. Next, create the managed HeatWave da
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
     ```
 
-11. Confirm the MySQL HeatWave version and GenAI routine.
+11. Confirm the MySQL Server version and the availability of the MySQL HeatWave GenAI routine.
 
     ```sql
     <copy>SELECT VERSION();
@@ -374,9 +373,9 @@ You have created the Oracle Linux web tier. Next, create the managed HeatWave da
     );</copy>
     ```
 
-    > **Checkpoint:** The managed DB System is reachable from PHP, reports MySQL HeatWave 9.0 or later, and returns a response from `ML_GENERATE`.
+    > **Checkpoint:** The MySQL HeatWave DB System is reachable from PHP, reports MySQL Server 9.0 or later, and returns a response from `ML_GENERATE`.
 
-You have created the OCI LAMP and MySQL HeatWave GenAI environment. In the next lab, you will create the saved-comparison database.
+You have created the OCI LAMP environment and configured a MySQL HeatWave DB System for MySQL HeatWave GenAI. In the next lab, you will create the saved-comparison database schema.
 
 ## Learn More
 

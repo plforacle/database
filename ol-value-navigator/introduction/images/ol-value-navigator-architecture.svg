@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="diagram-title diagram-description">
   <title id="diagram-title">Oracle Linux Value Navigator system architecture</title>
-  <desc id="diagram-description">An Oracle representative uses a browser to paste complete RHEL and Oracle Linux SKU text into a PHP application running on an Oracle Linux compute instance. The PHP application sends each input to MySQL HeatWave GenAI for structured suggestions. The representative reviews and confirms the suggestions. PHP calculates the results, and MySQL HeatWave saves the original inputs, suggestions, decisions, and results.</desc>
+  <desc id="diagram-description">An Oracle representative uses a browser to paste complete RHEL and Oracle Linux SKU text into a PHP application running on an Oracle Linux compute instance. The PHP application sends each input to MySQL HeatWave GenAI for structured suggestions. The representative reviews and confirms the suggestions. PHP calculates the results, and the MySQL HeatWave DB System stores the original inputs, suggestions, decisions, and results.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#4b5563"/>
@@ -15,7 +15,7 @@
 
   <rect width="1400" height="900" fill="#ffffff"/>
   <text x="700" y="48" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#1f2937">Oracle Linux Value Navigator Architecture</text>
-  <text x="700" y="78" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#4b5563">AI formats. The representative confirms. PHP calculates. MySQL HeatWave preserves the comparison.</text>
+  <text x="700" y="78" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#4b5563">AI formats. The representative confirms. PHP calculates. The DB System preserves the comparison.</text>
 
   <rect x="300" y="110" width="1060" height="590" rx="18" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
   <text x="330" y="145" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#1f2937">Oracle Cloud Infrastructure VCN</text>
@@ -101,7 +101,7 @@
     <circle cx="350" cy="810" r="20" fill="#c74634"/><text x="350" y="816" font-size="15" font-weight="700" fill="#ffffff">2</text>
     <text x="350" y="850" font-size="13" fill="#374151">Save original</text><text x="350" y="868" font-size="13" fill="#374151">text</text>
     <circle cx="585" cy="810" r="20" fill="#2563a5"/><text x="585" y="816" font-size="15" font-weight="700" fill="#ffffff">3</text>
-    <text x="585" y="850" font-size="13" fill="#374151">Format with</text><text x="585" y="868" font-size="13" fill="#374151">HeatWave GenAI</text>
+    <text x="585" y="850" font-size="13" fill="#374151">Format with</text><text x="585" y="868" font-size="13" fill="#374151">MySQL HeatWave GenAI</text>
     <circle cx="820" cy="810" r="20" fill="#c74634"/><text x="820" y="816" font-size="15" font-weight="700" fill="#ffffff">4</text>
     <text x="820" y="850" font-size="13" fill="#374151">Review, align,</text><text x="820" y="868" font-size="13" fill="#374151">and confirm</text>
     <circle cx="1055" cy="810" r="20" fill="#4b5563"/><text x="1055" y="816" font-size="15" font-weight="700" fill="#ffffff">5</text>

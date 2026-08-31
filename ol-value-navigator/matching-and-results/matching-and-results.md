@@ -86,7 +86,7 @@ This lab assumes you have:
 ## Learn More
 
 * [PHP arbitrary precision mathematics](https://www.php.net/manual/en/book.bc.php)
-* [MySQL HeatWave fixed-point data types](https://dev.mysql.com/doc/refman/8.4/en/fixed-point-types.html)
+* [MySQL fixed-point data types](https://dev.mysql.com/doc/refman/8.4/en/fixed-point-types.html)
 
 ## Acknowledgements
 

@@ -13,18 +13,18 @@
       "filename": "https://livelabs.oracle.com/cdn/common/labs/cloud-login/cloud-login.md"
     },
     {
-      "title": "Lab 1: Create the OCI Oracle Linux, Apache, PHP, and MySQL HeatWave GenAI Environment",
-      "description": "Create Oracle Linux, Apache, PHP, and a private MySQL HeatWave GenAI DB System.",
+      "title": "Lab 1: Create the OCI Oracle Linux, Apache, PHP, and MySQL HeatWave Environment",
+      "description": "Create Oracle Linux, Apache, PHP, and a private MySQL HeatWave DB System configured for MySQL HeatWave GenAI.",
       "filename": "../../oci-lamp-setup/oci-lamp-setup.md"
     },
     {
-      "title": "Lab 2: Create the MySQL HeatWave Database for Inputs, Reviews, Results, and Audit History",
-      "description": "Create MySQL HeatWave tables for complete RHEL and Oracle Linux freeform inputs, reviewed lines, results, rule versions, and workflow events.",
+      "title": "Lab 2: Create the Database Schema for Inputs, Reviews, Results, and Audit History",
+      "description": "Create tables in the MySQL HeatWave DB System for complete RHEL and Oracle Linux freeform inputs, reviewed lines, results, rule versions, and workflow events.",
       "filename": "../../catalog-database/catalog-database.md"
     },
     {
       "title": "Lab 3: Build the PHP Input and Saved Comparison Review Pages",
-      "description": "Build separate RHEL and Oracle Linux inputs that accept and save complete freeform SKU text in MySQL HeatWave.",
+      "description": "Build separate RHEL and Oracle Linux inputs that accept and save complete freeform SKU text in the MySQL HeatWave DB System.",
       "filename": "../../php-calculator/php-calculator.md"
     },
     {

@@ -8,7 +8,7 @@ Estimated Time: 60 minutes
 
 ### About Prototype Verification
 
-A successful installation is not enough. The final checks verify HeatWave GenAI formatting, saved-comparison behavior, calculations, unresolved-line handling, manual fallback, and safe error behavior.
+A successful installation is not enough. The final checks verify MySQL HeatWave GenAI formatting, saved-comparison behavior, calculations, unresolved-line handling, manual fallback, and safe error behavior.
 
 ### Objectives
 
@@ -48,11 +48,11 @@ This lab assumes you have:
 
 1. Open the application through the OCI instance web address.
 
-2. Confirm that Apache serves the PHP pages and connects to the private HeatWave DB System.
+2. Confirm that Apache serves the PHP pages and connects to the private MySQL HeatWave DB System.
 
 3. Confirm that invalid input produces a helpful message without exposing database credentials, connection details, or pasted source text.
 
-4. Restart Apache and confirm that the application reconnects to HeatWave.
+4. Restart Apache and confirm that the application reconnects to the MySQL HeatWave DB System.
 
     ```bash
     <copy>sudo systemctl restart httpd
@@ -71,7 +71,7 @@ This lab assumes you have:
 
 5. Demonstrate one unresolved value and explain why the application withholds totals.
 
-6. Reopen the saved comparison and explain how MySQL HeatWave provides workbook-like persistence.
+6. Reopen the saved comparison and explain how the database in the MySQL HeatWave DB System provides workbook-like persistence.
 
 7. State that the prototype is not a quote, licensing determination, full TCO model, or production customer-data system.
 

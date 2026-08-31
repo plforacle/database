@@ -26,7 +26,7 @@ In this lab, you will:
 This lab assumes you have:
 
 * The working input and saved-comparison pages from Lab 3.
-* An active MySQL HeatWave GenAI environment from Lab 1.
+* An active MySQL HeatWave DB System configured for MySQL HeatWave GenAI from Lab 1.
 * Demonstration input that contains no real customer information.
 
 *This is the fold. The remaining sections are collapsed by default.*
@@ -81,7 +81,7 @@ This lab assumes you have:
     ) AS ai_response;</copy>
     ```
 
-3. Decode the outer HeatWave response, extract its `text` value, and decode the structured JSON returned by the model.
+3. Decode the outer `ML_GENERATE` response, extract its `text` value, and decode the structured JSON returned by the model.
 
 4. Reject invalid JSON, unsupported fields, oversized responses, nonnumeric quantities or prices, and values not supported by the source text.
 
