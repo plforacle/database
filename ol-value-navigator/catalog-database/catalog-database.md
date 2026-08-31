@@ -13,10 +13,10 @@ Estimated Time: 60 minutes
 The application follows this flow:
 
 1. The representative creates a comparison.
-2. The representative pastes RHEL subscription information.
-3. AI extracts and formats possible RHEL SKUs, descriptions, quantities, and prices.
-4. The representative pastes or enters Oracle Linux subscription information.
-5. AI extracts and formats possible Oracle Linux SKUs, descriptions, quantities, and prices.
+2. The representative pastes the complete RHEL SKU text into the RHEL freeform input.
+3. MySQL HeatWave GenAI extracts and formats possible RHEL SKUs, descriptions, quantities, and prices.
+4. The representative pastes the complete Oracle Linux SKU text into the Oracle Linux freeform input.
+5. MySQL HeatWave GenAI extracts and formats possible Oracle Linux SKUs, descriptions, quantities, and prices.
 6. The representative reviews, corrects, aligns, and confirms both sides.
 7. PHP calculates annual, three-year, and five-year totals.
 8. The application saves the inputs, confirmed lines, decisions, rule version, and results.
@@ -30,7 +30,7 @@ In this lab, you will:
 
 * Create the application database and PHP account.
 * Record calculation-rule versions.
-* Store saved comparisons and their two freeform inputs.
+* Store the complete RHEL and Oracle Linux freeform SKU text for each saved comparison.
 * Store AI-formatted and representative-confirmed lines.
 * Store calculated result snapshots.
 * Record AI and human workflow events.
@@ -116,7 +116,7 @@ This lab assumes you have:
 
 ## Task 3: Create the input and formatted-line tables
 
-1. Create the table that preserves the two freeform inputs supplied for a comparison.
+1. Create the table that preserves the complete RHEL and Oracle Linux freeform SKU text supplied for a comparison.
 
     ```sql
     <copy>CREATE TABLE comparison_input (
@@ -167,7 +167,7 @@ This lab assumes you have:
 
     The same `comparison_group` value can align related RHEL and Oracle Linux lines. An unresolved line remains visible but is not included in confirmed totals.
 
-    > **Checkpoint:** The database can preserve original input and reviewed rows without treating them as a master product catalog.
+    > **Checkpoint:** The database can preserve the complete original text from both inputs and the reviewed rows without treating them as a master product catalog.
 
 ## Task 4: Create the result and event tables
 

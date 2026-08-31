@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This lab walks you through replacing the temporary test page with a PHP application that saves and reopens dynamic RHEL and Oracle Linux comparison input in MySQL HeatWave.
+This lab walks you through replacing the temporary test page with a PHP application that saves and reopens the complete freeform RHEL and Oracle Linux SKU text in MySQL HeatWave.
 
 Estimated Time: 60 minutes
 
@@ -17,7 +17,7 @@ In this lab, you will:
 * Create the application directories.
 * Configure a PDO database connection.
 * Build a comparison form.
-* Capture and save both freeform inputs.
+* Capture and save the complete text from both freeform SKU inputs.
 * Reopen a saved comparison.
 
 ### Prerequisites
@@ -86,19 +86,19 @@ This lab assumes you have:
 
 1. Create `/var/www/html/ol-value-navigator/index.php`.
 
-2. Add a comparison name, a freeform RHEL text area, and a freeform Oracle Linux text area.
+2. Add a comparison name, a **RHEL SKU information** text area, and an **Oracle Linux SKU information** text area. Both text areas must accept complete freeform text, including any SKUs, descriptions, quantities, prices, and notes.
 
-3. Submit the form with `POST` and validate that the name and both inputs are present.
+3. Submit the form with `POST` and validate that the comparison name and both complete freeform inputs are present.
 
 4. Use one transaction and PDO prepared statements to create one `comparison` row and two `comparison_input` rows.
 
-5. Redirect to a review page that loads the saved comparison by its identifier and displays both original inputs.
+5. Redirect to a review page that loads the saved comparison by its identifier and displays the complete original text from both inputs.
 
 ## Task 4: Verify the saved comparison
 
 1. Open `http://PUBLIC_IP_ADDRESS/ol-value-navigator/` in a browser.
 
-2. Create a comparison with demonstration RHEL and Oracle Linux text.
+2. Paste complete demonstration RHEL and Oracle Linux SKU text into their separate freeform inputs. Include example SKUs, descriptions, quantities, prices, and notes.
 
 3. Open MySQL HeatWave and verify the saved rows.
 

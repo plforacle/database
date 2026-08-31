@@ -1,8 +1,8 @@
-# Lab 4: Align Confirmed RHEL and Oracle Linux Lines and Build the Cost Results Page
+# Lab 5: Align Confirmed RHEL and Oracle Linux Lines and Build the Cost Results Page
 
 ## Introduction
 
-This lab walks you through aligning representative-confirmed RHEL and Oracle Linux lines and presenting traceable subscription-cost results.
+This lab walks you through reviewing the lines formatted from the complete RHEL and Oracle Linux freeform inputs, aligning representative-confirmed lines, and presenting traceable subscription-cost results.
 
 Estimated Time: 75 minutes
 
@@ -24,13 +24,13 @@ In this lab, you will:
 This lab assumes you have:
 
 * A working PHP calculator connected to the workshop database.
-* A saved comparison containing RHEL and Oracle Linux input.
+* A saved comparison containing the complete RHEL and Oracle Linux source text and the MySQL HeatWave GenAI suggestions created in Lab 4.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
 ## Task 1: Add representative alignment
 
-1. Display the formatted RHEL and Oracle Linux lines side by side.
+1. Display the formatted RHEL and Oracle Linux lines side by side with the complete original text from both freeform inputs available for reference.
 
 2. Allow the representative to assign related lines to the same `comparison_group`.
 

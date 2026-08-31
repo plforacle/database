@@ -32,9 +32,9 @@ Estimated Workshop Time: 6 hours 30 minutes
 The completed application follows this flow:
 
 1. The representative creates a comparison.
-2. The representative pastes RHEL subscription information.
+2. The representative pastes the complete RHEL SKU text into the RHEL freeform input.
 3. MySQL HeatWave GenAI extracts and formats possible RHEL SKUs, descriptions, quantities, and prices through `sys.ML_GENERATE`.
-4. The representative pastes or enters Oracle Linux subscription information.
+4. The representative pastes the complete Oracle Linux SKU text into the Oracle Linux freeform input.
 5. MySQL HeatWave GenAI extracts and formats possible Oracle Linux SKUs, descriptions, quantities, and prices through `sys.ML_GENERATE`.
 6. The representative reviews, corrects, aligns, and confirms both sides.
 7. PHP calculates annual, three-year, and five-year totals.

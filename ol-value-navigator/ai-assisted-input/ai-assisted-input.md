@@ -1,20 +1,20 @@
-# Lab 5: Use MySQL HeatWave GenAI to Format Inputs and Build the Representative Review Page
+# Lab 4: Use MySQL HeatWave GenAI to Format Complete Inputs and Build the Representative Review Page
 
 ## Introduction
 
-This lab walks you through sending both freeform inputs to MySQL HeatWave GenAI, validating structured line suggestions, and requiring representative review before calculation.
+This lab walks you through sending the complete RHEL and Oracle Linux freeform SKU text to MySQL HeatWave GenAI, validating structured line suggestions, and requiring representative review before calculation.
 
 Estimated Time: 75 minutes
 
 ### About AI-Assisted Input
 
-AI accelerates the conversion of freeform text into candidate fields. It does not approve SKUs, prices, mappings, exclusions, or results. The PHP application validates every response and provides manual entry when AI is unavailable.
+AI accelerates the conversion of complete freeform SKU text into candidate fields. The source text can include SKUs, descriptions, quantities, prices, and notes. AI does not approve SKUs, prices, mappings, exclusions, or results. The PHP application validates every response and provides manual entry when AI is unavailable.
 
 ### Objectives
 
 In this lab, you will:
 
-* Add a bounded freeform input page.
+* Process the complete text from both bounded freeform SKU inputs.
 * Define a structured AI response contract.
 * Call `sys.ML_GENERATE` through PDO.
 * Validate structured AI suggestions.
@@ -25,15 +25,15 @@ In this lab, you will:
 
 This lab assumes you have:
 
-* A working comparison and results workflow.
+* The working input and saved-comparison pages from Lab 3.
 * An active MySQL HeatWave GenAI environment from Lab 1.
 * Demonstration input that contains no real customer information.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
-## Task 1: Add the paste input page
+## Task 1: Prepare both complete freeform inputs
 
-1. Use the RHEL and Oracle Linux text areas created in Lab 3.
+1. Use the separate RHEL and Oracle Linux freeform text areas created in Lab 3. Each text area accepts complete SKU text, including any SKUs, descriptions, quantities, prices, and notes.
 
 2. Display a reminder that the prototype does not accept real customer information.
 
@@ -43,7 +43,7 @@ This lab assumes you have:
 
 ## Task 2: Define the AI response contract
 
-1. Define a structured response for either input side.
+1. Define the same structured response contract for either complete freeform input.
 
     ```json
     {
@@ -66,7 +66,7 @@ This lab assumes you have:
 
 ## Task 3: Call MySQL HeatWave GenAI
 
-1. Build a PHP prompt containing the response contract, extraction rules, input-side label, and untrusted freeform text.
+1. Build a PHP prompt containing the response contract, extraction rules, input-side label, and the complete untrusted freeform text from that side.
 
 2. Execute a prepared SQL statement through PDO.
 
@@ -89,7 +89,7 @@ This lab assumes you have:
 
 ## Task 4: Build the representative review page
 
-1. Show every RHEL and Oracle Linux candidate beside its original source input.
+1. Show every RHEL and Oracle Linux candidate beside the complete original source text from its input.
 
 2. Allow the representative to correct SKU, description, quantity, and annual unit price.
 

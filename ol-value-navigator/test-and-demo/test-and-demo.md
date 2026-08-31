@@ -25,14 +25,14 @@ In this lab, you will:
 This lab assumes you have:
 
 * A deployed Oracle Linux Value Navigator prototype.
-* Demonstration RHEL and Oracle Linux input scenarios.
+* Complete demonstration RHEL and Oracle Linux freeform SKU text containing SKUs, descriptions, quantities, prices, and notes.
 * Browser and SSH access to the workshop environment.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
 ## Task 1: Test the core scenarios
 
-1. Test a comparison containing demonstration RHEL and Oracle Linux freeform input.
+1. Test a comparison by pasting complete demonstration RHEL and Oracle Linux SKU text into their separate freeform inputs.
 
 2. Verify the annual, three-year, and five-year totals manually.
 
@@ -63,7 +63,7 @@ This lab assumes you have:
 
 1. Explain the business problem and the subscription-cost comparison boundary.
 
-2. Paste small demonstration RHEL and Oracle Linux scenarios.
+2. Paste complete demonstration RHEL and Oracle Linux SKU text into the two separate freeform inputs.
 
 3. Review and confirm the suggested lines.
 
