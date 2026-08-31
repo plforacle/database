@@ -25,6 +25,12 @@ Oracle Linux Value Navigator combines Oracle Cloud Infrastructure, Oracle Linux,
 
 AI assists with formatting the input. It does not approve SKUs, prices, alignments, or final results. The Oracle representative reviews and confirms the data before PHP calculates the comparison.
 
+### System Architecture
+
+The application uses an Oracle Linux compute instance for Apache and PHP and a private MySQL HeatWave DB System for GenAI formatting and saved-comparison data. The representative remains responsible for reviewing and confirming both sides before PHP calculates the results.
+
+![Oracle Linux Value Navigator architecture showing an Oracle representative using a browser, an Oracle Linux Apache and PHP web tier in a public subnet, and a MySQL HeatWave GenAI DB System in a private subnet.](images/ol-value-navigator-architecture.svg)
+
 Estimated Workshop Time: 6 hours 30 minutes
 
 ### Application Flow
