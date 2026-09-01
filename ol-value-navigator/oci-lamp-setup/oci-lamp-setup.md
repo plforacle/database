@@ -335,35 +335,54 @@ You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB S
 
 3. Configure the DB System.
 
-    | Field | Value |
-    | --- | --- |
-    | Compartment | `ol-value-navigator` |
-    | Name | `ol-value-navigator-db` |
-    | MySQL Server version | 9.0 Innovation or later |
-    | Configuration | Standalone |
-    | Shape | `MySQL.2` or an approved paid HeatWave-capable shape |
-    | Subnet | Private subnet with CIDR `10.0.1.0/24` |
-    | Administrator username | `olvnadmin` |
+    | OCI form section | Field | Value |
+    | --- | --- | --- |
+    | Template | Template | Development or testing |
+    | DB System information | Create in compartment | `ol-value-navigator` |
+    | DB System information | Name | `ol-value-navigator-db` |
+    | DB System information | Description | `MySQL HeatWave DB System for Oracle Linux Value Navigator comparison storage and GenAI workloads` |
+    | Administrator credentials | Username | `olvnadmin` |
+    | Setup | Topology | Standalone |
+    | Networking | Virtual cloud network compartment | `ol-value-navigator` |
+    | Networking | Virtual cloud network | `ol-value-navigator-vcn` |
+    | Networking | Subnet compartment | `ol-value-navigator` |
+    | Networking | Subnet | Private regional subnet with CIDR `10.0.1.0/24` |
+    | Networking | Network security groups | None; use the subnet security list created earlier |
+    | Placement | Availability domain | Any available availability domain |
+    | Placement | Fault domain | Let Oracle choose |
+    | Hardware | Enable HeatWave cluster | Enabled |
+    | Hardware | DB System shape | `MySQL.2` or an approved paid HeatWave-capable shape |
+    | HeatWave Cluster | Shape | `HeatWave.512GB` |
+    | HeatWave Cluster | Nodes | `1` |
+    | HeatWave Cluster | MySQL HeatWave Lakehouse | Enabled |
+    | Storage | Initial data storage size | `50 GiB` |
+    | Storage | Automatic storage expansion | Disabled |
+    | Backup plan | Automatic backups | Disabled |
+    | Tools | MySQL Studio | Disabled |
+    | Operational notifications | Contact email | Optional |
+    | Deletion plan | Delete protected | Disabled |
+    | Deletion plan | Retain automatic backups | Disabled |
+    | Deletion plan | Require final backup | Disabled |
+    | Advanced options: Configuration | Configuration | Default configuration for `MySQL.2` |
+    | Advanced options: Configuration | Database version | Latest available supported MySQL version with MySQL HeatWave GenAI, version 9.0 or later |
+    | Advanced options: Encryption | Encryption key | Oracle-managed key |
+    | Other advanced options | Connections, crash recovery, maintenance, management, data import, security attributes, telemetry, and tags | Keep the defaults |
+
+    > **Note:** These settings are for a temporary development and testing environment. Production deployments require a separate review of high availability, backups, deletion protection, storage expansion, encryption, monitoring, and operational contacts.
 
 4. Create and securely store the administrator password. Do not add it to the repository.
 
-5. Create the DB System and wait for its state to become **Active**.
+5. Create the DB System and wait for both the DB System and MySQL HeatWave Cluster states to become **Active**.
 
-6. On the DB System details page, select **Add HeatWave cluster**.
+6. Record the DB System private IP address in your private notes.
 
-7. Select the `HeatWave.512GB` shape, use one node, enable **MySQL HeatWave Lakehouse**, and select **Add HeatWave cluster**.
-
-8. Wait for the MySQL HeatWave Cluster state to become **Active**.
-
-9. Record the DB System private IP address in your private notes.
-
-10. From the Oracle Linux instance, connect to the private DB System. Replace the placeholders.
+7. From the Oracle Linux instance, connect to the private DB System. Replace the placeholders.
 
     ```bash
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
     ```
 
-11. Confirm the MySQL Server version and the availability of the MySQL HeatWave GenAI routine.
+8. Confirm the MySQL Server version and the availability of the MySQL HeatWave GenAI routine.
 
     ```sql
     <copy>SELECT VERSION();
@@ -373,7 +392,7 @@ You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB S
     );</copy>
     ```
 
-    > **Checkpoint:** The MySQL HeatWave DB System is reachable from PHP, reports MySQL Server 9.0 or later, and returns a response from `ML_GENERATE`.
+    > **Checkpoint:** The MySQL HeatWave DB System is reachable from the Oracle Linux instance, reports MySQL Server 9.0 or later, and returns a response from `ML_GENERATE`.
 
 You have created the OCI LAMP environment and configured a MySQL HeatWave DB System for MySQL HeatWave GenAI. In the next lab, you will create the saved-comparison database schema.
 
