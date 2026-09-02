@@ -85,7 +85,7 @@ function app_url(string $path = ''): string
     return $base . '/' . ltrim($path, '/');
 }
 
-function redirect(string $path): never
+function redirect(string $path): void
 {
     header('Location: ' . app_url($path), true, 303);
     exit;
@@ -171,7 +171,7 @@ function render_footer(): void
     echo '</main><footer><div class="wrap">Version 1 has no login and does not maintain master SKU catalogs.</div></footer></body></html>';
 }
 
-function fail_page(string $title, string $message, int $status = 400): never
+function fail_page(string $title, string $message, int $status = 400): void
 {
     http_response_code($status);
     render_header($title);

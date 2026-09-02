@@ -145,7 +145,7 @@ OCI security lists act as a virtual firewall for the subnet. SSH and HTTP access
     | Destination port range | `3306` |
     | Description | `Allow MySQL traffic from the application subnet` |
 
-    > **Checkpoint:** The public subnet allows SSH traffic on TCP port 22 and HTTP traffic on TCP port 80.
+    > **Checkpoint:** The public subnet allows SSH traffic on TCP port 22 and HTTP traffic on TCP port 80. The private subnet allows MySQL traffic on TCP port 3306 only from the application subnet CIDR `10.0.0.0/24`.
 
 ## Task 4: Create the Oracle Linux compute instance
 
@@ -233,7 +233,15 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
 ## Task 6: Install and configure Apache, PHP, and the MySQL client
 
-1. Install Apache, PHP, the PHP driver for MySQL, and the MySQL command-line client supplied by Oracle Linux 9.
+1. Enable the recommended Oracle Linux 9 application streams for PHP and the MySQL client.
+
+    ```bash
+    <copy>sudo dnf module enable -y php:8.3 mysql:8.4</copy>
+    ```
+
+    PHP 8.3 and MySQL 8.4 are Oracle-supported Oracle Linux 9 AppStream versions with published support through 2029. Selecting the streams explicitly prevents DNF from installing the original PHP 8.0 and MySQL 8.0 streams.
+
+2. Install Apache, PHP 8.3, the matching PHP driver for MySQL, and the MySQL 8.4 command-line client.
 
     ```bash
     <copy>sudo dnf install -y httpd php php-mysqlnd mysql</copy>
@@ -241,26 +249,35 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     The `mysql` package installs the command-line client. It does not install a local MySQL Server on the compute instance.
 
-2. Enable and start Apache.
+    If you previously completed an older draft of this task and installed PHP 8.0 and MySQL 8.0, switch the installed packages to the selected streams before continuing.
+
+    ```bash
+    <copy>sudo dnf module reset -y php mysql
+    sudo dnf module enable -y php:8.3 mysql:8.4
+    sudo dnf distro-sync -y
+    sudo dnf install -y httpd php php-mysqlnd mysql</copy>
+    ```
+
+3. Enable and start Apache.
 
     ```bash
     <copy>sudo systemctl enable --now httpd</copy>
     ```
 
-3. Allow HTTP traffic through the Oracle Linux firewall.
+4. Allow HTTP traffic through the Oracle Linux firewall.
 
     ```bash
     <copy>sudo firewall-cmd --permanent --add-service=http
     sudo firewall-cmd --reload</copy>
     ```
 
-4. Allow Apache to connect to the private MySQL HeatWave DB System.
+5. Allow Apache to connect to the private MySQL HeatWave DB System.
 
     ```bash
     <copy>sudo setsebool -P httpd_can_network_connect_db 1</copy>
     ```
 
-5. Confirm that Apache is running.
+6. Confirm that Apache is running.
 
     ```bash
     <copy>systemctl is-active httpd</copy>
@@ -268,7 +285,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     The command should return `active`.
 
-6. Confirm the installed MySQL client and PHP versions, and verify that the client supports the required TLS option.
+7. Confirm the installed MySQL client and PHP versions, and verify that the client supports the required TLS option.
 
     ```bash
     <copy>mysql --version
@@ -276,9 +293,9 @@ The compute instance runs the web application. This workshop uses a paid, genera
     php --version</copy>
     ```
 
-    The output should report the installed MySQL client version and include `ssl-mode`.
+    Confirm that the output reports MySQL client 8.4, PHP 8.3, and the `ssl-mode` option.
 
-7. Confirm that the operating-system firewall permits HTTP.
+8. Confirm that the operating-system firewall permits HTTP.
 
     ```bash
     <copy>sudo firewall-cmd --list-services</copy>
@@ -286,7 +303,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     The output should include `http`.
 
-    > **Checkpoint:** Apache, PHP, and the Oracle Linux-provided MySQL client are installed. The MySQL client supports TLS connections, Apache is active, and TCP port 80 is available.
+    > **Checkpoint:** Apache, PHP 8.3, and the Oracle Linux-provided MySQL 8.4 client are installed. The MySQL client supports TLS connections, Apache is active, and TCP port 80 is available.
 
 ## Task 7: Verify PHP through Apache
 
@@ -404,6 +421,8 @@ You have created the OCI LAMP environment and configured a MySQL HeatWave DB Sys
 * [Launching Your First Linux Instance](https://docs.oracle.com/en-us/iaas/Content/Compute/tutorials/first-linux-instance/overview.htm)
 * [Oracle Linux 9 Image](https://docs.oracle.com/en-us/iaas/oracle-linux/oci/oracle-linux-9.htm)
 * [Install Apache and PHP on Oracle Linux](https://docs.oracle.com/en-us/iaas/Content/developer/apache-on-oracle-linux/01-summary.htm)
+* [Oracle Linux 9 PHP 8.3 and MySQL 8.4 application streams](https://docs.oracle.com/en/operating-systems/oracle-linux/9/relnotes9.6/ol9-features-DynamicProgramming.html)
+* [Oracle Linux application-stream life cycles](https://docs.oracle.com/en/operating-systems/oracle-linux/product-lifecycle/)
 * [MySQL HeatWave GenAI requirements](https://dev.mysql.com/doc/heatwave/en/mys-hw-genai-requirements.html)
 * [ML_GENERATE](https://dev.mysql.com/doc/heatwave/en/mys-hwgenai-ml-generate.html)
 
