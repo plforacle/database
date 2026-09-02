@@ -1,5 +1,7 @@
 # Oracle Linux Value Navigator
 
-This repository contains the workshop and application materials for building the Oracle Linux Value Navigator. The workshop guides a learner from an Oracle Cloud Infrastructure LAMP environment to a tested subscription-cost comparison application.
+This repository contains the complete workshop and application source for building Oracle Linux Value Navigator. The workshop guides a learner from an Oracle Cloud Infrastructure LAMP environment to a tested subscription-cost comparison application.
 
 The initial workshop uses only synthetic sample data. It is a subscription-cost comparison, not a quote, licensing determination, or full TCO analysis.
+
+The executable application is under `application/`. It includes the MySQL schema, private PHP libraries, public controllers and views, a staged deployment script, and automated checks. Lab 1 is the validated infrastructure baseline. Labs 2 through 6 create, deploy, enable, and test the application.

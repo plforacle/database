@@ -1,224 +1,130 @@
-# Lab 2: Create the Database Schema for Inputs, Reviews, Results, and Audit History
+# Lab 2: Create the Workbook-Style Database Schema
 
 ## Introduction
 
-In this lab, you create a database schema in the MySQL HeatWave DB System that gives the Oracle Linux Value Navigator the persistence of an Excel workbook. A representative can save a comparison, reopen it, review the original input and formatted lines, revise decisions, and reproduce the results.
+In this lab, you download the Oracle Linux Value Navigator source and create its complete database schema in the MySQL HeatWave DB System. The schema preserves the two original freeform inputs, every AI formatting run, the original AI suggestions, representative corrections and decisions, aligned comparison groups, calculated result snapshots, and workflow events.
 
-The database stores each comparison as a user-created snapshot. It does not maintain master RHEL or Oracle Linux product catalogs and does not claim that a saved SKU, description, or price is authoritative outside that comparison.
+The schema stores product text only inside a representative-created comparison. It does not contain or maintain a master RHEL or Oracle Linux SKU catalog.
 
-Estimated Time: 60 minutes
-
-### About the Application Flow
-
-The application follows this flow:
-
-1. The representative creates a comparison.
-2. The representative pastes the complete RHEL SKU text into the RHEL freeform input.
-3. MySQL HeatWave GenAI extracts and formats possible RHEL SKUs, descriptions, quantities, and prices.
-4. The representative pastes the complete Oracle Linux SKU text into the Oracle Linux freeform input.
-5. MySQL HeatWave GenAI extracts and formats possible Oracle Linux SKUs, descriptions, quantities, and prices.
-6. The representative reviews, corrects, aligns, and confirms both sides.
-7. PHP calculates annual, three-year, and five-year totals.
-8. The application saves the inputs, confirmed lines, decisions, rule version, and results.
-9. The representative can reopen, revise, duplicate, or export the comparison.
-
-The database in the MySQL HeatWave DB System acts like the saved workbook file. Product data exists only as part of the comparison in which the representative supplied and confirmed it.
+Estimated Time: 45 minutes
 
 ### Objectives
 
 In this lab, you will:
 
-* Create the application database and PHP account.
-* Record calculation-rule versions.
-* Store the complete RHEL and Oracle Linux freeform SKU text for each saved comparison.
-* Store AI-formatted and representative-confirmed lines.
-* Store calculated result snapshots.
-* Record AI and human workflow events.
-* Apply least-privilege permissions.
+* Download the application source used by the remaining labs.
+* Create the seven application tables and demonstration rule version.
+* Create the PHP database account.
+* Grant application data access and MySQL HeatWave GenAI access.
+* Verify the schema and application account.
 
 ### Prerequisites
 
 This lab assumes you have:
 
-* A running Oracle Linux instance from Lab 1.
-* An active MySQL HeatWave DB System running version 9.0 Innovation or later.
-* An active MySQL HeatWave Cluster with Lakehouse enabled and support for MySQL HeatWave GenAI.
-* Terminal access to the instance.
+* The working Oracle Linux instance from Lab 1.
+* The active MySQL HeatWave DB System and private IP address from Lab 1.
 * The DB System administrator password created in Lab 1.
+* The successful `sys.ML_GENERATE` result from the Lab 1 checkpoint.
 
-> **Note:** Use demonstration information only in this prototype. Authentication, ownership, encryption, retention, and deletion controls are required before storing customer information.
+> **Note:** Use demonstration information only. Version 1 has no login, user ownership, or production data-governance controls.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
-## Task 1: Create the database and application account
+## Task 1: Download the workshop application source
 
-1. Connect to the private MySQL HeatWave DB System as its administrator. Replace the private-IP placeholder.
+1. Connect to the Oracle Linux compute instance as `opc` if you are not already connected.
+
+2. Install Git from the enabled Oracle Linux repositories.
+
+    ```bash
+    <copy>sudo dnf install -y git</copy>
+    ```
+
+3. Create a shallow, sparse checkout containing only this workshop.
+
+    ```bash
+    <copy>cd ~
+    git clone --depth 1 --filter=blob:none --sparse https://github.com/oracle-livelabs/database.git livelabs-database
+    cd ~/livelabs-database
+    git sparse-checkout set ol-value-navigator</copy>
+    ```
+
+    If `~/livelabs-database` already exists, update it instead.
+
+    ```bash
+    <copy>cd ~/livelabs-database
+    git pull --ff-only
+    git sparse-checkout set ol-value-navigator</copy>
+    ```
+
+4. List the application assets.
+
+    ```bash
+    <copy>find ~/livelabs-database/ol-value-navigator/application -maxdepth 2 -type f | sort</copy>
+    ```
+
+    Confirm that the output includes `database/schema.sql`, `deploy.sh`, PHP files under `lib` and `public`, and tests under `tests`.
+
+    > **Checkpoint:** The complete workshop application source is available on the compute instance.
+
+## Task 2: Review and load the schema
+
+1. Review the SQL file before executing it.
+
+    ```bash
+    <copy>less ~/livelabs-database/ol-value-navigator/application/database/schema.sql</copy>
+    ```
+
+    Press `q` to exit `less`.
+
+2. Understand what the file creates.
+
+    | Table | Purpose |
+    | --- | --- |
+    | `calculation_rule_version` | Identifies the deterministic PHP rule used for a saved result |
+    | `comparison` | Represents one saved comparison workbook and its workflow state |
+    | `comparison_input` | Preserves the complete RHEL and Oracle Linux freeform inputs |
+    | `ai_formatting_run` | Records the model, outcome, and validated response for each formatting attempt |
+    | `comparison_line` | Preserves AI suggestions separately from representative-reviewed values and alignment decisions |
+    | `comparison_result` | Stores the annual, three-year, and five-year result snapshot |
+    | `application_event` | Records AI, representative, and application workflow events |
+
+3. Load the schema as the DB System administrator. Replace the private IP placeholder.
+
+    ```bash
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED &lt; ~/livelabs-database/ol-value-navigator/application/database/schema.sql</copy>
+    ```
+
+4. Enter the DB System administrator password when prompted.
+
+    The schema file creates the database with `utf8mb4`, creates all tables with foreign keys and fixed-precision decimal money columns, and loads `workshop-v1` calculation-rule metadata.
+
+## Task 3: Create the PHP database account
+
+1. Connect as the DB System administrator.
 
     ```bash
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
     ```
 
-2. Enter the DB System administrator password when prompted.
-
-3. Create the application database and local PHP account. Replace `CHANGE_THIS_PASSWORD` with a private password.
+2. Create the application account. Replace `CHANGE_THIS_PASSWORD` with a new private password.
 
     ```sql
-    <copy>CREATE DATABASE ol_value_navigator
-      CHARACTER SET utf8mb4
-      COLLATE utf8mb4_0900_ai_ci;
-
-    CREATE USER 'olvn_app'@'%'
-      IDENTIFIED BY 'CHANGE_THIS_PASSWORD';
-
-    USE ol_value_navigator;</copy>
+    <copy>CREATE USER 'olvn_app'@'%'
+      IDENTIFIED BY 'CHANGE_THIS_PASSWORD';</copy>
     ```
 
-    Store the password securely. Do not add it to the workshop repository.
-
-## Task 2: Create the rule-version and comparison tables
-
-1. Create the table that identifies the PHP calculation rules used for a saved result.
+    If you are repeating the lab and the account already exists, reset its password instead.
 
     ```sql
-    <copy>CREATE TABLE calculation_rule_version (
-      id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-      version_label VARCHAR(64) NOT NULL UNIQUE,
-      description VARCHAR(500) NOT NULL,
-      source_reference VARCHAR(255) NOT NULL,
-      governance_status ENUM('DEMONSTRATION','APPROVED','RETIRED')
-        NOT NULL DEFAULT 'DEMONSTRATION',
-      approved_by VARCHAR(255) NULL,
-      approved_at DATETIME NULL,
-      active TINYINT(1) NOT NULL DEFAULT 1,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );</copy>
+    <copy>ALTER USER 'olvn_app'@'%'
+      IDENTIFIED BY 'CHANGE_THIS_PASSWORD';</copy>
     ```
 
-2. Create the table representing one saved comparison.
+    Store this password securely. Do not add the real value to the repository, a shell script, or a command-line argument.
 
-    ```sql
-    <copy>CREATE TABLE comparison (
-      id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      status ENUM('DRAFT','NEEDS_REVIEW','CONFIRMED','CALCULATED')
-        NOT NULL DEFAULT 'DRAFT',
-      rule_version_id BIGINT UNSIGNED NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-      CONSTRAINT fk_comparison_rule_version
-        FOREIGN KEY (rule_version_id)
-        REFERENCES calculation_rule_version(id)
-    );</copy>
-    ```
-
-    > **Checkpoint:** A comparison has a name, workflow status, calculation-rule version, and timestamps.
-
-## Task 3: Create the input and formatted-line tables
-
-1. Create the table that preserves the complete RHEL and Oracle Linux freeform SKU text supplied for a comparison.
-
-    ```sql
-    <copy>CREATE TABLE comparison_input (
-      id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-      comparison_id BIGINT UNSIGNED NOT NULL,
-      input_side ENUM('RHEL','ORACLE_LINUX') NOT NULL,
-      raw_text MEDIUMTEXT NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-      CONSTRAINT fk_input_comparison
-        FOREIGN KEY (comparison_id)
-        REFERENCES comparison(id) ON DELETE CASCADE,
-      UNIQUE KEY unique_comparison_input (comparison_id, input_side)
-    );</copy>
-    ```
-
-2. Create the table that stores AI-formatted and representative-reviewed lines.
-
-    ```sql
-    <copy>CREATE TABLE comparison_line (
-      id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-      comparison_input_id BIGINT UNSIGNED NOT NULL,
-      line_number INT UNSIGNED NOT NULL,
-      comparison_group INT UNSIGNED NULL,
-      sku VARCHAR(128) NULL,
-      description VARCHAR(500) NULL,
-      quantity DECIMAL(12,2) NULL,
-      annual_unit_price DECIMAL(14,2) NULL,
-      review_status ENUM(
-        'AI_SUGGESTED',
-        'CONFIRMED',
-        'EXCLUDED',
-        'UNRESOLVED'
-      ) NOT NULL DEFAULT 'AI_SUGGESTED',
-      representative_note VARCHAR(500) NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-      CONSTRAINT fk_line_input
-        FOREIGN KEY (comparison_input_id)
-        REFERENCES comparison_input(id) ON DELETE CASCADE,
-      UNIQUE KEY unique_input_line (comparison_input_id, line_number),
-      CHECK (quantity IS NULL OR quantity &gt; 0),
-      CHECK (annual_unit_price IS NULL OR annual_unit_price &gt;= 0)
-    );</copy>
-    ```
-
-    The same `comparison_group` value can align related RHEL and Oracle Linux lines. An unresolved line remains visible but is not included in confirmed totals.
-
-    > **Checkpoint:** The database can preserve the complete original text from both inputs and the reviewed rows without treating them as a master product catalog.
-
-## Task 4: Create the result and event tables
-
-1. Create the table that preserves the calculated result snapshot.
-
-    ```sql
-    <copy>CREATE TABLE comparison_result (
-      id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-      comparison_id BIGINT UNSIGNED NOT NULL UNIQUE,
-      rhel_annual_total DECIMAL(16,2) NOT NULL,
-      oracle_linux_annual_total DECIMAL(16,2) NOT NULL,
-      rhel_three_year_total DECIMAL(16,2) NOT NULL,
-      oracle_linux_three_year_total DECIMAL(16,2) NOT NULL,
-      rhel_five_year_total DECIMAL(16,2) NOT NULL,
-      oracle_linux_five_year_total DECIMAL(16,2) NOT NULL,
-      calculated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      CONSTRAINT fk_result_comparison
-        FOREIGN KEY (comparison_id)
-        REFERENCES comparison(id) ON DELETE CASCADE,
-      CHECK (rhel_annual_total &gt;= 0),
-      CHECK (oracle_linux_annual_total &gt;= 0)
-    );</copy>
-    ```
-
-2. Create the append-only event table.
-
-    ```sql
-    <copy>CREATE TABLE application_event (
-      id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-      comparison_id BIGINT UNSIGNED NOT NULL,
-      event_type ENUM(
-        'AI_FORMATTING_COMPLETED',
-        'REPRESENTATIVE_CONFIRMED',
-        'CALCULATION_COMPLETED',
-        'COMPARISON_EXPORTED'
-      ) NOT NULL,
-      actor_type ENUM('AI','REPRESENTATIVE','APPLICATION') NOT NULL,
-      outcome ENUM('COMPLETED','CONFIRMED','REJECTED','FAILED') NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      CONSTRAINT fk_event_comparison
-        FOREIGN KEY (comparison_id)
-        REFERENCES comparison(id) ON DELETE CASCADE,
-      INDEX idx_event_comparison (comparison_id, created_at)
-    );</copy>
-    ```
-
-    > **Checkpoint:** Saved results and workflow events can be traced back to one comparison.
-
-## Task 5: Apply least-privilege permissions
-
-1. Allow PHP to read rule versions and manage saved comparison records.
+3. Grant the data permissions required by the PHP application.
 
     ```sql
     <copy>GRANT SELECT
@@ -233,6 +139,10 @@ This lab assumes you have:
       ON ol_value_navigator.comparison_input
       TO 'olvn_app'@'%';
 
+    GRANT SELECT, INSERT, DELETE
+      ON ol_value_navigator.ai_formatting_run
+      TO 'olvn_app'@'%';
+
     GRANT SELECT, INSERT, UPDATE, DELETE
       ON ol_value_navigator.comparison_line
       TO 'olvn_app'@'%';
@@ -243,34 +153,35 @@ This lab assumes you have:
 
     GRANT SELECT, INSERT
       ON ol_value_navigator.application_event
-      TO 'olvn_app'@'%';
-
-    FLUSH PRIVILEGES;</copy>
+      TO 'olvn_app'@'%';</copy>
     ```
 
-2. Display the application account permissions.
+4. Grant access to the MySQL HeatWave GenAI system routine.
 
     ```sql
-    <copy>SHOW GRANTS FOR 'olvn_app'@'%';</copy>
+    <copy>GRANT SELECT, EXECUTE
+      ON sys.*
+      TO 'olvn_app'@'%';</copy>
     ```
 
-    The PHP account can manage comparisons but cannot create, alter, or drop database tables.
+    The application uses the single-row `sys.ML_GENERATE` routine. It does not receive schema creation, table alteration, or user-administration privileges.
 
-## Task 6: Load rule metadata and verify the database
-
-1. Insert the demonstration calculation-rule version.
+5. Display the resulting grants, and then exit.
 
     ```sql
-    <copy>INSERT INTO calculation_rule_version
-      (version_label, description, source_reference, governance_status)
-    VALUES
-      ('workshop-v1',
-       'Annual cost equals quantity multiplied by annual unit price; three-year and five-year costs use the confirmed annual amount.',
-       'Oracle Linux Value Navigator workshop demonstration rules',
-       'DEMONSTRATION');</copy>
+    <copy>SHOW GRANTS FOR 'olvn_app'@'%';
+    EXIT;</copy>
     ```
 
-2. Display the tables.
+## Task 4: Verify the schema and GenAI access
+
+1. Connect with the new application account.
+
+    ```bash
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    ```
+
+2. Confirm that all seven tables exist.
 
     ```sql
     <copy>SHOW TABLES;</copy>
@@ -279,6 +190,7 @@ This lab assumes you have:
     Confirm that the output contains:
 
     ```text
+    ai_formatting_run
     application_event
     calculation_rule_version
     comparison
@@ -287,7 +199,32 @@ This lab assumes you have:
     comparison_result
     ```
 
-3. Confirm that no master product-catalog table exists.
+3. Confirm the active calculation-rule version.
+
+    ```sql
+    <copy>SELECT version_label, governance_status, active
+    FROM calculation_rule_version;</copy>
+    ```
+
+    Confirm that `workshop-v1` is active and has the `DEMONSTRATION` governance status.
+
+4. Confirm that the application account can call MySQL HeatWave GenAI.
+
+    ```sql
+    <copy>SELECT sys.ML_GENERATE(
+      'Return the word READY.',
+      JSON_OBJECT(
+        'task', 'generation',
+        'model_id', 'mistral-7b-instruct-v3',
+        'language', 'en',
+        'temperature', 0
+      )
+    );</copy>
+    ```
+
+    Wait for the response and confirm that its `text` field contains `READY`.
+
+5. Confirm that no master catalog table exists.
 
     ```sql
     <copy>SELECT table_name
@@ -296,26 +233,26 @@ This lab assumes you have:
       AND table_name LIKE '%catalog%';</copy>
     ```
 
-    The query should return an empty result.
+    The query must return an empty result.
 
-4. Exit the MySQL client.
+6. Exit the MySQL client.
 
     ```sql
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** The database in the MySQL HeatWave DB System can preserve a complete comparison like a saved workbook, but the application does not maintain a master RHEL or Oracle Linux SKU catalog.
+    > **Checkpoint:** The application account can manage saved-comparison records and call `sys.ML_GENERATE`, but the schema has no master RHEL or Oracle Linux SKU catalog.
 
-You have created the persistence layer for saved comparisons. In the next lab, you will build the PHP interface for creating, saving, and reopening comparisons.
+You have created the full persistence layer. In the next lab, you will deploy the PHP foundation and use it to create, list, and reopen comparison workbooks.
 
 ## Learn More
 
-* [MySQL HeatWave GenAI](https://dev.mysql.com/doc/heatwave/en/mys-hw-genai-overview.html)
-* [MySQL access control and account management](https://dev.mysql.com/doc/refman/8.4/en/access-control.html)
-* [PHP PDO documentation](https://www.php.net/manual/en/book.pdo.php)
+* [MySQL HeatWave GenAI roles and privileges](https://dev.mysql.com/doc/heatwave/en/mys-hw-genai-privileges.html)
+* [MySQL fixed-point data types](https://dev.mysql.com/doc/refman/8.4/en/fixed-point-types.html)
+* [MySQL access control](https://dev.mysql.com/doc/refman/8.4/en/access-control.html)
 
 ## Acknowledgements
 
 * **Author** - Perside Foster, Mark Atkinson, Shawn Kelley
 * **Contributors** - Nick Mader
-* **Last Updated By/Date** - Perside Foster, August 2026
+* **Last Updated By/Date** - Perside Foster, September 2026

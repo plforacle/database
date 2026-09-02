@@ -18,28 +18,28 @@
       "filename": "../../oci-lamp-setup/oci-lamp-setup.md"
     },
     {
-      "title": "Lab 2: Create the Database Schema for Inputs, Reviews, Results, and Audit History",
-      "description": "Create tables in the MySQL HeatWave DB System for complete RHEL and Oracle Linux freeform inputs, reviewed lines, results, rule versions, and workflow events.",
+      "title": "Lab 2: Create the Workbook-Style Database Schema",
+      "description": "Download the application source and create the complete persistence schema and least-privilege PHP account.",
       "filename": "../../catalog-database/catalog-database.md"
     },
     {
-      "title": "Lab 3: Build the PHP Input and Saved Comparison Review Pages",
-      "description": "Build separate RHEL and Oracle Linux inputs that accept and save complete freeform SKU text in the MySQL HeatWave DB System.",
+      "title": "Lab 3: Deploy the PHP Foundation and Saved-Input Workflow",
+      "description": "Deploy the secure PHP foundation and create, list, and reopen complete RHEL and Oracle Linux inputs.",
       "filename": "../../php-calculator/php-calculator.md"
     },
     {
-      "title": "Lab 4: Use MySQL HeatWave GenAI to Format Complete Inputs and Build the Representative Review Page",
-      "description": "Use ML_GENERATE to convert the complete text from both freeform SKU inputs into validated suggestions for human review.",
+      "title": "Lab 4: Enable GenAI Formatting and Representative Review",
+      "description": "Use ML_GENERATE to create validated suggestions, then correct, align, decide, and use manual fallback.",
       "filename": "../../ai-assisted-input/ai-assisted-input.md"
     },
     {
-      "title": "Lab 5: Align Confirmed RHEL and Oracle Linux Lines and Build the Cost Results Page",
-      "description": "Align representative-confirmed lines created from both complete inputs and calculate traceable subscription-cost results.",
+      "title": "Lab 5: Calculate, Save, and Manage the Complete Comparison",
+      "description": "Calculate traceable results and enable reopen, revision, duplication, and CSV workbook export.",
       "filename": "../../matching-and-results/matching-and-results.md"
     },
     {
-      "title": "Lab 6: Test, Deploy, and Demonstrate the Complete Application Workflow",
-      "description": "Test the full workflow and rehearse the prototype demonstration.",
+      "title": "Lab 6: Test and Demonstrate the Complete Application",
+      "description": "Run executable verification, test fail-closed scenarios, and rehearse the complete prototype demonstration.",
       "filename": "../../test-and-demo/test-and-demo.md"
     },
     {

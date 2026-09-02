@@ -1,122 +1,220 @@
-# Lab 3: Build the PHP Input and Saved Comparison Review Pages
+# Lab 3: Deploy the PHP Foundation and Saved-Input Workflow
 
 ## Introduction
 
-This lab walks you through replacing the temporary test page with a PHP application that saves and reopens the complete freeform RHEL and Oracle Linux SKU text in a database in the MySQL HeatWave DB System.
+In this lab, you deploy the working PHP application foundation. The application saves the complete RHEL and Oracle Linux freeform text in one transaction, lists saved comparisons, and reopens either original input without exposing database credentials.
+
+The supplied source is the application you will continue enabling in Labs 4 and 5. A stage file keeps later features unavailable until the lab that explains and verifies them.
 
 Estimated Time: 60 minutes
-
-### About the PHP Application
-
-The prototype uses server-rendered PHP and PDO prepared statements. Database credentials remain outside the public web directory, and the MySQL HeatWave DB System is reached through its private IP address.
 
 ### Objectives
 
 In this lab, you will:
 
-* Create the application directories.
-* Configure a PDO database connection.
-* Build a comparison form.
-* Capture and save the complete text from both freeform SKU inputs.
-* Reopen a saved comparison.
+* Review the complete application source layout.
+* Deploy the application for the Lab 3 stage.
+* Configure the private PDO connection.
+* Verify the database connection from the Apache service account.
+* Create, list, and reopen a saved comparison.
+* Verify transactional storage and safe browser output.
 
 ### Prerequisites
 
 This lab assumes you have:
 
-* Access to the workshop Oracle Linux instance.
-* A running Apache and PHP environment.
-* The private MySQL HeatWave DB System and the saved-comparison database schema created in Lab 2.
+* Completed Lab 2.
+* The workshop source under `~/livelabs-database/ol-value-navigator`.
+* The MySQL HeatWave DB System private IP address.
+* The private password for `olvn_app`.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
-## Task 1: Create the application directories
+## Task 1: Review the application structure
 
-1. Create the public application directory.
-
-    ```bash
-    <copy>sudo mkdir -p /var/www/html/ol-value-navigator
-    sudo chown -R opc:apache /var/www/html/ol-value-navigator
-    sudo chmod -R 750 /var/www/html/ol-value-navigator</copy>
-    ```
-
-2. Create a private configuration directory outside the Apache document root.
+1. Change to the application source directory.
 
     ```bash
-    <copy>sudo mkdir -p /var/www/ol-value-navigator
-    sudo chown opc:apache /var/www/ol-value-navigator
-    sudo chmod 750 /var/www/ol-value-navigator</copy>
+    <copy>cd ~/livelabs-database/ol-value-navigator/application</copy>
     ```
 
-## Task 2: Configure the database connection
-
-1. Create `/var/www/ol-value-navigator/config.php`. Replace the private IP and password placeholders with values from Labs 1 and 2.
-
-    ```php
-    <copy>&lt;?php
-    return [
-        'dsn' =&gt; 'mysql:host=HEATWAVE_PRIVATE_IP;port=3306;dbname=ol_value_navigator;charset=utf8mb4',
-        'user' =&gt; 'olvn_app',
-        'password' =&gt; 'CHANGE_THIS_PASSWORD',
-    ];</copy>
-    ```
-
-2. Restrict access to the configuration file.
+2. List the application files.
 
     ```bash
-    <copy>sudo chown opc:apache /var/www/ol-value-navigator/config.php
-    sudo chmod 640 /var/www/ol-value-navigator/config.php</copy>
+    <copy>find . -maxdepth 2 -type f | sort</copy>
     ```
 
-3. Create `/var/www/html/ol-value-navigator/database.php` with a PDO connection that enables exception mode.
+3. Use this map to understand what will be installed.
 
-    ```php
-    <copy>&lt;?php
-    $config = require '/var/www/ol-value-navigator/config.php';
+    | Source | Installed location | Responsibility |
+    | --- | --- | --- |
+    | `config/config.php.example` | `/var/www/ol-value-navigator/config.php` | Private database, model, size-limit, and route settings |
+    | `lib/bootstrap.php` | `/var/www/ol-value-navigator/lib/bootstrap.php` | Session, security headers, PDO, CSRF, output escaping, and shared page helpers |
+    | `lib/repository.php` | `/var/www/ol-value-navigator/lib/repository.php` | Prepared database queries and workflow-event storage |
+    | `lib/genai.php` | `/var/www/ol-value-navigator/lib/genai.php` | Prompt construction, `ML_GENERATE`, strict JSON validation, and suggestion storage |
+    | `lib/money.php` | `/var/www/ol-value-navigator/lib/money.php` | Integer-based decimal parsing, line-cost calculation, and period totals |
+    | `public/*.php` | `/var/www/html/ol-value-navigator/` | Browser controllers and server-rendered pages |
+    | `public/style.css` | `/var/www/html/ol-value-navigator/style.css` | Responsive application presentation |
 
-    $pdo = new PDO(
-        $config['dsn'],
-        $config['user'],
-        $config['password'],
-        [PDO::ATTR_ERRMODE =&gt; PDO::ERRMODE_EXCEPTION]
-    );</copy>
+    Files under `/var/www/ol-value-navigator` are outside the Apache document root. Browser-accessible PHP files never contain the database password.
+
+4. Review the Lab 3 controllers.
+
+    ```bash
+    <copy>less public/index.php
+    less public/create.php
+    less public/comparison.php</copy>
     ```
 
-## Task 3: Build the comparison form
+    Press `q` after each file. Notice these controls:
 
-1. Create `/var/www/html/ol-value-navigator/index.php`.
+    * `index.php` renders two separate bounded text areas and lists existing comparisons.
+    * `create.php` accepts only `POST`, verifies a CSRF token, validates all required fields, and uses one database transaction.
+    * `comparison.php` uses the numeric comparison identifier to reopen both complete original inputs and escapes every displayed value.
 
-2. Add a comparison name, a **RHEL SKU information** text area, and an **Oracle Linux SKU information** text area. Both text areas must accept complete freeform text, including any SKUs, descriptions, quantities, prices, and notes.
+## Task 2: Deploy the Lab 3 application stage
 
-3. Submit the form with `POST` and validate that the comparison name and both complete freeform inputs are present.
+1. Run the supplied deployment script with stage `3`.
 
-4. Use one transaction and PDO prepared statements to create one `comparison` row and two `comparison_input` rows.
+    ```bash
+    <copy>cd ~/livelabs-database/ol-value-navigator/application
+    sudo bash deploy.sh 3</copy>
+    ```
 
-5. Redirect to a review page that loads the saved comparison by its identifier and displays the complete original text from both inputs.
+    The script performs these actions:
 
-## Task 4: Verify the saved comparison
+    * Creates the private application and public web directories.
+    * Installs private libraries with group-readable permissions for Apache.
+    * Installs public controllers and CSS under the Apache document root.
+    * Writes `3` to the private stage file.
+    * Creates the private configuration from the example only when it does not already exist.
+    * Restores SELinux file contexts and reloads Apache.
 
-1. Open `http://PUBLIC_IP_ADDRESS/ol-value-navigator/` in a browser.
+2. Confirm the installed stage and permissions.
 
-2. Paste complete demonstration RHEL and Oracle Linux SKU text into their separate freeform inputs. Include example SKUs, descriptions, quantities, prices, and notes.
+    ```bash
+    <copy>sudo cat /var/www/ol-value-navigator/stage
+    sudo ls -l /var/www/ol-value-navigator/config.php
+    ls -l /var/www/html/ol-value-navigator</copy>
+    ```
 
-3. Connect to the MySQL HeatWave DB System with the MySQL client and verify the saved rows.
+    Confirm that the stage is `3`, the private configuration is owned by `root:apache` with mode `640`, and the public files do not contain a configuration file.
+
+## Task 3: Configure and verify PDO
+
+1. Open the private configuration.
+
+    ```bash
+    <copy>sudo vi /var/www/ol-value-navigator/config.php</copy>
+    ```
+
+2. Replace only these placeholders:
+
+    * Replace `HEATWAVE_PRIVATE_IP` in `dsn` with the DB System private IP address.
+    * Replace `CHANGE_THIS_PASSWORD` with the password for `olvn_app`.
+
+    Keep `dbname=ol_value_navigator`, `charset=utf8mb4`, the `olvn_app` user, the model identifier, and the size limits unchanged. If the password contains a single quote or backslash, prefix that character with a backslash in the PHP single-quoted string.
+
+3. Save the file and exit `vi`.
+
+4. Run the database connection check as the Apache service account.
+
+    ```bash
+    <copy>sudo -u apache php ~/livelabs-database/ol-value-navigator/application/tests/check-database.php</copy>
+    ```
+
+    Confirm that the output begins with `Database connection passed` and shows the server version and `workshop-v1` rule.
+
+5. If the test fails, verify the private IP, application password, private-subnet ingress rule for TCP port `3306`, and the grants from Lab 2. The application intentionally returns a generic browser error and writes only the exception class to the Apache error log.
+
+    > **Checkpoint:** PHP running as Apache can reach the private MySQL HeatWave DB System with the least-privilege application account.
+
+## Task 4: Create and reopen a saved comparison
+
+1. Open the application in your local browser. Replace the placeholder with the compute instance public IP address.
+
+    ```text
+    http://PUBLIC_IP_ADDRESS/ol-value-navigator/
+    ```
+
+2. Confirm that the page contains a comparison name, a **RHEL SKU information** text area, and an **Oracle Linux SKU information** text area.
+
+3. Enter `Lab 3 saved-input test` as the comparison name.
+
+4. Paste this complete demonstration RHEL input.
+
+    ```text
+    DEMO-RHEL-STD | Demonstration RHEL standard support | Quantity 10 | Annual unit price USD 1200.00
+    DEMO-RHEL-PREM | Demonstration RHEL premium support | Quantity 2 | Annual unit price USD 2400.00
+    Note: synthetic workshop data only.
+    ```
+
+5. Paste this complete demonstration Oracle Linux input.
+
+    ```text
+    DEMO-OL-BASIC | Demonstration Oracle Linux basic support | Quantity 10 | Annual unit price USD 800.00
+    DEMO-OL-PREM | Demonstration Oracle Linux premier support | Quantity 2 | Annual unit price USD 1600.00
+    Note: synthetic workshop data only.
+    ```
+
+6. Select **Save original inputs**.
+
+7. Confirm that the comparison page displays both complete original inputs and a `DRAFT` status. It must not display the database password, DSN, or private IP address.
+
+8. Select **All comparisons**, and then select **Open** for `Lab 3 saved-input test`.
+
+9. Confirm that both original inputs reopen unchanged.
+
+## Task 5: Verify the database transaction
+
+1. Connect with the application account.
+
+    ```bash
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    ```
+
+2. Display the saved comparison and the lengths of both complete inputs.
 
     ```sql
-    <copy>USE ol_value_navigator;
-    SELECT * FROM comparison;
-    SELECT comparison_id, input_side, raw_text FROM comparison_input;</copy>
+    <copy>SELECT id, name, status, rule_version_id
+    FROM comparison
+    ORDER BY id DESC
+    LIMIT 5;
+
+    SELECT comparison_id, input_side, CHAR_LENGTH(raw_text) AS input_characters
+    FROM comparison_input
+    ORDER BY comparison_id DESC, input_side;</copy>
     ```
 
-4. Confirm that the page does not display the database password or connection details.
+    Confirm that the new comparison has exactly one `RHEL` and one `ORACLE_LINUX` input row.
+
+3. Confirm that the create event was recorded.
+
+    ```sql
+    <copy>SELECT comparison_id, event_type, actor_type, outcome, created_at
+    FROM application_event
+    ORDER BY id DESC
+    LIMIT 5;</copy>
+    ```
+
+4. Exit the MySQL client.
+
+    ```sql
+    <copy>EXIT;</copy>
+    ```
+
+    > **Checkpoint:** The browser creates, lists, and reopens a complete comparison. Both original inputs and the creation event are stored together without a master catalog.
+
+You have built the saved-input workflow. In the next lab, you will enable MySQL HeatWave GenAI formatting, representative editing, alignment, decisions, and manual fallback.
 
 ## Learn More
 
-* [PHP PDO documentation](https://www.php.net/manual/en/book.pdo.php)
+* [PHP PDO](https://www.php.net/manual/en/book.pdo.php)
 * [PHP prepared statements](https://www.php.net/manual/en/pdo.prepared-statements.php)
+* [PHP session security](https://www.php.net/manual/en/session.security.ini.php)
 
 ## Acknowledgements
 
 * **Author** - Perside Foster, Mark Atkinson, Shawn Kelley
 * **Contributors** - Nick Mader
-* **Last Updated By/Date** - Perside Foster, August 2026
+* **Last Updated By/Date** - Perside Foster, September 2026
