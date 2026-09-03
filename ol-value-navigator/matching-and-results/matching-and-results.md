@@ -97,13 +97,19 @@ This lab assumes you have:
 
 ## Task 3: Calculate and reconcile the demonstration
 
-1. Open the application, reopen the reviewed demonstration comparison, and select **Review lines**.
+1. Open the application in your browser. Replace `PUBLIC_IP_ADDRESS` with the compute instance public IP address.
 
     ```text
-    http://PUBLIC_IP_ADDRESS/ol-value-navigator/
+    <copy>http://PUBLIC_IP_ADDRESS/ol-value-navigator/</copy>
     ```
 
-2. Confirm these reviewed values and alignments.
+2. In **Saved comparisons**, locate **Lab 3 saved-input test**. Confirm that its status is `CONFIRMED` and its line count is `4`, and then select **Open** for that comparison.
+
+    Do not open **Lab 4 manual fallback test**. That separate boundary-test comparison intentionally remains in `NEEDS_REVIEW` status.
+
+3. On the **Comparison: Lab 3 saved-input test** page, select **Review lines**.
+
+4. Locate each line by its SKU and confirm these reviewed values and alignments.
 
     | Side | Group | Quantity | Annual unit price | Annual line amount |
     | --- | ---: | ---: | ---: | ---: |
@@ -112,9 +118,13 @@ This lab assumes you have:
     | Oracle Linux basic | 1 | 10 | $800.00 | $8,000.00 |
     | Oracle Linux premier | 2 | 2 | $1,600.00 | $3,200.00 |
 
-3. Mark all four lines **Confirmed**, save the representative review, and select **Calculate confirmed results**.
+5. Confirm that each of the four lines has **Confirmed** selected as its decision. Correct any value or group that does not match the table, and then select **Save representative review**.
 
-4. Reconcile the results manually.
+6. Confirm that the application reports `Representative decisions were saved.`
+
+7. Select **Calculate confirmed results**.
+
+8. Confirm that the results page opens, and reconcile the displayed totals with this table.
 
     | Period | RHEL | Oracle Linux | Difference |
     | --- | ---: | ---: | ---: |
@@ -122,7 +132,7 @@ This lab assumes you have:
     | Three years | $50,400.00 | $33,600.00 | $16,800.00 |
     | Five years | $84,000.00 | $56,000.00 | $28,000.00 |
 
-5. Confirm that the results page identifies `workshop-v1`, shows every reviewed line and decision, and states when the snapshot was calculated.
+9. Confirm that the results page identifies `workshop-v1`, shows every reviewed line and decision, and states when the snapshot was calculated.
 
     > **Checkpoint:** PHP calculated and saved the annual, three-year, and five-year values from representative-confirmed decimal inputs.
 
@@ -208,6 +218,8 @@ This lab assumes you have:
     ```
 
     > **Checkpoint:** The complete Version 1 application can reopen, revise, duplicate, calculate, save, and export a representative-confirmed comparison.
+
+## Conclusion
 
 You have built the complete application. In the final lab, you will run deployment checks, test core scenarios, and rehearse the end-to-end demonstration.
 
