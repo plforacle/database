@@ -381,7 +381,7 @@ You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB S
     | Deletion plan | Retain automatic backups | Disabled |
     | Deletion plan | Require final backup | Disabled |
     | Advanced options: Configuration | Configuration | Default configuration for `MySQL.2` |
-    | Advanced options: Configuration | Database version | Latest available supported MySQL version with MySQL HeatWave GenAI, version 9.0 or later |
+    | Advanced options: Configuration | Database version | Current supported MySQL version for which MySQL HeatWave GenAI is available. Do not depend on the version shown in workshop screenshots. |
     | Advanced options: Encryption | Encryption key | Oracle-managed key |
     | Other advanced options | Connections, crash recovery, maintenance, management, data import, security attributes, telemetry, and tags | Keep the defaults |
 
@@ -409,7 +409,9 @@ You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB S
     );</copy>
     ```
 
-    > **Checkpoint:** The MySQL HeatWave DB System is reachable from the Oracle Linux instance, reports MySQL Server 9.0 or later, and returns a response from `ML_GENERATE`.
+    The value returned by `SELECT VERSION()` is informational and will change as MySQL HeatWave versions are updated. Do not compare it with a specific workshop version. A successful response from `ML_GENERATE` is the required GenAI capability test.
+
+    > **Checkpoint:** The MySQL HeatWave DB System is reachable from the Oracle Linux instance, reports its MySQL Server version, and returns a response from `ML_GENERATE`.
 
 You have created the OCI LAMP environment and configured a MySQL HeatWave DB System for MySQL HeatWave GenAI. In the next lab, you will create the saved-comparison database schema.
 

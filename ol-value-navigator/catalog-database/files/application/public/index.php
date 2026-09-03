@@ -1,0 +1,58 @@
+<?php
+declare(strict_types=1);
+require '/var/www/ol-value-navigator/lib/bootstrap.php';
+
+$comparisons = db()->query(
+    'SELECT c.id, c.name, c.status, c.updated_at,
+            (SELECT COUNT(*) FROM comparison_line l JOIN comparison_input i ON i.id = l.comparison_input_id WHERE i.comparison_id = c.id) AS line_count
+     FROM comparison c ORDER BY c.updated_at DESC LIMIT 50'
+)->fetchAll();
+
+render_header('Comparisons');
+?>
+<section class="card">
+  <h2>Create a comparison</h2>
+  <form method="post" action="<?= h(app_url('/create.php')) ?>">
+    <?= csrf_field() ?>
+    <label for="name">Comparison name</label>
+    <input id="name" name="name" maxlength="255" required placeholder="Demonstration comparison">
+
+    <div class="two-column">
+      <div>
+        <label for="rhel_text">RHEL SKU information</label>
+        <textarea id="rhel_text" name="rhel_text" maxlength="<?= (int) app_config('max_input_characters', 12000) ?>" required></textarea>
+        <small>Paste the complete supplied RHEL text, including SKUs, descriptions, quantities, annual prices, and notes.</small>
+      </div>
+      <div>
+        <label for="oracle_text">Oracle Linux SKU information</label>
+        <textarea id="oracle_text" name="oracle_text" maxlength="<?= (int) app_config('max_input_characters', 12000) ?>" required></textarea>
+        <small>Paste the complete supplied Oracle Linux text, including SKUs, descriptions, quantities, annual prices, and notes.</small>
+      </div>
+    </div>
+    <button type="submit">Save original inputs</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Saved comparisons</h2>
+  <?php if ($comparisons === []): ?>
+    <p>No comparisons have been saved.</p>
+  <?php else: ?>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Name</th><th>Status</th><th>Lines</th><th>Updated</th><th></th></tr></thead>
+      <tbody>
+      <?php foreach ($comparisons as $comparison): ?>
+        <tr>
+          <td><?= h($comparison['name']) ?></td>
+          <td><span class="status"><?= h($comparison['status']) ?></span></td>
+          <td><?= (int) $comparison['line_count'] ?></td>
+          <td><?= h($comparison['updated_at']) ?></td>
+          <td><a class="button secondary" href="<?= h(app_url('/comparison.php?id=' . (int) $comparison['id'])) ?>">Open</a></td>
+        </tr>
+      <?php endforeach; ?>
+      </tbody>
+    </table></div>
+  <?php endif; ?>
+</section>
+<?php render_footer(); ?>
+

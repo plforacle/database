@@ -86,7 +86,7 @@ This lab assumes you have:
     * Creates the private application and public web directories.
     * Installs private libraries with group-readable permissions for Apache.
     * Installs public controllers and CSS under the Apache document root.
-    * Writes `3` to the private stage file.
+    * Writes the Lab 3 application-stage identifier (3) to /var/www/ol-value-navigator/stage. PHP reads this value to determine which application features are enabled.
     * Creates the private configuration from the example only when it does not already exist.
     * Restores SELinux file contexts and reloads Apache.
 
@@ -115,17 +115,30 @@ This lab assumes you have:
 
     Keep `dbname=ol_value_navigator`, `charset=utf8mb4`, the `olvn_app` user, the model identifier, and the size limits unchanged. If the password contains a single quote or backslash, prefix that character with a backslash in the PHP single-quoted string.
 
-3. Save the file and exit `vi`.
+3. Press Esc to leave insert mode.
 
-4. Run the database connection check as the Apache service account.
+4. Type:
+
+    ```text
+    <copy>:wq</copy>
+    ```
+
+5. Press Enter to save the file and exit vi.
+
+6. Install the database connection checker in the private application directory, then run it as the Apache service account.
 
     ```bash
-    <copy>sudo -u apache php ~/ol-value-navigator-application/tests/check-database.php</copy>
+    <copy>sudo install -o root -g apache -m 0640 \
+      ~/ol-value-navigator-application/tests/check-database.php \
+      /var/www/ol-value-navigator/check-database.php
+    sudo -u apache php /var/www/ol-value-navigator/check-database.php</copy>
     ```
+
+    The checker must be placed outside `/home/opc` because the `apache` account cannot normally traverse the `opc` home directory. The private application directory is not exposed through the Apache document root.
 
     Confirm that the output begins with `Database connection passed` and shows the server version and `workshop-v1` rule.
 
-5. If the test fails, verify the private IP, application password, private-subnet ingress rule for TCP port `3306`, and the grants from Lab 2. The application intentionally returns a generic browser error and writes only the exception class to the Apache error log.
+7. If the test fails, verify the private IP, application password, private-subnet ingress rule for TCP port `3306`, and the grants from Lab 2. The application intentionally returns a generic browser error and writes only the exception class to the Apache error log.
 
     > **Checkpoint:** PHP running as Apache can reach the private MySQL HeatWave DB System with the least-privilege application account.
 
@@ -134,27 +147,27 @@ This lab assumes you have:
 1. Open the application in your local browser. Replace the placeholder with the compute instance public IP address.
 
     ```text
-    http://PUBLIC_IP_ADDRESS/ol-value-navigator/
+    <copy>http://PUBLIC_IP_ADDRESS/ol-value-navigator/</copy>
     ```
 
 2. Confirm that the page contains a comparison name, a **RHEL SKU information** text area, and an **Oracle Linux SKU information** text area.
 
-3. Enter `Lab 3 saved-input test` as the comparison name.
+3. Enter **Lab 3 saved-input test** as the comparison name.
 
 4. Paste this complete demonstration RHEL input.
 
     ```text
-    DEMO-RHEL-STD | Demonstration RHEL standard support | Quantity 10 | Annual unit price USD 1200.00
+    <copy>DEMO-RHEL-STD | Demonstration RHEL standard support | Quantity 10 | Annual unit price USD 1200.00
     DEMO-RHEL-PREM | Demonstration RHEL premium support | Quantity 2 | Annual unit price USD 2400.00
-    Note: synthetic workshop data only.
+    Note: synthetic workshop data only.</copy>
     ```
 
 5. Paste this complete demonstration Oracle Linux input.
 
     ```text
-    DEMO-OL-BASIC | Demonstration Oracle Linux basic support | Quantity 10 | Annual unit price USD 800.00
+    <copy>DEMO-OL-BASIC | Demonstration Oracle Linux basic support | Quantity 10 | Annual unit price USD 800.00
     DEMO-OL-PREM | Demonstration Oracle Linux premier support | Quantity 2 | Annual unit price USD 1600.00
-    Note: synthetic workshop data only.
+    Note: synthetic workshop data only.</copy>
     ```
 
 6. Select **Save original inputs**.
