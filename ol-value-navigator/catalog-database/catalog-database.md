@@ -12,7 +12,7 @@ Estimated Time: 45 minutes
 
 In this lab, you will:
 
-* Download the application source used by the remaining labs.
+* Download and extract the packaged application source used by the remaining labs.
 * Create the seven application tables and demonstration rule version.
 * Create the PHP database account.
 * Grant application data access and MySQL HeatWave GenAI access.
@@ -31,37 +31,47 @@ This lab assumes you have:
 
 *This is the fold. The remaining sections are collapsed by default.*
 
-## Task 1: Download the workshop application source
+## Task 1: Download the workshop application package
 
 1. Connect to the Oracle Linux compute instance as `opc` if you are not already connected.
 
-2. Install Git from the enabled Oracle Linux repositories.
+2. Install the tools used to download and extract the application package.
 
     ```bash
-    <copy>sudo dnf install -y git</copy>
+    <copy>sudo dnf install -y curl unzip</copy>
     ```
 
-3. Create a shallow, sparse checkout containing only this workshop.
+3. Download the application ZIP from this lab's `files` directory in the LiveLabs repository.
 
     ```bash
     <copy>cd ~
-    git clone --depth 1 --filter=blob:none --sparse https://github.com/oracle-livelabs/database.git livelabs-database
-    cd ~/livelabs-database
-    git sparse-checkout set ol-value-navigator</copy>
+    curl --fail --location \
+      --output ol-value-navigator-application.zip \
+      https://raw.githubusercontent.com/oracle-livelabs/database/main/ol-value-navigator/catalog-database/files/ol-value-navigator-application.zip</copy>
     ```
 
-    If `~/livelabs-database` already exists, update it instead.
+    You can also [download the application package](files/ol-value-navigator-application.zip) through the rendered lab page and transfer it to the compute instance if direct GitHub access is restricted.
+
+4. Verify the downloaded package checksum.
 
     ```bash
-    <copy>cd ~/livelabs-database
-    git pull --ff-only
-    git sparse-checkout set ol-value-navigator</copy>
+    <copy>cd ~
+    echo '13c075b5073366108b102146f6a799ece92fcbbb513e7d7253c1e54aaa050267  ol-value-navigator-application.zip' | sha256sum --check</copy>
     ```
 
-4. List the application assets.
+    Confirm that the command returns `ol-value-navigator-application.zip: OK`.
+
+5. Extract the package into a dedicated working directory.
 
     ```bash
-    <copy>find ~/livelabs-database/ol-value-navigator/application -maxdepth 2 -type f | sort</copy>
+    <copy>mkdir -p ~/ol-value-navigator-application
+    unzip -o ~/ol-value-navigator-application.zip -d ~/ol-value-navigator-application</copy>
+    ```
+
+6. List the extracted application assets.
+
+    ```bash
+    <copy>find ~/ol-value-navigator-application -maxdepth 2 -type f | sort</copy>
     ```
 
     Confirm that the output includes `database/schema.sql`, `deploy.sh`, PHP files under `lib` and `public`, and tests under `tests`.
@@ -73,7 +83,7 @@ This lab assumes you have:
 1. Review the SQL file before executing it.
 
     ```bash
-    <copy>less ~/livelabs-database/ol-value-navigator/application/database/schema.sql</copy>
+    <copy>less ~/ol-value-navigator-application/database/schema.sql</copy>
     ```
 
     Press `q` to exit `less`.
@@ -93,7 +103,7 @@ This lab assumes you have:
 3. Load the schema as the DB System administrator. Replace the private IP placeholder.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED &lt; ~/livelabs-database/ol-value-navigator/application/database/schema.sql</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED &lt; ~/ol-value-navigator-application/database/schema.sql</copy>
     ```
 
 4. Enter the DB System administrator password when prompted.

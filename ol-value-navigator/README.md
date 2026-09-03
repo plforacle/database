@@ -4,4 +4,4 @@ This repository contains the complete workshop and application source for buildi
 
 The initial workshop uses only synthetic sample data. It is a subscription-cost comparison, not a quote, licensing determination, or full TCO analysis.
 
-The executable application is under `application/`. It includes the MySQL schema, private PHP libraries, public controllers and views, a staged deployment script, and automated checks. Lab 1 is the validated infrastructure baseline. Labs 2 through 6 create, deploy, enable, and test the application.
+The executable application is packaged as `catalog-database/files/ol-value-navigator-application.zip`. It includes the MySQL schema, private PHP libraries, public controllers and views, a staged deployment script, and automated checks. Lab 1 is the validated infrastructure baseline. Labs 2 through 6 create, deploy, enable, and test the application.

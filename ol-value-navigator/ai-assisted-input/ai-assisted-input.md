@@ -34,7 +34,7 @@ This lab assumes you have:
 1. Change to the application source directory.
 
     ```bash
-    <copy>cd ~/livelabs-database/ol-value-navigator/application</copy>
+    <copy>cd ~/ol-value-navigator-application</copy>
     ```
 
 2. Review the GenAI module.
@@ -84,7 +84,7 @@ This lab assumes you have:
 1. Run the deployment script with stage `4`.
 
     ```bash
-    <copy>cd ~/livelabs-database/ol-value-navigator/application
+    <copy>cd ~/ol-value-navigator-application
     sudo bash deploy.sh 4</copy>
     ```
 

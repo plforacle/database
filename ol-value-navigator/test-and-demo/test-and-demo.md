@@ -33,7 +33,7 @@ This lab assumes you have:
 1. Run the source-level unit checks.
 
     ```bash
-    <copy>php ~/livelabs-database/ol-value-navigator/application/tests/unit.php</copy>
+    <copy>php ~/ol-value-navigator-application/tests/unit.php</copy>
     ```
 
     Confirm that all checks pass.
@@ -41,7 +41,7 @@ This lab assumes you have:
 2. Run the deployed-application verification as `root` so it can inspect the private files installed for Apache.
 
     ```bash
-    <copy>sudo bash ~/livelabs-database/ol-value-navigator/application/tests/verify-installation.sh</copy>
+    <copy>sudo bash ~/ol-value-navigator-application/tests/verify-installation.sh</copy>
     ```
 
     This script verifies:
@@ -55,7 +55,7 @@ This lab assumes you have:
 3. Run the database connection check as Apache.
 
     ```bash
-    <copy>sudo -u apache php ~/livelabs-database/ol-value-navigator/application/tests/check-database.php</copy>
+    <copy>sudo -u apache php ~/ol-value-navigator-application/tests/check-database.php</copy>
     ```
 
     Confirm that it reports the MySQL Server version and `workshop-v1`.

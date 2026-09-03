@@ -24,7 +24,7 @@ In this lab, you will:
 This lab assumes you have:
 
 * Completed Lab 2.
-* The workshop source under `~/livelabs-database/ol-value-navigator`.
+* The application package extracted under `~/ol-value-navigator-application`.
 * The MySQL HeatWave DB System private IP address.
 * The private password for `olvn_app`.
 
@@ -35,7 +35,7 @@ This lab assumes you have:
 1. Change to the application source directory.
 
     ```bash
-    <copy>cd ~/livelabs-database/ol-value-navigator/application</copy>
+    <copy>cd ~/ol-value-navigator-application</copy>
     ```
 
 2. List the application files.
@@ -77,7 +77,7 @@ This lab assumes you have:
 1. Run the supplied deployment script with stage `3`.
 
     ```bash
-    <copy>cd ~/livelabs-database/ol-value-navigator/application
+    <copy>cd ~/ol-value-navigator-application
     sudo bash deploy.sh 3</copy>
     ```
 
@@ -120,7 +120,7 @@ This lab assumes you have:
 4. Run the database connection check as the Apache service account.
 
     ```bash
-    <copy>sudo -u apache php ~/livelabs-database/ol-value-navigator/application/tests/check-database.php</copy>
+    <copy>sudo -u apache php ~/ol-value-navigator-application/tests/check-database.php</copy>
     ```
 
     Confirm that the output begins with `Database connection passed` and shows the server version and `workshop-v1` rule.

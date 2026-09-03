@@ -34,7 +34,7 @@ This lab assumes you have:
 1. Change to the application source directory and open the money module.
 
     ```bash
-    <copy>cd ~/livelabs-database/ol-value-navigator/application
+    <copy>cd ~/ol-value-navigator-application
     less lib/money.php</copy>
     ```
 
@@ -69,7 +69,7 @@ This lab assumes you have:
 1. Deploy stage `5`.
 
     ```bash
-    <copy>cd ~/livelabs-database/ol-value-navigator/application
+    <copy>cd ~/ol-value-navigator-application
     sudo bash deploy.sh 5</copy>
     ```
 
@@ -84,7 +84,7 @@ This lab assumes you have:
 3. Run the application unit checks.
 
     ```bash
-    <copy>php ~/livelabs-database/ol-value-navigator/application/tests/unit.php</copy>
+    <copy>php ~/ol-value-navigator-application/tests/unit.php</copy>
     ```
 
     Confirm that the output is:
