@@ -41,16 +41,16 @@ This lab assumes you have:
     <copy>sudo dnf install -y curl unzip</copy>
     ```
 
-3. Download the application ZIP from this lab's `files` directory in the LiveLabs repository.
+3. Download the application ZIP from OCI Object Storage.
+
+    <!-- Production publishing reminder: After all labs pass end-to-end testing, upload the final ZIP to the LiveLabs production Object Storage location and replace the testing PAR URL below before publishing the workshop. -->
 
     ```bash
     <copy>cd ~
     curl --fail --location \
       --output ol-value-navigator-application.zip \
-      https://raw.githubusercontent.com/oracle-livelabs/database/main/ol-value-navigator/catalog-database/files/ol-value-navigator-application.zip</copy>
+      https://objectstorage.us-ashburn-1.oraclecloud.com/p/EikwvWVbAyrfudFLLwreRODP5f2FGJ1jIcULUh57TkXSRB5Ori8bDWI6H1vNvc1S/n/idhwewbjlvpy/b/ol-value-navigator/o/ol-value-navigator-application.zip</copy>
     ```
-
-    You can also [download the application package](files/ol-value-navigator-application.zip) through the rendered lab page and transfer it to the compute instance if direct GitHub access is restricted.
 
 4. Verify the downloaded package checksum.
 
