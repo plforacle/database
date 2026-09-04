@@ -6,6 +6,8 @@ The initial workshop uses only synthetic sample data. It is a subscription-cost 
 
 The readable application source of truth is stored under `catalog-database/files/application`. It includes the MySQL schema, private PHP libraries, public controllers and views, a staged deployment script, and automated checks. The generated learner package is `catalog-database/files/ol-value-navigator-application.zip`. Regenerate the ZIP from the readable source after every application change, update the Lab 2 checksum, and test the packaged files before uploading them to Object Storage. Lab 1 is the validated infrastructure baseline. Labs 2 through 6 create, deploy, enable, and test the application.
 
+The standalone team tutorial is stored in `team-user-guide.md`. It documents the current application workflow and will become the source for the future application Help menu.
+
 ## Production publication reminder
 
 - [ ] Complete successful end-to-end testing of Labs 1 through 6.
