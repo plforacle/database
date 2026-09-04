@@ -8,6 +8,8 @@ The readable application source of truth is stored under `catalog-database/files
 
 The standalone team tutorial is stored in `team-user-guide.md`. It documents the current application workflow and will become the source for the future application Help menu.
 
+The five-minute management walkthrough is stored in `management-quick-start.md`.
+
 ## Production publication reminder
 
 - [ ] Complete successful end-to-end testing of Labs 1 through 6.
