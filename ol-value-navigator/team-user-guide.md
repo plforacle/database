@@ -235,6 +235,26 @@ Revising original inputs clears all formatted lines and the calculated result fo
 
 7. Select **Format with GenAI** and repeat the complete review, alignment, decision, and calculation process.
 
+## Delete a comparison
+
+Deleting a comparison is permanent. The application deletes its original inputs, formatting runs, reviewed lines, calculated result, and workflow events. It retains only the comparison ID, name, and deletion time in a separate audit record.
+
+1. Open the comparison you intend to delete.
+
+2. Scroll to **Delete comparison**.
+
+3. Confirm that the displayed comparison name is the one you intend to delete.
+
+4. Type the complete comparison name exactly as displayed. The confirmation is case-sensitive and must not contain extra spaces.
+
+5. Select **Delete comparison and associated data** once.
+
+6. If the name does not match, confirm that the application reports `The comparison name did not match. Nothing was deleted.`
+
+7. After entering the exact name, confirm that the application returns to **Comparisons** and reports that the comparison and its associated data were deleted.
+
+8. Confirm that the deleted comparison no longer appears under **Saved comparisons**.
+
 ## Status reference
 
 | Status | Meaning |
@@ -251,5 +271,3 @@ Revising original inputs clears all formatted lines and the calculated result fo
 * Demonstration data only
 * No production approval of calculation rules
 * No claim that aligned lines are product equivalents
-* No delete-comparison function yet
-

@@ -55,10 +55,10 @@ This lab assumes you have:
 3. Run the database connection check as Apache.
 
     ```bash
-    <copy>sudo -u apache php ~/ol-value-navigator-application/tests/check-database.php</copy>
+    <copy>sudo -u apache php /var/www/ol-value-navigator/check-database.php</copy>
     ```
 
-    Confirm that it reports the MySQL Server version and `workshop-v1`.
+    Confirm that it reports the MySQL Server version, `workshop-v1`, and `deletion audit ready`.
 
     > **Checkpoint:** Source logic, deployed PHP syntax, Apache, the browser route, and the private database connection pass executable checks.
 
@@ -145,6 +145,8 @@ This lab assumes you have:
     | Duplicate | Duplicate a comparison | Inputs and reviewed lines copy, but calculation must be run again |
     | Revise | Revise the duplicate's original input | Derived lines and results clear while the event history remains |
     | Export | Export the calculated original | CSV contains source, review, alignment, rule, and result sections |
+    | Delete with incorrect name | Duplicate a demonstration, open the duplicate, and enter a confirmation name that is not exact | The application reports that nothing was deleted and the duplicate remains available |
+    | Delete with exact name | Enter the duplicate's complete name exactly and delete it | The duplicate and its associated data disappear from the saved-comparisons list |
 
 3. Manually recalculate the demonstration values and confirm that they match the displayed values:
 
@@ -208,7 +210,9 @@ This lab assumes you have:
 
 8. Reopen and export the comparison to show workbook-style persistence.
 
-9. State the Version 1 boundaries:
+9. Duplicate the comparison, demonstrate that an incorrect deletion confirmation preserves it, and then enter its exact name to delete it.
+
+10. State the Version 1 boundaries:
 
     * No master RHEL or Oracle Linux SKU catalogs.
     * No login or multi-user ownership.
@@ -230,6 +234,8 @@ This lab assumes you have:
 2. Keep customer information, credentials, private keys, private IP addresses, and OCI identifiers out of the repository.
 
     > **Checkpoint:** The full Version 1 workflow is deployed, tested, traceable, reproducible, and ready for a demonstration using synthetic data.
+
+## Conclusion
 
 You have completed the Oracle Linux Value Navigator workshop.
 

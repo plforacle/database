@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this lab, you download the Oracle Linux Value Navigator source and create its complete database schema in the MySQL HeatWave DB System. The schema preserves the two original freeform inputs, every AI formatting run, the original AI suggestions, representative corrections and decisions, aligned comparison groups, calculated result snapshots, and workflow events.
+In this lab, you download the Oracle Linux Value Navigator source and create its complete database schema in the MySQL HeatWave DB System. The schema preserves the two original freeform inputs, every AI formatting run, the original AI suggestions, representative corrections and decisions, aligned comparison groups, calculated result snapshots, workflow events, and minimal deletion audit records.
 
 The schema stores product text only inside a representative-created comparison. It does not contain or maintain a master RHEL or Oracle Linux SKU catalog.
 
@@ -13,7 +13,7 @@ Estimated Time: 45 minutes
 In this lab, you will:
 
 * Download and extract the packaged application source used by the remaining labs.
-* Create the seven application tables and demonstration rule version.
+* Create the eight application tables and demonstration rule version.
 * Create the PHP database account.
 * Grant application data access and MySQL HeatWave GenAI access.
 * Verify the schema and application account.
@@ -56,7 +56,7 @@ This lab assumes you have:
 
     ```bash
     <copy>cd ~
-    echo '13c075b5073366108b102146f6a799ece92fcbbb513e7d7253c1e54aaa050267  ol-value-navigator-application.zip' | sha256sum --check</copy>
+    echo '6aa13425c6be7b5c9b15e417a624b7e4fe3f8437b8c86b1189cd93d94c15e1af  ol-value-navigator-application.zip' | sha256sum --check</copy>
     ```
 
     Confirm that the command returns `ol-value-navigator-application.zip: OK`.
@@ -99,6 +99,7 @@ This lab assumes you have:
     | `comparison_line` | Preserves AI suggestions separately from representative-reviewed values and alignment decisions |
     | `comparison_result` | Stores the annual, three-year, and five-year result snapshot |
     | `application_event` | Records AI, representative, and application workflow events |
+    | `comparison_deletion_audit` | Retains the comparison ID, name, and deletion time after associated data is deleted |
 
 3. Load the schema as the DB System administrator. Replace the private IP placeholder.
 
@@ -163,6 +164,10 @@ This lab assumes you have:
 
     GRANT SELECT, INSERT
       ON ol_value_navigator.application_event
+      TO 'olvn_app'@'%';
+
+    GRANT INSERT
+      ON ol_value_navigator.comparison_deletion_audit
       TO 'olvn_app'@'%';</copy>
     ```
 
@@ -191,7 +196,7 @@ This lab assumes you have:
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
     ```
 
-2. Confirm that all seven tables exist.
+2. Confirm that all eight tables exist.
 
     ```sql
     <copy>SHOW TABLES;</copy>
@@ -204,6 +209,7 @@ This lab assumes you have:
     application_event
     calculation_rule_version
     comparison
+    comparison_deletion_audit
     comparison_input
     comparison_line
     comparison_result
@@ -251,7 +257,9 @@ This lab assumes you have:
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** The application account can manage saved-comparison records and call `sys.ML_GENERATE`, but the schema has no master RHEL or Oracle Linux SKU catalog.
+    > **Checkpoint:** The application account can manage saved-comparison records, retain minimal deletion audits, and call `sys.ML_GENERATE`, but the schema has no master RHEL or Oracle Linux SKU catalog.
+
+## Conclusion
 
 You have created the full persistence layer. In the next lab, you will deploy the PHP foundation and use it to create, list, and reopen comparison workbooks.
 

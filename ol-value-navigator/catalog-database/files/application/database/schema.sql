@@ -130,6 +130,14 @@ CREATE TABLE IF NOT EXISTS application_event (
   INDEX idx_event_comparison (comparison_id, created_at)
 );
 
+CREATE TABLE IF NOT EXISTS comparison_deletion_audit (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  deleted_comparison_id BIGINT UNSIGNED NOT NULL,
+  comparison_name VARCHAR(255) NOT NULL,
+  deleted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY unique_deleted_comparison (deleted_comparison_id)
+);
+
 INSERT INTO calculation_rule_version
   (version_label, description, source_reference, governance_status)
 VALUES

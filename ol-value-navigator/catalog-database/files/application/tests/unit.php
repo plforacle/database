@@ -15,6 +15,7 @@ function comparison_lines(int $comparisonId): array
 
 require dirname(__DIR__) . '/lib/money.php';
 require dirname(__DIR__) . '/lib/genai.php';
+require dirname(__DIR__) . '/lib/deletion.php';
 
 $failures = [];
 function check(bool $condition, string $message): void
@@ -31,6 +32,10 @@ check(multiply_price_by_quantity('10.99', '1.25') === 1374, 'Half-up line roundi
 check(multiply_price_by_quantity('1200.00', '10') === 1200000, 'Whole quantity multiplication failed.');
 check(money('16800.00') === '$16,800.00', 'Exact money rendering failed.');
 check(money('-5600.00') === '-$5,600.00', 'Signed money rendering failed.');
+check(comparison_name_matches('Lab 3 saved-input test', 'Lab 3 saved-input test'), 'Exact deletion confirmation failed.');
+check(!comparison_name_matches('Lab 3 saved-input test', 'lab 3 saved-input test'), 'Case-changing deletion confirmation was accepted.');
+check(!comparison_name_matches('Lab 3 saved-input test', 'Lab 3 saved-input test '), 'Whitespace-changing deletion confirmation was accepted.');
+check(!comparison_name_matches('Lab 3 saved-input test', ''), 'Empty deletion confirmation was accepted.');
 
 $testLines = [
     ['input_side' => 'RHEL', 'comparison_group' => 1, 'sku' => 'R1', 'description' => 'RHEL', 'quantity' => '10.00', 'annual_unit_price' => '1200.00', 'review_status' => 'CONFIRMED'],

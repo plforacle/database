@@ -342,7 +342,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
     * `systemctl is-active httpd` returns `active`.
     * `sudo firewall-cmd --list-services` includes `http`.
 
-You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB System and verify MySQL HeatWave GenAI.
+    You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB System and verify MySQL HeatWave GenAI.
 
 ## Task 8: Create the MySQL HeatWave DB System and configure MySQL HeatWave GenAI
 
@@ -412,6 +412,8 @@ You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB S
     The value returned by `SELECT VERSION()` is informational and will change as MySQL HeatWave versions are updated. Do not compare it with a specific workshop version. A successful response from `ML_GENERATE` is the required GenAI capability test.
 
     > **Checkpoint:** The MySQL HeatWave DB System is reachable from the Oracle Linux instance, reports its MySQL Server version, and returns a response from `ML_GENERATE`.
+
+## Conclusion
 
 You have created the OCI LAMP environment and configured a MySQL HeatWave DB System for MySQL HeatWave GenAI. In the next lab, you will create the saved-comparison database schema.
 

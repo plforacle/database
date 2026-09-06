@@ -12,5 +12,11 @@ $version = $pdo->query('SELECT VERSION()')->fetchColumn();
 $rule = $pdo->query(
     "SELECT version_label FROM calculation_rule_version WHERE active = 1 ORDER BY id DESC LIMIT 1"
 )->fetchColumn();
-echo "Database connection passed. Server {$version}; rule {$rule}.\n";
-
+$auditTable = $pdo->query(
+    "SELECT COUNT(*) FROM information_schema.tables
+     WHERE table_schema = DATABASE() AND table_name = 'comparison_deletion_audit'"
+)->fetchColumn();
+if ((int) $auditTable !== 1) {
+    throw new RuntimeException('The comparison deletion audit table is missing.');
+}
+echo "Database connection passed. Server {$version}; rule {$rule}; deletion audit ready.\n";

@@ -4,9 +4,9 @@
 
 In this lab, you enable the complete Version 1 application. PHP verifies that every included line is confirmed and that each comparison group contains both sides. It then performs deterministic annual, three-year, and five-year calculations and saves the result snapshot in the MySQL HeatWave DB System.
 
-You also verify the workbook operations required by Version 1: reopen, revise, duplicate, and CSV export.
+You also verify the workbook operations required by Version 1: reopen, revise, duplicate, CSV export, and confirmed deletion.
 
-Estimated Time: 75 minutes
+Estimated Time: 85 minutes
 
 ### Objectives
 
@@ -17,7 +17,7 @@ In this lab, you will:
 * Enforce complete representative review and two-sided alignment.
 * Save and display annual, three-year, and five-year results.
 * Verify fail-closed behavior for unresolved and unmatched lines.
-* Reopen, revise, duplicate, and export a comparison.
+* Reopen, revise, duplicate, export, and securely delete a comparison.
 
 ### Prerequisites
 
@@ -219,9 +219,69 @@ This lab assumes you have:
 
     > **Checkpoint:** The complete Version 1 application can reopen, revise, duplicate, calculate, save, and export a representative-confirmed comparison.
 
+## Task 7: Delete a comparison with exact-name confirmation
+
+Use the duplicate created in Task 5. Do not delete the original calculated comparison.
+
+1. Select **Comparison**, then **All comparisons**, and locate the duplicate created in Task 5.
+
+2. Record the duplicate's name and ID, then select **Open** for that duplicate.
+
+    The numeric ID appears at the end of the browser URL after `id=`.
+
+3. Scroll to **Delete comparison** and review the warning. The operation deletes the comparison's inputs, formatting runs, reviewed lines, results, and workflow events. It retains only a minimal deletion audit record.
+
+4. Enter a name that does not exactly match the displayed comparison name, then select **Delete comparison and associated data**.
+
+5. Confirm that the application reports `The comparison name did not match. Nothing was deleted.` and that the duplicate remains available.
+
+6. Enter the complete comparison name exactly as displayed, including capitalization and spaces, then select **Delete comparison and associated data** once.
+
+7. Confirm that the application returns to **Comparisons**, reports that the comparison and its associated data were deleted, and no longer lists the duplicate.
+
+8. Connect as the DB System administrator.
+
+    ```bash
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    ```
+
+9. Replace `DELETED_COMPARISON_ID` and verify the retained audit record and deleted parent data.
+
+    ```sql
+    <copy>SELECT deleted_comparison_id, comparison_name, deleted_at
+    FROM comparison_deletion_audit
+    WHERE deleted_comparison_id = DELETED_COMPARISON_ID;
+
+    SELECT COUNT(*) AS remaining_comparisons
+    FROM comparison
+    WHERE id = DELETED_COMPARISON_ID;
+
+    SELECT COUNT(*) AS remaining_inputs
+    FROM comparison_input
+    WHERE comparison_id = DELETED_COMPARISON_ID;
+
+    SELECT COUNT(*) AS remaining_results
+    FROM comparison_result
+    WHERE comparison_id = DELETED_COMPARISON_ID;
+
+    SELECT COUNT(*) AS remaining_events
+    FROM application_event
+    WHERE comparison_id = DELETED_COMPARISON_ID;</copy>
+    ```
+
+    Confirm that the audit query returns one row and every remaining count is `0`.
+
+10. Exit the MySQL client.
+
+    ```sql
+    <copy>EXIT;</copy>
+    ```
+
+    > **Checkpoint:** Exact-name confirmation protects the delete operation, all associated comparison data is removed, and the minimal audit record remains.
+
 ## Conclusion
 
-You have built the complete application. In the final lab, you will run deployment checks, test core scenarios, and rehearse the end-to-end demonstration.
+You have built the complete application, including confirmed comparison deletion. In the final lab, you will run deployment checks, test core scenarios, and rehearse the end-to-end demonstration.
 
 ## Learn More
 

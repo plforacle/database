@@ -18,6 +18,7 @@ install -o root -g apache -m 0640 "$source_dir/lib/bootstrap.php" "$private_dir/
 install -o root -g apache -m 0640 "$source_dir/lib/repository.php" "$private_dir/lib/repository.php"
 install -o root -g apache -m 0640 "$source_dir/lib/genai.php" "$private_dir/lib/genai.php"
 install -o root -g apache -m 0640 "$source_dir/lib/money.php" "$private_dir/lib/money.php"
+install -o root -g apache -m 0640 "$source_dir/lib/deletion.php" "$private_dir/lib/deletion.php"
 
 for file in "$source_dir"/public/*; do
   install -o root -g apache -m 0644 "$file" "$public_dir/$(basename "$file")"
@@ -35,4 +36,3 @@ fi
 restorecon -RF "$private_dir" "$public_dir" >/dev/null 2>&1 || true
 systemctl reload httpd
 echo "Oracle Linux Value Navigator application files installed for Lab $stage."
-

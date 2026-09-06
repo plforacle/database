@@ -63,5 +63,16 @@ render_header('Comparison: ' . $comparison['name']);
       </form>
     </div>
   </section>
+
+  <section class="card danger-zone">
+    <h2>Delete comparison</h2>
+    <p>This permanently deletes the comparison and all associated inputs, formatted lines, results, and workflow events. A minimal audit record containing the comparison ID, name, and deletion time is retained.</p>
+    <form method="post" action="<?= h(app_url('/delete.php')) ?>">
+      <?= csrf_field() ?><input type="hidden" name="id" value="<?= $id ?>">
+      <label for="confirmation-name">Type <strong><?= h($comparison['name']) ?></strong> to confirm</label>
+      <input id="confirmation-name" name="confirmation_name" type="text" required autocomplete="off" spellcheck="false">
+      <button class="danger" type="submit">Delete comparison and associated data</button>
+    </form>
+  </section>
 <?php endif; ?>
 <?php render_footer(); ?>

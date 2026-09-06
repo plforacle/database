@@ -18,6 +18,9 @@ textarea { min-height:13rem; resize:vertical; }
 small { color:var(--muted); display:block; margin-top:.25rem; }
 button,.button { display:inline-block; width:auto; border:0; border-radius:.25rem; padding:.65rem 1rem; background:var(--red); color:#fff; font-weight:650; text-decoration:none; cursor:pointer; }
 button.secondary,.button.secondary { background:#fff; color:var(--ink); border:1px solid #777; }
+button.danger,.button.danger { background:#b3261e; color:#fff; }
+.danger-zone { border-color:#b3261e; }
+.danger-zone input { margin-bottom:1rem; }
 .actions { display:flex; align-items:center; flex-wrap:wrap; gap:.6rem; }
 .actions form { margin:0; }
 .notice { border-left:4px solid #777; padding:.8rem 1rem; margin:1rem 0; background:#fff; }
@@ -39,4 +42,3 @@ th { background:#f2f3f4; }
 .suggestion { color:var(--muted); font-size:.85rem; }
 footer { border-top:1px solid var(--line); color:var(--muted); padding:1.5rem 0; background:#fff; }
 @media (max-width:800px) { .two-column,.summary,.line-grid { grid-template-columns:1fr; } }
-

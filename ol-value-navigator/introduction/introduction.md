@@ -20,7 +20,7 @@ Oracle Linux Value Navigator brings together Oracle Cloud Infrastructure, Oracle
 * **Oracle Linux** provides the operating system for the application server.
 * **Apache HTTP Server** receives browser requests and serves the application pages.
 * **PHP** controls the application workflow, validates representative decisions, and performs the annual, three-year, and five-year calculations.
-* **MySQL HeatWave DB System** stores the original inputs, formatted lines, representative decisions, calculation results, and workflow history.
+* **MySQL HeatWave DB System** stores the original inputs, formatted lines, representative decisions, calculation results, workflow history, and minimal deletion audits.
 * **MySQL HeatWave GenAI** uses `sys.ML_GENERATE` to convert freeform RHEL and Oracle Linux subscription text into structured suggestions for representative review.
 
 AI assists with formatting the input. It does not approve SKUs, prices, alignments, or final results. The Oracle representative reviews and confirms the data before PHP calculates the comparison.
@@ -45,7 +45,7 @@ The completed application follows this flow:
 6. The representative reviews, corrects, aligns, and confirms both sides.
 7. PHP calculates annual, three-year, and five-year totals.
 8. The MySQL HeatWave DB System stores the inputs, formatted lines, representative decisions, rule version, and calculated results.
-9. The representative can reopen, revise, duplicate, or export the comparison.
+9. The representative can reopen, revise, duplicate, export, or delete the comparison.
 
 The repository includes the complete application source, an idempotent database schema, a staged deployment script, and executable PHP and installation tests. Labs 2 through 5 enable the application in stages so that each learner checkpoint corresponds to a working browser experience.
 
@@ -63,7 +63,7 @@ In this workshop, you will:
 * Review, correct, align, and confirm the formatted lines.
 * Calculate annual, three-year, and five-year subscription costs.
 * Save representative decisions and calculation-rule versions.
-* Reopen, revise, duplicate, and export saved comparisons.
+* Reopen, revise, duplicate, export, and securely delete saved comparisons.
 * Test and demonstrate the finished prototype.
 
 ### Prerequisites
@@ -81,7 +81,7 @@ This workshop assumes you have:
 * **Lab 2** downloads the workshop source and creates the workbook-style database schema and least-privilege application account.
 * **Lab 3** deploys the PHP foundation and verifies creation, storage, listing, and reopening of the two original inputs.
 * **Lab 4** enables MySQL HeatWave GenAI formatting, strict response validation, representative editing, alignment, decisions, and manual fallback.
-* **Lab 5** enables exact money calculations, saved result snapshots, revision, duplication, and CSV workbook export.
+* **Lab 5** enables exact money calculations, saved result snapshots, revision, duplication, CSV workbook export, and confirmed deletion.
 * **Lab 6** runs automated checks and verifies the complete browser workflow and fail-closed behavior.
 
 *This is the fold. The remaining sections are collapsed by default.*

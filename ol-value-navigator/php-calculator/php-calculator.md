@@ -218,6 +218,8 @@ This lab assumes you have:
 
     > **Checkpoint:** The browser creates, lists, and reopens a complete comparison. Both original inputs and the creation event are stored together without a master catalog.
 
+## Conclusion
+
 You have built the saved-input workflow. In the next lab, you will enable MySQL HeatWave GenAI formatting, representative editing, alignment, decisions, and manual fallback.
 
 ## Learn More
