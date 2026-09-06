@@ -1,5 +1,13 @@
 <?php
 declare(strict_types=1);
+/**
+ * GET controller and view for a Stage 5 calculated result snapshot.
+ *
+ * Access is redirected to review unless both the CALCULATED state and its result
+ * row exist. The view presents fixed-point totals, explains the difference
+ * direction, identifies the calculation rule, and retains excluded lines in the
+ * traceability table even though they do not contribute to totals.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 require_stage(5);
 $id = request_id();
@@ -52,4 +60,3 @@ render_header('Results: ' . $comparison['name']);
 
 <p>Calculated at <?= h($result['calculated_at']) ?>. Excluded lines remain visible but are not included in totals.</p>
 <?php render_footer(); ?>
-

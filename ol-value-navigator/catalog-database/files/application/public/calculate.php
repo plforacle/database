@@ -1,5 +1,14 @@
 <?php
 declare(strict_types=1);
+/**
+ * POST controller for calculating a fully reviewed workbook in Stage 5.
+ *
+ * calculate_comparison_totals performs the fail-closed review and alignment
+ * checks before this route begins a transaction. The result upsert, CALCULATED
+ * status, and application event then commit as one state change. Review problems
+ * return the representative to the review page, while unexpected failures expose
+ * only a generic message and log the exception class.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 require_stage(5);
 require_post();
@@ -9,6 +18,7 @@ $comparison = find_comparison($id);
 
 try {
     $totals = calculate_comparison_totals($id);
+    // Save the snapshot, workbook state, and trace event atomically.
     db()->beginTransaction();
     $statement = db()->prepare(
         'INSERT INTO comparison_result (

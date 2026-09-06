@@ -1,5 +1,14 @@
 <?php
 declare(strict_types=1);
+/**
+ * GET controller and static view for the built-in Version 1 Help experience.
+ *
+ * The guide follows the representative's actual workflow from source entry
+ * through GenAI formatting, human review, calculation, and CSV export. It also
+ * explains destructive actions, recovery paths, and prototype governance limits.
+ * Keeping this content in the deployed application makes help available without
+ * requiring access to the LiveLabs workshop.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 
 render_header('Help and Quick Start');

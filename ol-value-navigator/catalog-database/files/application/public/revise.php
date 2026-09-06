@@ -1,5 +1,14 @@
 <?php
 declare(strict_types=1);
+/**
+ * GET and POST controller for revising Stage 5 comparison source data.
+ *
+ * GET renders the saved name and original inputs. POST validates the CSRF token,
+ * normalizes and bounds all text, then resets the workbook to DRAFT. Because AI
+ * suggestions and calculations were derived from the former inputs, the same
+ * transaction removes result snapshots, lines, and formatting runs while retaining
+ * the comparison's workflow event history and appending an INPUTS_REVISED event.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 require_stage(5);
 $id = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' ? post_id() : request_id();
@@ -13,12 +22,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $name = require_length(normalize_text((string) ($_POST['name'] ?? '')), 1, 255, 'Comparison name');
         $rhel = require_length(normalize_text((string) ($_POST['rhel_text'] ?? '')), 1, $maximum, 'RHEL input');
         $oracle = require_length(normalize_text((string) ($_POST['oracle_text'] ?? '')), 1, $maximum, 'Oracle Linux input');
+        // Source replacement and removal of every stale derivative form one state change.
         db()->beginTransaction();
         db()->prepare("UPDATE comparison SET name = ?, status = 'DRAFT' WHERE id = ?")->execute([$name, $id]);
         $update = db()->prepare('UPDATE comparison_input SET raw_text = ? WHERE comparison_id = ? AND input_side = ?');
         $update->execute([$rhel, $id, 'RHEL']);
         $update->execute([$oracle, $id, 'ORACLE_LINUX']);
         db()->prepare('DELETE FROM comparison_result WHERE comparison_id = ?')->execute([$id]);
+        // Delete lines before their referenced formatting runs to satisfy the foreign key.
         db()->prepare(
             'DELETE l FROM comparison_line l JOIN comparison_input i ON i.id = l.comparison_input_id WHERE i.comparison_id = ?'
         )->execute([$id]);

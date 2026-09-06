@@ -1,6 +1,24 @@
 <?php
 declare(strict_types=1);
 
+/*
+ * GenAI boundary for prompt construction, response validation, and persistence.
+ * Model output remains untrusted until every contract check succeeds, and saved
+ * suggestions never become calculation inputs without representative review.
+ */
+
+/**
+ * Build the extraction prompt sent to MySQL HeatWave GenAI.
+ *
+ * The supplied SKU text is explicitly delimited as untrusted data to reduce
+ * prompt-injection risk. The contract limits the model to extraction and forbids
+ * invented values, recommendations, conversions, or equivalence claims. Human
+ * review remains mandatory because model output is only a suggestion.
+ *
+ * @param string $side RHEL or ORACLE_LINUX input-side code.
+ * @param string $rawText Complete representative-supplied source text.
+ * @return string Prompt containing the strict JSON response contract.
+ */
 function build_formatting_prompt(string $side, string $rawText): string
 {
     $label = $side === 'RHEL' ? 'RHEL' : 'Oracle Linux';
@@ -25,6 +43,15 @@ END_UNTRUSTED_INPUT
 PROMPT;
 }
 
+/**
+ * Remove one optional Markdown JSON fence before strict JSON decoding.
+ *
+ * This narrow normalization tolerates a common model wrapper without accepting
+ * commentary or attempting to repair malformed output.
+ *
+ * @param string $text Generated model text.
+ * @return string Unwrapped and trimmed JSON candidate.
+ */
 function strip_json_fence(string $text): string
 {
     $text = trim($text);
@@ -34,6 +61,15 @@ function strip_json_fence(string $text): string
     return $text;
 }
 
+/**
+ * Validate one optional string field from an untrusted model response.
+ *
+ * @param mixed $value Decoded JSON value.
+ * @param int $maximum Maximum accepted byte length.
+ * @param string $field Field name used in validation errors.
+ * @return string|null Trimmed value or null when the model reports no value.
+ * @throws UnexpectedValueException When type or length violates the contract.
+ */
 function nullable_ai_string(mixed $value, int $maximum, string $field): ?string
 {
     if ($value === null) {
@@ -49,11 +85,28 @@ function nullable_ai_string(mixed $value, int $maximum, string $field): ?string
     return $value;
 }
 
+/**
+ * Decode and validate all generated line suggestions before persistence.
+ *
+ * sys.ML_GENERATE normally returns an outer JSON object containing text, while
+ * tests may pass generated JSON directly. Both forms still undergo exact root
+ * and line-key validation, numeric limits, confidence validation, warning limits,
+ * and source traceability. In particular, every nonnull SKU must occur in the
+ * representative's original input.
+ *
+ * @param string $databaseResponse Raw sys.ML_GENERATE value or generated JSON.
+ * @param string $rawText Original source used for SKU traceability checks.
+ * @return array{generated_text:string,lines:list<array<string,mixed>>} Validated output.
+ * @throws JsonException When an outer or generated payload is not valid JSON.
+ * @throws UnexpectedValueException When output violates the application contract.
+ */
 function parse_ai_lines(string $databaseResponse, string $rawText): array
 {
+    // Reject oversized, malformed, or contract-breaking output before any suggestion is stored.
     if (strlen($databaseResponse) > 200000) {
         throw new UnexpectedValueException('The AI response exceeded the application limit.');
     }
+    // Accept the normal database envelope and the direct JSON form used by tests.
     $outer = json_decode($databaseResponse, true, 32, JSON_THROW_ON_ERROR);
     $generatedText = is_array($outer) && isset($outer['text']) ? $outer['text'] : $databaseResponse;
     if (!is_string($generatedText)) {
@@ -84,6 +137,7 @@ function parse_ai_lines(string $databaseResponse, string $rawText): array
         if ($price !== null && (!preg_match('/^(0|[1-9][0-9]*)(?:\.[0-9]{1,2})?$/', $price) || (float) $price > 100000000)) {
             throw new UnexpectedValueException('An AI price was not a nonnegative decimal value.');
         }
+        // Source matching blocks a generated SKU that the representative never supplied.
         if ($sku !== null && stripos($rawText, $sku) === false) {
             throw new UnexpectedValueException('An AI SKU was not present in the supplied input.');
         }
@@ -114,6 +168,20 @@ function parse_ai_lines(string $databaseResponse, string $rawText): array
     return ['generated_text' => $generatedText, 'lines' => $validated];
 }
 
+/**
+ * Format one saved input with GenAI and replace its current suggestion lines.
+ *
+ * The external model call and response validation occur before the transaction.
+ * Once validation succeeds, the completed run, replacement lines, and completion
+ * event commit together. A failure rolls back partial writes, then makes a
+ * best-effort attempt to retain a nonsensitive failure run and event. Exception
+ * classes are logged, but source text and model output are not written to logs.
+ *
+ * @param array<string,mixed> $input comparison_input row including id,
+ *     comparison_id, input_side, and raw_text.
+ * @return int Number of validated suggestions stored.
+ * @throws RuntimeException With a user-safe recovery message on any failure.
+ */
 function format_input_with_genai(array $input): int
 {
     $comparisonId = (int) $input['comparison_id'];
@@ -135,6 +203,7 @@ function format_input_with_genai(array $input): int
         $response = (string) $statement->fetchColumn();
         $parsed = parse_ai_lines($response, $rawText);
 
+        // Store the model run, replacement suggestions, and event atomically.
         db()->beginTransaction();
         $run = db()->prepare(
             "INSERT INTO ai_formatting_run (comparison_input_id, model_id, run_status, response_text)
@@ -170,6 +239,7 @@ function format_input_with_genai(array $input): int
         if (db()->inTransaction()) {
             db()->rollBack();
         }
+        // Failure auditing is best effort and must never hide the original failure.
         try {
             $run = db()->prepare(
                 "INSERT INTO ai_formatting_run (comparison_input_id, model_id, run_status, error_code)

@@ -1,5 +1,14 @@
 <?php
 declare(strict_types=1);
+/**
+ * GET controller and view for Stage 4 representative review and alignment.
+ *
+ * Original source text and immutable AI suggestions remain visible beside the
+ * editable reviewed values. Each line must receive a decision, and confirmed
+ * lines use positive group numbers to record representative-selected alignment.
+ * Grouping supports cost comparison and does not claim product equivalence.
+ * Manual fallback forms remain available when formatting fails or misses an item.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 require_stage(4);
 $id = request_id();
@@ -78,4 +87,3 @@ render_header('Review and align: ' . $comparison['name']);
   </div>
 </section>
 <?php render_footer(); ?>
-

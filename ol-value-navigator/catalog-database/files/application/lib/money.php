@@ -1,8 +1,27 @@
 <?php
 declare(strict_types=1);
 
+/*
+ * Deterministic calculation library for reviewed subscription-cost lines.
+ * All arithmetic uses scaled integers, while validation prevents incomplete or
+ * unpaired representative decisions from reaching a result snapshot.
+ */
+
+/**
+ * Convert an unsigned decimal string to an integer at the requested scale.
+ *
+ * Monetary calculations never use binary floating point. For example, 12.34 at
+ * scale 2 becomes 1234, while quantity 1.50 becomes 150. Callers can therefore
+ * multiply and round using integers with repeatable results.
+ *
+ * @param string $value Plain decimal text without currency or separators.
+ * @param int $scale Number of fractional digits to preserve.
+ * @return int Scaled integer representation.
+ * @throws InvalidArgumentException When the format or precision is invalid.
+ */
 function decimal_to_scaled_int(string $value, int $scale): int
 {
+    // Convert decimal text to an integer scale before arithmetic to avoid binary floating-point drift.
     $value = trim($value);
     if (!preg_match('/^(0|[1-9][0-9]*)(?:\.([0-9]+))?$/', $value, $matches)) {
         throw new InvalidArgumentException('A decimal value has an invalid format.');
@@ -15,6 +34,13 @@ function decimal_to_scaled_int(string $value, int $scale): int
     return ((int) $matches[1] * (10 ** $scale)) + (int) $fraction;
 }
 
+/**
+ * Convert a scaled integer back to a signed fixed-width decimal string.
+ *
+ * @param int $value Scaled integer value.
+ * @param int $scale Number of digits to place after the decimal point.
+ * @return string Decimal text suitable for a DECIMAL database column.
+ */
 function scaled_int_to_decimal(int $value, int $scale = 2): string
 {
     $negative = $value < 0;
@@ -25,6 +51,17 @@ function scaled_int_to_decimal(int $value, int $scale = 2): string
     return ($negative ? '-' : '') . $whole . '.' . $fraction;
 }
 
+/**
+ * Multiply a two-decimal unit price by a two-decimal quantity.
+ *
+ * The intermediate value is measured in ten-thousandths. Adding 50 before
+ * integer division applies positive half-up rounding to the nearest cent.
+ *
+ * @param string $price Annual unit price as nonnegative decimal text.
+ * @param string $quantity Positive quantity as decimal text.
+ * @return int Extended annual price in cents.
+ * @throws InvalidArgumentException When either decimal is malformed.
+ */
 function multiply_price_by_quantity(string $price, string $quantity): int
 {
     $priceCents = decimal_to_scaled_int($price, 2);
@@ -33,8 +70,23 @@ function multiply_price_by_quantity(string $price, string $quantity): int
     return intdiv($product + 50, 100);
 }
 
+/**
+ * Validate reviewed lines and calculate annual, three-year, and five-year totals.
+ *
+ * Calculation fails closed when lines are absent, still require a decision, lack
+ * required values, or use an unpaired comparison group. Excluded lines remain
+ * traceable in the workbook but do not contribute to totals. A positive
+ * difference means the confirmed RHEL total exceeds the Oracle Linux total.
+ *
+ * @param int $comparisonId Comparison primary key.
+ * @return array<string,string> Nine fixed-point totals and differences.
+ * @throws DomainException When review or alignment is incomplete.
+ * @throws InvalidArgumentException When a saved decimal is malformed.
+ * @throws PDOException When the comparison-line query fails.
+ */
 function calculate_comparison_totals(int $comparisonId): array
 {
+    // Fail closed until every included line is confirmed and every group contains both input sides.
     $lines = comparison_lines($comparisonId);
     if ($lines === []) {
         throw new DomainException('Format or add lines before calculating.');
@@ -48,6 +100,7 @@ function calculate_comparison_totals(int $comparisonId): array
         throw new DomainException('Resolve, confirm, or exclude every line before calculating.');
     }
 
+    // Totals stay in cents until the final database-ready result is assembled.
     $totals = ['RHEL' => 0, 'ORACLE_LINUX' => 0];
     $groups = [];
     $confirmedCount = ['RHEL' => 0, 'ORACLE_LINUX' => 0];
@@ -98,6 +151,13 @@ function calculate_comparison_totals(int $comparisonId): array
     ];
 }
 
+/**
+ * Format a database decimal as display-only US currency.
+ *
+ * @param string|int|null $value Fixed-point decimal returned by the database.
+ * @return string Currency text such as $1,234.50 or -$12.00.
+ * @throws InvalidArgumentException When the value is not a signed money decimal.
+ */
 function money(string|int|null $value): string
 {
     $text = trim((string) $value);

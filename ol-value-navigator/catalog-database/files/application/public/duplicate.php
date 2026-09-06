@@ -1,5 +1,14 @@
 <?php
 declare(strict_types=1);
+/**
+ * POST controller for creating an editable copy of a Stage 5 workbook.
+ *
+ * The transaction copies lineage, rule version, original inputs, AI suggestions,
+ * representative edits, groups, decisions, and notes. It deliberately omits the
+ * prior result snapshot and AI-run foreign keys because those describe processing
+ * performed on the source workbook. The copy starts in NEEDS_REVIEW and must be
+ * reviewed and calculated independently.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 require_stage(5);
 require_post();
@@ -9,6 +18,7 @@ $source = find_comparison($id);
 $inputs = comparison_inputs($id);
 
 try {
+    // Every copied input and line belongs to the new parent or nothing is committed.
     db()->beginTransaction();
     $copy = db()->prepare(
         "INSERT INTO comparison (source_comparison_id, name, status, rule_version_id)
@@ -34,6 +44,7 @@ try {
         $lineQuery = db()->prepare('SELECT * FROM comparison_line WHERE comparison_input_id = ? ORDER BY line_number');
         $lineQuery->execute([(int) $input['id']]);
         foreach ($lineQuery->fetchAll() as $line) {
+            // Preserve suggestion and review evidence without linking to the source AI run.
             $lineInsert->execute([
                 $newInputId, $line['line_number'], $line['comparison_group'], $line['entry_method'],
                 $line['suggested_sku'], $line['suggested_description'], $line['suggested_quantity'],

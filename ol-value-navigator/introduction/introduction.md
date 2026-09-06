@@ -33,19 +33,29 @@ The application uses an Oracle Linux compute instance for Apache and PHP. A priv
 
 Estimated Workshop Time: 6 hours 45 minutes
 
-### Application Flow
+### Build and Application Flow
 
-The completed application follows this flow:
+The workshop builds and validates the system in six working stages:
 
-1. The representative creates a comparison.
-2. The representative pastes the complete RHEL SKU text into the RHEL freeform input.
-3. MySQL HeatWave GenAI extracts and formats possible RHEL SKUs, descriptions, quantities, and prices through `sys.ML_GENERATE`.
-4. The representative pastes the complete Oracle Linux SKU text into the Oracle Linux freeform input.
-5. MySQL HeatWave GenAI extracts and formats possible Oracle Linux SKUs, descriptions, quantities, and prices through `sys.ML_GENERATE`.
-6. The representative reviews, corrects, aligns, and confirms both sides.
-7. PHP calculates annual, three-year, and five-year totals.
-8. The MySQL HeatWave DB System stores the inputs, formatted lines, representative decisions, rule version, and calculated results.
-9. The representative can reopen, revise, duplicate, export, or delete the comparison.
+```text
+Lab 1: OCI and LAMP infrastructure
+  -> Lab 2: workbook database and application account
+  -> Lab 3: PHP foundation and saved inputs
+  -> Lab 4: GenAI formatting and representative review
+  -> Lab 5: calculations and workbook actions
+  -> Lab 6: automated and browser verification
+```
+
+After the system is built, a representative uses the application through this flow:
+
+```text
+Enter both complete inputs
+  -> Save the original text
+  -> Format both inputs with MySQL HeatWave GenAI
+  -> Review, correct, align, and decide every line
+  -> Calculate annual, three-year, and five-year results with PHP
+  -> Save, reopen, export, duplicate, revise, or delete the comparison
+```
 
 The repository includes the complete application source, an idempotent database schema, a staged deployment script, and executable PHP and installation tests. Labs 2 through 5 enable the application in stages so that each learner checkpoint corresponds to a working browser experience.
 
@@ -75,15 +85,6 @@ This workshop assumes you have:
 * An SSH client and an SSH key pair.
 * Basic experience with Linux, Apache, MySQL HeatWave, and PHP.
 * No customer data is required. The workshop provides demonstration data.
-
-### Workshop Build Sequence
-
-* **Lab 1** creates the validated Oracle Linux, Apache, PHP, MySQL client, and MySQL HeatWave environment.
-* **Lab 2** downloads the workshop source and creates the workbook-style database schema and least-privilege application account.
-* **Lab 3** deploys the PHP foundation and verifies creation, storage, listing, and reopening of the two original inputs.
-* **Lab 4** enables MySQL HeatWave GenAI formatting, strict response validation, representative editing, alignment, decisions, and manual fallback.
-* **Lab 5** enables exact money calculations, saved result snapshots, built-in Help, revision, duplication, CSV workbook export, and confirmed deletion.
-* **Lab 6** runs automated checks and verifies the complete browser workflow and fail-closed behavior.
 
 *This is the fold. The remaining sections are collapsed by default.*
 

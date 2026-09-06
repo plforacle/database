@@ -1,5 +1,13 @@
 <?php
 declare(strict_types=1);
+/**
+ * POST controller for deleting one comparison and all associated workbook data.
+ *
+ * Stage, method, CSRF, and identifier checks run before the saved name is compared
+ * with the representative's exact confirmation. The deletion library records a
+ * minimal independent audit and deletes the parent in one transaction; schema
+ * cascades remove its inputs, lines, AI runs, results, and normal event history.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 require_stage(5);
 require_post();

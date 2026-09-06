@@ -1,5 +1,13 @@
 <?php
 declare(strict_types=1);
+/**
+ * GET controller and view for one saved comparison workbook.
+ *
+ * The page renders escaped source inputs, current line counts, and only the
+ * actions enabled by the deployed workshop stage. State-changing actions use
+ * POST forms with CSRF tokens. Stage 5 also exposes revise, duplicate, export,
+ * and exact-name-confirmed deletion controls.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 $id = request_id();
 $comparison = find_comparison($id);

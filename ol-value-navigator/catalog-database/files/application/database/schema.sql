@@ -1,9 +1,13 @@
+-- Workbook-style persistence for source inputs, AI suggestions, human decisions,
+-- deterministic result snapshots, workflow events, and retained deletion audits.
 CREATE DATABASE IF NOT EXISTS ol_value_navigator
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
 
 USE ol_value_navigator;
 
+-- Identifies the deterministic calculation policy attached to each comparison.
+-- The prototype seeds a demonstration rule and does not claim production approval.
 CREATE TABLE IF NOT EXISTS calculation_rule_version (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   version_label VARCHAR(64) NOT NULL UNIQUE,
@@ -17,6 +21,8 @@ CREATE TABLE IF NOT EXISTS calculation_rule_version (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Parent workbook record. source_comparison_id records duplication lineage without
+-- preventing deletion of the source, and rule_version_id makes results traceable.
 CREATE TABLE IF NOT EXISTS comparison (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   source_comparison_id BIGINT UNSIGNED NULL,
@@ -34,6 +40,8 @@ CREATE TABLE IF NOT EXISTS comparison (
     FOREIGN KEY (rule_version_id) REFERENCES calculation_rule_version(id)
 );
 
+-- Preserves exactly one complete RHEL input and one complete Oracle Linux input per
+-- comparison. Deleting the parent comparison cascades to all input-owned children.
 CREATE TABLE IF NOT EXISTS comparison_input (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   comparison_id BIGINT UNSIGNED NOT NULL,
@@ -48,6 +56,8 @@ CREATE TABLE IF NOT EXISTS comparison_input (
   UNIQUE KEY unique_comparison_input (comparison_id, input_side)
 );
 
+-- Records each successful or failed ML_GENERATE attempt independently for one input.
+-- response_text contains generated output only and is never treated as approved data.
 CREATE TABLE IF NOT EXISTS ai_formatting_run (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   comparison_input_id BIGINT UNSIGNED NOT NULL,
@@ -62,6 +72,8 @@ CREATE TABLE IF NOT EXISTS ai_formatting_run (
   INDEX idx_ai_run_input (comparison_input_id, created_at)
 );
 
+-- Stores immutable AI suggestions beside editable representative-reviewed values.
+-- Group numbers express user-selected alignment, not vendor product equivalence.
 CREATE TABLE IF NOT EXISTS comparison_line (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   comparison_input_id BIGINT UNSIGNED NOT NULL,
@@ -96,6 +108,8 @@ CREATE TABLE IF NOT EXISTS comparison_line (
   CHECK (annual_unit_price IS NULL OR annual_unit_price >= 0)
 );
 
+-- Stores one deterministic annual, three-year, and five-year snapshot per comparison.
+-- Recalculation replaces the snapshot, while source and reviewed lines remain traceable.
 CREATE TABLE IF NOT EXISTS comparison_result (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   comparison_id BIGINT UNSIGNED NOT NULL UNIQUE,
@@ -116,6 +130,8 @@ CREATE TABLE IF NOT EXISTS comparison_result (
   CHECK (oracle_linux_annual_total >= 0)
 );
 
+-- Captures workflow actions without storing credentials or duplicating source text.
+-- Events belong to the workbook and are removed when that workbook is deleted.
 CREATE TABLE IF NOT EXISTS application_event (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   comparison_id BIGINT UNSIGNED NOT NULL,
@@ -130,7 +146,9 @@ CREATE TABLE IF NOT EXISTS application_event (
   INDEX idx_event_comparison (comparison_id, created_at)
 );
 
+-- Retains only the minimum deletion evidence after the workbook and its children are gone.
 CREATE TABLE IF NOT EXISTS comparison_deletion_audit (
+  -- This table intentionally has no foreign key so its minimal record survives deletion.
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   deleted_comparison_id BIGINT UNSIGNED NOT NULL,
   comparison_name VARCHAR(255) NOT NULL,
@@ -138,6 +156,7 @@ CREATE TABLE IF NOT EXISTS comparison_deletion_audit (
   UNIQUE KEY unique_deleted_comparison (deleted_comparison_id)
 );
 
+-- Idempotent seed keeps repeat workshop runs aligned to the same demonstration policy.
 INSERT INTO calculation_rule_version
   (version_label, description, source_reference, governance_status)
 VALUES

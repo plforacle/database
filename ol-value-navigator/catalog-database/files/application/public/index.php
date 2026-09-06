@@ -1,7 +1,17 @@
 <?php
 declare(strict_types=1);
+/**
+ * GET controller and view for the Version 1 comparison workspace.
+ *
+ * The page accepts both complete freeform inputs and lists the 50 most recently
+ * updated workbooks. Version 1 has no login or per-user ownership, so the list is
+ * shared by everyone with network access to the prototype. All database values
+ * are escaped before rendering and creation is delegated to a CSRF-protected POST
+ * controller.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 
+// Bound the shared landing page while keeping recently active workbooks visible.
 $comparisons = db()->query(
     'SELECT c.id, c.name, c.status, c.updated_at,
             (SELECT COUNT(*) FROM comparison_line l JOIN comparison_input i ON i.id = l.comparison_input_id WHERE i.comparison_id = c.id) AS line_count
@@ -55,4 +65,3 @@ render_header('Comparisons');
   <?php endif; ?>
 </section>
 <?php render_footer(); ?>
-

@@ -1,5 +1,15 @@
 <?php
 declare(strict_types=1);
+/**
+ * POST controller for saving Stage 4 representative review decisions.
+ *
+ * Each submitted line identifier is joined back to the requested comparison before
+ * any update, preventing a modified form from changing another workbook's lines.
+ * The route bounds text, validates decimal and group formats, requires complete
+ * fields for confirmation, and requires notes for exclusions and unresolved lines.
+ * All line edits, result invalidation, derived workbook status, and event logging
+ * commit together.
+ */
 require '/var/www/ol-value-navigator/lib/bootstrap.php';
 require_stage(4);
 require_post();
@@ -12,6 +22,7 @@ if (!is_array($submittedLines) || $submittedLines === []) {
 }
 
 $allowedStatuses = ['AI_SUGGESTED', 'CONFIRMED', 'EXCLUDED', 'UNRESOLVED'];
+// This ownership query is the server-side defense against submitted line-ID tampering.
 $owned = db()->prepare(
     'SELECT l.id FROM comparison_line l JOIN comparison_input i ON i.id = l.comparison_input_id
      WHERE l.id = ? AND i.comparison_id = ?'
@@ -22,6 +33,7 @@ $update = db()->prepare(
 );
 
 try {
+    // Do not retain a partially saved review if any submitted line is invalid.
     db()->beginTransaction();
     foreach ($submittedLines as $lineId => $values) {
         if (!is_array($values) || !ctype_digit((string) $lineId)) {
@@ -76,11 +88,13 @@ try {
             (int) $lineId,
         ]);
     }
+    // Any edit invalidates the old snapshot, even when the workbook remains confirmed.
     db()->prepare('DELETE FROM comparison_result WHERE comparison_id = ?')->execute([$id]);
     $counts = line_counts($id);
     $status = ($counts['AI_SUGGESTED'] + $counts['UNRESOLVED']) === 0 && $counts['CONFIRMED'] > 0
         ? 'CONFIRMED' : 'NEEDS_REVIEW';
     db()->prepare('UPDATE comparison SET status = ? WHERE id = ?')->execute([$status, $id]);
+    // The event outcome records a successful save; details retain the resulting counts.
     record_event($id, 'REPRESENTATIVE_REVIEW_SAVED', 'REPRESENTATIVE', 'CONFIRMED', $counts);
     db()->commit();
     flash('success', 'Representative decisions were saved.');

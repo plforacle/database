@@ -12,9 +12,10 @@ The five-minute management walkthrough is stored in `management-quick-start.md`.
 
 ## Production publication reminder
 
-- [ ] Complete successful end-to-end testing of Labs 1 through 6.
-- [ ] Add concise descriptive comments to the readable application source after lab testing is complete.
-- [ ] Regenerate and retest the application ZIP after adding the source comments.
+- [x] Complete successful end-to-end testing of Labs 1 through 6.
+- [x] Add comprehensive maintainability documentation to the complete readable application source.
+- [x] Regenerate the application ZIP and verify its contents, syntax, and unit checks.
+- [ ] Deploy the final ZIP to the test compute instance and run the Stage 5 installation verification.
 - [ ] Upload the final application ZIP to the LiveLabs production Object Storage location.
 - [ ] Replace the testing Object Storage PAR URL in `catalog-database/catalog-database.md` with the LiveLabs production URL.
 - [ ] Verify the production object against the SHA-256 checksum documented in Lab 2 before publishing the workshop.

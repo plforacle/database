@@ -44,19 +44,49 @@ This lab assumes you have:
     <copy>find . -maxdepth 2 -type f | sort</copy>
     ```
 
-3. Use this map to understand what will be installed.
+3. Use this compact source map to understand each supplied file.
 
-    | Source | Installed location | Responsibility |
-    | --- | --- | --- |
-    | `config/config.php.example` | `/var/www/ol-value-navigator/config.php` | Private database, model, size-limit, and route settings |
-    | `lib/bootstrap.php` | `/var/www/ol-value-navigator/lib/bootstrap.php` | Session, security headers, PDO, CSRF, output escaping, and shared page helpers |
-    | `lib/repository.php` | `/var/www/ol-value-navigator/lib/repository.php` | Prepared database queries and workflow-event storage |
-    | `lib/genai.php` | `/var/www/ol-value-navigator/lib/genai.php` | Prompt construction, `ML_GENERATE`, strict JSON validation, and suggestion storage |
-    | `lib/money.php` | `/var/www/ol-value-navigator/lib/money.php` | Integer-based decimal parsing, line-cost calculation, and period totals |
-    | `public/*.php` | `/var/www/html/ol-value-navigator/` | Browser controllers and server-rendered pages |
-    | `public/style.css` | `/var/www/html/ol-value-navigator/style.css` | Responsive application presentation |
+    ```text
+    deploy.sh                         Installs one workshop stage and preserves private configuration
+    config/config.php.example         Provides the private database, model, limit, and URL template
+    database/schema.sql               Creates workbook, input, AI-run, line, result, event, and audit tables
+    lib/bootstrap.php                 Starts sessions, security headers, PDO, CSRF, escaping, and page helpers
+    lib/repository.php                Provides shared prepared queries and workflow-event writes
+    lib/genai.php                     Builds prompts, calls ML_GENERATE, validates JSON, and stores suggestions
+    lib/money.php                     Validates reviewed lines and calculates fixed-point period totals
+    lib/deletion.php                  Confirms names and performs audited cascading deletion
+    public/index.php                  Shows the creation form and recent saved comparisons
+    public/create.php                 Saves a comparison and both original inputs in one transaction
+    public/comparison.php             Reopens one workbook and displays its available actions
+    public/format.php                 Formats both inputs independently with GenAI
+    public/review.php                 Displays source, suggestions, editable values, groups, and decisions
+    public/save-review.php            Validates ownership and saves all representative decisions
+    public/add-line.php               Adds a manual fallback line and invalidates an old result
+    public/calculate.php              Applies review rules and saves a deterministic result snapshot
+    public/results.php                Displays period totals and traceable reviewed lines
+    public/revise.php                 Replaces source inputs and clears data derived from the old text
+    public/duplicate.php              Copies inputs and reviewed lines without copying the result
+    public/export.php                 Records an export event and streams a formula-safe CSV workbook
+    public/delete.php                 Requires exact-name confirmation before audited deletion
+    public/help.php                   Provides the in-application quick start and workflow guidance
+    public/style.css                  Provides responsive presentation for every application page
+    tests/unit.php                    Tests money, review, GenAI-contract, and deletion rules without a database
+    tests/check-database.php          Tests the deployed private connection, active rule, and audit table
+    tests/verify-installation.sh      Tests Stage 5 files, PHP syntax, Apache, and local routes
+    ```
 
-    Files under `/var/www/ol-value-navigator` are outside the Apache document root. Browser-accessible PHP files never contain the database password.
+    The files interact through this request flow:
+
+    ```text
+    Browser
+      -> public PHP controller or view
+         -> lib/bootstrap.php
+            -> private config.php and PDO connection
+            -> repository, GenAI, money, or deletion library
+               -> tables created by database/schema.sql
+    ```
+
+    `deploy.sh` copies `public` files into the Apache document root and keeps the configuration and libraries under `/var/www/ol-value-navigator`. The test files verify individual rules, the private database connection, and the final deployed application. Browser-accessible PHP files never contain the database password.
 
 4. Review the Lab 3 controllers.
 

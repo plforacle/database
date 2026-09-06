@@ -1,6 +1,21 @@
 <?php
 declare(strict_types=1);
 
+/*
+ * Shared persistence queries for comparison records, inputs, lines, and events.
+ * Centralizing these prepared statements keeps public controllers focused on
+ * workflow and gives all pages consistent row shapes and not-found behavior.
+ */
+
+/**
+ * Load one comparison and the label of the calculation rule it references.
+ *
+ * The request terminates with a user-safe HTTP 404 page when no row exists.
+ *
+ * @param int $id Comparison primary key.
+ * @return array<string,mixed> Database row for the comparison.
+ * @throws PDOException When the query fails.
+ */
 function find_comparison(int $id): array
 {
     $statement = db()->prepare(
@@ -17,6 +32,13 @@ function find_comparison(int $id): array
     return $comparison;
 }
 
+/**
+ * Load both original freeform inputs and index them by input side.
+ *
+ * @param int $comparisonId Comparison primary key.
+ * @return array<string,array<string,mixed>> Rows keyed by RHEL or ORACLE_LINUX.
+ * @throws PDOException When the query fails.
+ */
 function comparison_inputs(int $comparisonId): array
 {
     $statement = db()->prepare(
@@ -30,6 +52,16 @@ function comparison_inputs(int $comparisonId): array
     return $inputs;
 }
 
+/**
+ * Load all formatted and manually entered lines in stable display order.
+ *
+ * Joining through comparison_input proves each line belongs to the requested
+ * comparison and adds the side needed by review and calculation logic.
+ *
+ * @param int $comparisonId Comparison primary key.
+ * @return list<array<string,mixed>> RHEL lines followed by Oracle Linux lines.
+ * @throws PDOException When the query fails.
+ */
 function comparison_lines(int $comparisonId): array
 {
     $statement = db()->prepare(
@@ -43,6 +75,22 @@ function comparison_lines(int $comparisonId): array
     return $statement->fetchAll();
 }
 
+/**
+ * Append a workflow event to the comparison's traceable history.
+ *
+ * This function participates in an existing transaction when the caller has
+ * started one. Structured details are encoded as JSON with exceptions enabled,
+ * so malformed data cannot be silently stored.
+ *
+ * @param int $comparisonId Comparison that owns the event.
+ * @param string $eventType Stable application event name.
+ * @param string $actorType AI, REPRESENTATIVE, or APPLICATION.
+ * @param string $outcome COMPLETED, CONFIRMED, REJECTED, or FAILED.
+ * @param array<string,mixed>|null $details Optional nonsecret event context.
+ * @return void
+ * @throws JsonException When details cannot be encoded.
+ * @throws PDOException When the insert fails.
+ */
 function record_event(
     int $comparisonId,
     string $eventType,
@@ -63,6 +111,13 @@ function record_event(
     ]);
 }
 
+/**
+ * Count lines by review status for workbook status summaries.
+ *
+ * @param int $comparisonId Comparison primary key.
+ * @return array<string,int> All four supported statuses, including zero counts.
+ * @throws PDOException When the query fails.
+ */
 function line_counts(int $comparisonId): array
 {
     $statement = db()->prepare(
