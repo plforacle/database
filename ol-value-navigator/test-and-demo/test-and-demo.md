@@ -50,7 +50,7 @@ This lab assumes you have:
     * The deployed stage is `5`.
     * Every deployed PHP file passes `php -l` syntax validation.
     * Apache is active.
-    * The local application route returns a successful HTTP response.
+    * The local application and Help routes return successful HTTP responses.
 
 3. Run the database connection check as Apache.
 
@@ -60,7 +60,7 @@ This lab assumes you have:
 
     Confirm that it reports the MySQL Server version, `workshop-v1`, and `deletion audit ready`.
 
-    > **Checkpoint:** Source logic, deployed PHP syntax, Apache, the browser route, and the private database connection pass executable checks.
+    > **Checkpoint:** Source logic, deployed PHP syntax, Apache, the application and Help routes, and the private database connection pass executable checks.
 
 ## Task 2: Verify database consistency
 
@@ -145,6 +145,7 @@ This lab assumes you have:
     | Duplicate | Duplicate a comparison | Inputs and reviewed lines copy, but calculation must be run again |
     | Revise | Revise the duplicate's original input | Derived lines and results clear while the event history remains |
     | Export | Export the calculated original | CSV contains source, review, alignment, rule, and result sections |
+    | Help | Select Help from an application page and use Return to comparisons | The complete workflow guidance opens and returns to the saved-comparisons page |
     | Delete with incorrect name | Duplicate a demonstration, open the duplicate, and enter a confirmation name that is not exact | The application reports that nothing was deleted and the duplicate remains available |
     | Delete with exact name | Enter the duplicate's complete name exactly and delete it | The duplicate and its associated data disappear from the saved-comparisons list |
 

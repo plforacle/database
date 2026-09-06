@@ -6,7 +6,7 @@ In this lab, you enable the complete Version 1 application. PHP verifies that ev
 
 You also verify the workbook operations required by Version 1: reopen, revise, duplicate, CSV export, and confirmed deletion.
 
-Estimated Time: 85 minutes
+Estimated Time: 90 minutes
 
 ### Objectives
 
@@ -17,6 +17,7 @@ In this lab, you will:
 * Enforce complete representative review and two-sided alignment.
 * Save and display annual, three-year, and five-year results.
 * Verify fail-closed behavior for unresolved and unmatched lines.
+* Open the built-in Help and verify its complete workflow guidance.
 * Reopen, revise, duplicate, export, and securely delete a comparison.
 
 ### Prerequisites
@@ -279,9 +280,31 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 
     > **Checkpoint:** Exact-name confirmation protects the delete operation, all associated comparison data is removed, and the minimal audit record remains.
 
+## Task 8: Verify the built-in Help
+
+1. Return to the application in the browser and select **Help** in the header.
+
+2. Confirm that **Help and Quick Start** opens without leaving the application.
+
+3. Confirm that the page contains all of these help topics:
+
+    * Quick Start
+    * Review decisions
+    * Saved comparison actions
+    * Troubleshooting
+    * Version 1 boundaries
+
+4. Review the Quick Start and confirm that it covers creating, formatting, reviewing, calculating, and exporting a comparison.
+
+5. Review **Saved comparison actions** and confirm that it explains reopening, exporting, duplicating, revising, and deleting a comparison.
+
+6. Select **Return to comparisons** and confirm that the application returns to the saved-comparisons page.
+
+    > **Checkpoint:** Built-in Help provides the complete Version 1 workflow and returns the user to the application.
+
 ## Conclusion
 
-You have built the complete application, including confirmed comparison deletion. In the final lab, you will run deployment checks, test core scenarios, and rehearse the end-to-end demonstration.
+You have built the complete application, including built-in Help and confirmed comparison deletion. In the final lab, you will run deployment checks, test core scenarios, and rehearse the end-to-end demonstration.
 
 ## Learn More
 

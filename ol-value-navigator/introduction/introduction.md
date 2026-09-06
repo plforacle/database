@@ -63,6 +63,7 @@ In this workshop, you will:
 * Review, correct, align, and confirm the formatted lines.
 * Calculate annual, three-year, and five-year subscription costs.
 * Save representative decisions and calculation-rule versions.
+* Use built-in Help to guide the complete workflow.
 * Reopen, revise, duplicate, export, and securely delete saved comparisons.
 * Test and demonstrate the finished prototype.
 
@@ -81,7 +82,7 @@ This workshop assumes you have:
 * **Lab 2** downloads the workshop source and creates the workbook-style database schema and least-privilege application account.
 * **Lab 3** deploys the PHP foundation and verifies creation, storage, listing, and reopening of the two original inputs.
 * **Lab 4** enables MySQL HeatWave GenAI formatting, strict response validation, representative editing, alignment, decisions, and manual fallback.
-* **Lab 5** enables exact money calculations, saved result snapshots, revision, duplication, CSV workbook export, and confirmed deletion.
+* **Lab 5** enables exact money calculations, saved result snapshots, built-in Help, revision, duplication, CSV workbook export, and confirmed deletion.
 * **Lab 6** runs automated checks and verifies the complete browser workflow and fail-closed behavior.
 
 *This is the fold. The remaining sections are collapsed by default.*

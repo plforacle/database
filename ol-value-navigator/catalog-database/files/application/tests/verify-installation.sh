@@ -15,6 +15,6 @@ done
 
 systemctl is-active --quiet httpd
 curl --fail --silent --show-error http://localhost/ol-value-navigator/ >/dev/null
+curl --fail --silent --show-error http://localhost/ol-value-navigator/help.php | grep --quiet "Help and Quick Start"
 
-echo "Application files, PHP syntax, Apache, and the local browser route passed verification."
-
+echo "Application files, PHP syntax, Apache, and the local application and Help routes passed verification."

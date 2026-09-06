@@ -20,6 +20,16 @@ This application is not a quote, licensing determination, product-equivalence de
     Team demonstration - YOUR_NAME - YYYY-MM-DD
     ```
 
+## Open the application Help
+
+1. Select **Help** in the application header from any page.
+
+2. Use **Quick Start** for the shortest complete workflow.
+
+3. Use the remaining Help topics for review decisions, saved comparison actions, troubleshooting, and Version 1 boundaries.
+
+4. Select **Return to comparisons** when you are ready to begin.
+
 ## Create a comparison
 
 1. Open the application URL in a browser.

@@ -153,13 +153,15 @@ function render_header(string $title): void
     $flashes = $_SESSION['flash'] ?? [];
     unset($_SESSION['flash']);
     $home = h(app_url('/index.php'));
+    $help = h(app_url('/help.php'));
     $css = h(app_url('/style.css'));
     echo '<!doctype html><html lang="en"><head><meta charset="utf-8">';
     echo '<meta name="viewport" content="width=device-width,initial-scale=1">';
     echo '<title>' . h($title) . ' | Oracle Linux Value Navigator</title>';
     echo '<link rel="stylesheet" href="' . $css . '"></head><body>';
     echo '<header><div class="wrap"><a class="brand" href="' . $home . '">Oracle Linux Value Navigator</a>';
-    echo '<span class="badge">Workshop prototype</span></div></header><main class="wrap">';
+    echo '<nav class="header-actions" aria-label="Application navigation"><a class="header-link" href="' . $help . '">Help</a>';
+    echo '<span class="badge">Workshop prototype</span></nav></div></header><main class="wrap">';
     echo '<div class="notice warning">Use demonstration information only. This prototype is not a quote, licensing determination, or complete TCO analysis.</div>';
     foreach ($flashes as $item) {
         echo '<div class="notice ' . h($item['type']) . '">' . h($item['message']) . '</div>';
