@@ -14,7 +14,7 @@ In this lab, you will:
 * Verify database completeness and workflow consistency.
 * Test confirmed, excluded, unresolved, AI-failure, and manual-entry scenarios.
 * Verify safe browser and configuration behavior.
-* Rehearse the end-to-end Version 1 demonstration.
+* Rehearse the end-to-end Version 2 baseline demonstration.
 * Identify controls deferred beyond this prototype.
 
 ### Prerequisites
@@ -33,7 +33,7 @@ This lab assumes you have:
 1. Run the source-level unit checks.
 
     ```bash
-    <copy>php ~/ol-value-navigator-application/tests/unit.php</copy>
+    <copy>php ~/ol-value-navigator-2-application/tests/unit.php</copy>
     ```
 
     Confirm that all checks pass.
@@ -41,7 +41,7 @@ This lab assumes you have:
 2. Run the deployed-application verification as `root` so it can inspect the private files installed for Apache.
 
     ```bash
-    <copy>sudo bash ~/ol-value-navigator-application/tests/verify-installation.sh</copy>
+    <copy>sudo bash ~/ol-value-navigator-2-application/tests/verify-installation.sh</copy>
     ```
 
     This script verifies:
@@ -55,10 +55,10 @@ This lab assumes you have:
 3. Run the database connection check as Apache.
 
     ```bash
-    <copy>sudo -u apache php /var/www/ol-value-navigator/check-database.php</copy>
+    <copy>sudo -u apache php /var/www/ol-value-navigator-2/check-database.php</copy>
     ```
 
-    Confirm that it reports the MySQL Server version, `workshop-v1`, and `deletion audit ready`.
+    Confirm that it reports the MySQL Server version, `workshop-v2`, and `deletion audit ready`.
 
     > **Checkpoint:** Source logic, deployed PHP syntax, Apache, the application and Help routes, and the private database connection pass executable checks.
 
@@ -67,7 +67,7 @@ This lab assumes you have:
 1. Connect with the application account.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2_app --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
 2. Find any comparison that does not have exactly two original inputs.
@@ -128,7 +128,7 @@ This lab assumes you have:
 1. Open the application.
 
     ```text
-    http://PUBLIC_IP_ADDRESS/ol-value-navigator/
+    http://PUBLIC_IP_ADDRESS/ol-value-navigator-2/
     ```
 
 2. Execute this test matrix with demonstration data.
@@ -164,19 +164,19 @@ This lab assumes you have:
 1. Confirm that the private configuration is not present under the public web directory.
 
     ```bash
-    <copy>test ! -e /var/www/html/ol-value-navigator/config.php &amp;&amp; echo "PASS: no public configuration file"</copy>
+    <copy>test ! -e /var/www/html/ol-value-navigator-2/config.php &amp;&amp; echo "PASS: no public configuration file"</copy>
     ```
 
 2. Confirm that an HTTP request for a configuration file returns `404`.
 
     ```bash
-    <copy>curl --silent --output /dev/null --write-out '%{http_code}\n' http://localhost/ol-value-navigator/config.php</copy>
+    <copy>curl --silent --output /dev/null --write-out '%{http_code}\n' http://localhost/ol-value-navigator-2/config.php</copy>
     ```
 
 3. Confirm the private configuration permissions.
 
     ```bash
-    <copy>sudo stat --format='%U %G %a %n' /var/www/ol-value-navigator/config.php</copy>
+    <copy>sudo stat --format='%U %G %a %n' /var/www/ol-value-navigator-2/config.php</copy>
     ```
 
     The expected owner, group, and mode are `root apache 640`.
@@ -188,7 +188,7 @@ This lab assumes you have:
     ```bash
     <copy>sudo systemctl restart httpd
     systemctl is-active httpd
-    curl --fail --silent http://localhost/ol-value-navigator/ &gt; /dev/null &amp;&amp; echo "PASS: application route"</copy>
+    curl --fail --silent http://localhost/ol-value-navigator-2/ &gt; /dev/null &amp;&amp; echo "PASS: application route"</copy>
     ```
 
     Confirm that Apache is `active` and the route passes.
@@ -213,7 +213,7 @@ This lab assumes you have:
 
 9. Duplicate the comparison, demonstrate that an incorrect deletion confirmation preserves it, and then enter its exact name to delete it.
 
-10. State the Version 1 boundaries:
+10. State the Version 2 baseline boundaries:
 
     * No master RHEL or Oracle Linux SKU catalogs.
     * No login or multi-user ownership.
@@ -223,7 +223,7 @@ This lab assumes you have:
 
 ## Task 6: Record the next production controls
 
-1. Record these Version 2 or production-readiness work items outside the demonstration application:
+1. Record these remaining Version 2 and production-readiness work items outside the demonstration application:
 
     * Identity, login, authorization, comparison ownership, and session lifecycle.
     * Approved calculation-rule governance and change control.
@@ -234,7 +234,7 @@ This lab assumes you have:
 
 2. Keep customer information, credentials, private keys, private IP addresses, and OCI identifiers out of the repository.
 
-    > **Checkpoint:** The full Version 1 workflow is deployed, tested, traceable, reproducible, and ready for a demonstration using synthetic data.
+    > **Checkpoint:** The full Version 2 baseline workflow is deployed, tested, traceable, reproducible, and ready for a demonstration using synthetic data.
 
 ## Conclusion
 

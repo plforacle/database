@@ -9,7 +9,7 @@ declare(strict_types=1);
  * Grouping supports cost comparison and does not claim product equivalence.
  * Manual fallback forms remain available when formatting fails or misses an item.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(4);
 $id = request_id();
 $comparison = find_comparison($id);

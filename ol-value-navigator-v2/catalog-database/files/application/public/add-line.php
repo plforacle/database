@@ -8,7 +8,7 @@ declare(strict_types=1);
  * so it is removed and the workbook returns to NEEDS_REVIEW. The representative
  * completes the new fields on the review page.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(4);
 require_post();
 verify_csrf();

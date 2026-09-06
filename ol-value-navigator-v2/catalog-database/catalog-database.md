@@ -27,7 +27,7 @@ This lab assumes you have:
 * The DB System administrator password created in Lab 1.
 * The successful `sys.ML_GENERATE` result from the Lab 1 checkpoint.
 
-> **Note:** Use demonstration information only. Version 1 has no login, user ownership, or production data-governance controls.
+> **Note:** Use demonstration information only. At this development checkpoint, the copied baseline does not yet include login or user ownership.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
@@ -48,30 +48,32 @@ This lab assumes you have:
     ```bash
     <copy>cd ~
     curl --fail --location \
-      --output ol-value-navigator-application.zip \
-      https://objectstorage.us-ashburn-1.oraclecloud.com/p/EikwvWVbAyrfudFLLwreRODP5f2FGJ1jIcULUh57TkXSRB5Ori8bDWI6H1vNvc1S/n/idhwewbjlvpy/b/ol-value-navigator/o/ol-value-navigator-application.zip</copy>
+      --output ol-value-navigator-2-application.zip \
+      VERSION_2_OBJECT_STORAGE_PAR_URL</copy>
     ```
+
+    The Version 2 Object Storage PAR URL will be added after the login-enabled package is complete. Do not test this download until the placeholder has been replaced.
 
 4. Verify the downloaded package checksum.
 
     ```bash
     <copy>cd ~
-    echo 'b1d84d3c7fecf4835b0a9d9141b62a1242969151a89ae966886d64c021d85885  ol-value-navigator-application.zip' | sha256sum --check</copy>
+    echo 'f7c5b08df9077255de32521d9a82b4658993309c85749d5ff2d964fd5da6ca15  ol-value-navigator-2-application.zip' | sha256sum --check</copy>
     ```
 
-    Confirm that the command returns `ol-value-navigator-application.zip: OK`.
+    Confirm that the command returns `ol-value-navigator-2-application.zip: OK`.
 
 5. Extract the package into a dedicated working directory.
 
     ```bash
-    <copy>mkdir -p ~/ol-value-navigator-application
-    unzip -o ~/ol-value-navigator-application.zip -d ~/ol-value-navigator-application</copy>
+    <copy>mkdir -p ~/ol-value-navigator-2-application
+    unzip -o ~/ol-value-navigator-2-application.zip -d ~/ol-value-navigator-2-application</copy>
     ```
 
 6. List the extracted application assets.
 
     ```bash
-    <copy>find ~/ol-value-navigator-application -maxdepth 2 -type f | sort</copy>
+    <copy>find ~/ol-value-navigator-2-application -maxdepth 2 -type f | sort</copy>
     ```
 
     Confirm that the output includes `database/schema.sql`, `deploy.sh`, PHP files under `lib` and `public`, and tests under `tests`.
@@ -83,7 +85,7 @@ This lab assumes you have:
 1. Review the SQL file before executing it.
 
     ```bash
-    <copy>less ~/ol-value-navigator-application/database/schema.sql</copy>
+    <copy>less ~/ol-value-navigator-2-application/database/schema.sql</copy>
     ```
 
     Press `q` to exit `less`.
@@ -104,32 +106,32 @@ This lab assumes you have:
 3. Load the schema as the DB System administrator. Replace the private IP placeholder.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED &lt; ~/ol-value-navigator-application/database/schema.sql</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2admin --password --ssl-mode=REQUIRED &lt; ~/ol-value-navigator-2-application/database/schema.sql</copy>
     ```
 
 4. Enter the DB System administrator password when prompted.
 
-    The schema file creates the database with `utf8mb4`, creates all tables with foreign keys and fixed-precision decimal money columns, and loads `workshop-v1` calculation-rule metadata.
+    The schema file creates the database with `utf8mb4`, creates all tables with foreign keys and fixed-precision decimal money columns, and loads `workshop-v2` calculation-rule metadata.
 
 ## Task 3: Create the PHP database account
 
 1. Connect as the DB System administrator.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2admin --password --ssl-mode=REQUIRED</copy>
     ```
 
 2. Create the application account. Replace `CHANGE_THIS_PASSWORD` with a new private password.
 
     ```sql
-    <copy>CREATE USER 'olvn_app'@'%'
+    <copy>CREATE USER 'olvn2_app'@'%'
       IDENTIFIED BY 'CHANGE_THIS_PASSWORD';</copy>
     ```
 
     If you are repeating the lab and the account already exists, reset its password instead.
 
     ```sql
-    <copy>ALTER USER 'olvn_app'@'%'
+    <copy>ALTER USER 'olvn2_app'@'%'
       IDENTIFIED BY 'CHANGE_THIS_PASSWORD';</copy>
     ```
 
@@ -139,36 +141,36 @@ This lab assumes you have:
 
     ```sql
     <copy>GRANT SELECT
-      ON ol_value_navigator.calculation_rule_version
-      TO 'olvn_app'@'%';
+      ON ol_value_navigator_2.calculation_rule_version
+      TO 'olvn2_app'@'%';
 
     GRANT SELECT, INSERT, UPDATE, DELETE
-      ON ol_value_navigator.comparison
-      TO 'olvn_app'@'%';
+      ON ol_value_navigator_2.comparison
+      TO 'olvn2_app'@'%';
 
     GRANT SELECT, INSERT, UPDATE, DELETE
-      ON ol_value_navigator.comparison_input
-      TO 'olvn_app'@'%';
+      ON ol_value_navigator_2.comparison_input
+      TO 'olvn2_app'@'%';
 
     GRANT SELECT, INSERT, DELETE
-      ON ol_value_navigator.ai_formatting_run
-      TO 'olvn_app'@'%';
+      ON ol_value_navigator_2.ai_formatting_run
+      TO 'olvn2_app'@'%';
 
     GRANT SELECT, INSERT, UPDATE, DELETE
-      ON ol_value_navigator.comparison_line
-      TO 'olvn_app'@'%';
+      ON ol_value_navigator_2.comparison_line
+      TO 'olvn2_app'@'%';
 
     GRANT SELECT, INSERT, UPDATE, DELETE
-      ON ol_value_navigator.comparison_result
-      TO 'olvn_app'@'%';
+      ON ol_value_navigator_2.comparison_result
+      TO 'olvn2_app'@'%';
 
     GRANT SELECT, INSERT
-      ON ol_value_navigator.application_event
-      TO 'olvn_app'@'%';
+      ON ol_value_navigator_2.application_event
+      TO 'olvn2_app'@'%';
 
     GRANT INSERT
-      ON ol_value_navigator.comparison_deletion_audit
-      TO 'olvn_app'@'%';</copy>
+      ON ol_value_navigator_2.comparison_deletion_audit
+      TO 'olvn2_app'@'%';</copy>
     ```
 
 4. Grant access to the MySQL HeatWave GenAI system routine.
@@ -176,7 +178,7 @@ This lab assumes you have:
     ```sql
     <copy>GRANT SELECT, EXECUTE
       ON sys.*
-      TO 'olvn_app'@'%';</copy>
+      TO 'olvn2_app'@'%';</copy>
     ```
 
     The application uses the single-row `sys.ML_GENERATE` routine. It does not receive schema creation, table alteration, or user-administration privileges.
@@ -184,7 +186,7 @@ This lab assumes you have:
 5. Display the resulting grants, and then exit.
 
     ```sql
-    <copy>SHOW GRANTS FOR 'olvn_app'@'%';
+    <copy>SHOW GRANTS FOR 'olvn2_app'@'%';
     EXIT;</copy>
     ```
 
@@ -193,7 +195,7 @@ This lab assumes you have:
 1. Connect with the new application account.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2_app --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
 2. Confirm that all eight tables exist.
@@ -222,7 +224,7 @@ This lab assumes you have:
     FROM calculation_rule_version;</copy>
     ```
 
-    Confirm that `workshop-v1` is active and has the `DEMONSTRATION` governance status.
+    Confirm that `workshop-v2` is active and has the `DEMONSTRATION` governance status.
 
 4. Confirm that the application account can call MySQL HeatWave GenAI.
 
@@ -245,7 +247,7 @@ This lab assumes you have:
     ```sql
     <copy>SELECT table_name
     FROM information_schema.tables
-    WHERE table_schema = 'ol_value_navigator'
+    WHERE table_schema = 'ol_value_navigator_2'
       AND table_name LIKE '%catalog%';</copy>
     ```
 

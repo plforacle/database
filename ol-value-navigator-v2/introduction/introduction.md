@@ -4,7 +4,7 @@
 
 Oracle Linux Value Navigator is an AI-assisted PHP web application backed by MySQL HeatWave. It helps an Oracle representative format and compare RHEL and Oracle Linux subscription information. The representative supplies both sides of the comparison, reviews the formatted lines, and receives annual, three-year, and five-year subscription-cost results.
 
-In this workshop, you build and deploy the complete Version 1 prototype on Oracle Cloud Infrastructure. You begin with the validated Oracle Linux LAMP environment, create the saved-comparison database, deploy the PHP workflow, add AI-assisted formatting and deterministic calculations, and finish with executable verification and a tested demonstration.
+This development baseline starts from the validated Version 1 application and rebuilds it in a separate OCI environment whose resources use the `ol-value-navigator-2` prefix. Login and user-owned comparisons will be added and tested before the Version 2 workshop is complete.
 
 The workshop uses demonstration SKUs, quantities, and prices. Do not enter real customer information. The completed prototype produces a subscription-cost comparison for learning and demonstration. It is not a customer quote, a licensing determination, or a complete TCO analysis.
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * GET controller and static view for the built-in Version 1 Help experience.
+ * GET controller and static view for the built-in Version 2 baseline Help experience.
  *
  * The guide follows the representative's actual workflow from source entry
  * through GenAI formatting, human review, calculation, and CSV export. It also
@@ -9,7 +9,7 @@ declare(strict_types=1);
  * Keeping this content in the deployed application makes help available without
  * requiring access to the LiveLabs workshop.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 
 render_header('Help and Quick Start');
 ?>
@@ -19,7 +19,7 @@ render_header('Help and Quick Start');
   <a href="#review">Review decisions</a>
   <a href="#actions">Saved comparison actions</a>
   <a href="#troubleshooting">Troubleshooting</a>
-  <a href="#boundaries">Version 1 boundaries</a>
+  <a href="#boundaries">Version 2 baseline boundaries</a>
 </nav>
 
 <section id="quick-start" class="card">
@@ -82,10 +82,10 @@ render_header('Help and Quick Start');
 </section>
 
 <section id="boundaries" class="card">
-  <h2>Version 1 boundaries</h2>
+  <h2>Version 2 baseline boundaries</h2>
   <ul>
     <li>Use demonstration information only.</li>
-    <li>Version 1 has no login or individual comparison ownership.</li>
+    <li>Version 2 baseline has no login or individual comparison ownership.</li>
     <li>The application does not maintain master RHEL or Oracle Linux SKU catalogs.</li>
     <li>The comparison is not a quote, licensing determination, product-equivalence assessment, or complete TCO analysis.</li>
   </ul>

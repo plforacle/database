@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 /**
- * GET controller and view for the Version 1 comparison workspace.
+ * GET controller and view for the Version 2 baseline comparison workspace.
  *
  * The page accepts both complete freeform inputs and lists the 50 most recently
- * updated workbooks. Version 1 has no login or per-user ownership, so the list is
+ * updated workbooks. Version 2 baseline has no login or per-user ownership, so the list is
  * shared by everyone with network access to the prototype. All database values
  * are escaped before rendering and creation is delegated to a CSRF-protected POST
  * controller.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 
 // Bound the shared landing page while keeping recently active workbooks visible.
 $comparisons = db()->query(

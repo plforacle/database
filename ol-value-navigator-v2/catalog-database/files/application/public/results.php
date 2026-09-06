@@ -8,7 +8,7 @@ declare(strict_types=1);
  * direction, identifies the calculation rule, and retains excluded lines in the
  * traceability table even though they do not contribute to totals.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(5);
 $id = request_id();
 $comparison = find_comparison($id);

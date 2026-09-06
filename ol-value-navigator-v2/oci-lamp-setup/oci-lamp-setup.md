@@ -57,13 +57,13 @@ A compartment keeps the Oracle Linux Value Navigator resources together. It also
 
     | Field | Value |
     | --- | --- |
-    | Name | `ol-value-navigator` |
-    | Description | `Resources for the Oracle Linux Value Navigator workshop` |
+    | Name | `ol-value-navigator-2` |
+    | Description | `Resources for the Oracle Linux Value Navigator Version 2 workshop` |
     | Parent compartment | Your approved parent compartment or the root compartment |
 
 6. Leave the tagging fields empty unless your organization requires specific tags, and then select **Create compartment**.
 
-7. Confirm that `ol-value-navigator` appears in the compartment list with an **Active** status.
+7. Confirm that `ol-value-navigator-2` appears in the compartment list with an **Active** status.
 
     > **Checkpoint:** You now have one compartment dedicated to the workshop. Select this compartment whenever a later step asks where to create a resource.
 
@@ -73,7 +73,7 @@ The VCN is the private network for the application. The OCI wizard creates the p
 
 1. Open the navigation menu, select **Networking**, and then select **Virtual cloud networks**.
 
-2. In the **Compartment** list, select `ol-value-navigator`.
+2. In the **Compartment** list, select `ol-value-navigator-2`.
 
 3. Select **Start VCN Wizard**.
 
@@ -85,8 +85,8 @@ The VCN is the private network for the application. The OCI wizard creates the p
 
     | Field | Value |
     | --- | --- |
-    | VCN name | `ol-value-navigator-vcn` |
-    | Compartment | `ol-value-navigator` |
+    | VCN name | `ol-value-navigator-2-vcn` |
+    | Compartment | `ol-value-navigator-2` |
     | VCN IPv4 CIDR block | `10.0.0.0/16` |
     | Public subnet IPv4 CIDR block | `10.0.0.0/24` |
     | Private subnet IPv4 CIDR block | `10.0.1.0/24` |
@@ -102,15 +102,15 @@ The VCN is the private network for the application. The OCI wizard creates the p
 
 9. Select **View VCN**.
 
-    > **Checkpoint:** The VCN `ol-value-navigator-vcn` was created successfully. You will select its public subnet when you create the LAMP server.
+    > **Checkpoint:** The VCN `ol-value-navigator-2-vcn` was created successfully. You will select its public subnet when you create the LAMP server.
 
 ## Task 3: Configure the network security rules
 
 OCI security lists act as a virtual firewall for the subnet. SSH and HTTP access are available to workshop users so they can connect to the server and open the prototype in a browser.
 
-1. On the `ol-value-navigator-vcn` page, select the **Security** tab at the top of the page.
+1. On the `ol-value-navigator-2-vcn` page, select the **Security** tab at the top of the page.
 
-2. In the **Security Lists** section, select **Default Security List** for ol-value-navigator-vcn, and then select **Security Rules**.
+2. In the **Security Lists** section, select **Default Security List** for ol-value-navigator-2-vcn, and then select **Security Rules**.
 
 3. Under **Ingress Rules**, confirm that the existing stateful TCP rule for destination port `22` uses the source CIDR `0.0.0.0/0`.
 
@@ -153,7 +153,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
 1. Open the navigation menu, select **Compute**, and then select **Instances**.
 
-2. In the **Compartment** list, select `ol-value-navigator`.
+2. In the **Compartment** list, select `ol-value-navigator-2`.
 
 3. Select **Create instance**.
 
@@ -161,8 +161,8 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     | Field | Value |
     | --- | --- |
-    | Name | `ol-value-navigator-app` |
-    | Compartment | `ol-value-navigator` |
+    | Name | `ol-value-navigator-2-app` |
+    | Compartment | `ol-value-navigator-2` |
     | Placement | Accept the default availability domain |
 
 5. In the **Image and shape** section, select **Edit**, and then configure these values.
@@ -180,7 +180,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     | Field | Value |
     | --- | --- |
-    | Virtual cloud network | `ol-value-navigator-vcn` |
+    | Virtual cloud network | `ol-value-navigator-2-vcn` |
     | Subnet | The public subnet with CIDR `10.0.0.0/24` |
     | Use network security groups | Cleared |
     | Assign a public IPv4 address | Selected |
@@ -204,7 +204,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     Do not save the private SSH key, OCI OCIDs, or other protected tenancy information in the workshop repository.
 
-    > **Checkpoint:** The instance `ol-value-navigator-app` is running Oracle Linux 9 in the public subnet and has a public IPv4 address.
+    > **Checkpoint:** The instance `ol-value-navigator-2-app` is running Oracle Linux 9 in the public subnet and has a public IPv4 address.
 
 ## Task 5: Connect to and update the server
 
@@ -355,14 +355,14 @@ The compute instance runs the web application. This workshop uses a paid, genera
     | OCI form section | Field | Value |
     | --- | --- | --- |
     | Template | Template | Development or testing |
-    | DB System information | Create in compartment | `ol-value-navigator` |
-    | DB System information | Name | `ol-value-navigator-db` |
-    | DB System information | Description | `MySQL HeatWave DB System for Oracle Linux Value Navigator comparison storage and GenAI workloads` |
-    | Administrator credentials | Username | `olvnadmin` |
+    | DB System information | Create in compartment | `ol-value-navigator-2` |
+    | DB System information | Name | `ol-value-navigator-2-db` |
+    | DB System information | Description | `MySQL HeatWave DB System for Oracle Linux Value Navigator Version 2 comparison storage and GenAI workloads` |
+    | Administrator credentials | Username | `olvn2admin` |
     | Setup | Topology | Standalone |
-    | Networking | Virtual cloud network compartment | `ol-value-navigator` |
-    | Networking | Virtual cloud network | `ol-value-navigator-vcn` |
-    | Networking | Subnet compartment | `ol-value-navigator` |
+    | Networking | Virtual cloud network compartment | `ol-value-navigator-2` |
+    | Networking | Virtual cloud network | `ol-value-navigator-2-vcn` |
+    | Networking | Subnet compartment | `ol-value-navigator-2` |
     | Networking | Subnet | Private regional subnet with CIDR `10.0.1.0/24` |
     | Networking | Network security groups | None; use the subnet security list created earlier |
     | Placement | Availability domain | Any available availability domain |
@@ -396,7 +396,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 7. From the Oracle Linux instance, connect to the private DB System. Replace the placeholders.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2admin --password --ssl-mode=REQUIRED</copy>
     ```
 
 8. Confirm the MySQL Server version and the availability of the MySQL HeatWave GenAI routine.

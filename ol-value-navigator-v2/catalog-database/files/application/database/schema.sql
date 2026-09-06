@@ -1,10 +1,10 @@
 -- Workbook-style persistence for source inputs, AI suggestions, human decisions,
 -- deterministic result snapshots, workflow events, and retained deletion audits.
-CREATE DATABASE IF NOT EXISTS ol_value_navigator
+CREATE DATABASE IF NOT EXISTS ol_value_navigator_2
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
 
-USE ol_value_navigator;
+USE ol_value_navigator_2;
 
 -- Identifies the deterministic calculation policy attached to each comparison.
 -- The prototype seeds a demonstration rule and does not claim production approval.
@@ -160,8 +160,8 @@ CREATE TABLE IF NOT EXISTS comparison_deletion_audit (
 INSERT INTO calculation_rule_version
   (version_label, description, source_reference, governance_status)
 VALUES
-  ('workshop-v1',
+  ('workshop-v2',
    'Annual line cost equals quantity multiplied by annual unit price. Three-year and five-year costs equal the confirmed annual amount multiplied by three and five.',
-   'Oracle Linux Value Navigator workshop demonstration rules',
+   'Oracle Linux Value Navigator Version 2 workshop demonstration rules',
    'DEMONSTRATION')
 ON DUPLICATE KEY UPDATE description = VALUES(description);

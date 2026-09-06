@@ -8,7 +8,7 @@ declare(strict_types=1);
  * POST forms with CSRF tokens. Stage 5 also exposes revise, duplicate, export,
  * and exact-name-confirmed deletion controls.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 $id = request_id();
 $comparison = find_comparison($id);
 $inputs = comparison_inputs($id);

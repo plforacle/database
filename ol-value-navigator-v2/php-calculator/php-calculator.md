@@ -24,9 +24,9 @@ In this lab, you will:
 This lab assumes you have:
 
 * Completed Lab 2.
-* The application package extracted under `~/ol-value-navigator-application`.
+* The application package extracted under `~/ol-value-navigator-2-application`.
 * The MySQL HeatWave DB System private IP address.
-* The private password for `olvn_app`.
+* The private password for `olvn2_app`.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
@@ -35,7 +35,7 @@ This lab assumes you have:
 1. Change to the application source directory.
 
     ```bash
-    <copy>cd ~/ol-value-navigator-application</copy>
+    <copy>cd ~/ol-value-navigator-2-application</copy>
     ```
 
 2. List the application files.
@@ -86,7 +86,7 @@ This lab assumes you have:
                -> tables created by database/schema.sql
     ```
 
-    `deploy.sh` copies `public` files into the Apache document root and keeps the configuration and libraries under `/var/www/ol-value-navigator`. The test files verify individual rules, the private database connection, and the final deployed application. Browser-accessible PHP files never contain the database password.
+    `deploy.sh` copies `public` files into the Apache document root and keeps the configuration and libraries under `/var/www/ol-value-navigator-2`. The test files verify individual rules, the private database connection, and the final deployed application. Browser-accessible PHP files never contain the database password.
 
 4. Review the Lab 3 controllers.
 
@@ -107,7 +107,7 @@ This lab assumes you have:
 1. Run the supplied deployment script with stage `3`.
 
     ```bash
-    <copy>cd ~/ol-value-navigator-application
+    <copy>cd ~/ol-value-navigator-2-application
     sudo bash deploy.sh 3</copy>
     ```
 
@@ -116,16 +116,16 @@ This lab assumes you have:
     * Creates the private application and public web directories.
     * Installs private libraries with group-readable permissions for Apache.
     * Installs public controllers and CSS under the Apache document root.
-    * Writes the Lab 3 application-stage identifier (3) to /var/www/ol-value-navigator/stage. PHP reads this value to determine which application features are enabled.
+    * Writes the Lab 3 application-stage identifier (3) to /var/www/ol-value-navigator-2/stage. PHP reads this value to determine which application features are enabled.
     * Creates the private configuration from the example only when it does not already exist.
     * Restores SELinux file contexts and reloads Apache.
 
 2. Confirm the installed stage and permissions.
 
     ```bash
-    <copy>sudo cat /var/www/ol-value-navigator/stage
-    sudo ls -l /var/www/ol-value-navigator/config.php
-    ls -l /var/www/html/ol-value-navigator</copy>
+    <copy>sudo cat /var/www/ol-value-navigator-2/stage
+    sudo ls -l /var/www/ol-value-navigator-2/config.php
+    ls -l /var/www/html/ol-value-navigator-2</copy>
     ```
 
     Confirm that the stage is `3`, the private configuration is owned by `root:apache` with mode `640`, and the public files do not contain a configuration file.
@@ -135,15 +135,15 @@ This lab assumes you have:
 1. Open the private configuration.
 
     ```bash
-    <copy>sudo vi /var/www/ol-value-navigator/config.php</copy>
+    <copy>sudo vi /var/www/ol-value-navigator-2/config.php</copy>
     ```
 
 2. Replace only these placeholders:
 
     * Replace `HEATWAVE_PRIVATE_IP` in `dsn` with the DB System private IP address.
-    * Replace `CHANGE_THIS_PASSWORD` with the password for `olvn_app`.
+    * Replace `CHANGE_THIS_PASSWORD` with the password for `olvn2_app`.
 
-    Keep `dbname=ol_value_navigator`, `charset=utf8mb4`, the `olvn_app` user, the model identifier, and the size limits unchanged. If the password contains a single quote or backslash, prefix that character with a backslash in the PHP single-quoted string.
+    Keep `dbname=ol_value_navigator_2`, `charset=utf8mb4`, the `olvn2_app` user, the model identifier, and the size limits unchanged. If the password contains a single quote or backslash, prefix that character with a backslash in the PHP single-quoted string.
 
 3. Press Esc to leave insert mode.
 
@@ -159,14 +159,14 @@ This lab assumes you have:
 
     ```bash
     <copy>sudo install -o root -g apache -m 0640 \
-      ~/ol-value-navigator-application/tests/check-database.php \
-      /var/www/ol-value-navigator/check-database.php
-    sudo -u apache php /var/www/ol-value-navigator/check-database.php</copy>
+      ~/ol-value-navigator-2-application/tests/check-database.php \
+      /var/www/ol-value-navigator-2/check-database.php
+    sudo -u apache php /var/www/ol-value-navigator-2/check-database.php</copy>
     ```
 
     The checker must be placed outside `/home/opc` because the `apache` account cannot normally traverse the `opc` home directory. The private application directory is not exposed through the Apache document root.
 
-    Confirm that the output begins with `Database connection passed` and shows the server version and `workshop-v1` rule.
+    Confirm that the output begins with `Database connection passed` and shows the server version and `workshop-v2` rule.
 
 7. If the test fails, verify the private IP, application password, private-subnet ingress rule for TCP port `3306`, and the grants from Lab 2. The application intentionally returns a generic browser error and writes only the exception class to the Apache error log.
 
@@ -177,7 +177,7 @@ This lab assumes you have:
 1. Open the application in your local browser. Replace the placeholder with the compute instance public IP address.
 
     ```text
-    <copy>http://PUBLIC_IP_ADDRESS/ol-value-navigator/</copy>
+    <copy>http://PUBLIC_IP_ADDRESS/ol-value-navigator-2/</copy>
     ```
 
 2. Confirm that the page contains a comparison name, a **RHEL SKU information** text area, and an **Oracle Linux SKU information** text area.
@@ -213,7 +213,7 @@ This lab assumes you have:
 1. Connect with the application account.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2_app --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
 2. Display the saved comparison and the lengths of both complete inputs.

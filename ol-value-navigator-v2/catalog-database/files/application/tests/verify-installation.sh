@@ -7,8 +7,8 @@ set -euo pipefail
 # the public document root, every deployed PHP file, the Apache service, and both
 # the landing and Help routes through localhost. It intentionally avoids printing
 # the private configuration or making a state-changing application request.
-private_dir="/var/www/ol-value-navigator"
-public_dir="/var/www/html/ol-value-navigator"
+private_dir="/var/www/ol-value-navigator-2"
+public_dir="/var/www/html/ol-value-navigator-2"
 
 # Confirm the private/public split and the final workshop feature stage.
 test -r "$private_dir/config.php"
@@ -23,7 +23,7 @@ done
 
 # Verify the service and two representative read-only HTTP routes.
 systemctl is-active --quiet httpd
-curl --fail --silent --show-error http://localhost/ol-value-navigator/ >/dev/null
-curl --fail --silent --show-error http://localhost/ol-value-navigator/help.php | grep --quiet "Help and Quick Start"
+curl --fail --silent --show-error http://localhost/ol-value-navigator-2/ >/dev/null
+curl --fail --silent --show-error http://localhost/ol-value-navigator-2/help.php | grep --quiet "Help and Quick Start"
 
 echo "Application files, PHP syntax, Apache, and the local application and Help routes passed verification."

@@ -10,7 +10,7 @@ declare(strict_types=1);
  * All line edits, result invalidation, derived workbook status, and event logging
  * commit together.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(4);
 require_post();
 verify_csrf();

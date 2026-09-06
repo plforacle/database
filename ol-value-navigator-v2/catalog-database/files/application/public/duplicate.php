@@ -9,7 +9,7 @@ declare(strict_types=1);
  * performed on the source workbook. The copy starts in NEEDS_REVIEW and must be
  * reviewed and calculated independently.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(5);
 require_post();
 verify_csrf();

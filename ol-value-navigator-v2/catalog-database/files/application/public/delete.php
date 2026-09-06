@@ -8,7 +8,7 @@ declare(strict_types=1);
  * minimal independent audit and deletes the parent in one transaction; schema
  * cascades remove its inputs, lines, AI runs, results, and normal event history.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(5);
 require_post();
 verify_csrf();

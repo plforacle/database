@@ -1,16 +1,16 @@
-# Oracle Linux Value Navigator Management Quick Start
+# Oracle Linux Value Navigator Version 2 Management Quick Start
 
 **Time:** About 5 minutes  
 **Use synthetic demonstration data only.**
 
-> **Version 2 update:** User login will be available by Monday, September 7, 2026. Version 1 does not have login or individual comparison ownership, so all current users share the saved-comparisons list.
+> **Development status:** This guide currently describes the inherited comparison workflow. Login and individual comparison ownership have not yet been implemented or tested. Do not distribute this as the completed Version 2 guide.
 
 ## 1. Open the application
 
 Open:
 
 ```text
-http://129.80.238.67/ol-value-navigator/
+http://VERSION_2_PUBLIC_IP_ADDRESS/ol-value-navigator-2/
 ```
 
 ## 2. Create a comparison

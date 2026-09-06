@@ -9,7 +9,7 @@ declare(strict_types=1);
  * Text that could be interpreted as a spreadsheet formula is neutralized before
  * writing, and the download filename contains only safe characters.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(5);
 require_post();
 verify_csrf();
@@ -50,7 +50,7 @@ function csv_row($output, array $fields): void
 $safeName = preg_replace('/[^a-z0-9]+/i', '-', strtolower((string) $comparison['name']));
 $safeName = trim((string) $safeName, '-') ?: 'comparison';
 header('Content-Type: text/csv; charset=UTF-8');
-header('Content-Disposition: attachment; filename="olvn-' . $safeName . '-' . $id . '.csv"');
+header('Content-Disposition: attachment; filename="olvn2-' . $safeName . '-' . $id . '.csv"');
 $output = fopen('php://output', 'wb');
 if ($output === false) {
     exit;

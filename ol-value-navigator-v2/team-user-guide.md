@@ -1,4 +1,4 @@
-# Oracle Linux Value Navigator Team User Guide
+# Oracle Linux Value Navigator Version 2 Team User Guide
 
 ## Purpose
 
@@ -12,7 +12,7 @@ This application is not a quote, licensing determination, product-equivalence de
 
 2. Use demonstration information only. Do not enter customer, confidential, personal, production, or contract information.
 
-3. Remember that Version 1 has no login or comparison ownership. Everyone using the prototype can see and work with the same saved comparisons.
+3. Remember that Version 2 baseline has no login or comparison ownership. Everyone using the prototype can see and work with the same saved comparisons.
 
 4. Give your comparison a unique name using this format:
 
@@ -26,7 +26,7 @@ This application is not a quote, licensing determination, product-equivalence de
 
 2. Use **Quick Start** for the shortest complete workflow.
 
-3. Use the remaining Help topics for review decisions, saved comparison actions, troubleshooting, and Version 1 boundaries.
+3. Use the remaining Help topics for review decisions, saved comparison actions, troubleshooting, and Version 2 baseline boundaries.
 
 4. Select **Return to comparisons** when you are ready to begin.
 
@@ -68,7 +68,7 @@ This application is not a quote, licensing determination, product-equivalence de
 
     * Your comparison name
     * Status `DRAFT`
-    * Rule version `workshop-v1`
+    * Rule version `workshop-v2`
     * Both complete original inputs
 
 ## Format the inputs with GenAI
@@ -201,7 +201,7 @@ Use manual fallback only when a supplied subscription item was not extracted or 
 
 2. Under **Workbook actions**, select **Export CSV workbook**.
 
-3. Confirm that the browser downloads a CSV file whose name begins with `olvn-`.
+3. Confirm that the browser downloads a CSV file whose name begins with `olvn2-`.
 
 4. Open the file with a spreadsheet application.
 
@@ -274,7 +274,7 @@ Deleting a comparison is permanent. The application deletes its original inputs,
 | `CONFIRMED` | Every line has a final decision and at least one line is confirmed. |
 | `CALCULATED` | The application saved the annual, three-year, and five-year result snapshot. |
 
-## Current Version 1 boundaries
+## Current Version 2 baseline boundaries
 
 * No login or multi-user ownership
 * No master RHEL or Oracle Linux SKU catalogs

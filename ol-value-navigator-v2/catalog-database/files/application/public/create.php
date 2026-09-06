@@ -8,7 +8,7 @@ declare(strict_types=1);
  * creation event are committed together. The original text is preserved exactly
  * after newline normalization so later AI suggestions remain traceable.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_post();
 verify_csrf();
 
@@ -21,7 +21,7 @@ try {
     // The parent record is not useful unless both original inputs are also saved.
     db()->beginTransaction();
     $ruleId = db()->query(
-        "SELECT id FROM calculation_rule_version WHERE version_label = 'workshop-v1' AND active = 1"
+        "SELECT id FROM calculation_rule_version WHERE version_label = 'workshop-v2' AND active = 1"
     )->fetchColumn();
     if ($ruleId === false) {
         throw new RuntimeException('The active workshop calculation rule was not found.');

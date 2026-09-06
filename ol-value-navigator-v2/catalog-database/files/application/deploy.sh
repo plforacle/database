@@ -14,8 +14,8 @@ fi
 
 # Resolve paths from this script so deployment does not depend on the caller's directory.
 source_dir="$(cd "$(dirname "$0")" && pwd)"
-private_dir="/var/www/ol-value-navigator"
-public_dir="/var/www/html/ol-value-navigator"
+private_dir="/var/www/ol-value-navigator-2"
+public_dir="/var/www/html/ol-value-navigator-2"
 
 # Private libraries receive group-readable permissions for Apache. Public controllers,
 # views, and CSS are installed separately under the Apache document root.

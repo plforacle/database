@@ -2,9 +2,9 @@
 
 ## Introduction
 
-In this lab, you enable the complete Version 1 application. PHP verifies that every included line is confirmed and that each comparison group contains both sides. It then performs deterministic annual, three-year, and five-year calculations and saves the result snapshot in the MySQL HeatWave DB System.
+In this lab, you enable the complete Version 2 baseline application. PHP verifies that every included line is confirmed and that each comparison group contains both sides. It then performs deterministic annual, three-year, and five-year calculations and saves the result snapshot in the MySQL HeatWave DB System.
 
-You also verify the workbook operations required by Version 1: reopen, revise, duplicate, CSV export, and confirmed deletion.
+You also verify the workbook operations required by Version 2 baseline: reopen, revise, duplicate, CSV export, and confirmed deletion.
 
 Estimated Time: 90 minutes
 
@@ -35,7 +35,7 @@ This lab assumes you have:
 1. Change to the application source directory and open the money module.
 
     ```bash
-    <copy>cd ~/ol-value-navigator-application
+    <copy>cd ~/ol-value-navigator-2-application
     less lib/money.php</copy>
     ```
 
@@ -70,14 +70,14 @@ This lab assumes you have:
 1. Deploy stage `5`.
 
     ```bash
-    <copy>cd ~/ol-value-navigator-application
+    <copy>cd ~/ol-value-navigator-2-application
     sudo bash deploy.sh 5</copy>
     ```
 
 2. Confirm the installed stage.
 
     ```bash
-    <copy>sudo cat /var/www/ol-value-navigator/stage</copy>
+    <copy>sudo cat /var/www/ol-value-navigator-2/stage</copy>
     ```
 
     The output must be `5`.
@@ -85,7 +85,7 @@ This lab assumes you have:
 3. Run the application unit checks.
 
     ```bash
-    <copy>php ~/ol-value-navigator-application/tests/unit.php</copy>
+    <copy>php ~/ol-value-navigator-2-application/tests/unit.php</copy>
     ```
 
     Confirm that the output is:
@@ -101,7 +101,7 @@ This lab assumes you have:
 1. Open the application in your browser. Replace `PUBLIC_IP_ADDRESS` with the compute instance public IP address.
 
     ```text
-    <copy>http://PUBLIC_IP_ADDRESS/ol-value-navigator/</copy>
+    <copy>http://PUBLIC_IP_ADDRESS/ol-value-navigator-2/</copy>
     ```
 
 2. In **Saved comparisons**, locate **Lab 3 saved-input test**. Confirm that its status is `CONFIRMED` and its line count is `4`, and then select **Open** for that comparison.
@@ -133,7 +133,7 @@ This lab assumes you have:
     | Three years | $50,400.00 | $33,600.00 | $16,800.00 |
     | Five years | $84,000.00 | $56,000.00 | $28,000.00 |
 
-9. Confirm that the results page identifies `workshop-v1`, shows every reviewed line and decision, and states when the snapshot was calculated.
+9. Confirm that the results page identifies `workshop-v2`, shows every reviewed line and decision, and states when the snapshot was calculated.
 
     > **Checkpoint:** PHP calculated and saved the annual, three-year, and five-year values from representative-confirmed decimal inputs.
 
@@ -192,7 +192,7 @@ This lab assumes you have:
 5. Verify the calculation and workbook events in the database.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2_app --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
     ```sql
@@ -218,7 +218,7 @@ This lab assumes you have:
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** The complete Version 1 application can reopen, revise, duplicate, calculate, save, and export a representative-confirmed comparison.
+    > **Checkpoint:** The complete Version 2 baseline application can reopen, revise, duplicate, calculate, save, and export a representative-confirmed comparison.
 
 ## Task 7: Delete a comparison with exact-name confirmation
 
@@ -243,7 +243,7 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 8. Connect as the DB System administrator.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2admin --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
 9. Replace `DELETED_COMPARISON_ID` and verify the retained audit record and deleted parent data.
@@ -292,7 +292,7 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
     * Review decisions
     * Saved comparison actions
     * Troubleshooting
-    * Version 1 boundaries
+    * Version 2 baseline boundaries
 
 4. Review the Quick Start and confirm that it covers creating, formatting, reviewing, calculating, and exporting a comparison.
 
@@ -300,7 +300,7 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 
 6. Select **Return to comparisons** and confirm that the application returns to the saved-comparisons page.
 
-    > **Checkpoint:** Built-in Help provides the complete Version 1 workflow and returns the user to the application.
+    > **Checkpoint:** Built-in Help provides the complete Version 2 baseline workflow and returns the user to the application.
 
 ## Conclusion
 

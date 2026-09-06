@@ -24,7 +24,7 @@ In this lab, you will:
 This lab assumes you have:
 
 * The saved comparison created in Lab 3.
-* A working PDO connection through the `olvn_app` account.
+* A working PDO connection through the `olvn2_app` account.
 * The successful GenAI permission check from Lab 2.
 
 *This is the fold. The remaining sections are collapsed by default.*
@@ -34,7 +34,7 @@ This lab assumes you have:
 1. Change to the application source directory.
 
     ```bash
-    <copy>cd ~/ol-value-navigator-application</copy>
+    <copy>cd ~/ol-value-navigator-2-application</copy>
     ```
 
 2. Review the GenAI module.
@@ -84,16 +84,16 @@ This lab assumes you have:
 1. Run the deployment script with stage `4`.
 
     ```bash
-    <copy>cd ~/ol-value-navigator-application
+    <copy>cd ~/ol-value-navigator-2-application
     sudo bash deploy.sh 4</copy>
     ```
 
-    The script updates application code without overwriting `/var/www/ol-value-navigator/config.php`.
+    The script updates application code without overwriting `/var/www/ol-value-navigator-2/config.php`.
 
 2. Confirm the stage.
 
     ```bash
-    <copy>sudo cat /var/www/ol-value-navigator/stage</copy>
+    <copy>sudo cat /var/www/ol-value-navigator-2/stage</copy>
     ```
 
     The output must be `4`.
@@ -111,7 +111,7 @@ This lab assumes you have:
 1. Open the application and reopen `Lab 3 saved-input test`.
 
     ```text
-    http://PUBLIC_IP_ADDRESS/ol-value-navigator/
+    http://PUBLIC_IP_ADDRESS/ol-value-navigator-2/
     ```
 
 2. Select **Format with GenAI**.
@@ -165,7 +165,7 @@ This lab assumes you have:
 1. Connect to the database with the application account.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2_app --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
 2. Display both the original AI fields and the current representative-reviewed fields.
@@ -270,7 +270,7 @@ This lab assumes you have:
 16. Connect to the database with the application account.
 
     ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2_app --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
 17. Verify the manually entered line.

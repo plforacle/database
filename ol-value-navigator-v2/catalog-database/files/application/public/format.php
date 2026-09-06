@@ -8,7 +8,7 @@ declare(strict_types=1);
  * if the other call fails. All stored model output has already passed the strict
  * GenAI contract, but it remains a suggestion that requires representative review.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(4);
 require_post();
 verify_csrf();

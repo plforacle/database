@@ -9,7 +9,7 @@ declare(strict_types=1);
  * transaction removes result snapshots, lines, and formatting runs while retaining
  * the comparison's workflow event history and appending an INPUTS_REVISED event.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(5);
 $id = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' ? post_id() : request_id();
 $comparison = find_comparison($id);

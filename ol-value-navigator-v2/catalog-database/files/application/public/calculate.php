@@ -9,7 +9,7 @@ declare(strict_types=1);
  * return the representative to the review page, while unexpected failures expose
  * only a generic message and log the exception class.
  */
-require '/var/www/ol-value-navigator/lib/bootstrap.php';
+require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
 require_stage(5);
 require_post();
 verify_csrf();

@@ -9,7 +9,7 @@ declare(strict_types=1);
  * rule exists, and the independent deletion-audit table was installed. Output is
  * limited to server and rule metadata and never prints credentials or the DSN.
  */
-$config = require '/var/www/ol-value-navigator/config.php';
+$config = require '/var/www/ol-value-navigator-2/config.php';
 $pdo = new PDO(
     $config['dsn'],
     $config['user'],

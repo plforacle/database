@@ -10,7 +10,7 @@ declare(strict_types=1);
  * centralize escaping, URLs, request validation, CSRF protection, flash messages,
  * and page rendering so individual routes cannot accidentally use weaker rules.
  */
-session_name('olvn_session');
+session_name('olvn2_session');
 session_start([
     'cookie_httponly' => true,
     'cookie_samesite' => 'Lax',
@@ -24,7 +24,7 @@ header("Content-Security-Policy: default-src 'self'; style-src 'self'; form-acti
 header('Referrer-Policy: no-referrer');
 
 // Credentials remain in the private application directory and are never served by Apache.
-$configPath = '/var/www/ol-value-navigator/config.php';
+$configPath = '/var/www/ol-value-navigator-2/config.php';
 if (!is_file($configPath)) {
     throw new RuntimeException('Application configuration is missing.');
 }
@@ -34,7 +34,7 @@ if (!is_array($config)) {
     throw new RuntimeException('Application configuration is invalid.');
 }
 
-$stagePath = '/var/www/ol-value-navigator/stage';
+$stagePath = '/var/www/ol-value-navigator-2/stage';
 // Defaulting to stage 3 keeps advanced actions unavailable if the stage file is absent.
 $applicationStage = is_file($stagePath) ? (int) trim((string) file_get_contents($stagePath)) : 3;
 
@@ -135,7 +135,7 @@ function h(mixed $value): string
  */
 function app_url(string $path = ''): string
 {
-    $base = rtrim((string) app_config('base_path', '/ol-value-navigator'), '/');
+    $base = rtrim((string) app_config('base_path', '/ol-value-navigator-2'), '/');
     return $base . '/' . ltrim($path, '/');
 }
 
@@ -284,13 +284,13 @@ function render_header(string $title): void
 }
 
 /**
- * Close the application page and repeat the Version 1 governance boundary.
+ * Close the application page and repeat the Version 2 baseline governance boundary.
  *
  * @return void
  */
 function render_footer(): void
 {
-    echo '</main><footer><div class="wrap">Version 1 has no login and does not maintain master SKU catalogs.</div></footer></body></html>';
+    echo '</main><footer><div class="wrap">Version 2 baseline has no login and does not maintain master SKU catalogs.</div></footer></body></html>';
 }
 
 /**
