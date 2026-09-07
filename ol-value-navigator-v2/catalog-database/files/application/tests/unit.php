@@ -2,12 +2,13 @@
 declare(strict_types=1);
 
 /**
- * Dependency-free unit checks for the application's highest-risk pure logic.
+ * Dependency-free checks for the application's highest-risk logic and contracts.
  *
  * These tests replace database-dependent helpers with small in-memory stubs, then
  * load the production libraries directly. They cover fixed-point arithmetic,
- * fail-closed review rules, the strict GenAI response contract, and exact deletion
- * confirmation. A nonzero exit status makes the script suitable for deployment
+ * fail-closed review rules, the strict GenAI response contract, exact deletion
+ * confirmation, authentication controls, route guards, and ownership query
+ * contracts. A nonzero exit status makes the script suitable for deployment
  * checks and simple continuous-integration jobs.
  */
 
@@ -67,6 +68,94 @@ check(comparison_name_matches('Lab 3 saved-input test', 'Lab 3 saved-input test'
 check(!comparison_name_matches('Lab 3 saved-input test', 'lab 3 saved-input test'), 'Case-changing deletion confirmation was accepted.');
 check(!comparison_name_matches('Lab 3 saved-input test', 'Lab 3 saved-input test '), 'Whitespace-changing deletion confirmation was accepted.');
 check(!comparison_name_matches('Lab 3 saved-input test', ''), 'Empty deletion confirmation was accepted.');
+
+// Source-contract checks cover authentication primitives and every protected route.
+$applicationRoot = dirname(__DIR__);
+$bootstrapSource = file_get_contents($applicationRoot . '/lib/bootstrap.php');
+$repositorySource = file_get_contents($applicationRoot . '/lib/repository.php');
+$schemaSource = file_get_contents($applicationRoot . '/database/schema.sql');
+$loginSource = file_get_contents($applicationRoot . '/public/login.php');
+$registerSource = file_get_contents($applicationRoot . '/public/register.php');
+check(is_string($bootstrapSource), 'The authentication bootstrap could not be read.');
+check(is_string($repositorySource), 'The repository could not be read.');
+check(is_string($schemaSource), 'The database schema could not be read.');
+check(is_string($loginSource), 'The login controller could not be read.');
+check(is_string($registerSource), 'The registration controller could not be read.');
+
+if (is_string($bootstrapSource)) {
+    foreach ([
+        "'cookie_httponly' => true",
+        "'cookie_samesite' => 'Lax'",
+        "'cookie_secure' => request_is_https()",
+        "'use_only_cookies' => true",
+        "'use_strict_mode' => true",
+        '($now - $lastActivityAt) > 1800',
+        '($now - $authenticatedAt) > 28800',
+        '($now - $lastRegeneratedAt) > 900',
+        'session_regenerate_id(true)',
+        'session_destroy()',
+    ] as $requiredFragment) {
+        check(str_contains($bootstrapSource, $requiredFragment), "Missing session control: {$requiredFragment}");
+    }
+}
+
+if (is_string($loginSource)) {
+    foreach (['password_verify(', 'password_needs_rehash(', 'record_failed_login(', 'authenticate_user('] as $requiredFragment) {
+        check(str_contains($loginSource, $requiredFragment), "Missing login control: {$requiredFragment}");
+    }
+}
+if (is_string($registerSource)) {
+    foreach (['password_hash(', 'validate_new_password(', 'hash_equals(', 'authenticate_user('] as $requiredFragment) {
+        check(str_contains($registerSource, $requiredFragment), "Missing registration control: {$requiredFragment}");
+    }
+}
+
+$protectedControllers = [
+    'add-line.php', 'calculate.php', 'comparison.php', 'create.php',
+    'delete.php', 'duplicate.php', 'export.php', 'format.php', 'help.php',
+    'index.php', 'logout.php', 'results.php', 'review.php', 'revise.php',
+    'save-review.php',
+];
+foreach ($protectedControllers as $controller) {
+    $source = file_get_contents($applicationRoot . '/public/' . $controller);
+    check(is_string($source) && str_contains($source, 'require_login();'), "{$controller} is missing require_login().");
+}
+
+$comparisonControllers = [
+    'add-line.php', 'calculate.php', 'comparison.php', 'delete.php',
+    'duplicate.php', 'export.php', 'format.php', 'results.php', 'review.php',
+    'revise.php', 'save-review.php',
+];
+foreach ($comparisonControllers as $controller) {
+    $source = file_get_contents($applicationRoot . '/public/' . $controller);
+    check(is_string($source) && str_contains($source, 'find_comparison('), "{$controller} is missing the owner-scoped comparison lookup.");
+}
+$indexSource = file_get_contents($applicationRoot . '/public/index.php');
+$createSource = file_get_contents($applicationRoot . '/public/create.php');
+$deletionSource = file_get_contents($applicationRoot . '/lib/deletion.php');
+check(is_string($indexSource) && str_contains($indexSource, 'WHERE c.owner_user_id = ?'), 'The comparison list is not owner scoped.');
+check(is_string($createSource) && str_contains($createSource, 'INSERT INTO comparison (owner_user_id,'), 'Comparison creation does not assign an owner.');
+check(is_string($deletionSource) && str_contains($deletionSource, 'DELETE FROM comparison WHERE id = ? AND owner_user_id = ?'), 'Comparison deletion is not owner scoped.');
+
+if (is_string($repositorySource)) {
+    foreach ([
+        'WHERE c.id = ? AND c.owner_user_id = ?',
+        'WHERE i.comparison_id = ? AND c.owner_user_id = ?',
+        'WHERE r.comparison_id = ? AND c.owner_user_id = ?',
+    ] as $requiredFragment) {
+        check(str_contains($repositorySource, $requiredFragment), "Missing owner-scoped repository query: {$requiredFragment}");
+    }
+}
+if (is_string($schemaSource)) {
+    foreach ([
+        'CREATE TABLE IF NOT EXISTS user_account',
+        'owner_user_id BIGINT UNSIGNED NOT NULL',
+        'CONSTRAINT fk_comparison_owner',
+        'CONSTRAINT fk_deletion_audit_owner',
+    ] as $requiredFragment) {
+        check(str_contains($schemaSource, $requiredFragment), "Missing authentication or ownership schema: {$requiredFragment}");
+    }
+}
 
 // A complete two-sided fixture proves deterministic totals across paired groups.
 $testLines = [
@@ -128,4 +217,4 @@ if ($failures !== []) {
     exit(1);
 }
 
-echo "All Oracle Linux Value Navigator unit checks passed.\n";
+echo "All Oracle Linux Value Navigator unit, authentication, route-guard, and ownership contract checks passed.\n";

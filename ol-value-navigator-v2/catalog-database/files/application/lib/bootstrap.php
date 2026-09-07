@@ -273,7 +273,7 @@ function current_user(): ?array
 /**
  * Require an active application-managed account before continuing a route.
  *
- * Comparison routes adopt this guard in Checkpoint 2 when ownership is added.
+ * All comparison, Help, export, and logout routes invoke this guard.
  *
  * @return void
  */
@@ -282,6 +282,20 @@ function require_login(): void
     if (current_user() === null) {
         redirect('/login.php');
     }
+}
+
+/**
+ * Return the active account identifier or redirect an anonymous request.
+ *
+ * @return int Current authenticated user account primary key.
+ */
+function current_user_id(): int
+{
+    $user = current_user();
+    if ($user === null) {
+        redirect('/login.php');
+    }
+    return (int) $user['id'];
 }
 
 /**
@@ -501,11 +515,12 @@ function render_header(string $title): void
     echo '<title>' . h($title) . ' | Oracle Linux Value Navigator</title>';
     echo '<link rel="stylesheet" href="' . $css . '"></head><body>';
     echo '<header><div class="wrap"><a class="brand" href="' . $home . '">Oracle Linux Value Navigator</a>';
-    echo '<nav class="header-actions" aria-label="Application navigation"><a class="header-link" href="' . $help . '">Help</a>';
+    echo '<nav class="header-actions" aria-label="Application navigation">';
     if ($user === null) {
         echo '<a class="header-link" href="' . $login . '">Login</a>';
         echo '<a class="header-link" href="' . $register . '">Register</a>';
     } else {
+        echo '<a class="header-link" href="' . $help . '">Help</a>';
         echo '<span class="signed-in-user">Signed in as ' . h($user['username']) . '</span>';
         echo '<form class="header-form" method="post" action="' . $logout . '">' . csrf_field();
         echo '<button class="header-link" type="submit">Logout</button></form>';

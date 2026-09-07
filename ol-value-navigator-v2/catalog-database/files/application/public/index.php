@@ -3,20 +3,23 @@ declare(strict_types=1);
 /**
  * GET controller and view for the Version 2 baseline comparison workspace.
  *
- * The page accepts both complete freeform inputs and lists the 50 most recently
- * updated workbooks. Version 2 baseline has no login or per-user ownership, so the list is
- * shared by everyone with network access to the prototype. All database values
- * are escaped before rendering and creation is delegated to a CSRF-protected POST
- * controller.
+ * The page accepts both complete freeform inputs and lists the current user's 50
+ * most recently updated workbooks. All database values are escaped before
+ * rendering and creation is delegated to a CSRF-protected POST controller.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 
-// Bound the shared landing page while keeping recently active workbooks visible.
-$comparisons = db()->query(
+// Bound the owner-scoped landing page while keeping recently active workbooks visible.
+$statement = db()->prepare(
     'SELECT c.id, c.name, c.status, c.updated_at,
             (SELECT COUNT(*) FROM comparison_line l JOIN comparison_input i ON i.id = l.comparison_input_id WHERE i.comparison_id = c.id) AS line_count
-     FROM comparison c ORDER BY c.updated_at DESC LIMIT 50'
-)->fetchAll();
+     FROM comparison c
+     WHERE c.owner_user_id = ?
+     ORDER BY c.updated_at DESC LIMIT 50'
+);
+$statement->execute([current_user_id()]);
+$comparisons = $statement->fetchAll();
 
 render_header('Comparisons');
 ?>
@@ -44,9 +47,9 @@ render_header('Comparisons');
 </section>
 
 <section class="card">
-  <h2>Saved comparisons</h2>
+  <h2>Your saved comparisons</h2>
   <?php if ($comparisons === []): ?>
-    <p>No comparisons have been saved.</p>
+    <p>You have not saved any comparisons.</p>
   <?php else: ?>
     <div class="table-scroll"><table>
       <thead><tr><th>Name</th><th>Status</th><th>Lines</th><th>Updated</th><th></th></tr></thead>

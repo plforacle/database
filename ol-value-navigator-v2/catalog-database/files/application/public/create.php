@@ -9,8 +9,10 @@ declare(strict_types=1);
  * after newline normalization so later AI suggestions remain traceable.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_post();
 verify_csrf();
+$ownerId = current_user_id();
 
 try {
     $maximum = (int) app_config('max_input_characters', 12000);
@@ -26,8 +28,10 @@ try {
     if ($ruleId === false) {
         throw new RuntimeException('The active workshop calculation rule was not found.');
     }
-    $comparison = db()->prepare('INSERT INTO comparison (name, rule_version_id) VALUES (?, ?)');
-    $comparison->execute([$name, (int) $ruleId]);
+    $comparison = db()->prepare(
+        'INSERT INTO comparison (owner_user_id, name, rule_version_id) VALUES (?, ?, ?)'
+    );
+    $comparison->execute([$ownerId, $name, (int) $ruleId]);
     $comparisonId = (int) db()->lastInsertId();
 
     $input = db()->prepare(

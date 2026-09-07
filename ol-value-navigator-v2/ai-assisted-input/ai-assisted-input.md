@@ -24,6 +24,7 @@ In this lab, you will:
 This lab assumes you have:
 
 * The saved comparison created in Lab 3.
+* The application account registered in Lab 3.
 * A working PDO connection through the `olvn2_app` account.
 * The successful GenAI permission check from Lab 2.
 
@@ -108,7 +109,7 @@ This lab assumes you have:
 
 ## Task 3: Format both complete inputs
 
-1. Open the application and reopen `Lab 3 saved-input test`.
+1. Open the application, log in with the account created in Lab 3 if prompted, and reopen `Lab 3 saved-input test` under **Your saved comparisons**.
 
     ```text
     http://PUBLIC_IP_ADDRESS/ol-value-navigator-2/
@@ -171,7 +172,8 @@ This lab assumes you have:
 2. Display both the original AI fields and the current representative-reviewed fields.
 
     ```sql
-    <copy>SELECT i.input_side,
+    <copy>SELECT u.username AS owner_username,
+           i.input_side,
            l.line_number,
            l.entry_method,
            l.suggested_sku,
@@ -184,20 +186,25 @@ This lab assumes you have:
            l.review_status
     FROM comparison_line l
     JOIN comparison_input i ON i.id = l.comparison_input_id
+    JOIN comparison c ON c.id = i.comparison_id
+    JOIN user_account u ON u.id = c.owner_user_id
     ORDER BY i.comparison_id DESC, i.input_side, l.line_number;</copy>
     ```
 
 3. Display the GenAI run and review events.
 
     ```sql
-    <copy>SELECT event_type, actor_type, outcome, details, created_at
-    FROM application_event
-    WHERE event_type IN (
+    <copy>SELECT u.username AS owner_username,
+           e.event_type, e.actor_type, e.outcome, e.details, e.created_at
+    FROM application_event e
+    JOIN comparison c ON c.id = e.comparison_id
+    JOIN user_account u ON u.id = c.owner_user_id
+    WHERE e.event_type IN (
       'AI_FORMATTING_COMPLETED',
       'AI_FORMATTING_FAILED',
       'REPRESENTATIVE_REVIEW_SAVED'
     )
-    ORDER BY id DESC;</copy>
+    ORDER BY e.id DESC;</copy>
     ```
 
 4. Exit the MySQL client.
@@ -276,7 +283,8 @@ This lab assumes you have:
 17. Verify the manually entered line.
 
     ```sql
-    <copy>SELECT c.name,
+    <copy>SELECT u.username AS owner_username,
+           c.name,
            i.input_side,
            l.entry_method,
            l.sku,
@@ -285,6 +293,7 @@ This lab assumes you have:
            l.comparison_group,
            l.review_status
     FROM comparison c
+    JOIN user_account u ON u.id = c.owner_user_id
     JOIN comparison_input i ON i.comparison_id = c.id
     JOIN comparison_line l ON l.comparison_input_id = i.id
     WHERE c.name = 'Lab 4 manual fallback test'
@@ -297,9 +306,11 @@ This lab assumes you have:
 18. Verify that the application recorded the manual fallback event.
 
     ```sql
-    <copy>SELECT e.event_type, e.actor_type, e.outcome, e.details
+    <copy>SELECT u.username AS owner_username,
+           e.event_type, e.actor_type, e.outcome, e.details
     FROM application_event e
     JOIN comparison c ON c.id = e.comparison_id
+    JOIN user_account u ON u.id = c.owner_user_id
     WHERE c.name = 'Lab 4 manual fallback test'
       AND e.event_type = 'MANUAL_LINE_ADDED'
     ORDER BY e.id DESC;</copy>

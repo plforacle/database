@@ -3,7 +3,7 @@
 **Time:** About 5 minutes  
 **Use synthetic demonstration data only.**
 
-> **Development status:** This guide currently describes the inherited comparison workflow. Login and individual comparison ownership have not yet been implemented or tested. Do not distribute this as the completed Version 2 guide.
+Each account sees and manages only its own comparisons. Use a unique workshop username and a demonstration-only passphrase.
 
 ## 1. Open the application
 
@@ -12,6 +12,8 @@ Open:
 ```text
 http://VERSION_2_PUBLIC_IP_ADDRESS/ol-value-navigator-2/
 ```
+
+If this is your first visit, select **Register**, create a username and a passphrase of 12 to 128 characters, and select **Register**. If you already have an account, enter your username and password and select **Login**.
 
 ## 2. Create a comparison
 
@@ -72,4 +74,6 @@ Select **Save representative review**.
 2. Under **Workbook actions**, select **Export CSV workbook**.
 3. Open the downloaded CSV file.
 
-**Done.** You created, formatted, reviewed, calculated, and exported a complete demonstration comparison.
+4. Return to the application and select **Logout** when the demonstration is complete.
+
+**Done.** You signed in, created, formatted, reviewed, calculated, and exported a user-owned demonstration comparison, then ended the session.

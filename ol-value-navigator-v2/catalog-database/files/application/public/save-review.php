@@ -11,21 +11,26 @@ declare(strict_types=1);
  * commit together.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(4);
 require_post();
 verify_csrf();
 $id = post_id();
 find_comparison($id);
+$ownerId = current_user_id();
 $submittedLines = $_POST['lines'] ?? null;
 if (!is_array($submittedLines) || $submittedLines === []) {
     fail_page('Review not saved', 'No review lines were submitted.');
 }
 
 $allowedStatuses = ['AI_SUGGESTED', 'CONFIRMED', 'EXCLUDED', 'UNRESOLVED'];
-// This ownership query is the server-side defense against submitted line-ID tampering.
+// This owner-scoped query is the server-side defense against submitted line-ID tampering.
 $owned = db()->prepare(
-    'SELECT l.id FROM comparison_line l JOIN comparison_input i ON i.id = l.comparison_input_id
-     WHERE l.id = ? AND i.comparison_id = ?'
+    'SELECT l.id
+     FROM comparison_line l
+     JOIN comparison_input i ON i.id = l.comparison_input_id
+     JOIN comparison c ON c.id = i.comparison_id
+     WHERE l.id = ? AND i.comparison_id = ? AND c.owner_user_id = ?'
 );
 $update = db()->prepare(
     'UPDATE comparison_line SET sku = ?, description = ?, quantity = ?, annual_unit_price = ?,
@@ -39,7 +44,7 @@ try {
         if (!is_array($values) || !ctype_digit((string) $lineId)) {
             throw new InvalidArgumentException('A submitted line identifier was invalid.');
         }
-        $owned->execute([(int) $lineId, $id]);
+        $owned->execute([(int) $lineId, $id, $ownerId]);
         if (!$owned->fetchColumn()) {
             throw new InvalidArgumentException('A submitted line does not belong to this comparison.');
         }
@@ -93,7 +98,9 @@ try {
     $counts = line_counts($id);
     $status = ($counts['AI_SUGGESTED'] + $counts['UNRESOLVED']) === 0 && $counts['CONFIRMED'] > 0
         ? 'CONFIRMED' : 'NEEDS_REVIEW';
-    db()->prepare('UPDATE comparison SET status = ? WHERE id = ?')->execute([$status, $id]);
+    db()->prepare(
+        'UPDATE comparison SET status = ? WHERE id = ? AND owner_user_id = ?'
+    )->execute([$status, $id, $ownerId]);
     // The event outcome records a successful save; details retain the resulting counts.
     record_event($id, 'REPRESENTATIVE_REVIEW_SAVED', 'REPRESENTATIVE', 'CONFIRMED', $counts);
     db()->commit();

@@ -4,7 +4,7 @@
 
 Oracle Linux Value Navigator is an AI-assisted PHP web application backed by MySQL HeatWave. It helps an Oracle representative format and compare RHEL and Oracle Linux subscription information. The representative supplies both sides of the comparison, reviews the formatted lines, and receives annual, three-year, and five-year subscription-cost results.
 
-This development baseline starts from the validated Version 1 application and rebuilds it in a separate OCI environment whose resources use the `ol-value-navigator-2` prefix. Login and user-owned comparisons will be added and tested before the Version 2 workshop is complete.
+This workshop starts from the validated Version 1 application and rebuilds it in a separate OCI environment whose resources use the `ol-value-navigator-2` prefix. Version 2 adds application-managed registration and login, secure PHP sessions, logout, and user-owned comparisons without adding OCI identity or gateway services.
 
 The workshop uses demonstration SKUs, quantities, and prices. Do not enter real customer information. The completed prototype produces a subscription-cost comparison for learning and demonstration. It is not a customer quote, a licensing determination, or a complete TCO analysis.
 
@@ -19,8 +19,8 @@ Oracle Linux Value Navigator brings together Oracle Cloud Infrastructure, Oracle
 * **Oracle Cloud Infrastructure** provides the networking, compute, and managed database services used to run the application.
 * **Oracle Linux** provides the operating system for the application server.
 * **Apache HTTP Server** receives browser requests and serves the application pages.
-* **PHP** controls the application workflow, validates representative decisions, and performs the annual, three-year, and five-year calculations.
-* **MySQL HeatWave DB System** stores the original inputs, formatted lines, representative decisions, calculation results, workflow history, and minimal deletion audits.
+* **PHP** manages registration, login, secure sessions, the application workflow, representative decisions, and the annual, three-year, and five-year calculations.
+* **MySQL HeatWave DB System** stores application user accounts with PHP-generated password hashes, user-owned comparisons, original inputs, formatted lines, representative decisions, calculation results, workflow history, and minimal deletion audits.
 * **MySQL HeatWave GenAI** uses `sys.ML_GENERATE` to convert freeform RHEL and Oracle Linux subscription text into structured suggestions for representative review.
 
 AI assists with formatting the input. It does not approve SKUs, prices, alignments, or final results. The Oracle representative reviews and confirms the data before PHP calculates the comparison.
@@ -49,7 +49,8 @@ Lab 1: OCI and LAMP infrastructure
 After the system is built, a representative uses the application through this flow:
 
 ```text
-Enter both complete inputs
+Register or log in
+  -> Enter both complete inputs
   -> Save the original text
   -> Format both inputs with MySQL HeatWave GenAI
   -> Review, correct, align, and decide every line
@@ -68,13 +69,14 @@ In this workshop, you will:
 * Create an Oracle Linux LAMP environment in OCI.
 * Create a MySQL HeatWave DB System and configure it for MySQL HeatWave GenAI.
 * Create a database schema in the MySQL HeatWave DB System for saving and reopening comparisons.
+* Register an application account, log in through a secure PHP session, and log out.
 * Build PHP pages that capture RHEL and Oracle Linux freeform input.
 * Use AI to format both sides into reviewable subscription lines.
 * Review, correct, align, and confirm the formatted lines.
 * Calculate annual, three-year, and five-year subscription costs.
 * Save representative decisions and calculation-rule versions.
 * Use built-in Help to guide the complete workflow.
-* Reopen, revise, duplicate, export, and securely delete saved comparisons.
+* Reopen, revise, duplicate, export, and securely delete only your own saved comparisons.
 * Test and demonstrate the finished prototype.
 
 ### Prerequisites

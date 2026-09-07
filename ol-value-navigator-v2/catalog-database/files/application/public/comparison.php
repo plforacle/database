@@ -9,6 +9,7 @@ declare(strict_types=1);
  * and exact-name-confirmed deletion controls.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 $id = request_id();
 $comparison = find_comparison($id);
 $inputs = comparison_inputs($id);
@@ -74,7 +75,7 @@ render_header('Comparison: ' . $comparison['name']);
 
   <section class="card danger-zone">
     <h2>Delete comparison</h2>
-    <p>This permanently deletes the comparison and all associated inputs, formatted lines, results, and workflow events. A minimal audit record containing the comparison ID, name, and deletion time is retained.</p>
+    <p>This permanently deletes the comparison and all associated inputs, formatted lines, results, and workflow events. A minimal audit record containing the comparison ID, owner user ID, name, and deletion time is retained.</p>
     <form method="post" action="<?= h(app_url('/delete.php')) ?>">
       <?= csrf_field() ?><input type="hidden" name="id" value="<?= $id ?>">
       <label for="confirmation-name">Type <strong><?= h($comparison['name']) ?></strong> to confirm</label>

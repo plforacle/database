@@ -9,11 +9,13 @@ declare(strict_types=1);
  * completes the new fields on the review page.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(4);
 require_post();
 verify_csrf();
 $id = post_id();
 find_comparison($id);
+$ownerId = current_user_id();
 $side = (string) ($_POST['side'] ?? '');
 if (!in_array($side, ['RHEL', 'ORACLE_LINUX'], true)) {
     fail_page('Manual line not added', 'Select a valid input side.');
@@ -36,7 +38,9 @@ $insert = db()->prepare(
 $insert->execute([(int) $inputs[$side]['id'], $lineNumber]);
 // A new cost line invalidates any previously calculated result snapshot.
 db()->prepare('DELETE FROM comparison_result WHERE comparison_id = ?')->execute([$id]);
-db()->prepare("UPDATE comparison SET status = 'NEEDS_REVIEW' WHERE id = ?")->execute([$id]);
+db()->prepare(
+    "UPDATE comparison SET status = 'NEEDS_REVIEW' WHERE id = ? AND owner_user_id = ?"
+)->execute([$id, $ownerId]);
 record_event($id, 'MANUAL_LINE_ADDED', 'REPRESENTATIVE', 'COMPLETED', ['input_side' => $side]);
 flash('success', 'A manual line was added. Complete its fields and save the review.');
 redirect('/review.php?id=' . $id);

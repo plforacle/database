@@ -19,12 +19,12 @@
     },
     {
       "title": "Lab 2: Create the Workbook-Style Database Schema",
-      "description": "Download the application source and create the complete persistence schema and least-privilege PHP account.",
+      "description": "Download the application source and create the user, ownership, workbook, and audit schema with a least-privilege PHP account.",
       "filename": "../../catalog-database/catalog-database.md"
     },
     {
       "title": "Lab 3: Deploy the PHP Foundation and Saved-Input Workflow",
-      "description": "Deploy the secure PHP foundation and create, list, and reopen complete RHEL and Oracle Linux inputs.",
+      "description": "Deploy secure PHP sessions, register and log in, then create, list, and reopen user-owned inputs.",
       "filename": "../../php-calculator/php-calculator.md"
     },
     {
@@ -39,7 +39,7 @@
     },
     {
       "title": "Lab 6: Test and Demonstrate the Complete Application",
-      "description": "Run executable verification, test fail-closed scenarios, and rehearse the complete prototype demonstration.",
+      "description": "Run authentication and ownership verification, test fail-closed scenarios, and rehearse the complete prototype demonstration.",
       "filename": "../../test-and-demo/test-and-demo.md"
     },
     {

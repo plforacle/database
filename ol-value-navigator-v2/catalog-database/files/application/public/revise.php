@@ -10,9 +10,11 @@ declare(strict_types=1);
  * the comparison's workflow event history and appending an INPUTS_REVISED event.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(5);
 $id = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' ? post_id() : request_id();
 $comparison = find_comparison($id);
+$ownerId = current_user_id();
 $inputs = comparison_inputs($id);
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -24,7 +26,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $oracle = require_length(normalize_text((string) ($_POST['oracle_text'] ?? '')), 1, $maximum, 'Oracle Linux input');
         // Source replacement and removal of every stale derivative form one state change.
         db()->beginTransaction();
-        db()->prepare("UPDATE comparison SET name = ?, status = 'DRAFT' WHERE id = ?")->execute([$name, $id]);
+        db()->prepare(
+            "UPDATE comparison SET name = ?, status = 'DRAFT' WHERE id = ? AND owner_user_id = ?"
+        )->execute([$name, $id, $ownerId]);
         $update = db()->prepare('UPDATE comparison_input SET raw_text = ? WHERE comparison_id = ? AND input_side = ?');
         $update->execute([$rhel, $id, 'RHEL']);
         $update->execute([$oracle, $id, 'ORACLE_LINUX']);

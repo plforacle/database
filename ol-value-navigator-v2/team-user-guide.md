@@ -12,13 +12,29 @@ This application is not a quote, licensing determination, product-equivalence de
 
 2. Use demonstration information only. Do not enter customer, confidential, personal, production, or contract information.
 
-3. Remember that Version 2 baseline has no login or comparison ownership. Everyone using the prototype can see and work with the same saved comparisons.
+3. Create and use only your own application account. The application lists, opens, changes, exports, and deletes only comparisons owned by the signed-in account.
 
 4. Give your comparison a unique name using this format:
 
     ```text
     Team demonstration - YOUR_NAME - YYYY-MM-DD
     ```
+
+## Register or log in
+
+1. Open the application URL in a browser.
+
+2. If you do not have an account, select **Register**.
+
+3. Enter a unique username containing 3 to 64 characters. Start with a letter and use only letters, numbers, periods, underscores, or hyphens.
+
+4. Enter and confirm a demonstration-only passphrase containing 12 to 128 characters, then select **Register**.
+
+5. If you already have an account, enter your username and password on **Sign in**, then select **Login**.
+
+6. Confirm that the **Comparisons** page opens and the header shows **Signed in as** followed by your username.
+
+Do not share an account. Registration starts a new authenticated session. Inactive sessions expire after 30 minutes, sessions end after eight hours, and the application periodically rotates the session identifier while you work.
 
 ## Open the application Help
 
@@ -40,7 +56,7 @@ This application is not a quote, licensing determination, product-equivalence de
     * **RHEL SKU information**
     * **Oracle Linux SKU information**
     * **Save original inputs**
-    * **Saved comparisons**
+    * **Your saved comparisons**
 
 3. In **Comparison name**, enter your unique demonstration name.
 
@@ -187,7 +203,7 @@ Use manual fallback only when a supplied subscription item was not extracted or 
 
 2. Select **All comparisons**.
 
-3. Locate your comparison under **Saved comparisons**.
+3. Locate your comparison under **Your saved comparisons**.
 
 4. Review its status, line count, and updated time.
 
@@ -247,7 +263,7 @@ Revising original inputs clears all formatted lines and the calculated result fo
 
 ## Delete a comparison
 
-Deleting a comparison is permanent. The application deletes its original inputs, formatting runs, reviewed lines, calculated result, and workflow events. It retains only the comparison ID, name, and deletion time in a separate audit record.
+Deleting a comparison is permanent. The application deletes its original inputs, formatting runs, reviewed lines, calculated result, and workflow events. It retains only the owner user ID, comparison ID, name, and deletion time in a separate audit record.
 
 1. Open the comparison you intend to delete.
 
@@ -263,7 +279,15 @@ Deleting a comparison is permanent. The application deletes its original inputs,
 
 7. After entering the exact name, confirm that the application returns to **Comparisons** and reports that the comparison and its associated data were deleted.
 
-8. Confirm that the deleted comparison no longer appears under **Saved comparisons**.
+8. Confirm that the deleted comparison no longer appears under **Your saved comparisons**.
+
+## Log out
+
+1. Select **Logout** in the application header when you finish.
+
+2. Confirm that the **Sign in** page opens and reports that you have been logged out.
+
+3. Close the browser tab if you used a shared workshop computer.
 
 ## Status reference
 
@@ -276,7 +300,8 @@ Deleting a comparison is permanent. The application deletes its original inputs,
 
 ## Current Version 2 baseline boundaries
 
-* No login or multi-user ownership
+* Application-managed accounts only, with no password recovery or multifactor authentication
+* Each account can access only its own comparisons
 * No master RHEL or Oracle Linux SKU catalogs
 * Demonstration data only
 * No production approval of calculation rules

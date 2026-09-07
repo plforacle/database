@@ -9,11 +9,13 @@ declare(strict_types=1);
  * GenAI contract, but it remains a suggestion that requires representative review.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(4);
 require_post();
 verify_csrf();
 $id = post_id();
 find_comparison($id);
+$ownerId = current_user_id();
 $inputs = comparison_inputs($id);
 
 // Two remote model calls can take longer than a normal interactive PHP request.
@@ -37,7 +39,9 @@ foreach (['RHEL', 'ORACLE_LINUX'] as $side) {
 // A partial success is still actionable because manual entry can replace a failed side.
 $counts = line_counts($id);
 if (array_sum($counts) > 0) {
-    db()->prepare("UPDATE comparison SET status = 'NEEDS_REVIEW' WHERE id = ?")->execute([$id]);
+    db()->prepare(
+        "UPDATE comparison SET status = 'NEEDS_REVIEW' WHERE id = ? AND owner_user_id = ?"
+    )->execute([$id, $ownerId]);
 }
 flash('info', implode(' ', $messages));
 redirect('/review.php?id=' . $id);

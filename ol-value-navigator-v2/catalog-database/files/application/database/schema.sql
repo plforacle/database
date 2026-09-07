@@ -40,9 +40,11 @@ CREATE TABLE IF NOT EXISTS calculation_rule_version (
 );
 
 -- Parent workbook record. source_comparison_id records duplication lineage without
--- preventing deletion of the source, and rule_version_id makes results traceable.
+-- preventing deletion of the source, owner_user_id enforces durable ownership,
+-- and rule_version_id makes results traceable.
 CREATE TABLE IF NOT EXISTS comparison (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  owner_user_id BIGINT UNSIGNED NOT NULL,
   source_comparison_id BIGINT UNSIGNED NULL,
   name VARCHAR(255) NOT NULL,
   status ENUM('DRAFT','NEEDS_REVIEW','CONFIRMED','CALCULATED')
@@ -51,11 +53,14 @@ CREATE TABLE IF NOT EXISTS comparison (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_comparison_owner
+    FOREIGN KEY (owner_user_id) REFERENCES user_account(id),
   CONSTRAINT fk_comparison_source
     FOREIGN KEY (source_comparison_id) REFERENCES comparison(id)
     ON DELETE SET NULL,
   CONSTRAINT fk_comparison_rule_version
-    FOREIGN KEY (rule_version_id) REFERENCES calculation_rule_version(id)
+    FOREIGN KEY (rule_version_id) REFERENCES calculation_rule_version(id),
+  INDEX idx_comparison_owner_updated (owner_user_id, updated_at)
 );
 
 -- Preserves exactly one complete RHEL input and one complete Oracle Linux input per
@@ -166,12 +171,17 @@ CREATE TABLE IF NOT EXISTS application_event (
 
 -- Retains only the minimum deletion evidence after the workbook and its children are gone.
 CREATE TABLE IF NOT EXISTS comparison_deletion_audit (
-  -- This table intentionally has no foreign key so its minimal record survives deletion.
+  -- No foreign key points to comparison, so the audit survives workbook deletion.
+  -- The owner foreign key preserves which durable user account owned the workbook.
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   deleted_comparison_id BIGINT UNSIGNED NOT NULL,
+  owner_user_id BIGINT UNSIGNED NOT NULL,
   comparison_name VARCHAR(255) NOT NULL,
   deleted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_deleted_comparison (deleted_comparison_id)
+  UNIQUE KEY unique_deleted_comparison (deleted_comparison_id),
+  CONSTRAINT fk_deletion_audit_owner
+    FOREIGN KEY (owner_user_id) REFERENCES user_account(id),
+  INDEX idx_deletion_audit_owner (owner_user_id, deleted_at)
 );
 
 -- Idempotent seed keeps repeat workshop runs aligned to the same demonstration policy.

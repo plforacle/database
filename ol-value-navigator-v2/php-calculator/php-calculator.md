@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this lab, you deploy the working PHP application foundation. The application saves the complete RHEL and Oracle Linux freeform text in one transaction, lists saved comparisons, and reopens either original input without exposing database credentials.
+In this lab, you deploy the working PHP application foundation. A representative registers an application-managed account and signs in through a secure PHP session. The application saves the complete RHEL and Oracle Linux freeform text in one transaction, lists only the signed-in user's comparisons, and reopens either original input without exposing database credentials.
 
 The supplied source is the application you will continue enabling in Labs 4 and 5. A stage file keeps later features unavailable until the lab that explains and verifies them.
 
@@ -16,7 +16,8 @@ In this lab, you will:
 * Deploy the application for the Lab 3 stage.
 * Configure the private PDO connection.
 * Verify the database connection from the Apache service account.
-* Create, list, and reopen a saved comparison.
+* Register, log in, and verify the secure session workflow.
+* Create, list, and reopen a user-owned saved comparison.
 * Verify transactional storage and safe browser output.
 
 ### Prerequisites
@@ -49,15 +50,18 @@ This lab assumes you have:
     ```text
     deploy.sh                         Installs one workshop stage and preserves private configuration
     config/config.php.example         Provides the private database, model, limit, and URL template
-    database/schema.sql               Creates workbook, input, AI-run, line, result, event, and audit tables
-    lib/bootstrap.php                 Starts sessions, security headers, PDO, CSRF, escaping, and page helpers
-    lib/repository.php                Provides shared prepared queries and workflow-event writes
+    database/schema.sql               Creates user, workbook, input, AI-run, line, result, event, and audit tables
+    lib/bootstrap.php                 Enforces secure sessions, authentication, security headers, PDO, CSRF, and page helpers
+    lib/repository.php                Provides user and owner-scoped workbook queries and workflow-event writes
     lib/genai.php                     Builds prompts, calls ML_GENERATE, validates JSON, and stores suggestions
     lib/money.php                     Validates reviewed lines and calculates fixed-point period totals
     lib/deletion.php                  Confirms names and performs audited cascading deletion
-    public/index.php                  Shows the creation form and recent saved comparisons
-    public/create.php                 Saves a comparison and both original inputs in one transaction
-    public/comparison.php             Reopens one workbook and displays its available actions
+    public/login.php                  Verifies a password and starts a fresh authenticated session
+    public/register.php               Validates a new account and stores a PHP-generated password hash
+    public/logout.php                 Verifies a POST and CSRF token, then destroys the session
+    public/index.php                  Shows the creation form and the current user's recent comparisons
+    public/create.php                 Saves an owned comparison and both original inputs in one transaction
+    public/comparison.php             Reopens one owned workbook and displays its available actions
     public/format.php                 Formats both inputs independently with GenAI
     public/review.php                 Displays source, suggestions, editable values, groups, and decisions
     public/save-review.php            Validates ownership and saves all representative decisions
@@ -70,9 +74,9 @@ This lab assumes you have:
     public/delete.php                 Requires exact-name confirmation before audited deletion
     public/help.php                   Provides the in-application quick start and workflow guidance
     public/style.css                  Provides responsive presentation for every application page
-    tests/unit.php                    Tests money, review, GenAI-contract, and deletion rules without a database
-    tests/check-database.php          Tests the deployed private connection, active rule, and audit table
-    tests/verify-installation.sh      Tests Stage 5 files, PHP syntax, Apache, and local routes
+    tests/unit.php                    Tests core logic, authentication controls, route guards, and ownership contracts
+    tests/check-database.php          Tests the private connection, auth schema, and rolled-back two-user owner filter
+    tests/verify-installation.sh      Tests Stage 5 files, PHP syntax, Apache, auth pages, and protected-route redirects
     ```
 
     The files interact through this request flow:
@@ -98,9 +102,11 @@ This lab assumes you have:
 
     Press `q` after each file. Notice these controls:
 
-    * `index.php` renders two separate bounded text areas and lists existing comparisons.
-    * `create.php` accepts only `POST`, verifies a CSRF token, validates all required fields, and uses one database transaction.
-    * `comparison.php` uses the numeric comparison identifier to reopen both complete original inputs and escapes every displayed value.
+    * `login.php` uses a generic failure message, verifies PHP password hashes, throttles repeated failures, and rotates the session identifier after authentication.
+    * `register.php` validates usernames and 12-to-128-character passwords before storing a PHP-generated password hash.
+    * `index.php` requires login, renders two separate bounded text areas, and lists only the current user's comparisons.
+    * `create.php` accepts only `POST`, verifies a CSRF token, validates all required fields, assigns the current user as owner, and uses one database transaction.
+    * `comparison.php` uses both the numeric comparison identifier and current user identifier to reopen complete original inputs, and escapes every displayed value.
 
 ## Task 2: Deploy the Lab 3 application stage
 
@@ -166,7 +172,7 @@ This lab assumes you have:
 
     The checker must be placed outside `/home/opc` because the `apache` account cannot normally traverse the `opc` home directory. The private application directory is not exposed through the Apache document root.
 
-    Confirm that the output begins with `Database connection passed` and shows the server version and `workshop-v2` rule.
+    Confirm that the output begins with `Database connection passed`, shows the server version and `workshop-v2` rule, reports that the authentication schema and two-user ownership filter are ready, and confirms that temporary rows were rolled back.
 
 7. If the test fails, verify the private IP, application password, private-subnet ingress rule for TCP port `3306`, and the grants from Lab 2. The application intentionally returns a generic browser error and writes only the exception class to the Apache error log.
 
@@ -180,11 +186,17 @@ This lab assumes you have:
     <copy>http://PUBLIC_IP_ADDRESS/ol-value-navigator-2/</copy>
     ```
 
-2. Confirm that the page contains a comparison name, a **RHEL SKU information** text area, and an **Oracle Linux SKU information** text area.
+2. On the **Sign in** page, select **Register**.
 
-3. Enter **Lab 3 saved-input test** as the comparison name.
+3. Create a unique workshop username. Use 3 to 64 characters, start with a letter, and use only letters, numbers, periods, underscores, or hyphens.
 
-4. Paste this complete demonstration RHEL input.
+4. Enter and confirm a demonstration-only passphrase containing 12 to 128 characters, then select **Register**.
+
+5. Confirm that the **Comparisons** page opens, the header displays **Signed in as** followed by your username, and the page contains a comparison name, a **RHEL SKU information** text area, and an **Oracle Linux SKU information** text area.
+
+6. Enter **Lab 3 saved-input test** as the comparison name.
+
+7. Paste this complete demonstration RHEL input.
 
     ```text
     <copy>DEMO-RHEL-STD | Demonstration RHEL standard support | Quantity 10 | Annual unit price USD 1200.00
@@ -192,7 +204,7 @@ This lab assumes you have:
     Note: synthetic workshop data only.</copy>
     ```
 
-5. Paste this complete demonstration Oracle Linux input.
+8. Paste this complete demonstration Oracle Linux input.
 
     ```text
     <copy>DEMO-OL-BASIC | Demonstration Oracle Linux basic support | Quantity 10 | Annual unit price USD 800.00
@@ -200,13 +212,17 @@ This lab assumes you have:
     Note: synthetic workshop data only.</copy>
     ```
 
-6. Select **Save original inputs**.
+9. Select **Save original inputs**.
 
-7. Confirm that the comparison page displays both complete original inputs and a `DRAFT` status. It must not display the database password, DSN, or private IP address.
+10. Confirm that the comparison page displays both complete original inputs and a `DRAFT` status. It must not display the database password, DSN, private IP address, or another user's comparison.
 
-8. Select **All comparisons**, and then select **Open** for `Lab 3 saved-input test`.
+11. Select **All comparisons**, and then select **Open** for `Lab 3 saved-input test` under **Your saved comparisons**.
 
-9. Confirm that both original inputs reopen unchanged.
+12. Confirm that both original inputs reopen unchanged.
+
+13. Select **Logout**. Confirm that the **Sign in** page opens and reports that you have been logged out.
+
+14. Log in again with the account you created. Confirm that `Lab 3 saved-input test` remains available under **Your saved comparisons**.
 
 ## Task 5: Verify the database transaction
 
@@ -219,9 +235,10 @@ This lab assumes you have:
 2. Display the saved comparison and the lengths of both complete inputs.
 
     ```sql
-    <copy>SELECT id, name, status, rule_version_id
-    FROM comparison
-    ORDER BY id DESC
+    <copy>SELECT c.id, u.username AS owner_username, c.name, c.status, c.rule_version_id
+    FROM comparison c
+    JOIN user_account u ON u.id = c.owner_user_id
+    ORDER BY c.id DESC
     LIMIT 5;
 
     SELECT comparison_id, input_side, CHAR_LENGTH(raw_text) AS input_characters
@@ -246,11 +263,11 @@ This lab assumes you have:
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** The browser creates, lists, and reopens a complete comparison. Both original inputs and the creation event are stored together without a master catalog.
+    > **Checkpoint:** Registration, login, secure session logout, and relogin work. The browser creates, lists, and reopens the signed-in user's complete comparison. Both original inputs and the creation event are stored together without a master catalog.
 
 ## Conclusion
 
-You have built the saved-input workflow. In the next lab, you will enable MySQL HeatWave GenAI formatting, representative editing, alignment, decisions, and manual fallback.
+You have built the authenticated, user-owned saved-input workflow. In the next lab, you will enable MySQL HeatWave GenAI formatting, representative editing, alignment, decisions, and manual fallback.
 
 ## Learn More
 

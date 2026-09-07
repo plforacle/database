@@ -10,6 +10,7 @@ declare(strict_types=1);
  * Manual fallback forms remain available when formatting fails or misses an item.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(4);
 $id = request_id();
 $comparison = find_comparison($id);

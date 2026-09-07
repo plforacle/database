@@ -10,11 +10,13 @@ declare(strict_types=1);
  * only a generic message and log the exception class.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(5);
 require_post();
 verify_csrf();
 $id = post_id();
 $comparison = find_comparison($id);
+$ownerId = current_user_id();
 
 try {
     $totals = calculate_comparison_totals($id);
@@ -41,7 +43,9 @@ try {
           calculated_at = CURRENT_TIMESTAMP'
     );
     $statement->execute(['comparison_id' => $id] + $totals);
-    db()->prepare("UPDATE comparison SET status = 'CALCULATED' WHERE id = ?")->execute([$id]);
+    db()->prepare(
+        "UPDATE comparison SET status = 'CALCULATED' WHERE id = ? AND owner_user_id = ?"
+    )->execute([$id, $ownerId]);
     record_event($id, 'CALCULATION_COMPLETED', 'APPLICATION', 'COMPLETED', [
         'rule_version' => $comparison['version_label'],
     ]);

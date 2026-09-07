@@ -9,6 +9,7 @@ declare(strict_types=1);
  * cascades remove its inputs, lines, AI runs, results, and normal event history.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(5);
 require_post();
 verify_csrf();
@@ -23,7 +24,7 @@ if (!comparison_name_matches((string) $comparison['name'], $confirmation)) {
 }
 
 try {
-    delete_comparison_and_record_audit(db(), $id, (string) $comparison['name']);
+    delete_comparison_and_record_audit(db(), $id, current_user_id(), (string) $comparison['name']);
     flash('success', 'The comparison and its associated data were deleted. A minimal deletion audit record was retained.');
     redirect('/index.php');
 } catch (Throwable $exception) {

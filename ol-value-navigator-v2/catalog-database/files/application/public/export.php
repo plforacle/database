@@ -10,6 +10,7 @@ declare(strict_types=1);
  * writing, and the download filename contains only safe characters.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(5);
 require_post();
 verify_csrf();
@@ -17,9 +18,7 @@ $id = post_id();
 $comparison = find_comparison($id);
 $inputs = comparison_inputs($id);
 $lines = comparison_lines($id);
-$statement = db()->prepare('SELECT * FROM comparison_result WHERE comparison_id = ?');
-$statement->execute([$id]);
-$result = $statement->fetch();
+$result = comparison_result($id);
 record_event($id, 'COMPARISON_EXPORTED', 'REPRESENTATIVE', 'COMPLETED', ['format' => 'CSV']);
 
 /**

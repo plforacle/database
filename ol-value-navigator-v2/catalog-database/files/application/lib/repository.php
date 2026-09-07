@@ -94,7 +94,7 @@ function update_user_password_hash(int $id, string $passwordHash): void
 }
 
 /**
- * Load one comparison and the label of the calculation rule it references.
+ * Load one current-user-owned comparison and its calculation rule label.
  *
  * The request terminates with a user-safe HTTP 404 page when no row exists.
  *
@@ -104,13 +104,14 @@ function update_user_password_hash(int $id, string $passwordHash): void
  */
 function find_comparison(int $id): array
 {
+    $ownerId = current_user_id();
     $statement = db()->prepare(
         'SELECT c.*, r.version_label
          FROM comparison c
          LEFT JOIN calculation_rule_version r ON r.id = c.rule_version_id
-         WHERE c.id = ?'
+         WHERE c.id = ? AND c.owner_user_id = ?'
     );
-    $statement->execute([$id]);
+    $statement->execute([$id, $ownerId]);
     $comparison = $statement->fetch();
     if (!$comparison) {
         fail_page('Comparison not found', 'The requested comparison does not exist.', 404);
@@ -119,7 +120,7 @@ function find_comparison(int $id): array
 }
 
 /**
- * Load both original freeform inputs and index them by input side.
+ * Load both original freeform inputs for a current-user-owned comparison.
  *
  * @param int $comparisonId Comparison primary key.
  * @return array<string,array<string,mixed>> Rows keyed by RHEL or ORACLE_LINUX.
@@ -128,9 +129,13 @@ function find_comparison(int $id): array
 function comparison_inputs(int $comparisonId): array
 {
     $statement = db()->prepare(
-        "SELECT * FROM comparison_input WHERE comparison_id = ? ORDER BY FIELD(input_side, 'RHEL', 'ORACLE_LINUX')"
+        "SELECT i.*
+         FROM comparison_input i
+         JOIN comparison c ON c.id = i.comparison_id
+         WHERE i.comparison_id = ? AND c.owner_user_id = ?
+         ORDER BY FIELD(i.input_side, 'RHEL', 'ORACLE_LINUX')"
     );
-    $statement->execute([$comparisonId]);
+    $statement->execute([$comparisonId, current_user_id()]);
     $inputs = [];
     foreach ($statement->fetchAll() as $input) {
         $inputs[$input['input_side']] = $input;
@@ -141,8 +146,8 @@ function comparison_inputs(int $comparisonId): array
 /**
  * Load all formatted and manually entered lines in stable display order.
  *
- * Joining through comparison_input proves each line belongs to the requested
- * comparison and adds the side needed by review and calculation logic.
+ * Joining through comparison_input and comparison proves each line belongs to
+ * both the requested workbook and the current user.
  *
  * @param int $comparisonId Comparison primary key.
  * @return list<array<string,mixed>> RHEL lines followed by Oracle Linux lines.
@@ -154,11 +159,32 @@ function comparison_lines(int $comparisonId): array
         "SELECT l.*, i.input_side
          FROM comparison_line l
          JOIN comparison_input i ON i.id = l.comparison_input_id
-         WHERE i.comparison_id = ?
+         JOIN comparison c ON c.id = i.comparison_id
+         WHERE i.comparison_id = ? AND c.owner_user_id = ?
          ORDER BY FIELD(i.input_side, 'RHEL', 'ORACLE_LINUX'), l.line_number"
     );
-    $statement->execute([$comparisonId]);
+    $statement->execute([$comparisonId, current_user_id()]);
     return $statement->fetchAll();
+}
+
+/**
+ * Load the saved result for a current-user-owned comparison.
+ *
+ * @param int $comparisonId Comparison primary key.
+ * @return array<string,mixed>|null Result row or null when no snapshot exists.
+ * @throws PDOException When the query fails.
+ */
+function comparison_result(int $comparisonId): ?array
+{
+    $statement = db()->prepare(
+        'SELECT r.*
+         FROM comparison_result r
+         JOIN comparison c ON c.id = r.comparison_id
+         WHERE r.comparison_id = ? AND c.owner_user_id = ?'
+    );
+    $statement->execute([$comparisonId, current_user_id()]);
+    $result = $statement->fetch();
+    return $result === false ? null : $result;
 }
 
 /**
@@ -186,15 +212,21 @@ function record_event(
 ): void {
     $statement = db()->prepare(
         'INSERT INTO application_event (comparison_id, event_type, actor_type, outcome, details)
-         VALUES (?, ?, ?, ?, ?)'
+         SELECT c.id, ?, ?, ?, ?
+         FROM comparison c
+         WHERE c.id = ? AND c.owner_user_id = ?'
     );
     $statement->execute([
-        $comparisonId,
         $eventType,
         $actorType,
         $outcome,
         $details === null ? null : json_encode($details, JSON_THROW_ON_ERROR),
+        $comparisonId,
+        current_user_id(),
     ]);
+    if ($statement->rowCount() !== 1) {
+        throw new RuntimeException('The comparison event owner check failed.');
+    }
 }
 
 /**
@@ -210,10 +242,11 @@ function line_counts(int $comparisonId): array
         'SELECT l.review_status, COUNT(*) AS total
          FROM comparison_line l
          JOIN comparison_input i ON i.id = l.comparison_input_id
-         WHERE i.comparison_id = ?
+         JOIN comparison c ON c.id = i.comparison_id
+         WHERE i.comparison_id = ? AND c.owner_user_id = ?
          GROUP BY l.review_status'
     );
-    $statement->execute([$comparisonId]);
+    $statement->execute([$comparisonId, current_user_id()]);
     $counts = ['AI_SUGGESTED' => 0, 'CONFIRMED' => 0, 'EXCLUDED' => 0, 'UNRESOLVED' => 0];
     foreach ($statement->fetchAll() as $row) {
         $counts[$row['review_status']] = (int) $row['total'];

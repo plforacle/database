@@ -33,6 +33,7 @@ function comparison_name_matches(string $expectedName, string $submittedName): b
  *
  * @param PDO $pdo Active database connection.
  * @param int $comparisonId Comparison primary key being removed.
+ * @param int $ownerUserId Authenticated owner account primary key.
  * @param string $comparisonName Name retained in the deletion audit.
  * @return void
  * @throws Throwable When either the audit insert or deletion fails. The
@@ -41,6 +42,7 @@ function comparison_name_matches(string $expectedName, string $submittedName): b
 function delete_comparison_and_record_audit(
     PDO $pdo,
     int $comparisonId,
+    int $ownerUserId,
     string $comparisonName
 ): void {
     // Audit insertion and cascading deletion succeed or fail as one database transaction.
@@ -49,14 +51,14 @@ function delete_comparison_and_record_audit(
         // Write the durable evidence before the parent row and its dependents disappear.
         $audit = $pdo->prepare(
             'INSERT INTO comparison_deletion_audit
-             (deleted_comparison_id, comparison_name)
-             VALUES (?, ?)'
+             (deleted_comparison_id, owner_user_id, comparison_name)
+             VALUES (?, ?, ?)'
         );
-        $audit->execute([$comparisonId, $comparisonName]);
+        $audit->execute([$comparisonId, $ownerUserId, $comparisonName]);
 
-        // The affected-row check also detects a stale or already deleted identifier.
-        $delete = $pdo->prepare('DELETE FROM comparison WHERE id = ?');
-        $delete->execute([$comparisonId]);
+        // The affected-row check detects stale identifiers and ownership changes.
+        $delete = $pdo->prepare('DELETE FROM comparison WHERE id = ? AND owner_user_id = ?');
+        $delete->execute([$comparisonId, $ownerUserId]);
         if ($delete->rowCount() !== 1) {
             throw new RuntimeException('The comparison was not deleted.');
         }

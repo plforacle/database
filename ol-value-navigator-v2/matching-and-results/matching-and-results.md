@@ -91,10 +91,10 @@ This lab assumes you have:
     Confirm that the output is:
 
     ```text
-    All Oracle Linux Value Navigator unit checks passed.
+    All Oracle Linux Value Navigator unit, authentication, route-guard, and ownership contract checks passed.
     ```
 
-    These checks cover decimal scaling, exact money rendering, signed values, line rounding, whole-quantity multiplication, complete totals, fail-closed calculation, valid GenAI response parsing, and rejection of unsupported GenAI response fields.
+    These checks cover decimal scaling, exact money rendering, signed values, line rounding, whole-quantity multiplication, complete totals, fail-closed calculation, valid GenAI response parsing, rejection of unsupported GenAI response fields, secure-session settings, password-handling calls, protected-route guards, and owner-scoped comparison actions.
 
 ## Task 3: Calculate and reconcile the demonstration
 
@@ -104,7 +104,7 @@ This lab assumes you have:
     <copy>http://PUBLIC_IP_ADDRESS/ol-value-navigator-2/</copy>
     ```
 
-2. In **Saved comparisons**, locate **Lab 3 saved-input test**. Confirm that its status is `CONFIRMED` and its line count is `4`, and then select **Open** for that comparison.
+2. In **Your saved comparisons**, locate **Lab 3 saved-input test**. Confirm that its status is `CONFIRMED` and its line count is `4`, and then select **Open** for that comparison.
 
     Do not open **Lab 4 manual fallback test**. That separate boundary-test comparison intentionally remains in `NEEDS_REVIEW` status.
 
@@ -196,8 +196,9 @@ This lab assumes you have:
     ```
 
     ```sql
-    <copy>SELECT c.id, c.name, c.status, r.calculated_at
+    <copy>SELECT c.id, u.username AS owner_username, c.name, c.status, r.calculated_at
     FROM comparison c
+    JOIN user_account u ON u.id = c.owner_user_id
     LEFT JOIN comparison_result r ON r.comparison_id = c.id
     ORDER BY c.id DESC;
 
@@ -249,7 +250,7 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 9. Replace `DELETED_COMPARISON_ID` and verify the retained audit record and deleted parent data.
 
     ```sql
-    <copy>SELECT deleted_comparison_id, comparison_name, deleted_at
+    <copy>SELECT deleted_comparison_id, owner_user_id, comparison_name, deleted_at
     FROM comparison_deletion_audit
     WHERE deleted_comparison_id = DELETED_COMPARISON_ID;
 
@@ -289,18 +290,19 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 3. Confirm that the page contains all of these help topics:
 
     * Quick Start
+    * Account and ownership
     * Review decisions
     * Saved comparison actions
     * Troubleshooting
     * Version 2 baseline boundaries
 
-4. Review the Quick Start and confirm that it covers creating, formatting, reviewing, calculating, and exporting a comparison.
+4. Review the Quick Start and confirm that it covers authenticated access, creating, formatting, reviewing, calculating, exporting, and logout.
 
 5. Review **Saved comparison actions** and confirm that it explains reopening, exporting, duplicating, revising, and deleting a comparison.
 
 6. Select **Return to comparisons** and confirm that the application returns to the saved-comparisons page.
 
-    > **Checkpoint:** Built-in Help provides the complete Version 2 baseline workflow and returns the user to the application.
+    > **Checkpoint:** Built-in Help explains account ownership and the complete Version 2 baseline workflow, then returns the user to the application.
 
 ## Conclusion
 

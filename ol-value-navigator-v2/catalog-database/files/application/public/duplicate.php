@@ -10,6 +10,7 @@ declare(strict_types=1);
  * reviewed and calculated independently.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(5);
 require_post();
 verify_csrf();
@@ -21,10 +22,10 @@ try {
     // Every copied input and line belongs to the new parent or nothing is committed.
     db()->beginTransaction();
     $copy = db()->prepare(
-        "INSERT INTO comparison (source_comparison_id, name, status, rule_version_id)
-         VALUES (?, ?, 'NEEDS_REVIEW', ?)"
+        "INSERT INTO comparison (owner_user_id, source_comparison_id, name, status, rule_version_id)
+         VALUES (?, ?, ?, 'NEEDS_REVIEW', ?)"
     );
-    $copy->execute([$id, $source['name'] . ' copy', $source['rule_version_id']]);
+    $copy->execute([current_user_id(), $id, $source['name'] . ' copy', $source['rule_version_id']]);
     $newId = (int) db()->lastInsertId();
 
     $inputInsert = db()->prepare(

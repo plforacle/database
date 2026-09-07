@@ -9,13 +9,12 @@ declare(strict_types=1);
  * traceability table even though they do not contribute to totals.
  */
 require '/var/www/ol-value-navigator-2/lib/bootstrap.php';
+require_login();
 require_stage(5);
 $id = request_id();
 $comparison = find_comparison($id);
 $lines = comparison_lines($id);
-$statement = db()->prepare('SELECT * FROM comparison_result WHERE comparison_id = ?');
-$statement->execute([$id]);
-$result = $statement->fetch();
+$result = comparison_result($id);
 if (!$result || $comparison['status'] !== 'CALCULATED') {
     flash('info', 'Review and calculate the comparison before opening results.');
     redirect('/review.php?id=' . $id);

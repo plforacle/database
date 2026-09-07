@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this lab, you download the Oracle Linux Value Navigator source and create its complete database schema in the MySQL HeatWave DB System. The schema preserves the two original freeform inputs, every AI formatting run, the original AI suggestions, representative corrections and decisions, aligned comparison groups, calculated result snapshots, workflow events, and minimal deletion audit records.
+In this lab, you download the Oracle Linux Value Navigator source and create its complete database schema in the MySQL HeatWave DB System. The schema stores application-managed user accounts and ownership, and preserves the two original freeform inputs, every AI formatting run, the original AI suggestions, representative corrections and decisions, aligned comparison groups, calculated result snapshots, workflow events, and minimal deletion audit records.
 
 The schema stores product text only inside a representative-created comparison. It does not contain or maintain a master RHEL or Oracle Linux SKU catalog.
 
@@ -13,7 +13,7 @@ Estimated Time: 45 minutes
 In this lab, you will:
 
 * Download and extract the packaged application source used by the remaining labs.
-* Create the eight application tables and demonstration rule version.
+* Create the nine application tables and demonstration rule version.
 * Create the PHP database account.
 * Grant application data access and MySQL HeatWave GenAI access.
 * Verify the schema and application account.
@@ -27,7 +27,7 @@ This lab assumes you have:
 * The DB System administrator password created in Lab 1.
 * The successful `sys.ML_GENERATE` result from the Lab 1 checkpoint.
 
-> **Note:** Use demonstration information only. At this development checkpoint, the copied baseline does not yet include login or user ownership.
+> **Note:** Use demonstration information only. Account passwords are hashed by PHP, but all workshop comparison data must remain synthetic.
 
 *This is the fold. The remaining sections are collapsed by default.*
 
@@ -52,13 +52,13 @@ This lab assumes you have:
       VERSION_2_OBJECT_STORAGE_PAR_URL</copy>
     ```
 
-    The Version 2 Object Storage PAR URL will be added after the login-enabled package is complete. Do not test this download until the placeholder has been replaced.
+    Replace the placeholder with the Version 2 Object Storage PAR URL before testing the download.
 
 4. Verify the downloaded package checksum.
 
     ```bash
     <copy>cd ~
-    echo 'f7c5b08df9077255de32521d9a82b4658993309c85749d5ff2d964fd5da6ca15  ol-value-navigator-2-application.zip' | sha256sum --check</copy>
+    echo '3e960580748d564bf8ca85df197272b2e2d74935712a6e83ae8d97f0e0b11343  ol-value-navigator-2-application.zip' | sha256sum --check</copy>
     ```
 
     Confirm that the command returns `ol-value-navigator-2-application.zip: OK`.
@@ -94,14 +94,15 @@ This lab assumes you have:
 
     | Table | Purpose |
     | --- | --- |
+    | `user_account` | Stores application usernames, PHP-generated password hashes, account status, and login timestamps |
     | `calculation_rule_version` | Identifies the deterministic PHP rule used for a saved result |
-    | `comparison` | Represents one saved comparison workbook and its workflow state |
+    | `comparison` | Represents one user-owned saved comparison workbook and its workflow state |
     | `comparison_input` | Preserves the complete RHEL and Oracle Linux freeform inputs |
     | `ai_formatting_run` | Records the model, outcome, and validated response for each formatting attempt |
     | `comparison_line` | Preserves AI suggestions separately from representative-reviewed values and alignment decisions |
     | `comparison_result` | Stores the annual, three-year, and five-year result snapshot |
     | `application_event` | Records AI, representative, and application workflow events |
-    | `comparison_deletion_audit` | Retains the comparison ID, name, and deletion time after associated data is deleted |
+    | `comparison_deletion_audit` | Retains the owner ID, comparison ID, name, and deletion time after associated data is deleted |
 
 3. Load the schema as the DB System administrator. Replace the private IP placeholder.
 
@@ -140,7 +141,11 @@ This lab assumes you have:
 3. Grant the data permissions required by the PHP application.
 
     ```sql
-    <copy>GRANT SELECT
+    <copy>GRANT SELECT, INSERT, UPDATE
+      ON ol_value_navigator_2.user_account
+      TO 'olvn2_app'@'%';
+
+    GRANT SELECT
       ON ol_value_navigator_2.calculation_rule_version
       TO 'olvn2_app'@'%';
 
@@ -198,7 +203,7 @@ This lab assumes you have:
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2_app --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
-2. Confirm that all eight tables exist.
+2. Confirm that all nine tables exist.
 
     ```sql
     <copy>SHOW TABLES;</copy>
@@ -215,9 +220,22 @@ This lab assumes you have:
     comparison_input
     comparison_line
     comparison_result
+    user_account
     ```
 
-3. Confirm the active calculation-rule version.
+3. Confirm the ownership columns and foreign keys.
+
+    ```sql
+    <copy>SELECT table_name, column_name, referenced_table_name, referenced_column_name
+    FROM information_schema.key_column_usage
+    WHERE table_schema = 'ol_value_navigator_2'
+      AND column_name = 'owner_user_id'
+    ORDER BY table_name;</copy>
+    ```
+
+    Confirm that both `comparison.owner_user_id` and `comparison_deletion_audit.owner_user_id` reference `user_account.id`.
+
+4. Confirm the active calculation-rule version.
 
     ```sql
     <copy>SELECT version_label, governance_status, active
@@ -226,7 +244,7 @@ This lab assumes you have:
 
     Confirm that `workshop-v2` is active and has the `DEMONSTRATION` governance status.
 
-4. Confirm that the application account can call MySQL HeatWave GenAI.
+5. Confirm that the application account can call MySQL HeatWave GenAI.
 
     ```sql
     <copy>SELECT sys.ML_GENERATE(
@@ -242,7 +260,7 @@ This lab assumes you have:
 
     Wait for the response and confirm that its `text` field contains `READY`.
 
-5. Confirm that no master catalog table exists.
+6. Confirm that no master catalog table exists.
 
     ```sql
     <copy>SELECT table_name
@@ -253,17 +271,17 @@ This lab assumes you have:
 
     The query must return an empty result.
 
-6. Exit the MySQL client.
+7. Exit the MySQL client.
 
     ```sql
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** The application account can manage saved-comparison records, retain minimal deletion audits, and call `sys.ML_GENERATE`, but the schema has no master RHEL or Oracle Linux SKU catalog.
+    > **Checkpoint:** The application account can create and authenticate users, manage user-owned comparison records, retain owner-linked minimal deletion audits, and call `sys.ML_GENERATE`, but the schema has no master RHEL or Oracle Linux SKU catalog.
 
 ## Conclusion
 
-You have created the full persistence layer. In the next lab, you will deploy the PHP foundation and use it to create, list, and reopen comparison workbooks.
+You have created the full persistence layer. In the next lab, you will deploy the PHP foundation, register an application account, and create, list, and reopen user-owned comparison workbooks.
 
 ## Learn More
 
