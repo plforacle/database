@@ -2,10 +2,96 @@
 declare(strict_types=1);
 
 /*
- * Shared persistence queries for comparison records, inputs, lines, and events.
+ * Shared persistence queries for user accounts, comparisons, inputs, lines, and events.
  * Centralizing these prepared statements keeps public controllers focused on
  * workflow and gives all pages consistent row shapes and not-found behavior.
  */
+
+/**
+ * Load an active user account by its primary key.
+ *
+ * @param int $id User account primary key.
+ * @return array<string,mixed>|null Active account row or null.
+ * @throws PDOException When the query fails.
+ */
+function find_active_user_by_id(int $id): ?array
+{
+    $statement = db()->prepare(
+        'SELECT id, username, active, last_login_at, created_at
+         FROM user_account
+         WHERE id = ? AND active = 1'
+    );
+    $statement->execute([$id]);
+    $user = $statement->fetch();
+    return $user === false ? null : $user;
+}
+
+/**
+ * Load the credential row for a username supplied at login.
+ *
+ * Usernames use the database's case-insensitive utf8mb4 collation. The caller
+ * always emits the same failure message for missing, disabled, or bad-password
+ * accounts so login does not disclose which usernames exist.
+ *
+ * @param string $username Normalized username.
+ * @return array<string,mixed>|null Account row or null.
+ * @throws PDOException When the query fails.
+ */
+function find_user_for_login(string $username): ?array
+{
+    $statement = db()->prepare(
+        'SELECT id, username, password_hash, active
+         FROM user_account
+         WHERE username = ?'
+    );
+    $statement->execute([$username]);
+    $user = $statement->fetch();
+    return $user === false ? null : $user;
+}
+
+/**
+ * Create one active application-managed user account.
+ *
+ * @param string $username Validated normalized username.
+ * @param string $passwordHash Hash produced by PHP password_hash.
+ * @return int New user account primary key.
+ * @throws PDOException When the insert fails, including duplicate usernames.
+ */
+function create_user_account(string $username, string $passwordHash): int
+{
+    $statement = db()->prepare(
+        'INSERT INTO user_account (username, password_hash) VALUES (?, ?)'
+    );
+    $statement->execute([$username, $passwordHash]);
+    return (int) db()->lastInsertId();
+}
+
+/**
+ * Record a successful login without storing session identifiers in the database.
+ *
+ * @param int $id Authenticated user account primary key.
+ * @return void
+ * @throws PDOException When the update fails.
+ */
+function record_successful_login(int $id): void
+{
+    $statement = db()->prepare('UPDATE user_account SET last_login_at = CURRENT_TIMESTAMP WHERE id = ?');
+    $statement->execute([$id]);
+}
+
+/**
+ * Replace an older password hash after PHP authenticates it successfully.
+ *
+ * @param int $id Authenticated user account primary key.
+ * @param string $passwordHash Replacement hash produced by PHP password_hash.
+ * @return void
+ * @throws PDOException When the update fails.
+ */
+function update_user_password_hash(int $id, string $passwordHash): void
+{
+    $statement = db()->prepare('UPDATE user_account SET password_hash = ? WHERE id = ?');
+    $statement->execute([$passwordHash, $id]);
+}
 
 /**
  * Load one comparison and the label of the calculation rule it references.

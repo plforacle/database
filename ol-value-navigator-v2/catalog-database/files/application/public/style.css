@@ -19,11 +19,13 @@ header { background:#161513; color:#fff; padding:1rem 0; }
 header .wrap { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
 .brand { color:#fff; font-weight:700; text-decoration:none; font-size:1.15rem; }
 .header-actions { display:flex; align-items:center; gap:1rem; }
+.header-form { margin:0; }
 .header-link,.header-link:visited { display:inline-block; border:1px solid #c7c7c7; border-radius:.3rem; padding:.4rem .8rem; background:#fff; color:#161513; font-size:.95rem; font-weight:700; line-height:1.2; text-decoration:none; }
 .header-link:hover { background:#f2f3f4; }
 .header-link:focus-visible { outline:3px solid #f4a99f; outline-offset:2px; }
 .badge,.status { display:inline-block; border-radius:999px; padding:.2rem .65rem; background:#ececec; color:#333; font-size:.8rem; }
 header .badge { background:#3a3835; color:#fff; }
+.signed-in-user { color:#fff; font-size:.9rem; }
 
 /* Page layout, reusable panels, forms, and workflow actions. */
 main { padding:1.5rem 0 3rem; }
@@ -40,6 +42,8 @@ button.secondary,.button.secondary { background:#fff; color:var(--ink); border:1
 button.danger,.button.danger { background:#b3261e; color:#fff; }
 .danger-zone { border-color:#b3261e; }
 .danger-zone input { margin-bottom:1rem; }
+.authentication-card { max-width:34rem; }
+.authentication-card button { margin-top:1rem; }
 
 /* Help navigation and short management-oriented workflow steps. */
 .help-nav { display:flex; align-items:center; flex-wrap:wrap; gap:.75rem 1rem; }
@@ -73,4 +77,4 @@ th { background:#f2f3f4; }
 footer { border-top:1px solid var(--line); color:var(--muted); padding:1.5rem 0; background:#fff; }
 
 /* Stack all multi-column workflow controls when horizontal space is limited. */
-@media (max-width:800px) { .two-column,.summary,.line-grid { grid-template-columns:1fr; } }
+@media (max-width:800px) { .two-column,.summary,.line-grid { grid-template-columns:1fr; } header .wrap,.header-actions { align-items:flex-start; flex-wrap:wrap; } }

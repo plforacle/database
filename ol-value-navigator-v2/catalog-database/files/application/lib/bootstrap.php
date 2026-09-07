@@ -12,8 +12,13 @@ declare(strict_types=1);
  */
 session_name('olvn2_session');
 session_start([
+    'cookie_lifetime' => 0,
+    'cookie_path' => '/ol-value-navigator-2/',
     'cookie_httponly' => true,
     'cookie_samesite' => 'Lax',
+    'cookie_secure' => request_is_https(),
+    'gc_maxlifetime' => 28800,
+    'use_only_cookies' => true,
     'use_strict_mode' => true,
 ]);
 
@@ -22,6 +27,7 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header("Content-Security-Policy: default-src 'self'; style-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'");
 header('Referrer-Policy: no-referrer');
+header('Cache-Control: no-store');
 
 // Credentials remain in the private application directory and are never served by Apache.
 $configPath = '/var/www/ol-value-navigator-2/config.php';
@@ -63,6 +69,22 @@ require_once __DIR__ . '/repository.php';
 require_once __DIR__ . '/money.php';
 require_once __DIR__ . '/genai.php';
 require_once __DIR__ . '/deletion.php';
+
+maintain_authenticated_session();
+
+/**
+ * Detect whether PHP received the request over HTTPS.
+ *
+ * The Version 2 workshop currently uses direct Apache access. No proxy header is
+ * trusted here, so an external client cannot force an incorrect cookie setting.
+ *
+ * @return bool True when the web server marks the request as HTTPS.
+ */
+function request_is_https(): bool
+{
+    $https = strtolower((string) ($_SERVER['HTTPS'] ?? ''));
+    return $https !== '' && $https !== 'off';
+}
 
 /**
  * Read one private configuration value without exposing the configuration array.
@@ -162,6 +184,207 @@ function require_post(): void
         http_response_code(405);
         header('Allow: POST');
         exit('Method not allowed.');
+    }
+}
+
+/**
+ * Apply the authenticated session's inactivity, absolute, and rotation limits.
+ *
+ * Anonymous sessions are retained for CSRF protection on login and registration.
+ * Authenticated sessions expire after 30 minutes without activity or eight hours
+ * from login and receive a new identifier every 15 minutes while active.
+ *
+ * @return void
+ */
+function maintain_authenticated_session(): void
+{
+    if (!isset($_SESSION['authenticated_user_id'])) {
+        return;
+    }
+
+    $now = time();
+    $authenticatedAt = (int) ($_SESSION['authenticated_at'] ?? 0);
+    $lastActivityAt = (int) ($_SESSION['last_activity_at'] ?? 0);
+    $lastRegeneratedAt = (int) ($_SESSION['last_regenerated_at'] ?? 0);
+
+    if (
+        $authenticatedAt < 1
+        || $lastActivityAt < 1
+        || ($now - $lastActivityAt) > 1800
+        || ($now - $authenticatedAt) > 28800
+    ) {
+        clear_authentication_state();
+        session_regenerate_id(true);
+        $_SESSION['authentication_expired'] = true;
+        return;
+    }
+
+    if ($lastRegeneratedAt < 1 || ($now - $lastRegeneratedAt) > 900) {
+        session_regenerate_id(true);
+        $_SESSION['last_regenerated_at'] = $now;
+    }
+    $_SESSION['last_activity_at'] = $now;
+}
+
+/**
+ * Remove identity and authentication timestamps from the current session.
+ *
+ * @return void
+ */
+function clear_authentication_state(): void
+{
+    unset(
+        $_SESSION['authenticated_user_id'],
+        $_SESSION['authenticated_at'],
+        $_SESSION['last_activity_at'],
+        $_SESSION['last_regenerated_at']
+    );
+}
+
+/**
+ * Load the active account represented by the current authenticated session.
+ *
+ * @return array<string,mixed>|null Current account or null for an anonymous or
+ * disabled session.
+ */
+function current_user(): ?array
+{
+    static $loaded = false;
+    static $user = null;
+
+    if ($loaded) {
+        return $user;
+    }
+    $loaded = true;
+
+    $id = filter_var($_SESSION['authenticated_user_id'] ?? null, FILTER_VALIDATE_INT);
+    if ($id === false || $id === null || $id < 1) {
+        return null;
+    }
+
+    $user = find_active_user_by_id((int) $id);
+    if ($user === null) {
+        clear_authentication_state();
+        session_regenerate_id(true);
+    }
+    return $user;
+}
+
+/**
+ * Require an active application-managed account before continuing a route.
+ *
+ * Comparison routes adopt this guard in Checkpoint 2 when ownership is added.
+ *
+ * @return void
+ */
+function require_login(): void
+{
+    if (current_user() === null) {
+        redirect('/login.php');
+    }
+}
+
+/**
+ * Replace an anonymous session with a fresh authenticated session.
+ *
+ * @param int $userId Authenticated account primary key.
+ * @return void
+ */
+function authenticate_user(int $userId): void
+{
+    session_regenerate_id(true);
+    $_SESSION = [];
+    $now = time();
+    $_SESSION['authenticated_user_id'] = $userId;
+    $_SESSION['authenticated_at'] = $now;
+    $_SESSION['last_activity_at'] = $now;
+    $_SESSION['last_regenerated_at'] = $now;
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+/**
+ * Destroy the server-side session and expire its browser cookie.
+ *
+ * @return void
+ */
+function logout_user(): void
+{
+    $_SESSION = [];
+    if ((bool) ini_get('session.use_cookies')) {
+        $parameters = session_get_cookie_params();
+        setcookie(session_name(), '', [
+            'expires' => time() - 42000,
+            'path' => $parameters['path'],
+            'domain' => $parameters['domain'],
+            'secure' => $parameters['secure'],
+            'httponly' => $parameters['httponly'],
+            'samesite' => $parameters['samesite'] ?? 'Lax',
+        ]);
+    }
+    session_destroy();
+}
+
+/**
+ * Normalize and validate a human-readable login name.
+ *
+ * @param string $value Submitted username.
+ * @return string Valid username.
+ * @throws InvalidArgumentException When the username format is unsupported.
+ */
+function validate_username(string $value): string
+{
+    $username = trim($value);
+    if (preg_match('/\A[A-Za-z][A-Za-z0-9._-]{2,63}\z/', $username) !== 1) {
+        throw new InvalidArgumentException(
+            'Username must be 3 to 64 characters and start with a letter. Use letters, numbers, periods, underscores, or hyphens.'
+        );
+    }
+    return $username;
+}
+
+/**
+ * Validate a new password without imposing fragile composition rules.
+ *
+ * @param string $password Submitted password.
+ * @return string Valid password.
+ * @throws InvalidArgumentException When the password length is unsupported.
+ */
+function validate_new_password(string $password): string
+{
+    $length = strlen($password);
+    if ($length < 12 || $length > 128) {
+        throw new InvalidArgumentException('Password must contain between 12 and 128 characters.');
+    }
+    return $password;
+}
+
+/**
+ * Return the remaining temporary delay after repeated login failures.
+ *
+ * @return int Seconds remaining, or zero when another attempt is allowed.
+ */
+function login_delay_remaining(): int
+{
+    $blockedUntil = (int) ($_SESSION['login_blocked_until'] ?? 0);
+    if ($blockedUntil <= time()) {
+        unset($_SESSION['login_blocked_until']);
+        return 0;
+    }
+    return $blockedUntil - time();
+}
+
+/**
+ * Record a failed login and briefly delay further attempts after five failures.
+ *
+ * @return void
+ */
+function record_failed_login(): void
+{
+    $failures = (int) ($_SESSION['login_failure_count'] ?? 0) + 1;
+    $_SESSION['login_failure_count'] = $failures;
+    if ($failures >= 5) {
+        $_SESSION['login_blocked_until'] = time() + 60;
+        $_SESSION['login_failure_count'] = 0;
     }
 }
 
@@ -268,13 +491,25 @@ function render_header(string $title): void
     unset($_SESSION['flash']);
     $home = h(app_url('/index.php'));
     $help = h(app_url('/help.php'));
+    $login = h(app_url('/login.php'));
+    $register = h(app_url('/register.php'));
+    $logout = h(app_url('/logout.php'));
     $css = h(app_url('/style.css'));
+    $user = current_user();
     echo '<!doctype html><html lang="en"><head><meta charset="utf-8">';
     echo '<meta name="viewport" content="width=device-width,initial-scale=1">';
     echo '<title>' . h($title) . ' | Oracle Linux Value Navigator</title>';
     echo '<link rel="stylesheet" href="' . $css . '"></head><body>';
     echo '<header><div class="wrap"><a class="brand" href="' . $home . '">Oracle Linux Value Navigator</a>';
     echo '<nav class="header-actions" aria-label="Application navigation"><a class="header-link" href="' . $help . '">Help</a>';
+    if ($user === null) {
+        echo '<a class="header-link" href="' . $login . '">Login</a>';
+        echo '<a class="header-link" href="' . $register . '">Register</a>';
+    } else {
+        echo '<span class="signed-in-user">Signed in as ' . h($user['username']) . '</span>';
+        echo '<form class="header-form" method="post" action="' . $logout . '">' . csrf_field();
+        echo '<button class="header-link" type="submit">Logout</button></form>';
+    }
     echo '<span class="badge">Workshop prototype</span></nav></div></header><main class="wrap">';
     echo '<div class="notice warning">Use demonstration information only. This prototype is not a quote, licensing determination, or complete TCO analysis.</div>';
     foreach ($flashes as $item) {
@@ -290,7 +525,7 @@ function render_header(string $title): void
  */
 function render_footer(): void
 {
-    echo '</main><footer><div class="wrap">Version 2 baseline has no login and does not maintain master SKU catalogs.</div></footer></body></html>';
+    echo '</main><footer><div class="wrap">Version 2 uses application-managed login and does not maintain master SKU catalogs.</div></footer></body></html>';
 }
 
 /**

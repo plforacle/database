@@ -6,6 +6,24 @@ CREATE DATABASE IF NOT EXISTS ol_value_navigator_2
 
 USE ol_value_navigator_2;
 
+-- Stores application-managed identities. Passwords are created and verified by
+-- PHP using password_hash and password_verify; plaintext credentials are never
+-- stored. The active flag lets an administrator disable access without deleting
+-- the identity or its future comparison ownership history.
+CREATE TABLE IF NOT EXISTS user_account (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(64) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  last_login_at DATETIME NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY unique_user_account_username (username),
+  CHECK (CHAR_LENGTH(username) BETWEEN 3 AND 64),
+  CHECK (active IN (0, 1))
+);
+
 -- Identifies the deterministic calculation policy attached to each comparison.
 -- The prototype seeds a demonstration rule and does not claim production approval.
 CREATE TABLE IF NOT EXISTS calculation_rule_version (

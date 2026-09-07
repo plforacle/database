@@ -328,7 +328,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 3. On your local computer, open a browser and enter the following address. Replace the placeholder with the instance public IP address.
 
     ```text
-    http://PUBLIC_IP_ADDRESS/
+    <copy>http://PUBLIC_IP_ADDRESS/</copy>
     ```
 
 4. Confirm that the browser displays `Oracle Linux Value Navigator is running`.
@@ -359,6 +359,8 @@ The compute instance runs the web application. This workshop uses a paid, genera
     | DB System information | Name | `ol-value-navigator-2-db` |
     | DB System information | Description | `MySQL HeatWave DB System for Oracle Linux Value Navigator Version 2 comparison storage and GenAI workloads` |
     | Administrator credentials | Username | `olvn2admin` |
+    | Administrator credentials | Password | Create a strong, unique password and store it securely. Do not add it to the repository. |
+    | Administrator credentials | Confirm password | Re-enter the same password. |
     | Setup | Topology | Standalone |
     | Networking | Virtual cloud network compartment | `ol-value-navigator-2` |
     | Networking | Virtual cloud network | `ol-value-navigator-2-vcn` |
@@ -381,13 +383,17 @@ The compute instance runs the web application. This workshop uses a paid, genera
     | Deletion plan | Retain automatic backups | Disabled |
     | Deletion plan | Require final backup | Disabled |
     | Advanced options: Configuration | Configuration | Default configuration for `MySQL.2` |
-    | Advanced options: Configuration | Database version | Current supported MySQL version for which MySQL HeatWave GenAI is available. Do not depend on the version shown in workshop screenshots. |
+    | Advanced options: Configuration | Database version | `9.7.2` LTS, or a newer supported LTS version that supports `sys.ML_GENERATE` with `mistral-7b-instruct-v3` |
     | Advanced options: Encryption | Encryption key | Oracle-managed key |
     | Other advanced options | Connections, crash recovery, maintenance, management, data import, security attributes, telemetry, and tags | Keep the defaults |
 
+    > **Note:** This workshop was validated with MySQL 9.7.2 LTS. Available versions can change. Select a supported LTS release that provides `sys.ML_GENERATE` and the `mistral-7b-instruct-v3` in-database model rather than relying on the version shown in screenshots.
+
+    <!-- Separate the version note from the environment note. -->
+
     > **Note:** These settings are for a temporary development and testing environment. Production deployments require a separate review of high availability, backups, deletion protection, storage expansion, encryption, monitoring, and operational contacts.
 
-4. Create and securely store the administrator password. Do not add it to the repository.
+4. Confirm that the administrator password is stored securely in your private notes or approved password manager. You will need it in Lab 2.
 
 5. Create the DB System and wait for both the DB System and MySQL HeatWave Cluster states to become **Active**.
 
