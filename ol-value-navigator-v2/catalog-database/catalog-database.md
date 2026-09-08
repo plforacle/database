@@ -49,10 +49,10 @@ This lab assumes you have:
     <copy>cd ~
     curl --fail --location \
       --output ol-value-navigator-2-application.zip \
-      VERSION_2_OBJECT_STORAGE_PAR_URL</copy>
+      'https://objectstorage.us-ashburn-1.oraclecloud.com/p/8C4QZJZMmYdcbQMj62P7nlLKGf6MHgQmH1K4mxeNzHsy4Cc4MhDRKrySEniu3IUZ/n/idhwewbjlvpy/b/ol-value-navigator-v2/o/ol-value-navigator-2-application.zip'</copy>
     ```
 
-    Replace the placeholder with the Version 2 Object Storage PAR URL before testing the download.
+    This read-only PAR URL downloads the Version 2 application package from the dedicated `ol-value-navigator-v2` bucket.
 
 4. Verify the downloaded package checksum.
 
@@ -203,7 +203,7 @@ This lab assumes you have:
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn2_app --password --ssl-mode=REQUIRED ol_value_navigator_2</copy>
     ```
 
-2. Confirm that all nine tables exist.
+2. Check that all nine tables exist.
 
     ```sql
     <copy>SHOW TABLES;</copy>
@@ -211,19 +211,19 @@ This lab assumes you have:
 
     Confirm that the output contains:
 
-    ```text
-    ai_formatting_run
-    application_event
-    calculation_rule_version
-    comparison
-    comparison_deletion_audit
-    comparison_input
-    comparison_line
-    comparison_result
-    user_account
-    ```
+      ```text
+      ai_formatting_run
+      application_event
+      calculation_rule_version
+      comparison
+      comparison_deletion_audit
+      comparison_input
+      comparison_line
+      comparison_result
+      user_account
+      ```
 
-3. Confirm the ownership columns and foreign keys.
+3. Check the ownership columns and foreign keys.
 
     ```sql
     <copy>SELECT table_name, column_name, referenced_table_name, referenced_column_name
@@ -233,18 +233,18 @@ This lab assumes you have:
     ORDER BY table_name;</copy>
     ```
 
-    Confirm that both `comparison.owner_user_id` and `comparison_deletion_audit.owner_user_id` reference `user_account.id`.
+    Confirm that both **`comparison.owner_user_id`** and **`comparison_deletion_audit.owner_user_id`** reference **`user_account.id`**.
 
-4. Confirm the active calculation-rule version.
+4. Check the active calculation-rule version.
 
     ```sql
     <copy>SELECT version_label, governance_status, active
     FROM calculation_rule_version;</copy>
     ```
 
-    Confirm that `workshop-v2` is active and has the `DEMONSTRATION` governance status.
+    Confirm that **`workshop-v2`** is active and has the **DEMONSTRATION** governance status.
 
-5. Confirm that the application account can call MySQL HeatWave GenAI.
+5. Check that the application account can call MySQL HeatWave GenAI.
 
     ```sql
     <copy>SELECT sys.ML_GENERATE(
@@ -258,9 +258,9 @@ This lab assumes you have:
     );</copy>
     ```
 
-    Wait for the response and confirm that its `text` field contains `READY`.
+    Wait for the response and confirm that its **text** field contains **READY**.
 
-6. Confirm that no master catalog table exists.
+6. Check that no master catalog table exists.
 
     ```sql
     <copy>SELECT table_name
@@ -277,7 +277,7 @@ This lab assumes you have:
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** The application account can create and authenticate users, manage user-owned comparison records, retain owner-linked minimal deletion audits, and call `sys.ML_GENERATE`, but the schema has no master RHEL or Oracle Linux SKU catalog.
+    > **Checkpoint:** The application account can create and authenticate users, manage user-owned comparison records, retain owner-linked minimal deletion audits, and call **`sys.ML_GENERATE`**, but the schema has no master RHEL or Oracle Linux SKU catalog.
 
 ## Conclusion
 

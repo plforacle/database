@@ -24,6 +24,6 @@ The target published workshop URL is `https://plforacle.github.io/database/ol-va
 - [ ] Prove two-user isolation for every comparison query and action.
 - [ ] Complete successful end-to-end testing of the Version 2 labs.
 - [ ] Deploy the final ZIP to the test compute instance and run the Stage 5 installation verification.
-- [ ] Upload the final Version 2 application ZIP to Object Storage.
-- [ ] Replace `VERSION_2_OBJECT_STORAGE_PAR_URL` in Lab 2 with the final PAR URL.
-- [ ] Verify the production object against the SHA-256 checksum documented in Lab 2 before publishing the workshop.
+- [x] Upload the final Version 2 application ZIP to Object Storage.
+- [x] Replace `VERSION_2_OBJECT_STORAGE_PAR_URL` in Lab 2 with the final PAR URL.
+- [x] Verify the production object against the SHA-256 checksum documented in Lab 2 before publishing the workshop.
