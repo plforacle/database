@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Installs one workshop stage while keeping credentials outside the public document root.
+# Install one workshop stage while keeping credentials outside the public document root.
 #
 # Stage 3 exposes saved inputs, stage 4 adds GenAI review, and stage 5 enables
 # calculations and workbook actions. Re-running a stage safely replaces application

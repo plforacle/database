@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# End-to-end Stage 5 deployment smoke test.
+# Run the end-to-end Stage 5 deployment smoke test.
 #
 # The script fails at the first unmet condition. It checks private runtime files,
 # the public document root, every deployed PHP file, the Apache service, public
