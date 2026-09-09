@@ -67,10 +67,13 @@ This lab assumes you have:
 
 ## Task 2: Enable the complete application
 
-1. Deploy stage `5`.
+1. Install the PHP ZIP extension required for PowerPoint export, restart PHP-FPM to load it, and deploy stage `5`. The line-ending command also corrects packages previously created on Windows. Existing configuration and saved comparisons are preserved.
 
     ```bash
     <copy>cd ~/ol-value-navigator-application
+    sed -i 's/\r$//' deploy.sh tests/verify-installation.sh
+    sudo dnf install -y php-pecl-zip
+    sudo systemctl restart php-fpm
     sudo bash deploy.sh 5</copy>
     ```
 
@@ -173,7 +176,7 @@ This lab assumes you have:
 
 8. Return to the original comparison and confirm that it remains unchanged.
 
-## Task 6: Export the saved workbook
+## Task 6: Export the saved workbook and PowerPoint
 
 1. Open the original calculated comparison and select **Export CSV workbook**.
 
@@ -218,7 +221,23 @@ This lab assumes you have:
     <copy>EXIT;</copy>
     ```
 
-    > **Checkpoint:** The complete Version 1 application can reopen, revise, duplicate, calculate, save, and export a representative-confirmed comparison.
+7. In the browser, open the original calculated comparison and select **View results**. On the Results page, select **Download PowerPoint**.
+
+8. Open the downloaded `olvn-comparison-ID.pptx` file in Microsoft PowerPoint. Confirm that it opens without a repair warning and contains four slides: comparison overview, subscription-cost results, representative review, and assumptions.
+
+9. Compare the annual, three-year, and five-year amounts on slide 2 with the Results page. Confirm that all nine amounts match, including the difference signs. Select a table cell in PowerPoint and verify that its text is editable.
+
+10. Confirm that the presentation identifies the comparison, calculation rule, and calculation time. Keep the CSV workbook with the slides because the presentation summarizes the results rather than including every source line.
+
+11. Run the PowerPoint regression checks on the compute instance.
+
+    ```bash
+    <copy>php ~/ol-value-navigator-application/tests/presentation.php</copy>
+    ```
+
+    Confirm that the output reports `PowerPoint tests passed`. The exporter uses PHP ZipArchive to produce a PowerPoint-compatible ZIP package. It does not call GenAI again or change calculation rules. A PowerPoint repair warning is a failed test even if slides remain visible; stop and report the warning.
+
+    > **Checkpoint:** The complete Version 1 application can reopen, revise, duplicate, calculate, save, and export a representative-confirmed comparison as CSV and PowerPoint.
 
 ## Task 7: Delete a comparison with exact-name confirmation
 

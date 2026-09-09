@@ -31,7 +31,7 @@ render_header('Help and Quick Start');
     <li>Select <strong>Format with GenAI</strong> once and wait for both inputs to finish.</li>
     <li>Compare every suggestion with its original input, correct the values, assign related lines the same positive group number, and give every line a final decision.</li>
     <li>Select <strong>Save representative review</strong>, then select <strong>Calculate confirmed results</strong>.</li>
-    <li>Review the annual, three-year, and five-year results, then return to the comparison and select <strong>Export CSV workbook</strong>.</li>
+    <li>Review the annual, three-year, and five-year results. Select <strong>Download PowerPoint</strong> on the Results page for four editable summary slides. For the complete supporting data, return to the comparison and select <strong>Export CSV workbook</strong>.</li>
   </ol>
   <div class="notice info">MySQL HeatWave GenAI formats supplied text into suggestions. The representative owns every correction, alignment, confirmation, and exclusion. PHP performs the calculations.</div>
 </section>
@@ -62,6 +62,7 @@ render_header('Help and Quick Start');
       <tbody>
         <tr><td>Reopen</td><td>Returns to saved original inputs, reviewed lines, decisions, and results.</td></tr>
         <tr><td>Export CSV workbook</td><td>Downloads the complete source, review, alignment, rule, and result information.</td></tr>
+        <tr><td>Download PowerPoint</td><td>Downloads four editable slides from the calculated Results page. Includes saved totals, review counts, and assumptions. Recalculate after changing inputs or review decisions.</td></tr>
         <tr><td>Duplicate comparison</td><td>Copies the inputs and reviewed lines without copying the result snapshot. Review and calculate the copy again.</td></tr>
         <tr><td>Revise original inputs</td><td>Updates the source text and clears derived lines and results. The workflow must be repeated.</td></tr>
         <tr><td>Delete comparison</td><td>Permanently deletes the comparison and associated data after exact-name confirmation. Only its ID, name, and deletion time remain in the audit record.</td></tr>

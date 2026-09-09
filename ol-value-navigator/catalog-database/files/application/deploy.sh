@@ -13,6 +13,10 @@ if [[ ! "$stage" =~ ^(3|4|5)$ ]]; then
 fi
 
 # Resolve paths from this script so deployment does not depend on the caller's directory.
+if [[ "$stage" = "5" ]]; then
+  php -r 'if (!class_exists("ZipArchive")) { fwrite(STDERR, "PHP ZIP extension missing. Complete Lab 5 Task 2 before deploying.\n"); exit(1); }'
+fi
+
 source_dir="$(cd "$(dirname "$0")" && pwd)"
 private_dir="/var/www/ol-value-navigator"
 public_dir="/var/www/html/ol-value-navigator"
@@ -27,6 +31,7 @@ install -o root -g apache -m 0640 "$source_dir/lib/repository.php" "$private_dir
 install -o root -g apache -m 0640 "$source_dir/lib/genai.php" "$private_dir/lib/genai.php"
 install -o root -g apache -m 0640 "$source_dir/lib/money.php" "$private_dir/lib/money.php"
 install -o root -g apache -m 0640 "$source_dir/lib/deletion.php" "$private_dir/lib/deletion.php"
+install -o root -g apache -m 0640 "$source_dir/lib/presentation.php" "$private_dir/lib/presentation.php"
 
 for file in "$source_dir"/public/*; do
   install -o root -g apache -m 0644 "$file" "$public_dir/$(basename "$file")"

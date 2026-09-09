@@ -15,6 +15,9 @@ test -r "$private_dir/config.php"
 test -r "$private_dir/stage"
 test "$(cat "$private_dir/stage")" = "5"
 test -r "$public_dir/index.php"
+test -r "$public_dir/export-pptx.php"
+test -r "$private_dir/lib/presentation.php"
+php -r 'if (!class_exists("ZipArchive")) { fwrite(STDERR, "PHP ZIP extension missing. Complete Lab 5 Task 2.\n"); exit(1); }'
 
 # Lint the exact PHP copies Apache and command-line tests will execute.
 for file in "$private_dir"/lib/*.php "$public_dir"/*.php; do

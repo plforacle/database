@@ -56,7 +56,7 @@ This lab assumes you have:
 
     ```bash
     <copy>cd ~
-    echo 'b1d84d3c7fecf4835b0a9d9141b62a1242969151a89ae966886d64c021d85885  ol-value-navigator-application.zip' | sha256sum --check</copy>
+    echo 'dd926d0837109c10ea34d58b00a86a7d37d44fcc186492f82f9a6c23f6fb0f9e  ol-value-navigator-application.zip' | sha256sum --check</copy>
     ```
 
     Confirm that the command returns `ol-value-navigator-application.zip: OK`.

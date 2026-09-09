@@ -26,7 +26,13 @@ render_header('Results: ' . $comparison['name']);
 <div class="actions">
   <a class="button secondary" href="<?= h(app_url('/comparison.php?id=' . $id)) ?>">Comparison</a>
   <a class="button secondary" href="<?= h(app_url('/review.php?id=' . $id)) ?>">Review lines</a>
+  <form method="post" action="<?= h(app_url('/export-pptx.php')) ?>">
+    <?= csrf_field() ?>
+    <input type="hidden" name="id" value="<?= h($id) ?>">
+    <button type="submit">Download PowerPoint</button>
+  </form>
 </div>
+<p>Download four editable slides with the saved totals, review summary, and assumptions. The CSV workbook remains available on the Comparison page.</p>
 
 <section class="card">
   <h2>Confirmed subscription-cost comparison</h2>
