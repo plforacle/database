@@ -21,10 +21,10 @@ try {
     // Every copied input and line belongs to the new parent or nothing is committed.
     db()->beginTransaction();
     $copy = db()->prepare(
-        "INSERT INTO comparison (source_comparison_id, name, status, rule_version_id)
-         VALUES (?, ?, 'NEEDS_REVIEW', ?)"
+        "INSERT INTO comparison (source_comparison_id, name, status, rule_version_id, customer_name, customer_objective, comparison_scope, recommended_next_step)
+         VALUES (?, ?, 'NEEDS_REVIEW', ?, ?, ?, ?, ?)"
     );
-    $copy->execute([$id, $source['name'] . ' copy', $source['rule_version_id']]);
+    $copy->execute([$id, $source['name'] . ' copy', $source['rule_version_id'], ...array_values(customer_context_values($source))]);
     $newId = (int) db()->lastInsertId();
 
     $inputInsert = db()->prepare(

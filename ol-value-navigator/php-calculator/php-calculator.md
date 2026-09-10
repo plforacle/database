@@ -50,14 +50,18 @@ This lab assumes you have:
     deploy.sh                         Installs one workshop stage and preserves private configuration
     config/config.php.example         Provides the private database, model, limit, and URL template
     database/schema.sql               Creates workbook, input, AI-run, line, result, event, and audit tables
+    database/upgrade-customer-context.sql  Adds optional context columns to existing V1 databases safely
     lib/bootstrap.php                 Starts sessions, security headers, PDO, CSRF, escaping, and page helpers
     lib/repository.php                Provides shared prepared queries and workflow-event writes
+    lib/context.php                   Validates and renders optional customer context, separate from calculations
+    lib/presentation.php              Formats saved results and customer context into four editable slides
     lib/genai.php                     Builds prompts, calls ML_GENERATE, validates JSON, and stores suggestions
     lib/money.php                     Validates reviewed lines and calculates fixed-point period totals
     lib/deletion.php                  Confirms names and performs audited cascading deletion
     public/index.php                  Shows the creation form and recent saved comparisons
     public/create.php                 Saves a comparison and both original inputs in one transaction
     public/comparison.php             Reopens one workbook and displays its available actions
+    public/context.php                Edits customer details without clearing reviewed lines or results
     public/format.php                 Formats both inputs independently with GenAI
     public/review.php                 Displays source, suggestions, editable values, groups, and decisions
     public/save-review.php            Validates ownership and saves all representative decisions
@@ -67,10 +71,14 @@ This lab assumes you have:
     public/revise.php                 Replaces source inputs and clears data derived from the old text
     public/duplicate.php              Copies inputs and reviewed lines without copying the result
     public/export.php                 Records an export event and streams a formula-safe CSV workbook
+    public/export-pptx.php             Exports a consistent saved result and context snapshot as PowerPoint
     public/delete.php                 Requires exact-name confirmation before audited deletion
     public/help.php                   Provides the in-application quick start and workflow guidance
     public/style.css                  Provides responsive presentation for every application page
     tests/unit.php                    Tests money, review, GenAI-contract, and deletion rules without a database
+    tests/context.php                 Tests optional context validation and escaped form/display output
+    tests/presentation.php            Tests editable PowerPoint content, notes and package compatibility
+    tests/check-context-schema.php    Stops an existing deployment before copying files if columns are missing
     tests/check-database.php          Tests the deployed private connection, active rule, and audit table
     tests/verify-installation.sh      Tests Stage 5 files, PHP syntax, Apache, and local routes
     ```
@@ -183,6 +191,8 @@ This lab assumes you have:
 2. Confirm that the page contains a comparison name, a **RHEL SKU information** text area, and an **Oracle Linux SKU information** text area.
 
 3. Enter **Lab 3 saved-input test** as the comparison name.
+
+    The form also has **Customer details (optional)**. You can expand it to save a demonstration customer name, objective, scope, and recommended next step with a new comparison. Leave these fields blank for this checkpoint; Lab 5 Task 9 verifies adding them to an existing calculated comparison.
 
 4. Paste this complete demonstration RHEL input.
 

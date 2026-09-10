@@ -67,7 +67,17 @@ This lab assumes you have:
 
 ## Task 2: Enable the complete application
 
-1. Install the PHP ZIP extension required for PowerPoint export, restart PHP-FPM to load it, and deploy stage `5`. The line-ending command also corrects packages previously created on Windows. Existing configuration and saved comparisons are preserved.
+If you are updating an already deployed Version 1 application, first complete **Lab 2, Task 1** with the updated package. Do not recreate the database account or repeat the initial database setup. Then complete this task and Task 9 below. Existing comparisons remain in place.
+
+1. Apply the additive customer-context database upgrade before deploying the updated PHP files. Replace `HEATWAVE_PRIVATE_IP` with your DB System private IP and enter the administrator password when prompted.
+
+    ```bash
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED &lt; ~/ol-value-navigator-application/database/upgrade-customer-context.sql</copy>
+    ```
+
+    The upgrade adds only missing optional columns. It does not delete or recalculate comparisons and is safe to repeat, including on the fresh Lab 2 schema. Confirm that the final output lists `customer_name` with length `120`, and `customer_objective`, `comparison_scope`, and `recommended_next_step` with length `300`. Stop if the command reports an error.
+
+2. Install the PHP ZIP extension required for PowerPoint export, restart PHP-FPM to load it, and deploy stage `5`. The line-ending command also corrects packages previously created on Windows. Existing configuration and saved comparisons are preserved. On an existing installation, deployment checks the four database columns before replacing any application files.
 
     ```bash
     <copy>cd ~/ol-value-navigator-application
@@ -77,7 +87,7 @@ This lab assumes you have:
     sudo bash deploy.sh 5</copy>
     ```
 
-2. Confirm the installed stage.
+3. Confirm the installed stage.
 
     ```bash
     <copy>sudo cat /var/www/ol-value-navigator/stage</copy>
@@ -85,7 +95,7 @@ This lab assumes you have:
 
     The output must be `5`.
 
-3. Run the application unit checks.
+4. Run the application unit checks.
 
     ```bash
     <copy>php ~/ol-value-navigator-application/tests/unit.php</copy>
@@ -98,6 +108,15 @@ This lab assumes you have:
     ```
 
     These checks cover decimal scaling, exact money rendering, signed values, line rounding, whole-quantity multiplication, complete totals, fail-closed calculation, valid GenAI response parsing, and rejection of unsupported GenAI response fields.
+
+5. Run the customer-context and PowerPoint checks.
+
+    ```bash
+    <copy>php ~/ol-value-navigator-application/tests/context.php
+    php ~/ol-value-navigator-application/tests/presentation.php</copy>
+    ```
+
+    Confirm that both scripts report their checks passed. These tests do not change saved comparisons.
 
 ## Task 3: Calculate and reconcile the demonstration
 
@@ -185,6 +204,7 @@ This lab assumes you have:
 3. Confirm that it contains:
 
     * Comparison identifier, name, status, and rule version.
+    * Customer name, objective, comparison scope, and recommended next step, blank if not supplied.
     * Both complete original inputs.
     * Original AI suggestions and representative-reviewed values.
     * Comparison groups, decisions, and notes.
@@ -320,6 +340,62 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 6. Select **Return to comparisons** and confirm that the application returns to the saved-comparisons page.
 
     > **Checkpoint:** Built-in Help provides the complete Version 1 workflow and returns the user to the application.
+
+## Task 9: Add customer context without changing calculated results
+
+1. From **Comparisons**, open your original calculated demonstration, then select **View results**. Record its nine displayed amounts and its **Calculated at** timestamp. An older comparison shows **Not provided** for the four customer-context fields.
+
+2. In **Customer context**, select **Edit customer details**. Enter these demonstration values.
+
+    | Field | Value |
+    | --- | --- |
+    | Customer name | Demo Meridian |
+    | Objective | Compare subscription costs for the demonstration Linux estate. |
+    | Comparison scope | Two reviewed support groups. Subscription costs only, excluding migration and hardware. |
+    | Recommended next step | Review the confirmed quantities and assumptions with the team. |
+
+    All fields are optional. Customer name allows 120 characters; each other field allows 300. These fields are not sent to GenAI and do not supply pricing or calculation rules.
+
+3. Select **Save customer details**. Confirm that the application reports **Customer details saved. Reviewed lines and calculated results are unchanged.** The Comparison page must still show `CALCULATED` and the existing reviewed-line counts.
+
+4. Select **View results**. Confirm that all four details match your entries and that all nine amounts and the calculation timestamp match step 1. Do not reformat or recalculate just to change customer details.
+
+5. Select **Download PowerPoint** and open the new download. Confirm that PowerPoint opens without repair. Slide 1 must contain the customer name, objective, and scope. Slide 4 must contain your recommended next step. Slide 2 must still contain the same nine amounts. Full saved context remains in the speaker notes when long text is shortened on slides.
+
+6. Return to the browser, select **Comparison**, then **Export CSV workbook**. Open the new CSV and confirm that it contains all four complete context values and the original results. Files downloaded before the edit remain unchanged.
+
+7. On the Comparison page, select **Duplicate comparison**. Confirm that the copy contains the same four context values. On the copy, select **Edit customer details**, change Customer name to `Demo Meridian copy`, and select **Save customer details**. Reopen the original through **All comparisons** and confirm that it still says `Demo Meridian`.
+
+8. Reopen the copy, select **Edit customer details**, clear all four fields, and select **Save customer details**. Confirm that all four display **Not provided**. The original comparison must remain unchanged. Optional blank context does not block the normal review and calculation workflow.
+
+9. Connect to the database as the application account. Replace `HEATWAVE_PRIVATE_IP` with your DB System private IP and enter the application password when prompted.
+
+    ```bash
+    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
+    ```
+
+10. Replace `COMPARISON_ID` with the original comparison's numeric ID from its browser URL after `id=`. Verify its saved context, state, result timestamp, and update event.
+
+    ```sql
+    <copy>SET @context_comparison_id = COMPARISON_ID;
+    SELECT c.id, c.customer_name, c.customer_objective,
+           c.comparison_scope, c.recommended_next_step,
+           c.status, r.calculated_at
+    FROM comparison c
+    LEFT JOIN comparison_result r ON r.comparison_id = c.id
+    WHERE c.id = @context_comparison_id;
+
+    SELECT event_type, outcome, created_at
+    FROM application_event
+    WHERE comparison_id = @context_comparison_id
+      AND event_type = 'CUSTOMER_CONTEXT_UPDATED'
+    ORDER BY id DESC;
+    EXIT;</copy>
+    ```
+
+    Confirm that the original context matches step 2, its status remains `CALCULATED`, its calculation timestamp matches step 1, and a `COMPLETED` context-update event exists.
+
+    > **Checkpoint:** Customer context persists, copies independently, appears in both exports, and can be edited or cleared without changing calculated results.
 
 ## Conclusion
 

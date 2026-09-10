@@ -60,6 +60,7 @@ try {
 }
 
 require_once __DIR__ . '/repository.php';
+require_once __DIR__ . '/context.php';
 require_once __DIR__ . '/money.php';
 require_once __DIR__ . '/genai.php';
 require_once __DIR__ . '/deletion.php';

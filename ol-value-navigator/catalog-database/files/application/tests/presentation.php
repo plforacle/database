@@ -107,5 +107,52 @@ foreach ([[], [$lines[0]], [array_replace($lines[0], ['review_status' => 'NEEDS_
 $edge = array_replace($result, ['annual_difference' => '-5600.00', 'rhel_five_year_total' => '99999999999999.99']);
 ppt_check(str_starts_with($presentation->export(array_replace($comparison, ['name' => str_repeat('Long Unicode café 中文 ', 20) . "\x01"]), $edge, $lines), 'PK'), 'Long Unicode and signed totals export.');
 if (isset($argv[1])) { file_put_contents($argv[1], $bytes); }
+// Optional customer context changes narrative only. Old comparisons above still
+// export with no fields; this fixture exercises full and deliberately long text.
+$contextComparison = array_replace($comparison, [
+    'name' => 'Demonstration subscription comparison',
+    'customer_name' => 'Demo Meridian & Partners',
+    'customer_objective' => 'Compare annual subscription costs for our demonstration Linux estate.',
+    'comparison_scope' => 'Two reviewed support groups. Subscription costs only. No migration or hardware costs.',
+    'recommended_next_step' => 'Review the confirmed quantities and assumptions with the team before sharing the comparison.',
+]);
+$contextBytes = $presentation->export($contextComparison, $result, $lines);
+$contextDirectory = sys_get_temp_dir() . '/olvn-context-ppt-' . bin2hex(random_bytes(8));
+mkdir($contextDirectory, 0700);
+$contextPath = $contextDirectory . '/context.zip';
+try {
+    file_put_contents($contextPath, $contextBytes);
+    $zip = new ZipArchive(); $zip->open($contextPath);
+    $first = $zip->getFromName('ppt/slides/slide1.xml');
+    $last = $zip->getFromName('ppt/slides/slide4.xml');
+    ppt_check(str_contains($first, 'Demo Meridian &amp; Partners'), 'Customer appears as escaped slide text.');
+    ppt_check(str_contains($first, $contextComparison['customer_objective']), 'Objective appears on overview.');
+    ppt_check(str_contains($first, $contextComparison['comparison_scope']), 'Scope appears on overview.');
+    ppt_check(str_contains($last, $contextComparison['recommended_next_step']), 'Human next step appears on final slide.');
+    ppt_check(str_contains($zip->getFromName('ppt/slides/slide2.xml'), '16,800.00'), 'Context leaves saved totals unchanged.');
+    $zip->close();
+    $dense = array_replace($contextComparison, [
+        'customer_name' => str_repeat('W', 120),
+        'customer_objective' => str_repeat("Long context & <text> é\n", 12),
+        'comparison_scope' => str_repeat('W', 300),
+        'recommended_next_step' => str_repeat('W', 300),
+    ]);
+    $denseBytes = $presentation->export($dense, $result, $lines);
+    file_put_contents($contextPath, $denseBytes); $zip->open($contextPath);
+    $notes = $zip->getFromName('ppt/notesSlides/notesSlide1.xml');
+    foreach (['customer_name','customer_objective','comparison_scope','recommended_next_step'] as $key) {
+        foreach (explode("\n", $dense[$key]) as $paragraph) {
+            ppt_check(str_contains($notes, htmlspecialchars($paragraph, ENT_XML1 | ENT_QUOTES, 'UTF-8')), 'Full context retained in notes: ' . $key);
+        }
+    }
+    ppt_check(str_contains($zip->getFromName('ppt/slides/slide1.xml'), '...'), 'Long slide narrative is visibly shortened.');
+    ppt_check(ppt_zip_headers($denseBytes), 'Dense export preserves compatible ZIP headers.');
+    $zip->close();
+    if (isset($argv[2])) { file_put_contents($argv[2], $contextBytes); }
+    if (isset($argv[3])) { file_put_contents($argv[3], $denseBytes); }
+} finally {
+    if (isset($zip)) { unset($zip); }
+    unlink($contextPath); rmdir($contextDirectory);
+}
 echo "PowerPoint tests passed: {$checks} checks.\n";
 if (!class_exists('DOMDocument')) { echo "XML parser checks skipped: optional PHP DOM extension is not installed.\n"; }

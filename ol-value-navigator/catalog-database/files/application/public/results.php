@@ -33,6 +33,7 @@ render_header('Results: ' . $comparison['name']);
   </form>
 </div>
 <p>Download four editable slides with the saved totals, review summary, and assumptions. The CSV workbook remains available on the Comparison page.</p>
+<?php render_customer_context($comparison); ?>
 
 <section class="card">
   <h2>Confirmed subscription-cost comparison</h2>

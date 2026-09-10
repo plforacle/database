@@ -68,8 +68,8 @@ Select **Save representative review**.
 
 ## 6. Export
 
-1. Select **Comparison**.
-2. Under **Workbook actions**, select **Export CSV workbook**.
-3. Open the downloaded CSV file.
+1. Optionally select **Edit customer details** to add a demonstration customer name, objective, scope, and recommended next step. Save, then select **View results**. This does not change the calculated amounts.
+2. Select **Download PowerPoint** for four editable summary slides.
+3. Select **Comparison**, then **Export CSV workbook** for the complete supporting data.
 
 **Done.** You created, formatted, reviewed, calculated, and exported a complete demonstration comparison.

@@ -60,6 +60,9 @@ csv_row($output, ['Comparison ID', $id]);
 csv_row($output, ['Name', csv_text($comparison['name'])]);
 csv_row($output, ['Status', $comparison['status']]);
 csv_row($output, ['Rule version', $comparison['version_label']]);
+foreach (customer_context_fields() as $key => [$label]) {
+    csv_row($output, [$label, csv_text($comparison[$key] ?? '')]);
+}
 csv_row($output, []);
 foreach (['RHEL' => 'RHEL original input', 'ORACLE_LINUX' => 'Oracle Linux original input'] as $side => $label) {
     csv_row($output, [$label]);

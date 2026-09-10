@@ -26,6 +26,7 @@ render_header('Help and Quick Start');
   <h2>Quick Start</h2>
   <ol class="quick-steps">
     <li>On <strong>Comparisons</strong>, enter a unique comparison name.</li>
+    <li>Optionally expand <strong>Customer details</strong> and enter a demonstration customer name, objective, comparison scope, and recommended next step. These fields do not affect calculations or get sent to GenAI.</li>
     <li>Paste the complete supplied RHEL information into the RHEL input and the complete supplied Oracle Linux information into the Oracle Linux input.</li>
     <li>Select <strong>Save original inputs</strong>.</li>
     <li>Select <strong>Format with GenAI</strong> once and wait for both inputs to finish.</li>
@@ -61,9 +62,10 @@ render_header('Help and Quick Start');
       <thead><tr><th>Action</th><th>What it does</th></tr></thead>
       <tbody>
         <tr><td>Reopen</td><td>Returns to saved original inputs, reviewed lines, decisions, and results.</td></tr>
+        <tr><td>Edit customer details</td><td>Updates optional presentation context without clearing reviewed lines or calculated results. Available on the Comparison and Results pages. Download new exports after saving; previously downloaded files do not change.</td></tr>
         <tr><td>Export CSV workbook</td><td>Downloads the complete source, review, alignment, rule, and result information.</td></tr>
-        <tr><td>Download PowerPoint</td><td>Downloads four editable slides from the calculated Results page. Includes saved totals, review counts, and assumptions. Recalculate after changing inputs or review decisions.</td></tr>
-        <tr><td>Duplicate comparison</td><td>Copies the inputs and reviewed lines without copying the result snapshot. Review and calculate the copy again.</td></tr>
+        <tr><td>Download PowerPoint</td><td>Downloads four editable slides with customer context, saved totals, review counts, assumptions, and the recommended next step. Long context is shortened on slides with full text retained in speaker notes and CSV. Recalculate after changing SKU inputs or review decisions, but not after editing customer details.</td></tr>
+        <tr><td>Duplicate comparison</td><td>Copies customer details, inputs and reviewed lines without copying the result snapshot. Review and calculate the copy again.</td></tr>
         <tr><td>Revise original inputs</td><td>Updates the source text and clears derived lines and results. The workflow must be repeated.</td></tr>
         <tr><td>Delete comparison</td><td>Permanently deletes the comparison and associated data after exact-name confirmation. Only its ID, name, and deletion time remain in the audit record.</td></tr>
       </tbody>

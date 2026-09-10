@@ -32,6 +32,8 @@ This application is not a quote, licensing determination, product-equivalence de
 
 ## Create a comparison
 
+Optional customer details can be entered when creating a comparison. To add or edit them later, select **Edit customer details** on its Comparison or Results page. Use a demonstration customer name, objective, comparison scope, and recommended next step. Saving these details preserves reviewed lines and calculated results. They appear in new CSV and PowerPoint downloads; previously downloaded files do not change.
+
 1. Open the application URL in a browser.
 
 2. Confirm that the **Comparisons** page contains:

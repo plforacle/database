@@ -26,6 +26,11 @@ render_header('Comparisons');
     <?= csrf_field() ?>
     <label for="name">Comparison name</label>
     <input id="name" name="name" maxlength="255" required placeholder="Demonstration comparison">
+    <details class="context-details">
+      <summary>Customer details (optional)</summary>
+      <p>Use demonstration information only. These details appear in exports and do not affect calculations.</p>
+      <?php render_customer_context_fields(); ?>
+    </details>
 
     <div class="two-column">
       <div>

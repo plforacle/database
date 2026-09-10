@@ -48,6 +48,13 @@ button.danger,.button.danger { background:#b3261e; color:#fff; }
 .actions { display:flex; align-items:center; flex-wrap:wrap; gap:.6rem; }
 .actions form { margin:0; }
 
+/* Short optional context fields remain distinct from the complete SKU inputs. */
+.context-details { margin:1rem 0; }
+.context-details summary { cursor:pointer; font-weight:700; }
+textarea.context-input { min-height:4rem; height:auto; }
+.customer-context dt { font-weight:700; margin-top:.8rem; }
+.customer-context dd { margin:.2rem 0 1rem; overflow-wrap:anywhere; }
+
 /* Semantic feedback colors retain a visible border in addition to color. */
 .notice { border-left:4px solid #777; padding:.8rem 1rem; margin:1rem 0; background:#fff; }
 .notice.success { background:var(--ok); border-color:#16854b; }

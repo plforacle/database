@@ -56,7 +56,7 @@ This lab assumes you have:
 
     ```bash
     <copy>cd ~
-    echo 'dd926d0837109c10ea34d58b00a86a7d37d44fcc186492f82f9a6c23f6fb0f9e  ol-value-navigator-application.zip' | sha256sum --check</copy>
+    echo '523a467478a6f210eb7ddb9a012c4e48f04a92520621c1ca0a82849529b9f3a6  ol-value-navigator-application.zip' | sha256sum --check</copy>
     ```
 
     Confirm that the command returns `ol-value-navigator-application.zip: OK`.
@@ -93,7 +93,7 @@ This lab assumes you have:
     | Table | Purpose |
     | --- | --- |
     | `calculation_rule_version` | Identifies the deterministic PHP rule used for a saved result |
-    | `comparison` | Represents one saved comparison workbook and its workflow state |
+    | `comparison` | Represents one saved workbook, its workflow state, and optional customer name, objective, scope, and next step |
     | `comparison_input` | Preserves the complete RHEL and Oracle Linux freeform inputs |
     | `ai_formatting_run` | Records the model, outcome, and validated response for each formatting attempt |
     | `comparison_line` | Preserves AI suggestions separately from representative-reviewed values and alignment decisions |

@@ -10,6 +10,12 @@ The standalone team tutorial is stored in `team-user-guide.md`. It documents the
 
 The five-minute management walkthrough is stored in `management-quick-start.md`.
 
+## Customer-context update for an existing Version 1 deployment
+
+Upload the rebuilt application ZIP to the testing Object Storage location, then follow **Lab 2 Task 1** to download and verify it. Complete **Lab 5 Task 2** to apply the additive database upgrade before deploying stage 5, and **Lab 5 Task 9** to verify saved context and both exports. Do not recreate the database account. Existing comparisons, reviewed lines, and results are retained.
+
+The four optional fields are customer name, objective, comparison scope, and recommended next step. **Edit customer details** changes only these fields, separately from **Revise original inputs**. The update does not change calculation rules, GenAI prompts, OCI infrastructure, or Version 2.
+
 ## Production publication reminder
 
 - [x] Complete successful end-to-end testing of Labs 1 through 6.

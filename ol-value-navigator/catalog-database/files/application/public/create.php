@@ -14,6 +14,7 @@ verify_csrf();
 
 try {
     $maximum = (int) app_config('max_input_characters', 12000);
+    $context = customer_context_values($_POST);
     $name = require_length(normalize_text((string) ($_POST['name'] ?? '')), 1, 255, 'Comparison name');
     $rhel = require_length(normalize_text((string) ($_POST['rhel_text'] ?? '')), 1, $maximum, 'RHEL input');
     $oracle = require_length(normalize_text((string) ($_POST['oracle_text'] ?? '')), 1, $maximum, 'Oracle Linux input');
@@ -26,8 +27,8 @@ try {
     if ($ruleId === false) {
         throw new RuntimeException('The active workshop calculation rule was not found.');
     }
-    $comparison = db()->prepare('INSERT INTO comparison (name, rule_version_id) VALUES (?, ?)');
-    $comparison->execute([$name, (int) $ruleId]);
+    $comparison = db()->prepare('INSERT INTO comparison (name, rule_version_id, customer_name, customer_objective, comparison_scope, recommended_next_step) VALUES (?, ?, ?, ?, ?, ?)');
+    $comparison->execute([$name, (int) $ruleId, ...array_values($context)]);
     $comparisonId = (int) db()->lastInsertId();
 
     $input = db()->prepare(

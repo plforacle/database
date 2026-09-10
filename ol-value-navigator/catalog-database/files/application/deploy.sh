@@ -21,6 +21,12 @@ source_dir="$(cd "$(dirname "$0")" && pwd)"
 private_dir="/var/www/ol-value-navigator"
 public_dir="/var/www/html/ol-value-navigator"
 
+# Existing installations must receive the additive database upgrade before new
+# controllers are copied. A first deployment uses the fresh Lab 2 schema.
+if [[ -f "$private_dir/config.php" ]]; then
+  php "$source_dir/tests/check-context-schema.php"
+fi
+
 # Private libraries receive group-readable permissions for Apache. Public controllers,
 # views, and CSS are installed separately under the Apache document root.
 install -d -o root -g apache -m 0750 "$private_dir" "$private_dir/lib"
@@ -28,6 +34,7 @@ install -d -o root -g apache -m 0755 "$public_dir"
 
 install -o root -g apache -m 0640 "$source_dir/lib/bootstrap.php" "$private_dir/lib/bootstrap.php"
 install -o root -g apache -m 0640 "$source_dir/lib/repository.php" "$private_dir/lib/repository.php"
+install -o root -g apache -m 0640 "$source_dir/lib/context.php" "$private_dir/lib/context.php"
 install -o root -g apache -m 0640 "$source_dir/lib/genai.php" "$private_dir/lib/genai.php"
 install -o root -g apache -m 0640 "$source_dir/lib/money.php" "$private_dir/lib/money.php"
 install -o root -g apache -m 0640 "$source_dir/lib/deletion.php" "$private_dir/lib/deletion.php"

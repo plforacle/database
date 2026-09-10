@@ -33,7 +33,9 @@ This lab assumes you have:
 1. Run the source-level unit checks.
 
     ```bash
-    <copy>php ~/ol-value-navigator-application/tests/unit.php</copy>
+    <copy>php ~/ol-value-navigator-application/tests/unit.php
+    php ~/ol-value-navigator-application/tests/context.php
+    php ~/ol-value-navigator-application/tests/presentation.php</copy>
     ```
 
     Confirm that all checks pass.

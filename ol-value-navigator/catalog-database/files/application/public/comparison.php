@@ -36,6 +36,7 @@ render_header('Comparison: ' . $comparison['name']);
   </dl>
 </section>
 
+<?php render_customer_context($comparison); ?>
 <section class="two-column">
   <?php foreach (['RHEL' => 'RHEL original input', 'ORACLE_LINUX' => 'Oracle Linux original input'] as $side => $label): ?>
     <article class="card">

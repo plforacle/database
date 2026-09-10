@@ -65,11 +65,31 @@ final class ResultsPresentation
         $rule = $this->clean((string) ($comparison['version_label'] ?? ''));
         $date = $this->clean((string) ($result['calculated_at'] ?? ''));
         $trace = 'Comparison ' . $comparison['id'] . "\nRule: " . $rule . "\nCalculated: " . $date . ' (database time)';
+        // These are human-written narrative fields, not pricing or AI inputs.
+        // Collapse display whitespace and limit slide text; preserve full notes.
+        $context = [];
+        foreach (['customer_name', 'customer_objective', 'comparison_scope', 'recommended_next_step'] as $field) {
+            $context[$field] = $this->clean((string) ($comparison[$field] ?? ''));
+        }
+        $overview = $this->heading('Oracle Linux Value Navigator')
+            . $this->box($this->shorten($name, 90), .6, 1.8, 12, 1.6, 30, true, 'B84032')
+            . $this->box('Confirmed subscription-cost comparison', .6, 3.65, 12, .7, 24)
+            . $this->box($trace, .6, 4.8, 12, 1.5, 18);
+        if ($context['customer_name'] !== '' || $context['customer_objective'] !== '' || $context['comparison_scope'] !== '') {
+            $overview = $this->heading('Oracle Linux Value Navigator')
+                . $this->box($this->displayText($name, 55), .6, 1.35, 12, .95, 26, true, 'B84032')
+                . $this->box('Customer: ' . $this->displayText($context['customer_name'], 40), .6, 2.35, 12, .8, 20, true)
+                . $this->box('Objective', .6, 3.2, 12, .35, 18, true)
+                . $this->box($this->displayText($context['customer_objective'], 130), .6, 3.6, 12, .95, 18)
+                . $this->box('Comparison scope', .6, 4.65, 12, .35, 18, true)
+                . $this->box($this->displayText($context['comparison_scope'], 130), .6, 5.05, 12, .95, 18)
+                . $this->box(str_replace("\n", ' / ', $trace), .6, 6.25, 12, .55, 11);
+        }
+        $nextStep = $context['recommended_next_step'] === ''
+            ? 'Retain the CSV workbook with this presentation for traceability.'
+            : $this->displayText($context['recommended_next_step'], 160);
         $slides = [
-            $this->heading('Oracle Linux Value Navigator')
-                . $this->box($this->shorten($name, 90), .6, 1.8, 12, 1.6, 30, true, 'B84032')
-                . $this->box('Confirmed subscription-cost comparison', .6, 3.65, 12, .7, 24)
-                . $this->box($trace, .6, 4.8, 12, 1.5, 18),
+            $overview,
             $this->heading('Subscription-cost results')
                 . $this->table($rows, .6, 1.7, [2.1, 3.0, 3.0, 3.95], .85, 18)
                 . $this->box('Difference = RHEL minus Oracle Linux. A negative difference means Oracle Linux costs more.', .6, 5.55, 12, 1, 20),
@@ -83,10 +103,14 @@ final class ResultsPresentation
                 ], .6, 1.6, [9.05, 3.0], .75, 20)
                 . $this->box('The CSV workbook contains the full source inputs, reviewed lines and notes.', .6, 5.7, 12, .8, 20),
             $this->heading('Assumptions and next steps')
-                . $this->box("Three- and five-year totals repeat the annual costs.\nNo escalation, discounting or currency conversion.\nMigration, hardware, services and tax are outside this comparison.\nReview quantities, prices and scope before sharing results.\nUse demonstration data only.", .6, 1.65, 12, 3.75, 23)
-                . $this->box('Retain the CSV workbook with this presentation for traceability.', .6, 5.8, 12, .7, 20),
+                . $this->box("Three- and five-year totals repeat the annual costs.\nNo escalation, discounting or currency conversion.\nMigration, hardware, services and tax are outside this comparison.\nReview quantities, prices and scope before sharing results.\nUse demonstration data only.", .6, 1.65, 12, 2.7, 21)
+                . $this->box('Recommended next step', .6, 4.6, 12, .45, 21, true)
+                . $this->box($nextStep, .6, 5.1, 12, 1.35, 20),
         ];
         return $this->package($slides, ['notes' => $name . "\n\n" . $trace . "\n\n" . self::DISCLOSURE
+            . "\n\nCustomer: " . $context['customer_name'] . "\nObjective: " . $context['customer_objective']
+            . "\nComparison scope: " . $context['comparison_scope'] . "\nRecommended next step: " . $context['recommended_next_step']
+            . "\nLong context may be shortened on slides. These notes retain the full saved text."
             . "\nThe presentation summarizes saved results. Use the CSV export for complete evidence."]);
     }
 
@@ -112,6 +136,13 @@ final class ResultsPresentation
     {
         $characters = preg_split('//u', $text, -1, PREG_SPLIT_NO_EMPTY) ?: [];
         return count($characters) <= $limit ? $text : implode('', array_slice($characters, 0, $limit - 3)) . '...';
+    }
+
+    /** Keep manually entered newlines from pushing slide text outside its box. */
+    private function displayText(string $text, int $limit): string
+    {
+        $text = trim(preg_replace('/\s+/u', ' ', $text) ?? '');
+        return $text === '' ? 'Not provided' : $this->shorten($text, $limit);
     }
 
     /**
