@@ -28,11 +28,18 @@ render_header('Help and Quick Start');
     <li>Select <strong>Home</strong> in the header and enter a unique comparison name.</li>
     <li>Optionally expand <strong>Customer details</strong> and enter a demonstration customer name, objective, comparison scope, and recommended next step. These fields do not affect calculations or get sent to GenAI.</li>
     <li>Paste the complete supplied RHEL information into the RHEL input and the complete supplied Oracle Linux information into the Oracle Linux input.</li>
-    <li>Select <strong>Save original inputs</strong>.</li>
-    <li>Select <strong>Format with GenAI</strong> once and wait for both inputs to finish.</li>
+    <?php if (app_stage() >= 5): ?>
+    <li>Select <strong>Save and format with AI</strong> once. Your original inputs are saved first. Wait for the review page; formatting can take a minute or longer.</li>
+    <?php else: ?>
+    <li>Select <strong>Save original inputs</strong>. In Lab 4, select <strong>Format with GenAI</strong> once and wait for review.</li>
+    <?php endif; ?>
     <li>Compare every suggestion with its original input, correct the values, assign related lines the same positive group number, and give every line a final decision.</li>
-    <li>Select <strong>Save representative review</strong>, then select <strong>Calculate confirmed results</strong>.</li>
-    <li>Review the annual, three-year, and five-year results. On the Results page, select <strong>Download PowerPoint</strong> for four editable summary slides or <strong>Export CSV workbook</strong> for the complete supporting data.</li>
+    <?php if (app_stage() >= 5): ?>
+    <li>Select <strong>Save review and calculate</strong>. This saves your current edits, validates every decision and group, then opens results. Use <strong>Save review for later</strong> if you are not finished.</li>
+    <?php else: ?>
+    <li>In Lab 4, select <strong>Save representative review</strong>. Lab 5 enables calculation.</li>
+    <?php endif; ?>
+    <li>Review the annual, three-year, and five-year results. On the Results page, select <strong>Download PowerPoint</strong> for four editable summary slides or <strong>Download CSV</strong> for the complete supporting data.</li>
   </ol>
   <div class="notice info">MySQL HeatWave GenAI formats supplied text into suggestions. The representative owns every correction, alignment, confirmation, and exclusion. PHP performs the calculations.</div>
 </section>
@@ -52,19 +59,19 @@ render_header('Help and Quick Start');
     </table>
   </div>
   <p>Assign related RHEL and Oracle Linux lines the same positive group number. A group records the representative's chosen alignment and does not claim product equivalence.</p>
-  <p>If GenAI misses a supplied item or formatting is unavailable, use <strong>Manual fallback</strong> to add the line to the correct side. Complete and review it using the same rules.</p>
+  <p>If GenAI misses a supplied item or formatting is unavailable, save your current edits, then expand <strong>Manual fallback</strong> to add the line to the correct side. Complete and review it using the same rules.</p>
 </section>
 
 <section id="actions" class="card">
   <h2>Saved comparison actions</h2>
-  <p><strong>Home</strong> always opens the page where you create a comparison or open a saved one. <strong>Back to comparison details</strong> opens the current comparison's status, source inputs, customer details, and actions.</p>
+  <p><strong>Home</strong> always opens the page where you create a comparison or open a saved one. <strong>Open</strong> goes directly to results for calculated comparisons and to review when lines are available. An unformatted draft opens comparison details. <strong>Back to comparison details</strong> opens the current comparison. Expand <strong>Saved inputs, customer details, and status</strong> for supporting information or <strong>More actions</strong> to duplicate, revise, or delete. Formatting again is under <strong>Replace AI suggestions</strong> and replaces reviewed lines.</p>
   <div class="table-scroll">
     <table>
       <thead><tr><th>Action</th><th>What it does</th></tr></thead>
       <tbody>
-        <tr><td>Reopen</td><td>Returns to saved original inputs, reviewed lines, decisions, and results.</td></tr>
+        <tr><td>Reopen</td><td>Resumes results or review without changing saved data.</td></tr>
         <tr><td>Edit customer details</td><td>Updates optional presentation context without clearing reviewed lines or calculated results. Available on the Comparison and Results pages. Download new exports after saving; previously downloaded files do not change.</td></tr>
-        <tr><td>Export CSV workbook</td><td>Downloads the complete source, review, alignment, rule, and result information.</td></tr>
+        <tr><td>Download CSV</td><td>Downloads the complete source, review, alignment, rule, and result information.</td></tr>
         <tr><td>Download PowerPoint</td><td>Downloads four editable slides with customer context, saved totals, review counts, assumptions, and the recommended next step. Long context is shortened on slides with full text retained in speaker notes and CSV. Recalculate after changing SKU inputs or review decisions, but not after editing customer details.</td></tr>
         <tr><td>Duplicate comparison</td><td>Copies customer details, inputs and reviewed lines without copying the result snapshot. Review and calculate the copy again.</td></tr>
         <tr><td>Revise original inputs</td><td>Updates the source text and clears derived lines and results. The workflow must be repeated.</td></tr>
@@ -78,8 +85,8 @@ render_header('Help and Quick Start');
   <h2>Troubleshooting</h2>
   <ul>
     <li>If formatting takes several seconds, continue waiting. Do not refresh the page or select the button again.</li>
-    <li>If formatting fails for either side, use manual fallback and only enter information present in the original input.</li>
-    <li>If calculation is blocked, resolve every Needs review or Unresolved line and confirm that every included group contains both sides.</li>
+    <li>If formatting fails for either side, your original inputs remain saved. Do not create the comparison again. Expand Manual fallback and only enter information present in the original input.</li>
+    <li>If calculation is blocked after a valid save, your review remains saved. Resolve every Needs review or Unresolved line and confirm that every included group contains both sides, then select Save review and calculate again.</li>
     <li>If a form reports an error, correct the named field or review line. Creation, source-revision, and review forms restore your submitted entries after a failed save. Save again before leaving the page. Restored entries are not yet saved to the comparison.</li>
     <li>If deletion is blocked, type the complete comparison name exactly, including capitalization and spaces.</li>
     <li>If the application cannot connect to the database, contact the workshop administrator. Do not place credentials in a support message.</li>

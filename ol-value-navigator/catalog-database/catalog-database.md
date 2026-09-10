@@ -49,14 +49,14 @@ This lab assumes you have:
     <copy>cd ~
     curl --fail --location \
       --output ol-value-navigator-application.zip \
-      https://objectstorage.us-ashburn-1.oraclecloud.com/p/SZnGpuJxK1_eQvn3t2z-eFt582iLfhfGGSnTspGJJFgXNyMXkmLxD9WIgpVjnfI_/n/idhwewbjlvpy/b/ol-value-navigator/o/ol-value-navigator-application.zip</copy>
+      https://objectstorage.us-ashburn-1.oraclecloud.com/p/ZnCMS-_6lV8x3HOM_x_MJH6fFt_aHL6BKYBRxB1rbX_zEZ1olW3yvKpcv2Jz_tD5/n/idhwewbjlvpy/b/ol-value-navigator/o/ol-value-navigator-application.zip</copy>
     ```
 
 4. Verify the downloaded package checksum.
 
     ```bash
     <copy>cd ~
-    echo '4d5b48e702363c4725e311052044df2c3bf9771ffaf03c329eaab51cac5c6440  ol-value-navigator-application.zip' | sha256sum --check</copy>
+    echo '44d7a63ef32757c255dd4febd1ebc5c041e316eb2ed7c84539adf9f63a64f286  ol-value-navigator-application.zip' | sha256sum --check</copy>
     ```
 
     Confirm that the command returns `ol-value-navigator-application.zip: OK`.

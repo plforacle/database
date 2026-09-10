@@ -55,19 +55,20 @@ This lab assumes you have:
     lib/repository.php                Provides shared prepared queries and workflow-event writes
     lib/context.php                   Validates and renders optional customer context, separate from calculations
     lib/forms.php                     Restores editable entries after failed saves using the current session
+    lib/workflow.php                  Shares formatting, result persistence, and stage-aware landing routes
     lib/presentation.php              Formats saved results and customer context into four editable slides
     lib/genai.php                     Builds prompts, calls ML_GENERATE, validates JSON, and stores suggestions
     lib/money.php                     Validates reviewed lines and calculates fixed-point period totals
     lib/deletion.php                  Confirms names and performs audited cascading deletion
     public/index.php                  Shows the creation form and recent saved comparisons
-    public/create.php                 Saves a comparison and both original inputs in one transaction
+    public/create.php                 Saves both inputs; stage 5 can continue directly to AI formatting
     public/comparison.php             Reopens one workbook and displays its available actions
     public/context.php                Edits customer details without clearing reviewed lines or results
     public/format.php                 Formats both inputs independently with GenAI
     public/review.php                 Displays source, suggestions, editable values, groups, and decisions
-    public/save-review.php            Validates ownership and saves all representative decisions
+    public/save-review.php            Saves validated decisions; stage 5 can continue directly to calculation
     public/add-line.php               Adds a manual fallback line and invalidates an old result
-    public/calculate.php              Applies review rules and saves a deterministic result snapshot
+    public/calculate.php              Retains a POST endpoint for calculating already saved review decisions
     public/results.php                Displays period totals and traceable reviewed lines
     public/revise.php                 Replaces source inputs and clears data derived from the old text
     public/duplicate.php              Copies inputs and reviewed lines without copying the result
@@ -79,6 +80,7 @@ This lab assumes you have:
     tests/unit.php                    Tests money, review, GenAI-contract, and deletion rules without a database
     tests/context.php                 Tests optional context validation and escaped form/display output
     tests/forms.php                   Tests one-use form recovery without database access
+    tests/workflow.php                Tests combined workflow helpers offline with an in-memory test double
     tests/presentation.php            Tests editable PowerPoint content, notes and package compatibility
     tests/check-context-schema.php    Stops an existing deployment before copying files if columns are missing
     tests/check-database.php          Tests the deployed private connection, active rule, and audit table

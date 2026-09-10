@@ -19,13 +19,16 @@ render_header('Comparison: ' . $comparison['name']);
 <div class="actions">
   <a class="button secondary" href="<?= h(app_url('/index.php')) ?>">Home</a>
   <?php if (app_stage() >= 4): ?>
-    <a class="button" href="<?= h(app_url('/review.php?id=' . $id)) ?>">Review lines</a>
+    <a class="button <?= $comparison['status'] === 'CALCULATED' || array_sum($counts) === 0 ? 'secondary' : '' ?>" href="<?= h(app_url('/review.php?id=' . $id)) ?>">Review lines</a>
   <?php endif; ?>
   <?php if (app_stage() >= 5 && $comparison['status'] === 'CALCULATED'): ?>
     <a class="button" href="<?= h(app_url('/results.php?id=' . $id)) ?>">View results</a>
   <?php endif; ?>
 </div>
 
+<?php if (app_stage() >= 5): ?>
+<details class="card"><summary>Saved inputs, customer details, and status</summary>
+<?php endif; ?>
 <section class="card">
   <h2>Workbook status</h2>
   <dl class="summary">
@@ -46,18 +49,25 @@ render_header('Comparison: ' . $comparison['name']);
   <?php endforeach; ?>
 </section>
 
+<?php if (app_stage() >= 5): ?></details><?php endif; ?>
+
 <?php if (app_stage() === 3): ?>
   <div class="notice info">The original inputs are saved. Lab 4 enables MySQL HeatWave GenAI formatting and representative review.</div>
 <?php else: ?>
+  <?php if (app_stage() >= 5 && array_sum($counts) > 0): ?>
+  <details class="card"><summary>Replace AI suggestions</summary>
+  <?php endif; ?>
   <form method="post" action="<?= h(app_url('/format.php')) ?>" class="card">
     <?= csrf_field() ?><input type="hidden" name="id" value="<?= $id ?>">
     <h2><?= array_sum($counts) === 0 ? 'Format both inputs' : 'Format both inputs again' ?></h2>
     <p>MySQL HeatWave GenAI will create suggestions. You must review every line before calculation. Formatting again replaces existing reviewed lines and clears the saved result.</p>
     <button type="submit"><?= array_sum($counts) === 0 ? 'Format with GenAI' : 'Replace lines with new suggestions' ?></button>
   </form>
+  <?php if (app_stage() >= 5 && array_sum($counts) > 0): ?></details><?php endif; ?>
 <?php endif; ?>
 
 <?php if (app_stage() >= 5): ?>
+  <details class="card"><summary>More actions</summary>
   <section class="card">
     <h2>Workbook actions</h2>
     <div class="actions">
@@ -68,7 +78,7 @@ render_header('Comparison: ' . $comparison['name']);
       </form>
       <form method="post" action="<?= h(app_url('/export.php')) ?>">
         <?= csrf_field() ?><input type="hidden" name="id" value="<?= $id ?>">
-        <button class="secondary" type="submit">Export CSV workbook</button>
+        <button class="secondary" type="submit">Download CSV</button>
       </form>
     </div>
   </section>
@@ -83,5 +93,6 @@ render_header('Comparison: ' . $comparison['name']);
       <button class="danger" type="submit">Delete comparison and associated data</button>
     </form>
   </section>
+  </details>
 <?php endif; ?>
 <?php render_footer(); ?>

@@ -14,30 +14,10 @@ require_post();
 verify_csrf();
 $id = post_id();
 find_comparison($id);
-$inputs = comparison_inputs($id);
-
-// Two remote model calls can take longer than a normal interactive PHP request.
-set_time_limit(180);
-// Reformatting changes the workbook inputs to calculation, invalidating old results.
-db()->prepare('DELETE FROM comparison_result WHERE comparison_id = ?')->execute([$id]);
-$messages = [];
-foreach (['RHEL', 'ORACLE_LINUX'] as $side) {
-    if (!isset($inputs[$side])) {
-        $messages[] = "{$side}: original input is missing.";
-        continue;
-    }
-    try {
-        $count = format_input_with_genai($inputs[$side]);
-        $messages[] = "{$side}: {$count} suggestion(s) created.";
-    } catch (RuntimeException $exception) {
-        $messages[] = "{$side}: {$exception->getMessage()}";
-    }
+try {
+    flash('info', implode(' ', format_comparison_inputs($id)));
+} catch (Throwable $exception) {
+    error_log('OLVN formatting failed: ' . get_class($exception));
+    flash('error', 'Formatting could not finish. Your original inputs are saved. Review the available lines or use Manual fallback.');
 }
-
-// A partial success is still actionable because manual entry can replace a failed side.
-$counts = line_counts($id);
-if (array_sum($counts) > 0) {
-    db()->prepare("UPDATE comparison SET status = 'NEEDS_REVIEW' WHERE id = ?")->execute([$id]);
-}
-flash('info', implode(' ', $messages));
 redirect('/review.php?id=' . $id);

@@ -39,8 +39,6 @@ try {
     record_event($comparisonId, 'COMPARISON_CREATED', 'REPRESENTATIVE', 'COMPLETED');
     db()->commit();
 
-    flash('success', 'The complete original inputs were saved.');
-    redirect('/comparison.php?id=' . $comparisonId);
 } catch (InvalidArgumentException $exception) {
     if (db()->inTransaction()) {
         db()->rollBack();
@@ -57,3 +55,17 @@ try {
     flash('error', 'The comparison could not be saved. Your entries are restored below. Ask the workshop administrator to check the database before retrying.');
     redirect('/index.php');
 }
+
+// Creation is committed before contacting GenAI. Keep its failure path separate:
+// a formatting error must never tell the user to create this comparison again.
+flash('success', 'The complete original inputs were saved.');
+if (app_stage() >= 5 && ($_POST['next'] ?? '') === 'format') {
+    try {
+        flash('info', implode(' ', format_comparison_inputs($comparisonId)));
+    } catch (Throwable $exception) {
+        error_log('OLVN initial formatting failed: ' . get_class($exception));
+        flash('error', 'Your comparison and original inputs are saved. Formatting could not finish. Review any available suggestions or use Manual fallback below. Do not create the comparison again.');
+    }
+    redirect('/review.php?id=' . $comparisonId);
+}
+redirect('/comparison.php?id=' . $comparisonId);

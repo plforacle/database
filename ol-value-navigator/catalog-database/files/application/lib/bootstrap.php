@@ -65,6 +65,7 @@ require_once __DIR__ . '/forms.php';
 require_once __DIR__ . '/money.php';
 require_once __DIR__ . '/genai.php';
 require_once __DIR__ . '/deletion.php';
+require_once __DIR__ . '/workflow.php';
 
 /**
  * Read one private configuration value without exposing the configuration array.

@@ -24,6 +24,12 @@ This update adds Home navigation, groups exports and customer editing on Results
 
 The four-slide export now uses red table headers, alternating shaded rows, right-aligned amounts, and sign-aware difference highlighting. The final slide places its assumptions table beside the saved recommended next step. This update changes presentation styling only, with no schema, calculation, CSV, or infrastructure changes. Upload the rebuilt ZIP, complete **Lab 2 Task 1**, then **Lab 5 Task 2 steps 2 through 5**. Verify the new download with **Lab 5 Task 6 steps 7 through 11**. Existing calculated comparisons do not need to be recalculated; download a new PowerPoint file to see the updated design.
 
+## Simplified workflow update for an existing Version 1 deployment
+
+The complete stage 5 application now uses **Save and format with AI** and **Save review and calculate**. **Save review for later** preserves unfinished work. Home opens calculated comparisons directly at Results and comparisons with existing lines at Review. Supporting data and maintenance actions remain available in expandable sections. Labs 3 and 4 retain separate learning steps.
+
+No schema migration, calculation-rule change, or OCI infrastructure change is required for this update. Upload the rebuilt ZIP, complete **Lab 2 Task 1**, then **Lab 5 Task 2 steps 2 through 5**. Complete **Lab 5 Tasks 10 and 11** and **Lab 6 Task 1**. Existing calculated comparisons do not need recalculation; use the new demonstration in Task 11 to verify the combined actions.
+
 ## Production publication checklist
 
 - [x] Complete successful end-to-end testing of Labs 1 through 6.

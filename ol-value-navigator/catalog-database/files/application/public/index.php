@@ -45,7 +45,12 @@ render_header('Home');
         <small>Paste the complete supplied Oracle Linux text, including SKUs, descriptions, quantities, annual prices, and notes.</small>
       </div>
     </div>
-    <button type="submit">Save original inputs</button>
+    <?php if (app_stage() >= 5): ?>
+      <p>Step 1 of 3: enter inputs. Next, review the AI suggestions, then view your results. Formatting can take a minute or longer. Select once and wait.</p>
+      <button type="submit" name="next" value="format">Save and format with AI</button>
+    <?php else: ?>
+      <button type="submit">Save original inputs</button>
+    <?php endif; ?>
   </form>
 </section>
 
@@ -63,7 +68,7 @@ render_header('Home');
           <td><span class="status"><?= h($comparison['status']) ?></span></td>
           <td><?= (int) $comparison['line_count'] ?></td>
           <td><?= h($comparison['updated_at']) ?></td>
-          <td><a class="button secondary" href="<?= h(app_url('/comparison.php?id=' . (int) $comparison['id'])) ?>">Open</a></td>
+          <td><a class="button secondary" href="<?= h(app_url(comparison_landing_path($comparison, app_stage()))) ?>">Open</a></td>
         </tr>
       <?php endforeach; ?>
       </tbody>

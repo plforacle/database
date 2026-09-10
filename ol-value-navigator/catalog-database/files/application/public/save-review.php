@@ -16,6 +16,9 @@ require_post();
 verify_csrf();
 $id = post_id();
 find_comparison($id);
+$calculateAfterSave = ($_POST['next'] ?? '') === 'calculate';
+// A crafted Lab 4 POST must not bypass the calculation stage gate.
+if ($calculateAfterSave) { require_stage(5); }
 $submittedLines = $_POST['lines'] ?? null;
 if (!is_array($submittedLines) || $submittedLines === []) {
     fail_page('Review not saved', 'No review lines were submitted.');
@@ -112,8 +115,6 @@ try {
     // The event outcome records a successful save; details retain the resulting counts.
     record_event($id, 'REPRESENTATIVE_REVIEW_SAVED', 'REPRESENTATIVE', 'CONFIRMED', $counts);
     db()->commit();
-    flash('success', 'Representative decisions were saved.');
-    redirect('/review.php?id=' . $id);
 } catch (InvalidArgumentException $exception) {
     if (db()->inTransaction()) {
         db()->rollBack();
@@ -130,3 +131,21 @@ try {
     flash('error', 'The review could not be saved. Nothing was saved. Your entries are restored below.');
     redirect('/review.php?id=' . $id);
 }
+
+// Review persistence and calculation have separate outcomes. On a calculation
+// failure the review is already saved, so never restore it as an unsaved draft.
+if ($calculateAfterSave) {
+    try {
+        save_calculated_results($id);
+        flash('success', 'Annual, three-year, and five-year results were calculated and saved.');
+        redirect('/results.php?id=' . $id);
+    } catch (DomainException $exception) {
+        flash('warning', 'Your review was saved. ' . $exception->getMessage());
+    } catch (Throwable $exception) {
+        error_log('OLVN calculation after review failed: ' . get_class($exception));
+        flash('error', 'Your review was saved, but results could not be calculated or saved. Try Save review and calculate again.');
+    }
+} else {
+    flash('success', 'Representative decisions were saved.');
+}
+redirect('/review.php?id=' . $id);

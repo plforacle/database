@@ -36,6 +36,7 @@ install -o root -g apache -m 0640 "$source_dir/lib/bootstrap.php" "$private_dir/
 install -o root -g apache -m 0640 "$source_dir/lib/repository.php" "$private_dir/lib/repository.php"
 install -o root -g apache -m 0640 "$source_dir/lib/context.php" "$private_dir/lib/context.php"
 install -o root -g apache -m 0640 "$source_dir/lib/forms.php" "$private_dir/lib/forms.php"
+install -o root -g apache -m 0640 "$source_dir/lib/workflow.php" "$private_dir/lib/workflow.php"
 install -o root -g apache -m 0640 "$source_dir/lib/genai.php" "$private_dir/lib/genai.php"
 install -o root -g apache -m 0640 "$source_dir/lib/money.php" "$private_dir/lib/money.php"
 install -o root -g apache -m 0640 "$source_dir/lib/deletion.php" "$private_dir/lib/deletion.php"

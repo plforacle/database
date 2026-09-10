@@ -35,17 +35,14 @@ render_header('Review and align: ' . $comparison['name']);
 ?>
 <div class="actions">
   <a class="button secondary" href="<?= h(app_url('/comparison.php?id=' . $id)) ?>">Back to comparison details</a>
-  <?php if (app_stage() >= 5 && $draft === []): ?>
-    <form method="post" action="<?= h(app_url('/calculate.php')) ?>">
-      <?= csrf_field() ?><input type="hidden" name="id" value="<?= $id ?>">
-      <button type="submit">Calculate confirmed results</button>
-    </form>
-  <?php endif; ?>
 </div>
 
+<?php if (app_stage() >= 5): ?>
+<p>Step 2 of 3: review every line, then save your review and calculate to open results. No line is confirmed automatically.</p>
+<?php endif; ?>
 <div class="notice info">AI values are suggestions. Correct them, assign matching RHEL and Oracle Linux lines to the same positive group number, then confirm or exclude every line.</div>
 <?php if ($draft !== []): ?>
-<div class="notice warning">These restored entries are not saved. Correct the reported error and select <strong>Save representative review</strong> before calculating or leaving this page.</div>
+<div class="notice warning">These restored entries are not saved. Correct the reported error and save the review again before leaving this page. Calculation only proceeds after a valid save.</div>
 <?php endif; ?>
 
 <?php if ($lines === []): ?>
@@ -84,13 +81,21 @@ render_header('Review and align: ' . $comparison['name']);
       <?php endforeach; ?>
     </section>
   <?php endforeach; ?>
-  <button type="submit">Save representative review</button>
+  <div class="actions">
+    <?php if (app_stage() >= 5): ?>
+      <button type="submit" name="next" value="calculate">Save review and calculate</button>
+      <button type="submit" class="secondary" name="next" value="save">Save review for later</button>
+    <?php else: ?>
+      <button type="submit">Save representative review</button>
+    <?php endif; ?>
+  </div>
 </form>
 <?php endif; ?>
 
-<section class="card">
-  <h2>Manual fallback</h2>
+<details class="card" <?= app_stage() < 5 || $lines === [] ? 'open' : '' ?>>
+  <summary>Manual fallback</summary>
   <p>Add a blank line when GenAI is unavailable or when a supplied item was not extracted.</p>
+  <p>Save any current edits before adding a line. Adding a line reloads this page.</p>
   <div class="actions">
     <?php foreach (['RHEL' => 'Add RHEL line', 'ORACLE_LINUX' => 'Add Oracle Linux line'] as $side => $label): ?>
       <form method="post" action="<?= h(app_url('/add-line.php')) ?>">
@@ -99,5 +104,5 @@ render_header('Review and align: ' . $comparison['name']);
       </form>
     <?php endforeach; ?>
   </div>
-</section>
+</details>
 <?php render_footer(); ?>

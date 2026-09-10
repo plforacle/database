@@ -50,12 +50,13 @@ After the system is built, a representative uses the application through this fl
 
 ```text
 Enter both complete inputs
-  -> Save the original text
-  -> Format both inputs with MySQL HeatWave GenAI
+  -> Save and format with AI (original text saved before GenAI runs)
   -> Review, correct, align, and decide every line
-  -> Calculate annual, three-year, and five-year results with PHP
+  -> Save review and calculate annual, three-year, and five-year results with PHP
   -> Save, reopen, export, duplicate, revise, or delete the comparison
 ```
+
+The complete Lab 5 application combines saving and formatting into one action, and saving the review and calculating into another. Labs 3 and 4 keep these stages separate for learning. A representative can save an unfinished review for later.
 
 The repository includes the complete application source, an idempotent database schema, a staged deployment script, and executable PHP and installation tests. Labs 2 through 5 enable the application in stages so that each learner checkpoint corresponds to a working browser experience.
 

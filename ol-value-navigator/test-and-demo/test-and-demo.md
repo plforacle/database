@@ -36,7 +36,8 @@ This lab assumes you have:
     <copy>php ~/ol-value-navigator-application/tests/unit.php
     php ~/ol-value-navigator-application/tests/context.php
     php ~/ol-value-navigator-application/tests/presentation.php
-    php ~/ol-value-navigator-application/tests/forms.php</copy>
+    php ~/ol-value-navigator-application/tests/forms.php
+    php ~/ol-value-navigator-application/tests/workflow.php</copy>
     ```
 
     Confirm that all checks pass.
@@ -134,7 +135,7 @@ This lab assumes you have:
     http://PUBLIC_IP_ADDRESS/ol-value-navigator/
     ```
 
-2. Execute this test matrix with demonstration data.
+2. Complete **Lab 5 Task 11** for the click-by-click simplified workflow. For the matrix below, use **Save review and calculate** after changing review fields. Save unfinished work with **Save review for later**. Expand **Manual fallback** before adding a line. To duplicate, revise, or delete, select **Back to comparison details** from Review or Results, then expand **More actions**. Execute this test matrix with demonstration data.
 
     | Scenario | Action | Required result |
     | --- | --- | --- |
@@ -144,7 +145,7 @@ This lab assumes you have:
     | Unmatched group | Put a confirmed line in a group with no opposite-side line | Calculation identifies the group and withholds totals |
     | Invalid AI result or timeout | Use a formatting attempt that fails or wait for an unavailable service | A generic failure message appears and manual entry remains available |
     | Manual line | Add and complete a manual line | The same field, alignment, and decision validation applies |
-    | Reopen | Return to the list and open a saved comparison | Original inputs, reviewed values, decisions, and result snapshot persist |
+    | Reopen | Select Home and Open for a calculated or unfinished comparison | Results or Review opens directly without changing saved data or recalculating |
     | Duplicate | Duplicate a comparison | Inputs and reviewed lines copy, but calculation must be run again |
     | Revise | Revise the duplicate's original input | Derived lines and results clear while the event history remains |
     | Export | Export the calculated original | CSV contains source, review, alignment, rule, and result sections |
@@ -204,15 +205,15 @@ This lab assumes you have:
 
 3. Explain that the MySQL HeatWave DB System provides private database storage and that MySQL HeatWave GenAI formats each input with `sys.ML_GENERATE`.
 
-4. Format both inputs and show the original AI suggestions beside the complete source text.
+4. Select **Save and format with AI** once. Wait for Review to open, then expand **Show complete original input** to compare each source with its suggestions.
 
 5. Correct any suggestions, align paired lines, and explain that the representative, not AI, owns the confirmation and exclusion decisions.
 
 6. Demonstrate an unresolved line and show that PHP withholds all comparative totals.
 
-7. Resolve the line, calculate, and reconcile the annual, three-year, and five-year values.
+7. Resolve the line, select **Save review and calculate**, and reconcile the annual, three-year, and five-year values.
 
-8. Reopen and export the comparison to show workbook-style persistence.
+8. Select **Home** and reopen the calculated comparison directly at Results. Select **Download PowerPoint** and **Download CSV** to show workbook-style persistence.
 
 9. Duplicate the comparison, demonstrate that an incorrect deletion confirmation preserves it, and then enter its exact name to delete it.
 

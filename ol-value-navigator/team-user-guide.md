@@ -32,7 +32,7 @@ This application is not a quote, licensing determination, product-equivalence de
 
 ## Create a comparison
 
-Optional customer details can be entered when creating a comparison. To add or edit them later, select **Edit customer details** on its Comparison or Results page. Use a demonstration customer name, objective, comparison scope, and recommended next step. Saving these details preserves reviewed lines and calculated results. They appear in new CSV and PowerPoint downloads; previously downloaded files do not change.
+Optional customer details can be entered when creating a comparison. To add or edit them later, select **Edit customer details** on Results, or expand **Saved inputs, customer details, and status** on its Comparison page. Use a demonstration customer name, objective, comparison scope, and recommended next step. Saving these details preserves reviewed lines and calculated results. They appear in new CSV and PowerPoint downloads; previously downloaded files do not change.
 
 1. Open the application URL in a browser.
 
@@ -41,7 +41,7 @@ Optional customer details can be entered when creating a comparison. To add or e
     * **Comparison name**
     * **RHEL SKU information**
     * **Oracle Linux SKU information**
-    * **Save original inputs**
+    * **Save and format with AI**
     * **Saved comparisons**
 
 3. In **Comparison name**, enter your unique demonstration name.
@@ -62,20 +62,15 @@ Optional customer details can be entered when creating a comparison. To add or e
     Note: synthetic demonstration data only.
     ```
 
-6. Select **Save original inputs** once.
+6. Select **Save and format with AI** once. The original inputs are saved before formatting begins.
 
-7. Confirm that the application reports `The complete original inputs were saved.`
+7. Wait for **Review and align** to open automatically. Do not refresh or resubmit while formatting is running.
 
-8. Confirm that the comparison page shows:
-
-    * Your comparison name
-    * Status `DRAFT`
-    * Rule version `workshop-v1`
-    * Both complete original inputs
+8. Confirm your comparison name. Expand **Show complete original input** on each side to verify that both original inputs are preserved.
 
 ## Format the inputs with GenAI
 
-1. On the comparison page, select **Format with GenAI** once.
+1. New comparisons start formatting automatically after **Save and format with AI**. For an existing unformatted draft, select **Home**, open the draft, and select **Format with GenAI** on its comparison details page. Do not reformat already reviewed lines just to open them.
 
 2. Wait for the request to finish. Formatting both inputs can take several seconds. Do not refresh the page or select the button again while the request is running.
 
@@ -129,17 +124,17 @@ Optional customer details can be entered when creating a comparison. To add or e
 
 10. If GenAI created a line that is not a subscription item, select **Excluded** and enter a concise reason based on the original input.
 
-11. Select **Save representative review**.
+11. Select **Save review and calculate** to save your current edits and open Results. If you are not finished, select **Save review for later** to save without calculating.
 
-12. Confirm that the application reports `Representative decisions were saved.`
+12. On success, Results opens automatically. If calculation is blocked after a valid save, the message explains that your review was saved and identifies the remaining problem.
 
-13. Confirm that the comparison is ready for calculation. Calculation remains blocked while any line is marked **Needs review** or **Unresolved**, or when a confirmed group does not contain confirmed lines from both input sides.
+13. Correct the reported issue and select **Save review and calculate** again. Calculation remains blocked while any line is marked **Needs review** or **Unresolved**, or when a confirmed group does not contain confirmed lines from both input sides.
 
 ## Add a line manually
 
 Use manual fallback only when a supplied subscription item was not extracted or GenAI formatting was unavailable.
 
-1. On the **Review and align** page, scroll to **Manual fallback**.
+1. Save any current edits with **Save review for later**. On the **Review and align** page, expand **Manual fallback**.
 
 2. Select **Add RHEL line** or **Add Oracle Linux line** for the side containing the supplied item.
 
@@ -155,7 +150,7 @@ Use manual fallback only when a supplied subscription item was not extracted or 
 
 8. Enter a representative note when the decision is **Excluded** or **Unresolved**.
 
-9. Select **Save representative review**.
+9. Select **Save review for later** or, when every line is ready, **Save review and calculate**.
 
 ## Calculate and review the results
 
@@ -163,7 +158,7 @@ Use manual fallback only when a supplied subscription item was not extracted or 
 
 2. Confirm that each confirmed group contains at least one confirmed RHEL line and at least one confirmed Oracle Linux line.
 
-3. Select **Calculate confirmed results**.
+3. If Results is not already open, select **Save review and calculate** on Review.
 
 4. Confirm that the application reports `Annual, three-year, and five-year results were calculated and saved.`
 
@@ -177,7 +172,7 @@ Use manual fallback only when a supplied subscription item was not extracted or 
     | Three years | `$50,400.00` | `$33,600.00` | `$16,800.00` |
     | Five years | `$84,000.00` | `$56,000.00` | `$28,000.00` |
 
-7. Review the **Traceable reviewed lines** table. Confirm that it shows the side, group, SKU, description, quantity, annual unit price, decision, and representative note for every line.
+7. Expand **Traceable reviewed lines** and review its table. Confirm that it shows the side, group, SKU, description, quantity, annual unit price, decision, and representative note for every line.
 
 8. Confirm that the page identifies the calculation rule version and calculation timestamp.
 
@@ -195,13 +190,13 @@ Use manual fallback only when a supplied subscription item was not extracted or 
 
 5. Select **Open**.
 
-6. Select **Review lines** to inspect the reviewed data or **View results** when the comparison has a calculated result.
+6. A calculated comparison opens directly at Results. A comparison with existing lines opens at Review. An unformatted draft opens comparison details. Opening does not change saved data. Select **Back to comparison details** from Review or Results for supporting information and maintenance actions.
 
 ## Export the workbook
 
 1. Open the required comparison.
 
-2. Under **Workbook actions**, select **Export CSV workbook**.
+2. On Results, select **Download CSV**. For an uncalculated comparison, open its comparison details, expand **More actions**, and select **Download CSV**.
 
 3. Confirm that the browser downloads a CSV file whose name begins with `olvn-`.
 
@@ -217,25 +212,25 @@ Use manual fallback only when a supplied subscription item was not extracted or 
 
 ## Duplicate a comparison
 
-1. Open the comparison you want to copy.
+1. Open the comparison you want to copy. From Review or Results, select **Back to comparison details**.
 
-2. Under **Workbook actions**, select **Duplicate comparison** once.
+2. Expand **More actions**, then select **Duplicate comparison** once.
 
 3. Confirm that the application reports `The comparison was duplicated without a result snapshot. Review and calculate the copy.`
 
-4. Confirm that the duplicate name ends with `copy` and its status is `NEEDS_REVIEW`.
+4. Expand **Saved inputs, customer details, and status**. Confirm that the duplicate name ends with `copy` and its status is `NEEDS_REVIEW`.
 
-5. Select **Review lines**, verify every copied line and decision, and select **Save representative review**.
+5. Select **Review lines** and verify every copied line and decision.
 
-6. Select **Calculate confirmed results** to create a result snapshot for the duplicate.
+6. Select **Save review and calculate** to save the review and create a result snapshot for the duplicate.
 
 ## Revise original inputs
 
 Revising original inputs clears all formatted lines and the calculated result for that comparison. The workflow event history remains.
 
-1. Open the comparison you want to revise.
+1. Open the comparison you want to revise. From Review or Results, select **Back to comparison details**.
 
-2. Under **Workbook actions**, select **Revise original inputs**.
+2. Expand **More actions**, then select **Revise original inputs**.
 
 3. Review the warning before continuing.
 
@@ -251,9 +246,9 @@ Revising original inputs clears all formatted lines and the calculated result fo
 
 Deleting a comparison is permanent. The application deletes its original inputs, formatting runs, reviewed lines, calculated result, and workflow events. It retains only the comparison ID, name, and deletion time in a separate audit record.
 
-1. Open the comparison you intend to delete.
+1. Open the comparison you intend to delete. From Review or Results, select **Back to comparison details**.
 
-2. Scroll to **Delete comparison**.
+2. Expand **More actions**, then scroll to **Delete comparison**.
 
 3. Confirm that the displayed comparison name is the one you intend to delete.
 
@@ -263,7 +258,7 @@ Deleting a comparison is permanent. The application deletes its original inputs,
 
 6. If the name does not match, confirm that the application reports `The comparison name did not match. Nothing was deleted.`
 
-7. After entering the exact name, confirm that the application returns to **Home** and reports that the comparison and its associated data were deleted.
+7. After an incorrect name, expand **More actions** again to retry. After entering the exact name, confirm that the application returns to **Home** and reports that the comparison and its associated data were deleted.
 
 8. Confirm that the deleted comparison no longer appears under **Saved comparisons**.
 

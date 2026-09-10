@@ -35,12 +35,11 @@ http://129.80.238.67/ol-value-navigator/
    DEMO-OL-PREM | Demonstration Oracle Linux premier support | Quantity 2 | Annual unit price USD 1600.00
    ```
 
-4. Select **Save original inputs**.
+4. Select **Save and format with AI** once.
 
-## 3. Format with GenAI
+## 3. Wait for the AI suggestions
 
-1. Select **Format with GenAI** once.
-2. Wait for the **Review and align** page. Do not refresh while GenAI is working.
+The application saves both inputs and formats them automatically. Wait for **Review and align**. Formatting can take a minute or longer; do not refresh or resubmit. If formatting fails, your comparison is saved and manual entry remains available.
 
 ## 4. Confirm the four lines
 
@@ -53,11 +52,11 @@ Set the **Group** and **Decision** for each SKU:
 | `DEMO-RHEL-PREM` | `2` | **Confirmed** |
 | `DEMO-OL-PREM` | `2` | **Confirmed** |
 
-Select **Save representative review**.
+Select **Save review and calculate**. Your current edits are saved before calculation.
 
 ## 5. Calculate and review
 
-1. Select **Calculate confirmed results**.
+1. The Results page opens automatically. If review is incomplete, correct the reported issue and select **Save review and calculate** again.
 2. Confirm these results:
 
    | Period | RHEL | Oracle Linux | Difference |
@@ -70,6 +69,6 @@ Select **Save representative review**.
 
 1. Optionally select **Edit customer details** to add a demonstration customer name, objective, scope, and recommended next step. Save, then select **View results**. This does not change the calculated amounts.
 2. Select **Download PowerPoint** for four editable summary slides.
-3. On the same Results page, select **Export CSV workbook** for the complete supporting data.
+3. On the same Results page, select **Download CSV** for the complete supporting data.
 
 **Done.** You created, formatted, reviewed, calculated, and exported a complete demonstration comparison.
