@@ -244,9 +244,9 @@ If you are updating an already deployed Version 1 application, first complete **
 
 7. In the browser, open the original calculated comparison and select **View results**. On the Results page, select **Download PowerPoint**.
 
-8. Open the downloaded `olvn-comparison-ID.pptx` file in Microsoft PowerPoint. Confirm that it opens without a repair warning and contains four slides: comparison overview, subscription-cost results, representative review, and assumptions.
+8. Open the downloaded `olvn-comparison-ID.pptx` file in Microsoft PowerPoint. Confirm that it opens without a repair warning and contains four slides: comparison overview, subscription-cost results, representative review, and assumptions. Confirm the white background, red table headers, alternating shaded rows, and the use of your comparison and customer names. Slide 4 places the assumptions table beside the recommended next step.
 
-9. Compare the annual, three-year, and five-year amounts on slide 2 with the Results page. Confirm that all nine amounts match, including the difference signs. Select a table cell in PowerPoint and verify that its text is editable.
+9. Compare the annual, three-year, and five-year amounts on slide 2 with the Results page. Confirm that all nine amounts match, including the difference signs. Amounts are right aligned. Positive differences appear bold green, negative differences appear bold red, and zero remains neutral. The sign and explanation remain visible so color is not the only indicator. Select a table cell in PowerPoint and verify that its text is editable.
 
 10. Confirm that the presentation identifies the comparison, calculation rule, and calculation time. Keep the CSV workbook with the slides because the presentation summarizes the results rather than including every source line.
 

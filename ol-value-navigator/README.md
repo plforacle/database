@@ -20,6 +20,10 @@ The four optional fields are customer name, objective, comparison scope, and rec
 
 This update adds Home navigation, groups exports and customer editing on Results, and restores form entries after failed saves. Calculation rules and the database schema are unchanged. Upload the rebuilt ZIP, complete **Lab 2 Task 1**, then **Lab 5 Task 2 steps 2 through 5** if the customer-context upgrade is already installed. Verify **Lab 5 Tasks 9 and 10**, then run **Lab 6 Task 1**. Refresh the browser after deployment so it loads the updated stylesheet.
 
+## PowerPoint styling update for an existing Version 1 deployment
+
+The four-slide export now uses red table headers, alternating shaded rows, right-aligned amounts, and sign-aware difference highlighting. The final slide places its assumptions table beside the saved recommended next step. This update changes presentation styling only, with no schema, calculation, CSV, or infrastructure changes. Upload the rebuilt ZIP, complete **Lab 2 Task 1**, then **Lab 5 Task 2 steps 2 through 5**. Verify the new download with **Lab 5 Task 6 steps 7 through 11**. Existing calculated comparisons do not need to be recalculated; download a new PowerPoint file to see the updated design.
+
 ## Production publication checklist
 
 - [x] Complete successful end-to-end testing of Labs 1 through 6.

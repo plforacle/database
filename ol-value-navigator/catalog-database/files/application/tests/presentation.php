@@ -81,6 +81,23 @@ try {
         ppt_check(str_contains($costs, $amount), 'Saved amount preserved: ' . $amount);
     }
     ppt_check(str_contains($costs, '<a:tbl>'), 'Results remain an editable table.');
+    preg_match_all('/<a:tr\b[^>]*>(.*?)<\/a:tr>/s', $costs, $resultRows);
+    ppt_check(count($resultRows[1]) === 4, 'Header plus three periods, with no misleading grand total.');
+    ppt_check(str_contains($resultRows[1][0], 'val="C74634"'), 'Result headers use Oracle red.');
+    ppt_check(str_contains($resultRows[1][1], 'val="EED1CE"') && str_contains($resultRows[1][2], 'val="F8EEEC"'), 'Rows alternate light red shading.');
+    foreach (array_slice($resultRows[1], 1) as $rowNumber => $rowXml) {
+        preg_match_all('/<a:tc>(.*?)<\/a:tc>/s', $rowXml, $cells);
+        ppt_check(count($cells[1]) === 4, 'Each period retains its four columns.');
+        foreach ([1, 2, 3] as $column) {
+            ppt_check(str_contains($cells[1][$column], 'algn="r"'), 'Amounts are right aligned.');
+        }
+        ppt_check(str_contains($cells[1][3], 'val="006B3C"') && str_contains($cells[1][3], 'b="1"'), 'Positive saved differences are emphasized in dark green.');
+    }
+    $assumptions = $archive['ppt/slides/slide4.xml']->getContent();
+    ppt_check(str_contains($assumptions, '<a:tbl>') && str_contains($assumptions, 'Recommended next step'), 'Assumptions table and next step remain editable content.');
+    foreach ($xmlParts as $xml) {
+        ppt_check(!preg_match('/Capital Group|Broadcom|VMware|11,330,380|48,651,580/', $xml), 'No names, prices or claims imported from the design reference.');
+    }
     ppt_check(str_contains($archive['ppt/slides/slide1.xml']->getContent(), 'Demo &amp; &lt;review&gt;'), 'User text is escaped.');
     foreach ($xmlParts as $xml) { ppt_check(!str_contains($xml, 'TargetMode="External"'), 'No external relationships.'); }
     unset($archive);
@@ -148,6 +165,20 @@ try {
     ppt_check(str_contains($zip->getFromName('ppt/slides/slide1.xml'), '...'), 'Long slide narrative is visibly shortened.');
     ppt_check(ppt_zip_headers($denseBytes), 'Dense export preserves compatible ZIP headers.');
     $zip->close();
+    // All styles depend on saved value signs, including zero and negative zero.
+    $signedResult = array_replace($result, ['annual_difference' => '-5600.00', 'three_year_difference' => '0.00', 'five_year_difference' => '-0.00']);
+    $signedBytes = $presentation->export($contextComparison, $signedResult, $lines);
+    file_put_contents($contextPath, $signedBytes); $zip->open($contextPath);
+    $signedXml = $zip->getFromName('ppt/slides/slide2.xml');
+    preg_match_all('/<a:tr\b[^>]*>(.*?)<\/a:tr>/s', $signedXml, $signedRows);
+    foreach ([1 => ['-5,600.00', 'A4262C'], 2 => ['0.00', '312D2A'], 3 => ['-0.00', '312D2A']] as $rowIndex => [$amount, $color]) {
+        preg_match_all('/<a:tc>(.*?)<\/a:tc>/s', $signedRows[1][$rowIndex], $cells);
+        ppt_check(str_contains($cells[1][3], '>' . $amount . '</a:t>'), 'Preserve signed saved difference exactly.');
+        ppt_check(str_contains($cells[1][3], 'val="' . $color . '"'), 'Negative is red and zero remains neutral.');
+        ppt_check(!str_contains($cells[1][3], 'val="006B3C"'), 'Never present a negative or zero difference as positive.');
+    }
+    $zip->close();
+    if (isset($argv[4])) { file_put_contents($argv[4], $signedBytes); }
     if (isset($argv[2])) { file_put_contents($argv[2], $contextBytes); }
     if (isset($argv[3])) { file_put_contents($argv[3], $denseBytes); }
 } finally {

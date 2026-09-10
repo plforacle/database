@@ -14,6 +14,14 @@ final class ResultsPresentation
     private const A = 'http://schemas.openxmlformats.org/drawingml/2006/main';
     private const P = 'http://schemas.openxmlformats.org/presentationml/2006/main';
     private const R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+    // Presentation styling only. No customer names, vendor prices or assumptions
+    // are imported from the reference deck. Keep colors centralized for all slides.
+    private const RED = 'C74634';
+    private const INK = '312D2A';
+    private const ROW_DARK = 'EED1CE';
+    private const ROW_LIGHT = 'F8EEEC';
+    private const POSITIVE = '006B3C';
+    private const NEGATIVE = 'A4262C';
     private const DISCLOSURE = 'Demonstration only. Subscription costs, not a quote, licensing determination, equivalence assessment or full TCO.';
     private int $shapeId = 1;
 
@@ -30,7 +38,7 @@ final class ResultsPresentation
             || (string) ($comparison['id'] ?? '') !== (string) ($result['comparison_id'] ?? '')) {
             throw new DomainException('Calculate this comparison before downloading PowerPoint.');
         }
-        $rows = [['Period (USD)', 'RHEL', 'Oracle Linux', 'Difference']];
+        $rows = [['Period', 'RHEL (USD)', 'Oracle Linux (USD)', 'Difference (USD)']];
         foreach (['annual' => 'Annual', 'three_year' => 'Three years', 'five_year' => 'Five years'] as $period => $label) {
             $rows[] = [$label, $this->amount($result['rhel_' . $period . '_total'] ?? null),
                 $this->amount($result['oracle_linux_' . $period . '_total'] ?? null),
@@ -72,16 +80,16 @@ final class ResultsPresentation
             $context[$field] = $this->clean((string) ($comparison[$field] ?? ''));
         }
         $overview = $this->heading('Oracle Linux Value Navigator')
-            . $this->box($this->shorten($name, 90), .6, 1.8, 12, 1.6, 30, true, 'B84032')
+            . $this->box($this->displayText($name, 90), .6, 1.8, 12, 1.6, 30, true, self::RED)
             . $this->box('Confirmed subscription-cost comparison', .6, 3.65, 12, .7, 24)
             . $this->box($trace, .6, 4.8, 12, 1.5, 18);
         if ($context['customer_name'] !== '' || $context['customer_objective'] !== '' || $context['comparison_scope'] !== '') {
             $overview = $this->heading('Oracle Linux Value Navigator')
-                . $this->box($this->displayText($name, 55), .6, 1.35, 12, .95, 26, true, 'B84032')
+                . $this->box($this->displayText($name, 55), .6, 1.35, 12, .95, 26, true, self::RED)
                 . $this->box('Customer: ' . $this->displayText($context['customer_name'], 40), .6, 2.35, 12, .8, 20, true)
-                . $this->box('Objective', .6, 3.2, 12, .35, 18, true)
+                . $this->box('Objective', .6, 3.2, 12, .35, 18, true, self::RED)
                 . $this->box($this->displayText($context['customer_objective'], 130), .6, 3.6, 12, .95, 18)
-                . $this->box('Comparison scope', .6, 4.65, 12, .35, 18, true)
+                . $this->box('Comparison scope', .6, 4.65, 12, .35, 18, true, self::RED)
                 . $this->box($this->displayText($context['comparison_scope'], 130), .6, 5.05, 12, .95, 18)
                 . $this->box(str_replace("\n", ' / ', $trace), .6, 6.25, 12, .55, 11);
         }
@@ -91,8 +99,8 @@ final class ResultsPresentation
         $slides = [
             $overview,
             $this->heading('Subscription-cost results')
-                . $this->table($rows, .6, 1.7, [2.1, 3.0, 3.0, 3.95], .85, 18)
-                . $this->box('Difference = RHEL minus Oracle Linux. A negative difference means Oracle Linux costs more.', .6, 5.55, 12, 1, 20),
+                . $this->table($rows, .6, 1.7, [2.1, 3.0, 3.45, 3.5], .85, 18, [1, 2, 3], 3)
+                . $this->box('Difference = RHEL minus Oracle Linux. Positive values mean Oracle Linux costs less. Negative values mean Oracle Linux costs more.', .6, 5.5, 12, 1, 18),
             $this->heading('Representative review')
                 . $this->table([
                     ['Review measure', 'Count'],
@@ -100,12 +108,19 @@ final class ResultsPresentation
                     ['Confirmed Oracle Linux lines', (string) $counts['ORACLE_LINUX']],
                     ['Aligned comparison groups', (string) count($groups)],
                     ['Excluded lines (not in totals)', (string) $excluded],
-                ], .6, 1.6, [9.05, 3.0], .75, 20)
-                . $this->box('The CSV workbook contains the full source inputs, reviewed lines and notes.', .6, 5.7, 12, .8, 20),
+                ], .6, 1.6, [9.05, 3.0], .75, 20, [1])
+                . $this->box('The CSV workbook contains the full source inputs, reviewed lines and notes.', .6, 5.7, 12, .8, 18),
             $this->heading('Assumptions and next steps')
-                . $this->box("Three- and five-year totals repeat the annual costs.\nNo escalation, discounting or currency conversion.\nMigration, hardware, services and tax are outside this comparison.\nReview quantities, prices and scope before sharing results.\nUse demonstration data only.", .6, 1.65, 12, 2.7, 21)
-                . $this->box('Recommended next step', .6, 4.6, 12, .45, 21, true)
-                . $this->box($nextStep, .6, 5.1, 12, 1.35, 20),
+                . $this->table([
+                    ['Calculation basis', 'Applied rule'],
+                    ['Periods', 'Three- and five-year totals repeat annual costs.'],
+                    ['Adjustments', 'No escalation, discounting or currency conversion.'],
+                    ['Outside scope', 'Migration, hardware, services and tax.'],
+                    ['Review', 'Confirm quantities, prices and scope before sharing.'],
+                    ['Data', 'Use demonstration information only.'],
+                ], .6, 1.65, [2.25, 4.9], .78, 17)
+                . $this->box('Recommended next step', 8.15, 1.65, 4.5, .65, 20, true, self::RED)
+                . $this->box($nextStep, 8.15, 2.5, 4.5, 3.85, 19),
         ];
         return $this->package($slides, ['notes' => $name . "\n\n" . $trace . "\n\n" . self::DISCLOSURE
             . "\n\nCustomer: " . $context['customer_name'] . "\nObjective: " . $context['customer_objective']
@@ -206,7 +221,7 @@ final class ResultsPresentation
         return $this->box($title, .6, .5, 12.1, .85, 32, true);
     }
 
-    private function box(string $text, float $x, float $y, float $w, float $h, int $size, bool $bold = false, string $color = '282923', bool $notesBody = false): string
+    private function box(string $text, float $x, float $y, float $w, float $h, int $size, bool $bold = false, string $color = self::INK, bool $notesBody = false): string
     {
         $id = ++$this->shapeId;
         $paragraphs = $this->paragraphs($text, $size, $bold, $color);
@@ -215,19 +230,27 @@ final class ResultsPresentation
             . '<p:txBody><a:bodyPr wrap="square" lIns="0" rIns="0" tIns="0" bIns="0"/><a:lstStyle/>' . $paragraphs . '</p:txBody></p:sp>';
     }
 
-    private function paragraphs(string $text, int $size, bool $bold = false, string $color = '282923'): string
+    private function paragraphs(string $text, int $size, bool $bold = false, string $color = self::INK, bool $rightAligned = false): string
     {
         $xml = '';
         foreach (explode("\n", $text) as $line) {
-            $xml .= '<a:p><a:pPr/><a:r><a:rPr lang="en-US" sz="' . ($size * 100) . '" b="' . ($bold ? '1' : '0') . '"><a:solidFill><a:srgbClr val="' . $color . '"/></a:solidFill><a:latin typeface="Arial"/></a:rPr><a:t xml:space="preserve">' . $this->xml($line) . '</a:t></a:r><a:endParaRPr lang="en-US" sz="' . ($size * 100) . '"/></a:p>';
+            $xml .= '<a:p><a:pPr algn="' . ($rightAligned ? 'r' : 'l') . '"/><a:r><a:rPr lang="en-US" sz="' . ($size * 100) . '" b="' . ($bold ? '1' : '0') . '"><a:solidFill><a:srgbClr val="' . $color . '"/></a:solidFill><a:latin typeface="Arial"/></a:rPr><a:t xml:space="preserve">' . $this->xml($line) . '</a:t></a:r><a:endParaRPr lang="en-US" sz="' . ($size * 100) . '"/></a:p>';
         }
         return $xml;
     }
 
-    /** @param list<list<string>> $rows
+    /**
+     * Editable, banded tables following the supplied presentation's visual style.
+     * Numeric columns align on their right edge. The optional difference column
+     * uses the sign of the already formatted saved value, never a new calculation.
+     * Zero remains neutral; the explicit sign and explanation also convey meaning
+     * without relying on color. Period totals are not summed into a grand total.
+     *
+     * @param list<list<string>> $rows
      * @param list<float> $widths
+     * @param list<int> $numericColumns Zero-based column indices.
      */
-    private function table(array $rows, float $x, float $y, array $widths, float $rowHeight, int $size): string
+    private function table(array $rows, float $x, float $y, array $widths, float $rowHeight, int $size, array $numericColumns = [], ?int $differenceColumn = null): string
     {
         $id = ++$this->shapeId;
         $xml = '<p:graphicFrame><p:nvGraphicFramePr><p:cNvPr id="' . $id . '" name="Comparison table"/><p:cNvGraphicFramePr/><p:nvPr/></p:nvGraphicFramePr><p:xfrm><a:off x="' . $this->emu($x) . '" y="' . $this->emu($y) . '"/><a:ext cx="' . $this->emu(array_sum($widths)) . '" cy="' . $this->emu(count($rows) * $rowHeight) . '"/></p:xfrm><a:graphic><a:graphicData uri="' . 'http://schemas.openxmlformats.org/drawingml/2006/table"><a:tbl><a:tblPr firstRow="1" bandRow="0"/><a:tblGrid>';
@@ -237,8 +260,21 @@ final class ResultsPresentation
         $xml .= '</a:tblGrid>';
         foreach ($rows as $index => $row) {
             $xml .= '<a:tr h="' . $this->emu($rowHeight) . '">';
-            foreach ($row as $cell) {
-                $xml .= '<a:tc><a:txBody><a:bodyPr/><a:lstStyle/>' . $this->paragraphs($cell, $size, $index === 0, $index === 0 ? 'FFFFFF' : '282923') . '</a:txBody><a:tcPr marL="100000" marR="100000" marT="65000" marB="50000"><a:solidFill><a:srgbClr val="' . ($index === 0 ? '384239' : ($index % 2 === 0 ? 'EEEAE1' : 'F8F5EF')) . '"/></a:solidFill></a:tcPr></a:tc>';
+            foreach ($row as $column => $cell) {
+                $difference = $index > 0 && $column === $differenceColumn;
+                $color = $index === 0 ? 'FFFFFF' : self::INK;
+                if ($difference && preg_match('/[1-9]/', $cell)) {
+                    $color = str_starts_with($cell, '-') ? self::NEGATIVE : self::POSITIVE;
+                }
+                $fill = $index === 0 ? self::RED : ($index % 2 === 0 ? self::ROW_LIGHT : self::ROW_DARK);
+                $borders = '';
+                foreach (['L', 'R', 'T', 'B'] as $edge) {
+                    $borders .= '<a:ln' . $edge . ' w="12700"><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill><a:prstDash val="solid"/></a:ln' . $edge . '>';
+                }
+                $xml .= '<a:tc><a:txBody><a:bodyPr/><a:lstStyle/>'
+                    . $this->paragraphs($cell, $size, $index === 0 || $column === 0 || $difference, $color, in_array($column, $numericColumns, true))
+                    . '</a:txBody><a:tcPr marL="110000" marR="110000" marT="65000" marB="65000" anchor="ctr">'
+                    . $borders . '<a:solidFill><a:srgbClr val="' . $fill . '"/></a:solidFill></a:tcPr></a:tc>';
             }
             $xml .= '</a:tr>';
         }
@@ -267,7 +303,7 @@ final class ResultsPresentation
             $presentationRels[] = ['slide', 'slides/slide' . $number . '.xml'];
             $content .= $this->box(self::DISCLOSURE, .6, 7.05, 11.6, .32, 10);
             $content .= $this->box((string) $number, 12.4, 7.03, .35, .3, 11);
-            $parts['ppt/slides/slide' . $number . '.xml'] = '<p:sld xmlns:a="' . self::A . '" xmlns:r="' . self::R . '" xmlns:p="' . self::P . '"><p:cSld><p:bg><p:bgPr><a:solidFill><a:srgbClr val="F8F5EF"/></a:solidFill><a:effectLst/></p:bgPr></p:bg>' . $this->tree($content) . '</p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>';
+            $parts['ppt/slides/slide' . $number . '.xml'] = '<p:sld xmlns:a="' . self::A . '" xmlns:r="' . self::R . '" xmlns:p="' . self::P . '"><p:cSld><p:bg><p:bgPr><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill><a:effectLst/></p:bgPr></p:bg>' . $this->tree($content) . '</p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>';
             $parts['ppt/slides/_rels/slide' . $number . '.xml.rels'] = $this->rels([['slideLayout', '../slideLayouts/slideLayout1.xml'], ['notesSlide', '../notesSlides/notesSlide' . $number . '.xml']]);
             $notes = $data['notes'];
             $parts['ppt/notesSlides/notesSlide' . $number . '.xml'] = '<p:notes xmlns:a="' . self::A . '" xmlns:r="' . self::R . '" xmlns:p="' . self::P . '"><p:cSld>' . $this->tree($this->box($notes, .5, 1, 6, 8, 11, notesBody: true)) . '</p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:notes>';
@@ -288,7 +324,7 @@ final class ResultsPresentation
         // Sharing theme1 passed schema validation but triggered Office repair.
         $parts['ppt/notesMasters/_rels/notesMaster1.xml.rels'] = $this->rels([['theme', '../theme/theme2.xml']]);
         $colors = '';
-        foreach (['dk1' => '282923', 'lt1' => 'FFFFFF', 'dk2' => '384239', 'lt2' => 'F8F5EF', 'accent1' => 'B84032', 'accent2' => '384239', 'accent3' => '8B6A47', 'accent4' => '657C72', 'accent5' => 'BEA57A', 'accent6' => '6E6B63', 'hlink' => '0563C1', 'folHlink' => '954F72'] as $key => $color) {
+        foreach (['dk1' => self::INK, 'lt1' => 'FFFFFF', 'dk2' => self::RED, 'lt2' => self::ROW_LIGHT, 'accent1' => self::RED, 'accent2' => self::POSITIVE, 'accent3' => self::ROW_DARK, 'accent4' => self::NEGATIVE, 'accent5' => '6B6662', 'accent6' => 'D9D5D2', 'hlink' => '0563C1', 'folHlink' => '954F72'] as $key => $color) {
             $colors .= '<a:' . $key . '><a:srgbClr val="' . $color . '"/></a:' . $key . '>';
         }
         $font = '<a:latin typeface="Arial"/><a:ea typeface=""/><a:cs typeface=""/>';
