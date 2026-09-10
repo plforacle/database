@@ -47,13 +47,17 @@ function render_customer_context_fields(array $values = []): void
 }
 
 /** Show complete context as inert text, keeping blank fields explicit. */
-function render_customer_context(array $comparison): void
+function render_customer_context(array $comparison, bool $showEdit = true): void
 {
     echo '<section class="card"><h2>Customer context</h2><dl class="customer-context">';
     foreach (customer_context_fields() as $key => [$label]) {
         $value = (string) ($comparison[$key] ?? '');
         echo '<dt>' . h($label) . '</dt><dd>' . nl2br(h($value === '' ? 'Not provided' : $value)) . '</dd>';
     }
-    echo '</dl><a class="button secondary" href="' . h(app_url('/context.php?id=' . (int) $comparison['id']))
-        . '">Edit customer details</a></section>';
+    echo '</dl>';
+    if ($showEdit) {
+        echo '<a class="button secondary" href="' . h(app_url('/context.php?id=' . (int) $comparison['id']))
+            . '">Edit customer details</a>';
+    }
+    echo '</section>';
 }

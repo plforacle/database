@@ -18,29 +18,30 @@ $comparisons = db()->query(
      FROM comparison c ORDER BY c.updated_at DESC LIMIT 50'
 )->fetchAll();
 
-render_header('Comparisons');
+$draft = take_form('create');
+render_header('Home');
 ?>
 <section class="card">
   <h2>Create a comparison</h2>
   <form method="post" action="<?= h(app_url('/create.php')) ?>">
     <?= csrf_field() ?>
     <label for="name">Comparison name</label>
-    <input id="name" name="name" maxlength="255" required placeholder="Demonstration comparison">
-    <details class="context-details">
+    <input id="name" name="name" maxlength="255" required placeholder="Demonstration comparison" value="<?= h(form_value($draft, 'name')) ?>">
+    <details class="context-details" <?= $draft !== [] ? 'open' : '' ?>>
       <summary>Customer details (optional)</summary>
       <p>Use demonstration information only. These details appear in exports and do not affect calculations.</p>
-      <?php render_customer_context_fields(); ?>
+      <?php render_customer_context_fields($draft); ?>
     </details>
 
     <div class="two-column">
       <div>
         <label for="rhel_text">RHEL SKU information</label>
-        <textarea id="rhel_text" name="rhel_text" maxlength="<?= (int) app_config('max_input_characters', 12000) ?>" required></textarea>
+        <textarea id="rhel_text" name="rhel_text" maxlength="<?= (int) app_config('max_input_characters', 12000) ?>" required><?= h(form_value($draft, 'rhel_text')) ?></textarea>
         <small>Paste the complete supplied RHEL text, including SKUs, descriptions, quantities, annual prices, and notes.</small>
       </div>
       <div>
         <label for="oracle_text">Oracle Linux SKU information</label>
-        <textarea id="oracle_text" name="oracle_text" maxlength="<?= (int) app_config('max_input_characters', 12000) ?>" required></textarea>
+        <textarea id="oracle_text" name="oracle_text" maxlength="<?= (int) app_config('max_input_characters', 12000) ?>" required><?= h(form_value($draft, 'oracle_text')) ?></textarea>
         <small>Paste the complete supplied Oracle Linux text, including SKUs, descriptions, quantities, annual prices, and notes.</small>
       </div>
     </div>

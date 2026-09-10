@@ -154,5 +154,10 @@ try {
     if (isset($zip)) { unset($zip); }
     unlink($contextPath); rmdir($contextDirectory);
 }
+// Display shortening avoids chopped words while retaining a hard layout bound.
+$shorten = new ReflectionMethod(ResultsPresentation::class, 'shorten');
+ppt_check($shorten->invoke($presentation, str_repeat('Alpha beta ', 8), 21) === 'Alpha beta Alpha...', 'Shorten at a nearby word boundary.');
+ppt_check($shorten->invoke($presentation, str_repeat('W', 100), 40) === str_repeat('W', 37) . '...', 'Unbroken strings keep a safe display limit.');
+ppt_check($shorten->invoke($presentation, 'Short name', 40) === 'Short name', 'Short text remains unchanged.');
 echo "PowerPoint tests passed: {$checks} checks.\n";
 if (!class_exists('DOMDocument')) { echo "XML parser checks skipped: optional PHP DOM extension is not installed.\n"; }

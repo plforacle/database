@@ -61,6 +61,7 @@ try {
 
 require_once __DIR__ . '/repository.php';
 require_once __DIR__ . '/context.php';
+require_once __DIR__ . '/forms.php';
 require_once __DIR__ . '/money.php';
 require_once __DIR__ . '/genai.php';
 require_once __DIR__ . '/deletion.php';
@@ -275,7 +276,7 @@ function render_header(string $title): void
     echo '<title>' . h($title) . ' | Oracle Linux Value Navigator</title>';
     echo '<link rel="stylesheet" href="' . $css . '"></head><body>';
     echo '<header><div class="wrap"><a class="brand" href="' . $home . '">Oracle Linux Value Navigator</a>';
-    echo '<nav class="header-actions" aria-label="Application navigation"><a class="header-link" href="' . $help . '">Help</a>';
+    echo '<nav class="header-actions" aria-label="Application navigation"><a class="header-link" href="' . $home . '">Home</a><a class="header-link" href="' . $help . '">Help</a>';
     echo '<span class="badge">Workshop prototype</span></nav></div></header><main class="wrap">';
     echo '<div class="notice warning">Use demonstration information only. This prototype is not a quote, licensing determination, or complete TCO analysis.</div>';
     foreach ($flashes as $item) {
@@ -307,7 +308,7 @@ function fail_page(string $title, string $message, int $status = 400): void
     http_response_code($status);
     render_header($title);
     echo '<div class="notice error">' . h($message) . '</div>';
-    echo '<p><a class="button secondary" href="' . h(app_url('/index.php')) . '">Return to comparisons</a></p>';
+    echo '<p><a class="button secondary" href="' . h(app_url('/index.php')) . '">Home</a></p>';
     render_footer();
     exit;
 }

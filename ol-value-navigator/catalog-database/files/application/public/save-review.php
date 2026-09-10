@@ -24,7 +24,7 @@ if (!is_array($submittedLines) || $submittedLines === []) {
 $allowedStatuses = ['AI_SUGGESTED', 'CONFIRMED', 'EXCLUDED', 'UNRESOLVED'];
 // This ownership query is the server-side defense against submitted line-ID tampering.
 $owned = db()->prepare(
-    'SELECT l.id FROM comparison_line l JOIN comparison_input i ON i.id = l.comparison_input_id
+    'SELECT l.id, l.line_number, i.input_side FROM comparison_line l JOIN comparison_input i ON i.id = l.comparison_input_id
      WHERE l.id = ? AND i.comparison_id = ?'
 );
 $update = db()->prepare(
@@ -32,16 +32,25 @@ $update = db()->prepare(
      comparison_group = ?, review_status = ?, representative_note = ? WHERE id = ?'
 );
 
+$lineLabel = '';
 try {
     // Do not retain a partially saved review if any submitted line is invalid.
     db()->beginTransaction();
     foreach ($submittedLines as $lineId => $values) {
+        $lineLabel = '';
         if (!is_array($values) || !ctype_digit((string) $lineId)) {
             throw new InvalidArgumentException('A submitted line identifier was invalid.');
         }
         $owned->execute([(int) $lineId, $id]);
-        if (!$owned->fetchColumn()) {
+        $ownedLine = $owned->fetch();
+        if (!$ownedLine) {
             throw new InvalidArgumentException('A submitted line does not belong to this comparison.');
+        }
+        $lineLabel = ($ownedLine['input_side'] === 'RHEL' ? 'RHEL' : 'Oracle Linux') . ' line ' . $ownedLine['line_number'] . ': ';
+        foreach (['sku', 'description', 'quantity', 'price', 'group', 'status', 'note'] as $field) {
+            if (isset($values[$field]) && !is_string($values[$field])) {
+                throw new InvalidArgumentException('A submitted field has an invalid format.');
+            }
         }
         $sku = normalize_text((string) ($values['sku'] ?? ''));
         $description = normalize_text((string) ($values['description'] ?? ''));
@@ -51,8 +60,10 @@ try {
         $status = (string) ($values['status'] ?? '');
         $note = normalize_text((string) ($values['note'] ?? ''));
 
-        if (strlen($sku) > 128 || strlen($description) > 500 || strlen($note) > 500) {
-            throw new InvalidArgumentException('A reviewed field exceeded its maximum length.');
+        foreach ([[$sku, 128, 'SKU'], [$description, 500, 'Description'], [$note, 500, 'Representative note']] as [$text, $limit, $label]) {
+            if (strlen($text) > $limit) {
+                throw new InvalidArgumentException($label . ' exceeds its maximum length of ' . $limit . ' bytes.');
+            }
         }
         if (!in_array($status, $allowedStatuses, true)) {
             throw new InvalidArgumentException('A review decision was invalid.');
@@ -72,7 +83,11 @@ try {
             $group = (int) $groupText;
         }
         if ($status === 'CONFIRMED' && ($sku === '' || $description === '' || $quantity === '' || $price === '' || $group === null)) {
-            throw new InvalidArgumentException('A confirmed line requires SKU, description, quantity, annual unit price, and comparison group.');
+            $missing = [];
+            foreach (['SKU' => $sku, 'Description' => $description, 'Quantity' => $quantity, 'Annual unit price' => $price, 'Group' => $group] as $label => $value) {
+                if ($value === '' || $value === null) { $missing[] = $label; }
+            }
+            throw new InvalidArgumentException('Complete these fields before confirming: ' . implode(', ', $missing) . '.');
         }
         if (in_array($status, ['EXCLUDED', 'UNRESOLVED'], true) && $note === '') {
             throw new InvalidArgumentException('Excluded and unresolved lines require a representative note.');
@@ -103,11 +118,15 @@ try {
     if (db()->inTransaction()) {
         db()->rollBack();
     }
-    fail_page('Review validation failed', $exception->getMessage());
+    remember_form('review:' . $id, $_POST, ['lines']);
+    flash('error', $lineLabel . $exception->getMessage() . ' Nothing was saved. Your entries are restored below.');
+    redirect('/review.php?id=' . $id);
 } catch (Throwable $exception) {
     if (db()->inTransaction()) {
         db()->rollBack();
     }
     error_log('OLVN review save failed: ' . get_class($exception));
-    fail_page('Review not saved', 'The review could not be saved. Try again.', 500);
+    remember_form('review:' . $id, $_POST, ['lines']);
+    flash('error', 'The review could not be saved. Nothing was saved. Your entries are restored below.');
+    redirect('/review.php?id=' . $id);
 }

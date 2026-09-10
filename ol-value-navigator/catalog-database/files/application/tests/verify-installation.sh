@@ -18,6 +18,7 @@ test -r "$public_dir/index.php"
 test -r "$public_dir/export-pptx.php"
 test -r "$private_dir/lib/presentation.php"
 test -r "$private_dir/lib/context.php"
+test -r "$private_dir/lib/forms.php"
 test -r "$public_dir/context.php"
 php -r 'if (!class_exists("ZipArchive")) { fwrite(STDERR, "PHP ZIP extension missing. Complete Lab 5 Task 2.\n"); exit(1); }'
 

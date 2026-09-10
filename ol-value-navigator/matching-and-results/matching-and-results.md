@@ -67,7 +67,7 @@ This lab assumes you have:
 
 ## Task 2: Enable the complete application
 
-If you are updating an already deployed Version 1 application, first complete **Lab 2, Task 1** with the updated package. Do not recreate the database account or repeat the initial database setup. Then complete this task and Task 9 below. Existing comparisons remain in place.
+If you are updating an already deployed Version 1 application, first complete **Lab 2, Task 1** with the updated package. Do not recreate the database account or repeat the initial database setup. Then complete this task and Tasks 9 and 10 below. Existing comparisons remain in place. If you already applied and verified the customer-context upgrade, start at step 2; this usability update adds no database columns.
 
 1. Apply the additive customer-context database upgrade before deploying the updated PHP files. Replace `HEATWAVE_PRIVATE_IP` with your DB System private IP and enter the administrator password when prompted.
 
@@ -109,14 +109,15 @@ If you are updating an already deployed Version 1 application, first complete **
 
     These checks cover decimal scaling, exact money rendering, signed values, line rounding, whole-quantity multiplication, complete totals, fail-closed calculation, valid GenAI response parsing, and rejection of unsupported GenAI response fields.
 
-5. Run the customer-context and PowerPoint checks.
+5. Run the customer-context, PowerPoint, and form-recovery checks.
 
     ```bash
     <copy>php ~/ol-value-navigator-application/tests/context.php
-    php ~/ol-value-navigator-application/tests/presentation.php</copy>
+    php ~/ol-value-navigator-application/tests/presentation.php
+    php ~/ol-value-navigator-application/tests/forms.php</copy>
     ```
 
-    Confirm that both scripts report their checks passed. These tests do not change saved comparisons.
+    Confirm that all three scripts report their checks passed. These tests do not change saved comparisons.
 
 ## Task 3: Calculate and reconcile the demonstration
 
@@ -179,7 +180,7 @@ If you are updating an already deployed Version 1 application, first complete **
 
 ## Task 5: Reopen, duplicate, and revise
 
-1. Select **Comparison**, then **All comparisons**, and reopen the calculated demonstration.
+1. Select **Home** in the header and reopen the calculated demonstration.
 
 2. Confirm that the two original inputs, status, reviewed-line counts, rule version, and result link remain available after reopening.
 
@@ -263,7 +264,7 @@ If you are updating an already deployed Version 1 application, first complete **
 
 Use the duplicate created in Task 5. Do not delete the original calculated comparison.
 
-1. Select **Comparison**, then **All comparisons**, and locate the duplicate created in Task 5.
+1. Select **Home** in the header and locate the duplicate created in Task 5.
 
 2. Record the duplicate's name and ID, then select **Open** for that duplicate.
 
@@ -277,7 +278,7 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 
 6. Enter the complete comparison name exactly as displayed, including capitalization and spaces, then select **Delete comparison and associated data** once.
 
-7. Confirm that the application returns to **Comparisons**, reports that the comparison and its associated data were deleted, and no longer lists the duplicate.
+7. Confirm that the application returns to **Home**, reports that the comparison and its associated data were deleted, and no longer lists the duplicate.
 
 8. Connect as the DB System administrator.
 
@@ -337,15 +338,15 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 
 5. Review **Saved comparison actions** and confirm that it explains reopening, exporting, duplicating, revising, and deleting a comparison.
 
-6. Select **Return to comparisons** and confirm that the application returns to the saved-comparisons page.
+6. Select **Home** and confirm that the application returns to the saved-comparisons page.
 
     > **Checkpoint:** Built-in Help provides the complete Version 1 workflow and returns the user to the application.
 
 ## Task 9: Add customer context without changing calculated results
 
-1. From **Comparisons**, open your original calculated demonstration, then select **View results**. Record its nine displayed amounts and its **Calculated at** timestamp. An older comparison shows **Not provided** for the four customer-context fields.
+1. Select **Home** in the header. Under **Saved comparisons**, open the calculated demonstration you used in Task 3, then select **View results**. Record its comparison name, numeric ID from the browser address after `id=`, nine displayed amounts, and **Calculated at** timestamp. In this task, this is the **original**. Do not use a copy with status `NEEDS_REVIEW`. An older comparison shows **Not provided** for the four customer-context fields.
 
-2. In **Customer context**, select **Edit customer details**. Enter these demonstration values.
+2. Select **Edit customer details** above the results table. Enter these demonstration values. This exercise verifies that you can add presentation details to an existing result without recalculating it; customer details remain optional in normal use.
 
     | Field | Value |
     | --- | --- |
@@ -362,11 +363,11 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
 
 5. Select **Download PowerPoint** and open the new download. Confirm that PowerPoint opens without repair. Slide 1 must contain the customer name, objective, and scope. Slide 4 must contain your recommended next step. Slide 2 must still contain the same nine amounts. Full saved context remains in the speaker notes when long text is shortened on slides.
 
-6. Return to the browser, select **Comparison**, then **Export CSV workbook**. Open the new CSV and confirm that it contains all four complete context values and the original results. Files downloaded before the edit remain unchanged.
+6. Return to the browser tab showing **Results** for the original comparison. Select **Export CSV workbook** above the results table. Open the new CSV and confirm that it contains all four complete context values and the original results. Files downloaded before the edit remain unchanged.
 
-7. On the Comparison page, select **Duplicate comparison**. Confirm that the copy contains the same four context values. On the copy, select **Edit customer details**, change Customer name to `Demo Meridian copy`, and select **Save customer details**. Reopen the original through **All comparisons** and confirm that it still says `Demo Meridian`.
+7. Select **Back to comparison details**, scroll to **Workbook actions**, and select **Duplicate comparison**. Record the copy's different name and numeric ID. Confirm that the copy contains the same four context values. On the copy, select **Edit customer details**, change Customer name to `Demo Meridian copy`, and select **Save customer details**. Select **Home**, open the original by the name recorded in step 1, and confirm that it still says `Demo Meridian`.
 
-8. Reopen the copy, select **Edit customer details**, clear all four fields, and select **Save customer details**. Confirm that all four display **Not provided**. The original comparison must remain unchanged. Optional blank context does not block the normal review and calculation workflow.
+8. Select **Home** and open the copy by the name recorded in step 7. Select **Edit customer details**, clear all four fields, and select **Save customer details**. Confirm that all four display **Not provided**. The original comparison must remain unchanged. A copy has no calculated result until you review and calculate it; do not use its ID to verify the original result.
 
 9. Connect to the database as the application account. Replace `HEATWAVE_PRIVATE_IP` with your DB System private IP and enter the application password when prompted.
 
@@ -374,28 +375,51 @@ Use the duplicate created in Task 5. Do not delete the original calculated compa
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
     ```
 
-10. Replace `COMPARISON_ID` with the original comparison's numeric ID from its browser URL after `id=`. Verify its saved context, state, result timestamp, and update event.
+10. Run these read-only queries without substitutions. They list calculated comparisons with the demonstration customer name. In each output, locate the original name and ID recorded in step 1. If multiple demonstrations match, use that recorded ID to identify your original; do not use the copy from steps 7 and 8.
 
     ```sql
-    <copy>SET @context_comparison_id = COMPARISON_ID;
-    SELECT c.id, c.customer_name, c.customer_objective,
+    <copy>SELECT c.id, c.name, c.customer_name, c.customer_objective,
            c.comparison_scope, c.recommended_next_step,
            c.status, r.calculated_at
     FROM comparison c
     LEFT JOIN comparison_result r ON r.comparison_id = c.id
-    WHERE c.id = @context_comparison_id;
+    WHERE c.customer_name = 'Demo Meridian'
+      AND c.status = 'CALCULATED'
+    ORDER BY c.id;
 
-    SELECT event_type, outcome, created_at
-    FROM application_event
-    WHERE comparison_id = @context_comparison_id
-      AND event_type = 'CUSTOMER_CONTEXT_UPDATED'
-    ORDER BY id DESC;
+    SELECT c.id, c.name, e.event_type, e.outcome, e.created_at
+    FROM application_event e
+    JOIN comparison c ON c.id = e.comparison_id
+    WHERE c.customer_name = 'Demo Meridian'
+      AND c.status = 'CALCULATED'
+      AND e.event_type = 'CUSTOMER_CONTEXT_UPDATED'
+    ORDER BY e.id DESC;
     EXIT;</copy>
     ```
 
     Confirm that the original context matches step 2, its status remains `CALCULATED`, its calculation timestamp matches step 1, and a `COMPLETED` context-update event exists.
 
     > **Checkpoint:** Customer context persists, copies independently, appears in both exports, and can be edited or cleared without changing calculated results.
+
+## Task 10: Verify navigation and form recovery
+
+1. Select **Home** in the header. Confirm that it opens the page with **Create a comparison** and **Saved comparisons**. Select **Help**, then **Home**, and confirm that the same page opens.
+
+2. Open the original calculated comparison recorded in Task 9, step 1. Select **View results**. Confirm that the cost table appears first, followed by customer context and reviewed lines. Confirm that **Download PowerPoint**, **Export CSV workbook**, and **Edit customer details** appear together above the results.
+
+3. Select **Back to comparison details**. Confirm that the page shows the same comparison name and its saved inputs, rather than the list of all comparisons.
+
+4. Select **Home** and open the copy recorded in Task 9, step 7. Verify its name and ID before continuing. This test must use the copy, not the original calculated comparison.
+
+5. Select **Review lines**. In the first RHEL line, record the current **Annual unit price** and representative note. Replace the price with `not-a-price` and enter `Retained validation test` in **Representative note or exclusion reason**.
+
+6. Select **Save representative review**. Confirm that the error identifies the RHEL line and annual unit price. The price must still show `not-a-price` and the note must still show `Retained validation test`. The page explains that these entries are not saved. **Calculate confirmed results** is unavailable until you correct and save the review.
+
+7. Restore the price and note recorded in step 5. Select **Save representative review**. Confirm the successful-save message. The calculation button should be available again.
+
+8. Select **Home**, open the original recorded in Task 9, step 1, and select **View results**. Confirm that its nine amounts and calculation timestamp remain unchanged.
+
+    > **Checkpoint:** Home consistently returns to the application start page, result actions are easy to find, and a failed review preserves entered values without changing saved data.
 
 ## Conclusion
 

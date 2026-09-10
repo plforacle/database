@@ -29,6 +29,9 @@ ob_start(); render_customer_context(['id' => 7, 'customer_name' => $inert]); $ht
 context_check(str_contains($html, '&lt;script&gt;') && !str_contains($html, '<script>'), 'HTML is escaped.');
 context_check(substr_count($html, 'Not provided') === 3, 'Missing optional values are explicit.');
 context_check(str_contains($html, '/context.php?id=7'), 'Edit link preserves comparison ID.');
+ob_start(); render_customer_context(['id' => 7, 'customer_name' => $inert], false); $resultsContext = ob_get_clean();
+context_check(!str_contains($resultsContext, '/context.php'), 'Results can group the edit action outside the context card.');
+context_check(str_contains($resultsContext, '&lt;script&gt;'), 'Results context remains escaped.');
 ob_start(); render_customer_context_fields(['customer_objective' => '</textarea><script>x</script>']); $form = ob_get_clean();
 context_check(!str_contains($form, '<script>') && substr_count($form, '<textarea') === 4, 'Form cannot be escaped by user input.');
 context_check(!str_contains($form, ' required'), 'All four fields remain optional.');

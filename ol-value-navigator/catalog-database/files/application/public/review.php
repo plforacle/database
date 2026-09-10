@@ -15,6 +15,17 @@ $id = request_id();
 $comparison = find_comparison($id);
 $inputs = comparison_inputs($id);
 $lines = comparison_lines($id);
+$draft = take_form('review:' . $id);
+// Restore only editable values on lines that still belong to this comparison.
+// Saved AI suggestions and original input evidence are never overwritten here.
+foreach ($lines as &$line) {
+    $submitted = $draft['lines'][$line['id']] ?? [];
+    if (!is_array($submitted)) { continue; }
+    foreach (['sku' => 'sku', 'description' => 'description', 'quantity' => 'quantity', 'price' => 'annual_unit_price', 'group' => 'comparison_group', 'status' => 'review_status', 'note' => 'representative_note'] as $field => $column) {
+        $line[$column] = form_value($submitted, $field, (string) ($line[$column] ?? ''));
+    }
+}
+unset($line);
 $bySide = ['RHEL' => [], 'ORACLE_LINUX' => []];
 foreach ($lines as $line) {
     $bySide[$line['input_side']][] = $line;
@@ -23,8 +34,8 @@ foreach ($lines as $line) {
 render_header('Review and align: ' . $comparison['name']);
 ?>
 <div class="actions">
-  <a class="button secondary" href="<?= h(app_url('/comparison.php?id=' . $id)) ?>">Comparison</a>
-  <?php if (app_stage() >= 5): ?>
+  <a class="button secondary" href="<?= h(app_url('/comparison.php?id=' . $id)) ?>">Back to comparison details</a>
+  <?php if (app_stage() >= 5 && $draft === []): ?>
     <form method="post" action="<?= h(app_url('/calculate.php')) ?>">
       <?= csrf_field() ?><input type="hidden" name="id" value="<?= $id ?>">
       <button type="submit">Calculate confirmed results</button>
@@ -33,6 +44,9 @@ render_header('Review and align: ' . $comparison['name']);
 </div>
 
 <div class="notice info">AI values are suggestions. Correct them, assign matching RHEL and Oracle Linux lines to the same positive group number, then confirm or exclude every line.</div>
+<?php if ($draft !== []): ?>
+<div class="notice warning">These restored entries are not saved. Correct the reported error and select <strong>Save representative review</strong> before calculating or leaving this page.</div>
+<?php endif; ?>
 
 <?php if ($lines === []): ?>
   <section class="card">

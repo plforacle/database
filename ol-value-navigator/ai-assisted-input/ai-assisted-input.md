@@ -208,7 +208,7 @@ This lab assumes you have:
 
 ## Task 6: Exercise manual fallback and untrusted-input handling
 
-1. Return to the browser tab displaying the review page. Select **Comparison**, and then select **All comparisons**. Confirm that the **Comparisons** page displays the **Create a comparison** form.
+1. Return to the browser tab displaying the review page. Select **Home** in the header. Confirm that the page displays the **Create a comparison** form.
 
 2. In **Comparison name**, enter this value.
 

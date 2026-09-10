@@ -25,14 +25,14 @@ render_header('Help and Quick Start');
 <section id="quick-start" class="card">
   <h2>Quick Start</h2>
   <ol class="quick-steps">
-    <li>On <strong>Comparisons</strong>, enter a unique comparison name.</li>
+    <li>Select <strong>Home</strong> in the header and enter a unique comparison name.</li>
     <li>Optionally expand <strong>Customer details</strong> and enter a demonstration customer name, objective, comparison scope, and recommended next step. These fields do not affect calculations or get sent to GenAI.</li>
     <li>Paste the complete supplied RHEL information into the RHEL input and the complete supplied Oracle Linux information into the Oracle Linux input.</li>
     <li>Select <strong>Save original inputs</strong>.</li>
     <li>Select <strong>Format with GenAI</strong> once and wait for both inputs to finish.</li>
     <li>Compare every suggestion with its original input, correct the values, assign related lines the same positive group number, and give every line a final decision.</li>
     <li>Select <strong>Save representative review</strong>, then select <strong>Calculate confirmed results</strong>.</li>
-    <li>Review the annual, three-year, and five-year results. Select <strong>Download PowerPoint</strong> on the Results page for four editable summary slides. For the complete supporting data, return to the comparison and select <strong>Export CSV workbook</strong>.</li>
+    <li>Review the annual, three-year, and five-year results. On the Results page, select <strong>Download PowerPoint</strong> for four editable summary slides or <strong>Export CSV workbook</strong> for the complete supporting data.</li>
   </ol>
   <div class="notice info">MySQL HeatWave GenAI formats supplied text into suggestions. The representative owns every correction, alignment, confirmation, and exclusion. PHP performs the calculations.</div>
 </section>
@@ -57,6 +57,7 @@ render_header('Help and Quick Start');
 
 <section id="actions" class="card">
   <h2>Saved comparison actions</h2>
+  <p><strong>Home</strong> always opens the page where you create a comparison or open a saved one. <strong>Back to comparison details</strong> opens the current comparison's status, source inputs, customer details, and actions.</p>
   <div class="table-scroll">
     <table>
       <thead><tr><th>Action</th><th>What it does</th></tr></thead>
@@ -79,6 +80,7 @@ render_header('Help and Quick Start');
     <li>If formatting takes several seconds, continue waiting. Do not refresh the page or select the button again.</li>
     <li>If formatting fails for either side, use manual fallback and only enter information present in the original input.</li>
     <li>If calculation is blocked, resolve every Needs review or Unresolved line and confirm that every included group contains both sides.</li>
+    <li>If a form reports an error, correct the named field or review line. Creation, source-revision, and review forms restore your submitted entries after a failed save. Save again before leaving the page. Restored entries are not yet saved to the comparison.</li>
     <li>If deletion is blocked, type the complete comparison name exactly, including capitalization and spaces.</li>
     <li>If the application cannot connect to the database, contact the workshop administrator. Do not place credentials in a support message.</li>
   </ul>
@@ -94,5 +96,5 @@ render_header('Help and Quick Start');
   </ul>
 </section>
 
-<p><a class="button secondary" href="<?= h(app_url('/index.php')) ?>">Return to comparisons</a></p>
+<p><a class="button secondary" href="<?= h(app_url('/index.php')) ?>">Home</a></p>
 <?php render_footer(); ?>

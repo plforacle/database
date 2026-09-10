@@ -54,6 +54,7 @@ This lab assumes you have:
     lib/bootstrap.php                 Starts sessions, security headers, PDO, CSRF, escaping, and page helpers
     lib/repository.php                Provides shared prepared queries and workflow-event writes
     lib/context.php                   Validates and renders optional customer context, separate from calculations
+    lib/forms.php                     Restores editable entries after failed saves using the current session
     lib/presentation.php              Formats saved results and customer context into four editable slides
     lib/genai.php                     Builds prompts, calls ML_GENERATE, validates JSON, and stores suggestions
     lib/money.php                     Validates reviewed lines and calculates fixed-point period totals
@@ -77,6 +78,7 @@ This lab assumes you have:
     public/style.css                  Provides responsive presentation for every application page
     tests/unit.php                    Tests money, review, GenAI-contract, and deletion rules without a database
     tests/context.php                 Tests optional context validation and escaped form/display output
+    tests/forms.php                   Tests one-use form recovery without database access
     tests/presentation.php            Tests editable PowerPoint content, notes and package compatibility
     tests/check-context-schema.php    Stops an existing deployment before copying files if columns are missing
     tests/check-database.php          Tests the deployed private connection, active rule, and audit table
@@ -214,7 +216,7 @@ This lab assumes you have:
 
 7. Confirm that the comparison page displays both complete original inputs and a `DRAFT` status. It must not display the database password, DSN, or private IP address.
 
-8. Select **All comparisons**, and then select **Open** for `Lab 3 saved-input test`.
+8. Select **Home**, and then select **Open** for `Lab 3 saved-input test`.
 
 9. Confirm that both original inputs reopen unchanged.
 

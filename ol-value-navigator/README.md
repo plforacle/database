@@ -6,7 +6,7 @@ The initial workshop uses only synthetic sample data. It is a subscription-cost 
 
 The readable application source of truth is stored under `catalog-database/files/application`. It includes the MySQL schema, private PHP libraries, public controllers and views, a staged deployment script, and automated checks. The generated learner package is `catalog-database/files/ol-value-navigator-application.zip`. Regenerate the ZIP from the readable source after every application change, update the Lab 2 checksum, and test the packaged files before uploading them to Object Storage. Lab 1 is the validated infrastructure baseline. Labs 2 through 6 create, deploy, enable, and test the application.
 
-The standalone team tutorial is stored in `team-user-guide.md`. It documents the current application workflow and will become the source for the future application Help menu.
+The standalone team tutorial is stored in `team-user-guide.md`. It documents the current application workflow alongside the built-in Help page.
 
 The five-minute management walkthrough is stored in `management-quick-start.md`.
 
@@ -16,7 +16,11 @@ Upload the rebuilt application ZIP to the testing Object Storage location, then 
 
 The four optional fields are customer name, objective, comparison scope, and recommended next step. **Edit customer details** changes only these fields, separately from **Revise original inputs**. The update does not change calculation rules, GenAI prompts, OCI infrastructure, or Version 2.
 
-## Production publication reminder
+## Usability update for an existing Version 1 deployment
+
+This update adds Home navigation, groups exports and customer editing on Results, and restores form entries after failed saves. Calculation rules and the database schema are unchanged. Upload the rebuilt ZIP, complete **Lab 2 Task 1**, then **Lab 5 Task 2 steps 2 through 5** if the customer-context upgrade is already installed. Verify **Lab 5 Tasks 9 and 10**, then run **Lab 6 Task 1**. Refresh the browser after deployment so it loads the updated stylesheet.
+
+## Production publication checklist
 
 - [x] Complete successful end-to-end testing of Labs 1 through 6.
 - [x] Add comprehensive maintainability documentation to the complete readable application source.

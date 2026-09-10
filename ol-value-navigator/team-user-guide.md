@@ -28,7 +28,7 @@ This application is not a quote, licensing determination, product-equivalence de
 
 3. Use the remaining Help topics for review decisions, saved comparison actions, troubleshooting, and Version 1 boundaries.
 
-4. Select **Return to comparisons** when you are ready to begin.
+4. Select **Home** when you are ready to begin.
 
 ## Create a comparison
 
@@ -36,7 +36,7 @@ Optional customer details can be entered when creating a comparison. To add or e
 
 1. Open the application URL in a browser.
 
-2. Confirm that the **Comparisons** page contains:
+2. Confirm that the **Home** page contains:
 
     * **Comparison name**
     * **RHEL SKU information**
@@ -185,9 +185,9 @@ Use manual fallback only when a supplied subscription item was not extracted or 
 
 ## Reopen a saved comparison
 
-1. From the results or review page, select **Comparison**.
+1. Select **Home** in the header from any application page.
 
-2. Select **All comparisons**.
+2. Confirm that **Create a comparison** and **Saved comparisons** appear.
 
 3. Locate your comparison under **Saved comparisons**.
 
@@ -263,7 +263,7 @@ Deleting a comparison is permanent. The application deletes its original inputs,
 
 6. If the name does not match, confirm that the application reports `The comparison name did not match. Nothing was deleted.`
 
-7. After entering the exact name, confirm that the application returns to **Comparisons** and reports that the comparison and its associated data were deleted.
+7. After entering the exact name, confirm that the application returns to **Home** and reports that the comparison and its associated data were deleted.
 
 8. Confirm that the deleted comparison no longer appears under **Saved comparisons**.
 

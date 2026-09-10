@@ -45,11 +45,15 @@ try {
     if (db()->inTransaction()) {
         db()->rollBack();
     }
-    fail_page('Input validation failed', $exception->getMessage());
+    remember_form('create', $_POST, ['name', 'rhel_text', 'oracle_text', ...array_keys(customer_context_fields())]);
+    flash('error', $exception->getMessage() . ' Nothing was saved. Your entries are restored below.');
+    redirect('/index.php');
 } catch (Throwable $exception) {
     if (db()->inTransaction()) {
         db()->rollBack();
     }
     error_log('OLVN comparison creation failed: ' . get_class($exception));
-    fail_page('Comparison not saved', 'The comparison could not be saved. Verify the application database and try again.', 500);
+    remember_form('create', $_POST, ['name', 'rhel_text', 'oracle_text', ...array_keys(customer_context_fields())]);
+    flash('error', 'The comparison could not be saved. Your entries are restored below. Ask the workshop administrator to check the database before retrying.');
+    redirect('/index.php');
 }

@@ -24,16 +24,20 @@ if (!$result || $comparison['status'] !== 'CALCULATED') {
 render_header('Results: ' . $comparison['name']);
 ?>
 <div class="actions">
-  <a class="button secondary" href="<?= h(app_url('/comparison.php?id=' . $id)) ?>">Comparison</a>
+  <a class="button secondary" href="<?= h(app_url('/comparison.php?id=' . $id)) ?>">Back to comparison details</a>
   <a class="button secondary" href="<?= h(app_url('/review.php?id=' . $id)) ?>">Review lines</a>
   <form method="post" action="<?= h(app_url('/export-pptx.php')) ?>">
     <?= csrf_field() ?>
     <input type="hidden" name="id" value="<?= h($id) ?>">
     <button type="submit">Download PowerPoint</button>
   </form>
+  <form method="post" action="<?= h(app_url('/export.php')) ?>">
+    <?= csrf_field() ?><input type="hidden" name="id" value="<?= h($id) ?>">
+    <button class="secondary" type="submit">Export CSV workbook</button>
+  </form>
+  <a class="button secondary" href="<?= h(app_url('/context.php?id=' . $id)) ?>">Edit customer details</a>
 </div>
-<p>Download four editable slides with the saved totals, review summary, and assumptions. The CSV workbook remains available on the Comparison page.</p>
-<?php render_customer_context($comparison); ?>
+<p>Download four editable PowerPoint slides or the complete CSV workbook. Both exports use this saved comparison.</p>
 
 <section class="card">
   <h2>Confirmed subscription-cost comparison</h2>
@@ -48,6 +52,7 @@ render_header('Results: ' . $comparison['name']);
   </table></div>
 </section>
 
+<?php render_customer_context($comparison, false); ?>
 <section class="card">
   <h2>Traceable reviewed lines</h2>
   <div class="table-scroll"><table>

@@ -17,7 +17,7 @@ $counts = line_counts($id);
 render_header('Comparison: ' . $comparison['name']);
 ?>
 <div class="actions">
-  <a class="button secondary" href="<?= h(app_url('/index.php')) ?>">All comparisons</a>
+  <a class="button secondary" href="<?= h(app_url('/index.php')) ?>">Home</a>
   <?php if (app_stage() >= 4): ?>
     <a class="button" href="<?= h(app_url('/review.php?id=' . $id)) ?>">Review lines</a>
   <?php endif; ?>

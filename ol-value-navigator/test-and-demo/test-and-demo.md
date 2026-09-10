@@ -35,7 +35,8 @@ This lab assumes you have:
     ```bash
     <copy>php ~/ol-value-navigator-application/tests/unit.php
     php ~/ol-value-navigator-application/tests/context.php
-    php ~/ol-value-navigator-application/tests/presentation.php</copy>
+    php ~/ol-value-navigator-application/tests/presentation.php
+    php ~/ol-value-navigator-application/tests/forms.php</copy>
     ```
 
     Confirm that all checks pass.
@@ -147,7 +148,7 @@ This lab assumes you have:
     | Duplicate | Duplicate a comparison | Inputs and reviewed lines copy, but calculation must be run again |
     | Revise | Revise the duplicate's original input | Derived lines and results clear while the event history remains |
     | Export | Export the calculated original | CSV contains source, review, alignment, rule, and result sections |
-    | Help | Select Help from an application page and use Return to comparisons | The complete workflow guidance opens and returns to the saved-comparisons page |
+    | Help | Select Help from an application page, then select Home | The complete workflow guidance opens and Home returns to the saved-comparisons page |
     | Delete with incorrect name | Duplicate a demonstration, open the duplicate, and enter a confirmation name that is not exact | The application reports that nothing was deleted and the duplicate remains available |
     | Delete with exact name | Enter the duplicate's complete name exactly and delete it | The duplicate and its associated data disappear from the saved-comparisons list |
 

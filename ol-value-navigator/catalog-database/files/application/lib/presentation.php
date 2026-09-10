@@ -131,11 +131,22 @@ final class ResultsPresentation
         return preg_replace('/[^\\x{9}\\x{A}\\x{D}\\x{20}-\\x{D7FF}\\x{E000}-\\x{FFFD}\\x{10000}-\\x{10FFFF}]/u', '', $text) ?? '';
     }
 
-    /** Shorten only display text; full comparison name remains in speaker notes. */
+    /**
+     * Shorten display text at a word boundary when one fits near the limit.
+     * Unbroken strings still receive a hard character limit for layout safety.
+     * Full names and customer details remain unchanged in speaker notes.
+     */
     private function shorten(string $text, int $limit): string
     {
         $characters = preg_split('//u', $text, -1, PREG_SPLIT_NO_EMPTY) ?: [];
-        return count($characters) <= $limit ? $text : implode('', array_slice($characters, 0, $limit - 3)) . '...';
+        if (count($characters) <= $limit) { return $text; }
+        $prefix = rtrim(implode('', array_slice($characters, 0, $limit - 3)));
+        if (!preg_match('/\s/u', $characters[$limit - 3])) {
+            $words = preg_replace('/\s+\S*$/u', '', $prefix) ?? $prefix;
+            $wordLength = count(preg_split('//u', $words, -1, PREG_SPLIT_NO_EMPTY) ?: []);
+            if ($wordLength >= (int) ($limit * .6)) { $prefix = $words; }
+        }
+        return $prefix . '...';
     }
 
     /** Keep manually entered newlines from pushing slide text outside its box. */

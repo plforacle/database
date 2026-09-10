@@ -44,17 +44,25 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         if (db()->inTransaction()) {
             db()->rollBack();
         }
-        fail_page('Revision validation failed', $exception->getMessage());
+        remember_form('revise:' . $id, $_POST, ['name', 'rhel_text', 'oracle_text']);
+        flash('error', $exception->getMessage() . ' Nothing was saved. Your entries are restored below.');
+        redirect('/revise.php?id=' . $id);
     } catch (Throwable $exception) {
         if (db()->inTransaction()) {
             db()->rollBack();
         }
         error_log('OLVN revision failed: ' . get_class($exception));
-        fail_page('Revision failed', 'The comparison could not be revised.', 500);
+        remember_form('revise:' . $id, $_POST, ['name', 'rhel_text', 'oracle_text']);
+        flash('error', 'The comparison could not be revised. Nothing was saved. Your entries are restored below.');
+        redirect('/revise.php?id=' . $id);
     }
 }
 
-render_header('Revise: ' . $comparison['name']);
+$draft = take_form('revise:' . $id);
+$comparison['name'] = form_value($draft, 'name', (string) $comparison['name']);
+$inputs['RHEL']['raw_text'] = form_value($draft, 'rhel_text', (string) ($inputs['RHEL']['raw_text'] ?? ''));
+$inputs['ORACLE_LINUX']['raw_text'] = form_value($draft, 'oracle_text', (string) ($inputs['ORACLE_LINUX']['raw_text'] ?? ''));
+render_header('Revise original inputs');
 ?>
 <div class="notice warning">Saving revised source text clears the current formatted lines and calculated result. The workflow event history remains.</div>
 <form method="post" action="<?= h(app_url('/revise.php')) ?>" class="card">
