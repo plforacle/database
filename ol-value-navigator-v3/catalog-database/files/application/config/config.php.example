@@ -1,0 +1,26 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Private runtime settings copied to /var/www/ol-value-navigator/config.php.
+ *
+ * The deployed copy is owned by root, readable by Apache, and kept outside the
+ * public document root. Replace placeholders only in that deployed copy. Never
+ * commit working credentials or private endpoint information to this example.
+ */
+return [
+    // PDO connects to the private MySQL HeatWave endpoint with utf8mb4 enabled.
+    'dsn' => 'mysql:host=HEATWAVE_PRIVATE_IP;port=3306;dbname=ol_value_navigator;charset=utf8mb4',
+    // Least-privilege account created and granted in Lab 2.
+    'user' => 'olvn_app',
+    'password' => 'CHANGE_THIS_PASSWORD',
+    // HeatWave GenAI model passed to sys.ML_GENERATE for both input sides.
+    'model_id' => 'mistral-7b-instruct-v3',
+    // Server-side limits remain authoritative even when the browser supplies maxlength.
+    'max_input_characters' => 12000,
+    'max_lines_per_input' => 100,
+    // URL prefix used by links, redirects, forms, and the stylesheet reference.
+    'base_path' => '/ol-value-navigator',
+    // Reserved for controlled diagnostics. Production pages never expose exceptions.
+    'debug' => false,
+];
