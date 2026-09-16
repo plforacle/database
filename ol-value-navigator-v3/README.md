@@ -1,41 +1,60 @@
-# Oracle Linux Value Navigator
+# Oracle Linux Value Navigator Version 3
 
-This repository contains the complete workshop and application source for building Oracle Linux Value Navigator. The workshop guides a learner from an Oracle Cloud Infrastructure LAMP environment to a tested subscription-cost comparison application.
+## Introduction
 
-The initial workshop uses only synthetic sample data. It is a subscription-cost comparison, not a quote, licensing determination, or full TCO analysis.
+This is the separate Version 3 LiveLabs workshop, based on Shawn's application. It reuses the Version 1 layout and Lab 1 LAMP setup sequence with separate V3 resources. The original sibling folder, `ol-value-navigator`, remains unchanged.
 
-The readable application source of truth is stored under `catalog-database/files/application`. It includes the MySQL schema, private PHP libraries, public controllers and views, a staged deployment script, and automated checks. The generated learner package is `catalog-database/files/ol-value-navigator-application.zip`. Regenerate the ZIP from the readable source after every application change, update the Lab 2 checksum, and test the packaged files before uploading them to Object Storage. Lab 1 is the validated infrastructure baseline. Labs 2 through 6 create, deploy, enable, and test the application.
+**Status: Lab 1 is ready for a user-led rehearsal; Labs 2 through 6 remain authoring drafts.** Lab 1 contains resource-creation instructions, but has not yet been executed for V3. No adapted application or runtime acceptance results are included.
 
-The standalone team tutorial is stored in `team-user-guide.md`. It documents the current application workflow alongside the built-in Help page.
+Estimated Time: 5 minutes to review this status.
 
-The five-minute management walkthrough is stored in `management-quick-start.md`.
+### Objectives
 
-## Customer-context update for an existing Version 1 deployment
+* Build a reproducible LAMP workshop around Shawn's application.
+* Keep the representative workflow and human maintenance straightforward.
+* Protect the Version 1 demonstration environment.
 
-Upload the rebuilt application ZIP to the testing Object Storage location, then follow **Lab 2 Task 1** to download and verify it. Complete **Lab 5 Task 2** to apply the additive database upgrade before deploying stage 5, and **Lab 5 Task 9** to verify saved context and both exports. Do not recreate the database account. Existing comparisons, reviewed lines, and results are retained.
+## Start here
 
-The four optional fields are customer name, objective, comparison scope, and recommended next step. **Edit customer details** changes only these fields, separately from **Revise original inputs**. The update does not change calculation rules, GenAI prompts, OCI infrastructure, or Version 2.
+Start with [Lab 1: Create the Version 3 OCI LAMP Environment](oci-lamp-setup/oci-lamp-setup.md). You execute the OCI steps; the assistant has not accessed or changed OCI.
 
-## Usability update for an existing Version 1 deployment
+Open `workshops/tenancy/index.html` through the team's approved local LiveLabs preview procedure. The manifest identifies this workshop as a Version 3 draft. Browser rendering has not yet been verified.
 
-This update adds Home navigation, groups exports and customer editing on Results, and restores form entries after failed saves. Calculation rules and the database schema are unchanged. Upload the rebuilt ZIP, complete **Lab 2 Task 1**, then **Lab 5 Task 2 steps 2 through 5** if the customer-context upgrade is already installed. Verify **Lab 5 Tasks 9 and 10**, then run **Lab 6 Task 1**. Refresh the browser after deployment so it loads the updated stylesheet.
+The learner journey is: enter or import RHEL information, review, compare, save, and export. The target release adds real login and user-owned comparisons. AI suggests fields; people review them; PHP calculates.
 
-## PowerPoint styling update for an existing Version 1 deployment
+## Source of truth
 
-The four-slide export now uses red table headers, alternating shaded rows, right-aligned amounts, and sign-aware difference highlighting. The final slide places its assumptions table beside the saved recommended next step. This update changes presentation styling only, with no schema, calculation, CSV, or infrastructure changes. Upload the rebuilt ZIP, complete **Lab 2 Task 1**, then **Lab 5 Task 2 steps 2 through 5**. Verify the new download with **Lab 5 Task 6 steps 7 through 11**. Existing calculated comparisons do not need to be recalculated; download a new PowerPoint file to see the updated design.
+| Item | Source |
+| --- | --- |
+| Upstream application | Complete local repository: `C:\Users\Perside\Documents\GitHub\olvalnav` |
+| Reviewed commit | `d419d24d035cabc68b219b9e98be23cd05770742` |
+| Integration reference | `perside-integration-quick-start.pdf` in Perside's project folder |
+| Version 3 workshop | This folder, `ol-value-navigator-v3` |
+| Application candidate | Not packaged yet; no additional original ZIP is required to use the verified repository |
 
-## Simplified workflow update for an existing Version 1 deployment
+The supplied `shawn/app` directory contains only the application-code subtree. Use the complete repository for dependencies, public files, migrations, resources, and tests.
 
-The complete stage 5 application now uses **Save and format with AI** and **Save review and calculate**. **Save review for later** preserves unfinished work. Home opens calculated comparisons directly at Results and comparisons with existing lines at Review. Supporting data and maintenance actions remain available in expandable sections. Labs 3 and 4 retain separate learning steps.
+**Copied Version 1 files are reference material only:** `catalog-database/files/application` and `catalog-database/files/ol-value-navigator-application.zip`. They have not been converted into Version 3. Do not run their scripts, upload that ZIP as Version 3, or point their configuration at a live database. The active labs no longer direct learners to that package.
 
-No schema migration, calculation-rule change, or OCI infrastructure change is required for this update. Upload the rebuilt ZIP, complete **Lab 2 Task 1**, then **Lab 5 Task 2 steps 2 through 5**. Complete **Lab 5 Tasks 10 and 11** and **Lab 6 Task 1**. Existing calculated comparisons do not need recalculation; use the new demonstration in Task 11 to verify the combined actions.
+## Workshop sequence
 
-## Production publication checklist
+1. Create the compartment `ol-value-navigator-3`, networking, LAMP server, and private HeatWave database.
+2. Identify the source and review database/catalog installation.
+3. Configure the PHP application and identity.
+4. Enter, import, and review subscription information.
+5. Calculate, save, and export comparisons.
+6. Verify, maintain, recover, and demonstrate.
 
-- [x] Complete successful end-to-end testing of Labs 1 through 6.
-- [x] Add comprehensive maintainability documentation to the complete readable application source.
-- [x] Regenerate the application ZIP and verify its contents, syntax, and unit checks.
-- [ ] Deploy the final ZIP to the test compute instance and run the Stage 5 installation verification.
-- [ ] Upload the final application ZIP to the LiveLabs production Object Storage location.
-- [ ] Replace the testing Object Storage PAR URL in `catalog-database/catalog-database.md` with the LiveLabs production URL.
-- [ ] Verify the production object against the SHA-256 checksum documented in Lab 2 before publishing the workshop.
+Keep existing folder names during this first pass so the copied LiveLabs layout stays familiar.
+
+## Release checkpoints
+
+See [authoring status](authoring-status.md) for the code gaps, source references, and verification checklist. In particular, real login and integrated AI/scenario behavior remain unfinished; the newer scenario currently supports 12 and 36 months, not five years.
+
+Use synthetic data. No OCI changes, dependency installations, migrations, or application tests have been performed during this authoring pass.
+
+## Acknowledgements
+
+* **Authors** - Perside Foster, Mark Atkinson, and Shawn Kelley
+* **Contributors** - Nick Mader
+* **Last Updated By/Date** - Perside Foster, September 2026

@@ -1,258 +1,69 @@
-# Lab 6: Test and Demonstrate the Complete Application
+# Lab 6: Verify, Maintain, and Demonstrate Version 3
 
 ## Introduction
 
-In this lab, you verify the completed Oracle Linux Value Navigator as installed software, a database-backed workflow, and a browser application. You run executable checks, test normal and fail-closed scenarios, inspect saved state, and rehearse the full demonstration.
+> **Version 3 authoring draft.** This lab is not ready for deployment or a learner run. Read the prerequisites and pending checkpoints before executing anything. Version 1 remains unchanged.
 
-Estimated Time: 60 minutes
+A successful page load does not prove a reproducible workshop. Validate the exact candidate and have another maintainer exercise routine operations.
+
+Estimated Time: Pending the complete rehearsal.
 
 ### Objectives
 
-In this lab, you will:
+* Separate automated, environment, and manual checks.
+* Verify recovery without touching Version 1.
+* Prepare an evidence-based demonstration and handoff.
 
-* Run PHP unit and deployed-application checks.
-* Verify database completeness and workflow consistency.
-* Test confirmed, excluded, unresolved, AI-failure, and manual-entry scenarios.
-* Verify safe browser and configuration behavior.
-* Rehearse the end-to-end Version 1 demonstration.
-* Identify controls deferred beyond this prototype.
+## Task 1: Establish the test target
 
-### Prerequisites
+1. Record the candidate identity, PHP/dependency versions, migration set, private configuration references, and selected catalog. Do not record secrets.
 
-This lab assumes you have:
+2. Read upstream `docs/operations/ci-verification.md`. The full wrapper expects a clean Git candidate and a checked disposable local MySQL fixture.
 
-* Completed Labs 1 through 5.
-* A stage 5 application deployment.
-* At least one calculated demonstration comparison.
-* Browser and SSH access to the Oracle Linux compute instance.
+3. Select a supported test host. Neither Version 1's database nor the new OCI application database is automatically a compatible disposable fixture.
 
-*This is the fold. The remaining sections are collapsed by default.*
+4. Run the required style, static, unit, contract, and integration checks only after reviewing their setup and cleanup targets. The default `composer quality` command is unit-only, not the complete suite.
 
-## Task 1: Run the automated checks
+5. Record passed, failed, and unrun results. Upstream results and earlier PHP 8.2 syntax checks do not validate the adapted PHP 8.3 candidate.
 
-1. Run the source-level unit checks.
+    **Pending checkpoint:** The supported full-suite environment is not yet selected. Do not bypass test identity protections.
 
-    ```bash
-    <copy>php ~/ol-value-navigator-application/tests/unit.php
-    php ~/ol-value-navigator-application/tests/context.php
-    php ~/ol-value-navigator-application/tests/presentation.php
-    php ~/ol-value-navigator-application/tests/forms.php
-    php ~/ol-value-navigator-application/tests/workflow.php</copy>
-    ```
+## Task 2: Verify the installed application
 
-    Confirm that all checks pass.
+1. Test HTTPS, database TLS/server identity, private-file denial, and actual least-privilege account behavior on approved V3 resources.
 
-2. Run the deployed-application verification as `root` so it can inspect the private files installed for Apache.
+2. Run the two-user access checks from Lab 3 and the input, arithmetic, persistence, and export checks from Labs 4 and 5.
 
-    ```bash
-    <copy>sudo bash ~/ol-value-navigator-application/tests/verify-installation.sh</copy>
-    ```
+3. Verify live HeatWave extraction separately from manual fallback.
 
-    This script verifies:
+4. Agree a modest concurrent-user test and response-time target. Record actual observations instead of claiming scale from the small data volume.
 
-    * The private configuration and stage files exist.
-    * The deployed stage is `5`.
-    * Every deployed PHP file passes `php -l` syntax validation.
-    * Apache is active.
-    * The local application and Help routes return successful HTTP responses.
+## Task 3: Test human maintenance and recovery
 
-3. Run the database connection check as Apache.
+1. Have a backup maintainer follow the documented synthetic price-update procedure. Check a new comparison and an old confirmed comparison.
 
-    ```bash
-    <copy>sudo -u apache php /var/www/ol-value-navigator/check-database.php</copy>
-    ```
+2. Have that maintainer diagnose a failed comparison using safe logs and the troubleshooting notes.
 
-    Confirm that it reports the MySQL Server version, `workshop-v1`, and `deletion audit ready`.
+3. Review backups for the matching application artifact, database, private source files, and configuration references.
 
-    > **Checkpoint:** Source logic, deployed PHP syntax, Apache, the application and Help routes, and the private database connection pass executable checks.
+4. Restore only to an explicitly authorized recovery target. Do not restore over Version 1. Verify that the recovered application can reopen and export the synthetic saved comparison.
 
-## Task 2: Verify database consistency
+5. Distinguish catalog activation reversal from application rollback and database recovery. One does not undo the others.
 
-1. Connect with the application account.
+## Task 4: Rehearse and publish
 
-    ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
-    ```
+1. Walk through the workshop from a clean approved V3 target. Record the actual duration and collect screenshots with synthetic data.
 
-2. Find any comparison that does not have exactly two original inputs.
+2. Remove draft stop notices only after their checks pass. Resolve the support alias, source distribution, and remaining feature decisions.
 
-    ```sql
-    <copy>SELECT c.id, c.name, COUNT(i.id) AS input_count
-    FROM comparison c
-    LEFT JOIN comparison_input i ON i.comparison_id = c.id
-    GROUP BY c.id, c.name
-    HAVING COUNT(i.id) &lt;&gt; 2;</copy>
-    ```
+3. Demonstrate one simple scenario, one correction, one reopened result, and one exported presentation.
 
-    The query should return an empty result.
+4. Report the exact deployed identity, verification outcomes, backup maintainer, and recovery location to the team. Keep credentials and customer data out of the handoff.
 
-3. Find any orphaned line.
-
-    ```sql
-    <copy>SELECT l.id
-    FROM comparison_line l
-    LEFT JOIN comparison_input i ON i.id = l.comparison_input_id
-    WHERE i.id IS NULL;</copy>
-    ```
-
-    The query should return an empty result.
-
-4. Find any calculated comparison that still contains an unreviewed or unresolved line.
-
-    ```sql
-    <copy>SELECT DISTINCT c.id, c.name, l.review_status
-    FROM comparison c
-    JOIN comparison_input i ON i.comparison_id = c.id
-    JOIN comparison_line l ON l.comparison_input_id = i.id
-    WHERE c.status = 'CALCULATED'
-      AND l.review_status IN ('AI_SUGGESTED', 'UNRESOLVED');</copy>
-    ```
-
-    The query should return an empty result.
-
-5. Display the complete event sequence for the calculated demonstration. Replace `COMPARISON_ID`.
-
-    ```sql
-    <copy>SELECT event_type, actor_type, outcome, details, created_at
-    FROM application_event
-    WHERE comparison_id = COMPARISON_ID
-    ORDER BY id;</copy>
-    ```
-
-    Confirm that the sequence includes creation, successful formatting for each side, representative review, calculation, and any export action you performed.
-
-6. Exit the MySQL client.
-
-    ```sql
-    <copy>EXIT;</copy>
-    ```
-
-## Task 3: Test the browser scenarios
-
-1. Open the application.
-
-    ```text
-    http://PUBLIC_IP_ADDRESS/ol-value-navigator/
-    ```
-
-2. Complete **Lab 5 Task 11** for the click-by-click simplified workflow. For the matrix below, use **Save review and calculate** after changing review fields. Save unfinished work with **Save review for later**. Expand **Manual fallback** before adding a line. To duplicate, revise, or delete, select **Back to comparison details** from Review or Results, then expand **More actions**. Execute this test matrix with demonstration data.
-
-    | Scenario | Action | Required result |
-    | --- | --- | --- |
-    | Confirmed comparison | Confirm complete paired lines and calculate | Annual, three-year, and five-year results appear and persist |
-    | Missing value | Leave a quantity or price empty and mark the line unresolved | A note is required and totals are withheld |
-    | Excluded line | Exclude a line with a reason | The line remains visible and is absent from totals |
-    | Unmatched group | Put a confirmed line in a group with no opposite-side line | Calculation identifies the group and withholds totals |
-    | Invalid AI result or timeout | Use a formatting attempt that fails or wait for an unavailable service | A generic failure message appears and manual entry remains available |
-    | Manual line | Add and complete a manual line | The same field, alignment, and decision validation applies |
-    | Reopen | Select Home and Open for a calculated or unfinished comparison | Results or Review opens directly without changing saved data or recalculating |
-    | Duplicate | Duplicate a comparison | Inputs and reviewed lines copy, but calculation must be run again |
-    | Revise | Revise the duplicate's original input | Derived lines and results clear while the event history remains |
-    | Export | Export the calculated original | CSV contains source, review, alignment, rule, and result sections |
-    | Help | Select Help from an application page, then select Home | The complete workflow guidance opens and Home returns to the saved-comparisons page |
-    | Delete with incorrect name | Duplicate a demonstration, open the duplicate, and enter a confirmation name that is not exact | The application reports that nothing was deleted and the duplicate remains available |
-    | Delete with exact name | Enter the duplicate's complete name exactly and delete it | The duplicate and its associated data disappear from the saved-comparisons list |
-
-3. Manually recalculate the demonstration values and confirm that they match the displayed values:
-
-    ```text
-    RHEL annual:        (10 x 1200.00) + (2 x 2400.00) = 16800.00
-    Oracle annual:      (10 x 800.00)  + (2 x 1600.00) = 11200.00
-    Annual difference:  16800.00 - 11200.00 = 5600.00
-    Three-year values:  each annual value x 3
-    Five-year values:   each annual value x 5
-    ```
-
-## Task 4: Verify safe deployment behavior
-
-1. Confirm that the private configuration is not present under the public web directory.
-
-    ```bash
-    <copy>test ! -e /var/www/html/ol-value-navigator/config.php &amp;&amp; echo "PASS: no public configuration file"</copy>
-    ```
-
-2. Confirm that an HTTP request for a configuration file returns `404`.
-
-    ```bash
-    <copy>curl --silent --output /dev/null --write-out '%{http_code}\n' http://localhost/ol-value-navigator/config.php</copy>
-    ```
-
-3. Confirm the private configuration permissions.
-
-    ```bash
-    <copy>sudo stat --format='%U %G %a %n' /var/www/ol-value-navigator/config.php</copy>
-    ```
-
-    The expected owner, group, and mode are `root apache 640`.
-
-4. Submit an incomplete form in the browser and confirm that the application shows a helpful validation message without displaying the database password, DSN, private IP, SQL statement, stack trace, or pasted source text.
-
-5. Restart Apache and rerun the local route check.
-
-    ```bash
-    <copy>sudo systemctl restart httpd
-    systemctl is-active httpd
-    curl --fail --silent http://localhost/ol-value-navigator/ &gt; /dev/null &amp;&amp; echo "PASS: application route"</copy>
-    ```
-
-    Confirm that Apache is `active` and the route passes.
-
-## Task 5: Rehearse the complete demonstration
-
-1. State the boundary: Oracle Linux Value Navigator compares representative-supplied subscription costs. It is not a quote, licensing determination, or complete TCO analysis.
-
-2. Create a comparison and paste the complete demonstration RHEL and Oracle Linux text into the two separate inputs.
-
-3. Explain that the MySQL HeatWave DB System provides private database storage and that MySQL HeatWave GenAI formats each input with `sys.ML_GENERATE`.
-
-4. Select **Save and format with AI** once. Wait for Review to open, then expand **Show complete original input** to compare each source with its suggestions.
-
-5. Correct any suggestions, align paired lines, and explain that the representative, not AI, owns the confirmation and exclusion decisions.
-
-6. Demonstrate an unresolved line and show that PHP withholds all comparative totals.
-
-7. Resolve the line, select **Save review and calculate**, and reconcile the annual, three-year, and five-year values.
-
-8. Select **Home** and reopen the calculated comparison directly at Results. Select **Download PowerPoint** and **Download CSV** to show workbook-style persistence.
-
-9. Duplicate the comparison, demonstrate that an incorrect deletion confirmation preserves it, and then enter its exact name to delete it.
-
-10. State the Version 1 boundaries:
-
-    * No master RHEL or Oracle Linux SKU catalogs.
-    * No login or multi-user ownership.
-    * Demonstration data only.
-    * No production approval of calculation rules.
-    * No claim that aligned lines are product equivalents.
-
-## Task 6: Record the next production controls
-
-1. Record these Version 2 or production-readiness work items outside the demonstration application:
-
-    * Identity, login, authorization, comparison ownership, and session lifecycle.
-    * Approved calculation-rule governance and change control.
-    * Customer-data classification, consent, retention, deletion, and audit policy.
-    * HTTPS, managed secrets, certificate verification, private web-tier access, and security monitoring.
-    * High availability, automatic backups, deletion protection, recovery testing, and operational contacts.
-    * Accessibility, usability, load, concurrency, and failure-recovery testing.
-
-2. Keep customer information, credentials, private keys, private IP addresses, and OCI identifiers out of the repository.
-
-    > **Checkpoint:** The full Version 1 workflow is deployed, tested, traceable, reproducible, and ready for a demonstration using synthetic data.
-
-## Conclusion
-
-You have completed the Oracle Linux Value Navigator workshop.
-
-## Learn More
-
-* [Oracle Linux documentation](https://docs.oracle.com/en/operating-systems/oracle-linux/)
-* [OCI Compute documentation](https://docs.oracle.com/en-us/iaas/Content/Compute/home.htm)
-* [MySQL HeatWave GenAI](https://dev.mysql.com/doc/heatwave/en/mys-hw-genai-overview.html)
-* [PHP security](https://www.php.net/manual/en/security.php)
+    **Publication condition:** Do not publish while required checks are failed or unrun. Version 1 continues to provide the existing demo.
 
 ## Acknowledgements
 
-* **Author** - Perside Foster, Mark Atkinson, Shawn Kelley
+* **Authors** - Perside Foster, Mark Atkinson, and Shawn Kelley
 * **Contributors** - Nick Mader
 * **Last Updated By/Date** - Perside Foster, September 2026

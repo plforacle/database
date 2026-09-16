@@ -1,10 +1,10 @@
 {
-  "workshoptitle": "Build Oracle Linux Value Navigator",
-  "help": "TODO: replace with the approved workshop support alias",
+  "workshoptitle": "Build Oracle Linux Value Navigator Version 3 (Authoring Draft)",
+  "help": "TODO: approved Version 3 workshop support alias",
   "tutorials": [
     {
-      "title": "Introduction",
-      "description": "Learn what you will build, the workshop scope, and the required prerequisites.",
+      "title": "Introduction: Version 3 scope and readiness",
+      "description": "Review the LAMP approach, source handoff, and pending implementation.",
       "filename": "../../introduction/introduction.md"
     },
     {
@@ -13,39 +13,39 @@
       "filename": "https://livelabs.oracle.com/cdn/common/labs/cloud-login/cloud-login.md"
     },
     {
-      "title": "Lab 1: Create the OCI Oracle Linux, Apache, PHP, and MySQL HeatWave Environment",
-      "description": "Create Oracle Linux, Apache, PHP, and a private MySQL HeatWave DB System configured for MySQL HeatWave GenAI.",
+      "title": "Lab 1: Create the Version 3 OCI LAMP Environment",
+      "description": "Create the V3 compartment, network, LAMP server, and private HeatWave database; verify the setup.",
       "filename": "../../oci-lamp-setup/oci-lamp-setup.md"
     },
     {
-      "title": "Lab 2: Create the Workbook-Style Database Schema",
-      "description": "Download the application source and create the complete persistence schema and least-privilege PHP account.",
+      "title": "Lab 2: Identify the Source and Prepare the Database",
+      "description": "Identify Shawn's complete source and review safe schema, account, and catalog setup.",
       "filename": "../../catalog-database/catalog-database.md"
     },
     {
-      "title": "Lab 3: Deploy the PHP Foundation and Saved-Input Workflow",
-      "description": "Deploy the secure PHP foundation and create, list, and reopen complete RHEL and Oracle Linux inputs.",
+      "title": "Lab 3: Configure the PHP Application and User Access",
+      "description": "Review PHP configuration and the real-login implementation and verification requirements.",
       "filename": "../../php-calculator/php-calculator.md"
     },
     {
-      "title": "Lab 4: Enable GenAI Formatting and Representative Review",
-      "description": "Use ML_GENERATE to create validated suggestions, then correct, align, decide, and use manual fallback.",
+      "title": "Lab 4: Enter, Import, and Review Subscription Information",
+      "description": "Distinguish existing imports from the planned integrated AI input workflow.",
       "filename": "../../ai-assisted-input/ai-assisted-input.md"
     },
     {
-      "title": "Lab 5: Calculate, Save, and Manage the Complete Comparison",
-      "description": "Calculate traceable results and enable reopen, revision, duplication, and CSV workbook export.",
+      "title": "Lab 5: Calculate, Save, and Export Comparisons",
+      "description": "Validate period support, independent expected results, saved work, and exports.",
       "filename": "../../matching-and-results/matching-and-results.md"
     },
     {
-      "title": "Lab 6: Test and Demonstrate the Complete Application",
-      "description": "Run executable verification, test fail-closed scenarios, and rehearse the complete prototype demonstration.",
+      "title": "Lab 6: Verify, Maintain, and Demonstrate Version 3",
+      "description": "Prepare exact-candidate checks, recovery, and a human-maintainable handoff.",
       "filename": "../../test-and-demo/test-and-demo.md"
     },
     {
-      "title": "Need Help?",
-      "description": "Review common problems and find directions for receiving help.",
-      "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-freetier.md"
+      "title": "Authoring status and remaining work",
+      "description": "Review draft limitations, source traceability, and publication prerequisites.",
+      "filename": "../../authoring-status.md"
     }
   ]
 }

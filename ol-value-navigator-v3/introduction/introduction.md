@@ -1,102 +1,56 @@
-# Introduction
+# Build Oracle Linux Value Navigator Version 3
 
-## About this Workshop
+## Introduction
 
-Oracle Linux Value Navigator is an AI-assisted PHP web application backed by MySQL HeatWave. It helps an Oracle representative format and compare RHEL and Oracle Linux subscription information. The representative supplies both sides of the comparison, reviews the formatted lines, and receives annual, three-year, and five-year subscription-cost results.
+> **Version 3 workshop in progress.** Lab 1 contains the setup procedure for a user-led rehearsal. Labs 2 through 6 remain authoring drafts. Version 1 remains unchanged.
 
-In this workshop, you build and deploy the complete Version 1 prototype on Oracle Cloud Infrastructure. You begin with the validated Oracle Linux LAMP environment, create the saved-comparison database, deploy the PHP workflow, add AI-assisted formatting and deterministic calculations, and finish with executable verification and a tested demonstration.
+This workshop will guide you through building a subscription-cost comparison application from Shawn's PHP code. It uses the LAMP concept: Oracle Linux and Apache run PHP, and a private MySQL HeatWave DB System stores data and supports HeatWave GenAI.
 
-The workshop uses demonstration SKUs, quantities, and prices. Do not enter real customer information. The completed prototype produces a subscription-cost comparison for learning and demonstration. It is not a customer quote, a licensing determination, or a complete TCO analysis.
+The goal is a simple representative journey: enter or import RHEL information, review the lines and Oracle Linux comparison, calculate, then save or export. AI assists with input; it does not approve prices, choose authoritative mappings, or confirm results.
 
-This workshop is also the development guide for the project. Each lab builds a working part of the software or infrastructure, explains why it exists, and provides steps to verify the result.
+Use invented sample data only. This application is not a customer quote, licensing determination, or full TCO analysis.
 
-Because the documentation grows with the application, the workshop becomes a clean and accessible source of truth. Another developer can follow the labs, reproduce the environment, understand the decisions, and verify the completed application.
-
-### About Product/Technology
-
-Oracle Linux Value Navigator brings together Oracle Cloud Infrastructure, Oracle Linux, Apache HTTP Server, PHP, and MySQL HeatWave GenAI to create one web application.
-
-* **Oracle Cloud Infrastructure** provides the networking, compute, and managed database services used to run the application.
-* **Oracle Linux** provides the operating system for the application server.
-* **Apache HTTP Server** receives browser requests and serves the application pages.
-* **PHP** controls the application workflow, validates representative decisions, and performs the annual, three-year, and five-year calculations.
-* **MySQL HeatWave DB System** stores the original inputs, formatted lines, representative decisions, calculation results, workflow history, and minimal deletion audits.
-* **MySQL HeatWave GenAI** uses `sys.ML_GENERATE` to convert freeform RHEL and Oracle Linux subscription text into structured suggestions for representative review.
-
-AI assists with formatting the input. It does not approve SKUs, prices, alignments, or final results. The Oracle representative reviews and confirms the data before PHP calculates the comparison.
-
-### System Architecture
-
-The application uses an Oracle Linux compute instance for Apache and PHP. A private MySQL HeatWave DB System stores the saved-comparison data and provides MySQL HeatWave GenAI formatting. The representative remains responsible for reviewing and confirming both sides before PHP calculates the results.
-
-![Oracle Linux Value Navigator architecture showing an Oracle representative using a browser, an Oracle Linux Apache and PHP web tier in a public subnet, and a MySQL HeatWave DB System with MySQL HeatWave GenAI in a private subnet.](images/ol-value-navigator-architecture.svg)
-
-Estimated Workshop Time: 6 hours 45 minutes
-
-### Build and Application Flow
-
-The workshop builds and validates the system in six working stages:
-
-```text
-Lab 1: OCI and LAMP infrastructure
-  -> Lab 2: workbook database and application account
-  -> Lab 3: PHP foundation and saved inputs
-  -> Lab 4: GenAI formatting and representative review
-  -> Lab 5: calculations and workbook actions
-  -> Lab 6: automated and browser verification
-```
-
-After the system is built, a representative uses the application through this flow:
-
-```text
-Enter both complete inputs
-  -> Save and format with AI (original text saved before GenAI runs)
-  -> Review, correct, align, and decide every line
-  -> Save review and calculate annual, three-year, and five-year results with PHP
-  -> Save, reopen, export, duplicate, revise, or delete the comparison
-```
-
-The complete Lab 5 application combines saving and formatting into one action, and saving the review and calculating into another. Labs 3 and 4 keep these stages separate for learning. A representative can save an unfinished review for later.
-
-The repository includes the complete application source, an idempotent database schema, a staged deployment script, and executable PHP and installation tests. Labs 2 through 5 enable the application in stages so that each learner checkpoint corresponds to a working browser experience.
-
-The database in the MySQL HeatWave DB System preserves each comparison like a saved Excel workbook. The application does not maintain a master RHEL or Oracle Linux product catalog. A saved SKU, description, or price is part of one representative-confirmed comparison and is not treated as authoritative product data.
+Estimated Workshop Time: Pending measurement during the Version 3 rehearsal.
 
 ### Objectives
 
-In this workshop, you will:
+* Deploy one PHP application in a separate OCI environment.
+* Review source information and use deterministic cost calculations.
+* Protect comparisons with authenticated user ownership.
+* Save and export results with their price basis.
+* Maintain and recover the application using documented procedures.
 
-* Create an Oracle Linux LAMP environment in OCI.
-* Create a MySQL HeatWave DB System and configure it for MySQL HeatWave GenAI.
-* Create a database schema in the MySQL HeatWave DB System for saving and reopening comparisons.
-* Build PHP pages that capture RHEL and Oracle Linux freeform input.
-* Use AI to format both sides into reviewable subscription lines.
-* Review, correct, align, and confirm the formatted lines.
-* Calculate annual, three-year, and five-year subscription costs.
-* Save representative decisions and calculation-rule versions.
-* Use built-in Help to guide the complete workflow.
-* Reopen, revise, duplicate, export, and securely delete saved comparisons.
-* Test and demonstrate the finished prototype.
+### Current code versus target release
 
-### Prerequisites
+| Area | Reviewed Shawn code | Version 3 target |
+| --- | --- | --- |
+| Identity | One configured demo representative | Real sign-in and separate user access |
+| Scenario terms | 12 or 36 months | Annual, three-year, and five-year results under reviewed assumptions |
+| AI | Text extraction in a separate analysis demo | A coherent reviewed-input journey |
+| Imports | CSV, TSV, XLSX, and manually transcribed images | Focused spreadsheet workflow; no PDF/OCR promise |
+| Saved work | Revisions, confirmation, and PowerPoint routes | Simple owner-filtered list and agreed exports |
 
-This workshop assumes you have:
+The target column is planned work, not a claim of implemented behavior.
 
-* Access to an OCI tenancy with permission to create a compute instance and configure its network.
-* An SSH client and an SSH key pair.
-* Basic experience with Linux, Apache, MySQL HeatWave, and PHP.
-* No customer data is required. The workshop provides demonstration data.
+### Environment boundary
 
-*This is the fold. The remaining sections are collapsed by default.*
+Version 3 must not use Version 1's server, DB System, accounts, or deployment scripts. Lab 1 creates separate resources in compartment `ol-value-navigator-3`. Do not change shared Version 1 network rules.
 
-## Learn More
+No new microservice, Kubernetes platform, or separate OCI AI service is required by this application. Lab 1 uses the Version 1 pattern: a public Apache server and a private database. Its HTTP greeting page is only a setup test. HTTPS configuration belongs in Lab 3 before application use.
 
-* [Oracle Linux documentation](https://docs.oracle.com/en/operating-systems/oracle-linux/)
-* [Oracle Cloud Infrastructure documentation](https://docs.oracle.com/en-us/iaas/Content/home.htm)
-* [Oracle LiveLabs authoring documentation](https://livelabs.oracle.com/how-to)
+### Prerequisites and later-lab requirements
+
+* OCI access, permission to create the Lab 1 resources, and an SSH client. Lab 1 creates the separate environment; it does not need to exist beforehand.
+* Review of resource costs before creation.
+* The complete, identified application source and supported PHP 8.3 dependencies.
+* A reviewed migration/account procedure and selected synthetic catalog package.
+* A working identity integration before teaching multiuser access.
+* Synthetic examples, independent expected results, and tested recovery steps.
+
+Begin with Lab 1 and record actual checkpoint results. The source, migration, identity, and recovery requirements above apply to the later application labs, not to creating the Lab 1 infrastructure.
 
 ## Acknowledgements
 
-* **Author** - Perside Foster, Mark Atkinson, Shawn Kelley
+* **Authors** - Perside Foster, Mark Atkinson, and Shawn Kelley
 * **Contributors** - Nick Mader
 * **Last Updated By/Date** - Perside Foster, September 2026

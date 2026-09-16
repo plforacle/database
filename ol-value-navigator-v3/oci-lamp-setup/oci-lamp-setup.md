@@ -1,12 +1,14 @@
-# Lab 1: Create the OCI Oracle Linux, Apache, PHP, and MySQL HeatWave Environment
+# Lab 1: Create the Version 3 OCI LAMP Environment
 
 ## Introduction
 
-In this lab, you create the OCI foundation for the Oracle Linux Value Navigator. You will organize the project resources in a compartment, create a Virtual Cloud Network (VCN), configure network access, launch an Oracle Linux compute instance, and install the LAMP software.
+In this lab, you create a separate OCI foundation for Oracle Linux Value Navigator Version 3. You will organize the project resources in a compartment, create a Virtual Cloud Network (VCN), configure network access, launch an Oracle Linux compute instance, and install the LAMP software.
 
 Apache and PHP run on the Oracle Linux compute instance. A private MySQL HeatWave DB System stores the application data, and its MySQL HeatWave Cluster provides MySQL HeatWave GenAI.
 
-Estimated Time: 90 minutes
+Estimated Time: 90 minutes, subject to provisioning time; confirm during rehearsal.
+
+> **Version 3 rehearsal:** Follow these steps yourself in OCI. They adapt Version 1 Lab 1; this V3 procedure has not yet been run. Do not select or change Version 1 resources. This lab prepares infrastructure and a greeting page, not the complete application.
 
 ### About the LAMP Environment
 
@@ -32,8 +34,9 @@ In this lab, you will:
 This lab assumes you have:
 
 * Access to an OCI tenancy.
-* Permission to create compartments, networking resources, and compute instances.
+* Permission and available service limits to create compartments, networking resources, compute instances, and a MySQL HeatWave DB System with a HeatWave cluster.
 * An SSH client on your local computer.
+* Permission to incur charges for the workshop resources. Review the displayed costs before creating compute or HeatWave resources.
 
 > **Note:** If your organization manages compartments, networks, or security rules for you, ask your OCI administrator to create or approve the values in this lab. Do not create duplicate resources.
 
@@ -43,7 +46,7 @@ This lab assumes you have:
 
 A compartment keeps the Oracle Linux Value Navigator resources together. It also gives your OCI administrator a clear location for access policies, budgets, and cleanup.
 
-1. Sign in to the **Oracle Cloud Console**.
+1. Sign in to the **Oracle Cloud Console** and select your workshop region. Use the same region for all V3 resources.
 
 2. Open the navigation menu, select **Identity & Security**, and then select **Compartments** under **Identity**.
 
@@ -57,13 +60,13 @@ A compartment keeps the Oracle Linux Value Navigator resources together. It also
 
     | Field | Value |
     | --- | --- |
-    | Name | `ol-value-navigator` |
-    | Description | `Resources for the Oracle Linux Value Navigator workshop` |
+    | Name | `ol-value-navigator-3` |
+    | Description | `Resources for the Oracle Linux Value Navigator Version 3 workshop` |
     | Parent compartment | Your approved parent compartment or the root compartment |
 
 6. Leave the tagging fields empty unless your organization requires specific tags, and then select **Create compartment**.
 
-7. Confirm that `ol-value-navigator` appears in the compartment list with an **Active** status.
+7. Confirm that `ol-value-navigator-3` appears in the compartment list with an **Active** status.
 
     > **Checkpoint:** You now have one compartment dedicated to the workshop. Select this compartment whenever a later step asks where to create a resource.
 
@@ -73,7 +76,7 @@ The VCN is the private network for the application. The OCI wizard creates the p
 
 1. Open the navigation menu, select **Networking**, and then select **Virtual cloud networks**.
 
-2. In the **Compartment** list, select `ol-value-navigator`.
+2. In the **Compartment** list, select `ol-value-navigator-3`.
 
 3. Select **Start VCN Wizard**.
 
@@ -85,8 +88,8 @@ The VCN is the private network for the application. The OCI wizard creates the p
 
     | Field | Value |
     | --- | --- |
-    | VCN name | `ol-value-navigator-vcn` |
-    | Compartment | `ol-value-navigator` |
+    | VCN name | `ol-value-navigator-3-vcn` |
+    | Compartment | `ol-value-navigator-3` |
     | VCN IPv4 CIDR block | `10.0.0.0/16` |
     | Public subnet IPv4 CIDR block | `10.0.0.0/24` |
     | Private subnet IPv4 CIDR block | `10.0.1.0/24` |
@@ -102,17 +105,19 @@ The VCN is the private network for the application. The OCI wizard creates the p
 
 9. Select **View VCN**.
 
-    > **Checkpoint:** The VCN `ol-value-navigator-vcn` was created successfully. You will select its public subnet when you create the LAMP server.
+    > **Checkpoint:** The VCN `ol-value-navigator-3-vcn` was created successfully. You will select its public subnet when you create the LAMP server.
 
 ## Task 3: Configure the network security rules
 
 OCI security lists act as a virtual firewall for the subnet. SSH and HTTP access are available to workshop users so they can connect to the server and open the prototype in a browser.
 
-1. On the `ol-value-navigator-vcn` page, select the **Security** tab at the top of the page.
+1. On the `ol-value-navigator-3-vcn` page, select the **Security** tab at the top of the page.
 
-2. In the **Security Lists** section, select **Default Security List** for ol-value-navigator-vcn, and then select **Security Rules**.
+2. In the **Security Lists** section, select **Default Security List** for ol-value-navigator-3-vcn, and then select **Security Rules**.
 
-3. Under **Ingress Rules**, confirm that the existing stateful TCP rule for destination port `22` uses the source CIDR `0.0.0.0/0`.
+3. Under Ingress Rules, confirm that the existing stateful TCP rule for destination port 22 uses source CIDR 0.0.0.0/0.
+
+    Use the public address seen outside your network, not your laptop's private address. In the following table, replace `0.0.0.0/0` with that value. If your VPN changes your egress address, update this V3 rule.
 
 4. Select **Add Ingress Rules** and add the following HTTP rule.
 
@@ -153,7 +158,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
 1. Open the navigation menu, select **Compute**, and then select **Instances**.
 
-2. In the **Compartment** list, select `ol-value-navigator`.
+2. In the **Compartment** list, select `ol-value-navigator-3`.
 
 3. Select **Create instance**.
 
@@ -161,8 +166,8 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     | Field | Value |
     | --- | --- |
-    | Name | `ol-value-navigator-app` |
-    | Compartment | `ol-value-navigator` |
+    | Name | `ol-value-navigator-3-app` |
+    | Compartment | `ol-value-navigator-3` |
     | Placement | Accept the default availability domain |
 
 5. In the **Image and shape** section, select **Edit**, and then configure these values.
@@ -180,7 +185,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     | Field | Value |
     | --- | --- |
-    | Virtual cloud network | `ol-value-navigator-vcn` |
+    | Virtual cloud network | `ol-value-navigator-3-vcn` |
     | Subnet | The public subnet with CIDR `10.0.0.0/24` |
     | Use network security groups | Cleared |
     | Assign a public IPv4 address | Selected |
@@ -204,23 +209,23 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
     Do not save the private SSH key, OCI OCIDs, or other protected tenancy information in the workshop repository.
 
-    > **Checkpoint:** The instance `ol-value-navigator-app` is running Oracle Linux 9 in the public subnet and has a public IPv4 address.
+    > **Checkpoint:** The instance `ol-value-navigator-3-app` is running Oracle Linux 9 in the public subnet and has a public IPv4 address.
 
-## Task 5: Connect to and update the server
+## Task 5: Connect to the new server
 
 1. Open PowerShell, Windows Terminal, or another terminal on your local computer.
 
 2. Connect to the instance. Replace the two placeholders with the private-key path and the instance public IP address.
 
     ```bash
-    <copy>ssh -i /path/to/private-key opc@PUBLIC_IP_ADDRESS</copy>
+    <copy>ssh -i "PATH_TO_PRIVATE_KEY" opc@PUBLIC_IP_ADDRESS</copy>
     ```
 
     The default SSH user for an Oracle Linux platform image is `opc`.
 
 3. If this is your first connection, review the host fingerprint, type `yes`, and press Enter.
 
-4. Confirm that the prompt changes to the remote `opc` account.
+4. Confirm that the prompt changes to the remote `opc` account. Check that the public IP belongs to `ol-value-navigator-3-app` before running the remaining commands. Do not use your Version 1 SSH session.
 
 5. Confirm the operating system and enabled software repositories.
 
@@ -239,29 +244,20 @@ The compute instance runs the web application. This workshop uses a paid, genera
     <copy>sudo dnf module enable -y php:8.3 mysql:8.4</copy>
     ```
 
-    PHP 8.3 and MySQL 8.4 are Oracle-supported Oracle Linux 9 AppStream versions with published support through 2029. Selecting the streams explicitly prevents DNF from installing the original PHP 8.0 and MySQL 8.0 streams.
+    Oracle Linux 9.6 introduced these [PHP 8.3 and MySQL 8.4 AppStream versions](https://docs.oracle.com/en/operating-systems/oracle-linux/9/relnotes9.6/ol9-features-DynamicProgramming.html). The MySQL client version is separate from the managed database server version.
 
 2. Install Apache, PHP 8.3, the matching PHP driver for MySQL, and the MySQL 8.4 command-line client.
 
     ```bash
-    <copy>sudo dnf install -y httpd php php-mysqlnd mysql</copy>
+    <copy>sudo dnf install -y httpd php php-fpm php-mysqlnd mysql</copy>
     ```
 
     The `mysql` package installs the command-line client. It does not install a local MySQL Server on the compute instance.
 
-    If you previously completed an older draft of this task and installed PHP 8.0 and MySQL 8.0, switch the installed packages to the selected streams before continuing.
+3. Enable and start Apache and its PHP handler.
 
     ```bash
-    <copy>sudo dnf module reset -y php mysql
-    sudo dnf module enable -y php:8.3 mysql:8.4
-    sudo dnf distro-sync -y
-    sudo dnf install -y httpd php php-mysqlnd mysql</copy>
-    ```
-
-3. Enable and start Apache.
-
-    ```bash
-    <copy>sudo systemctl enable --now httpd</copy>
+    <copy>sudo systemctl enable --now php-fpm httpd</copy>
     ```
 
 4. Allow HTTP traffic through the Oracle Linux firewall.
@@ -280,10 +276,10 @@ The compute instance runs the web application. This workshop uses a paid, genera
 6. Confirm that Apache is running.
 
     ```bash
-    <copy>systemctl is-active httpd</copy>
+    <copy>systemctl is-active httpd php-fpm</copy>
     ```
 
-    The command should return `active`.
+    The command should return `active` for both services.
 
 7. Confirm the installed MySQL client and PHP versions, and verify that the client supports the required TLS option.
 
@@ -307,10 +303,12 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
 ## Task 7: Verify PHP through Apache
 
-1. Create the first Oracle Linux Value Navigator PHP page.
+1. On the new V3 server only, create a PHP greeting page.
+
+    This HTTP test contains no credentials or customer information. Configure HTTPS before running the application or sign-in flow in Lab 3. Do not weaken secure-cookie settings to make the application run over HTTP.
 
     ```bash
-    <copy>echo '&lt;?php echo "Oracle Linux Value Navigator is running"; ?&gt;' | sudo tee /var/www/html/index.php</copy>
+    <copy>echo '&lt;?php echo "Oracle Linux Value Navigator Version 3 is running"; ?&gt;' | sudo tee /var/www/html/index.php</copy>
     ```
 
 2. Test the page from the compute instance.
@@ -322,7 +320,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
     The command should return:
 
     ```text
-    Oracle Linux Value Navigator is running
+    Oracle Linux Value Navigator Version 3 is running
     ```
 
 3. On your local computer, open a browser and enter the following address. Replace the placeholder with the instance public IP address.
@@ -331,7 +329,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
     http://PUBLIC_IP_ADDRESS/
     ```
 
-4. Confirm that the browser displays `Oracle Linux Value Navigator is running`.
+4. Confirm that the browser displays `Oracle Linux Value Navigator Version 3 is running`.
 
 5. If the browser cannot reach the page, verify all of the following items before continuing.
 
@@ -339,7 +337,7 @@ The compute instance runs the web application. This workshop uses a paid, genera
     * The instance has a public IPv4 address.
     * The instance is in the public subnet with CIDR `10.0.0.0/24`.
     * The OCI security list permits inbound TCP port `80` from `0.0.0.0/0`.
-    * `systemctl is-active httpd` returns `active`.
+    * `systemctl is-active httpd php-fpm` returns `active`.
     * `sudo firewall-cmd --list-services` includes `http`.
 
     You have created the Oracle Linux web tier. Next, create the MySQL HeatWave DB System and verify MySQL HeatWave GenAI.
@@ -355,14 +353,14 @@ The compute instance runs the web application. This workshop uses a paid, genera
     | OCI form section | Field | Value |
     | --- | --- | --- |
     | Template | Template | Development or testing |
-    | DB System information | Create in compartment | `ol-value-navigator` |
-    | DB System information | Name | `ol-value-navigator-db` |
+    | DB System information | Create in compartment | `ol-value-navigator-3` |
+    | DB System information | Name | `ol-value-navigator-3-db` |
     | DB System information | Description | `MySQL HeatWave DB System for Oracle Linux Value Navigator comparison storage and GenAI workloads` |
     | Administrator credentials | Username | `olvnadmin` |
     | Setup | Topology | Standalone |
-    | Networking | Virtual cloud network compartment | `ol-value-navigator` |
-    | Networking | Virtual cloud network | `ol-value-navigator-vcn` |
-    | Networking | Subnet compartment | `ol-value-navigator` |
+    | Networking | Virtual cloud network compartment | `ol-value-navigator-3` |
+    | Networking | Virtual cloud network | `ol-value-navigator-3-vcn` |
+    | Networking | Subnet compartment | `ol-value-navigator-3` |
     | Networking | Subnet | Private regional subnet with CIDR `10.0.1.0/24` |
     | Networking | Network security groups | None; use the subnet security list created earlier |
     | Placement | Availability domain | Any available availability domain |
@@ -381,15 +379,17 @@ The compute instance runs the web application. This workshop uses a paid, genera
     | Deletion plan | Retain automatic backups | Disabled |
     | Deletion plan | Require final backup | Disabled |
     | Advanced options: Configuration | Configuration | Default configuration for `MySQL.2` |
-    | Advanced options: Configuration | Database version | Current supported MySQL version for which MySQL HeatWave GenAI is available. Do not depend on the version shown in workshop screenshots. |
+    | Advanced options: Configuration | Database version | A current supported Innovation version, 9.3.1 or later, that supports the model used below. Do not select 8.4 for this GenAI test. |
     | Advanced options: Encryption | Encryption key | Oracle-managed key |
     | Other advanced options | Connections, crash recovery, maintenance, management, data import, security attributes, telemetry, and tags | Keep the defaults |
 
-    > **Note:** These settings are for a temporary development and testing environment. Production deployments require a separate review of high availability, backups, deletion protection, storage expansion, encryption, monitoring, and operational contacts.
+    The `HeatWave.512GB` setting follows the [GenAI recommendation](https://dev.mysql.com/doc/heatwave/en/mys-hw-genai-requirements.html), not the size of the comparison data. Review its cost before creating the cluster. Lakehouse must be enabled for GenAI; this lab does not create an Object Storage bucket or a separate OCI Generative AI service.
+
+    > **Note:** These settings are for a temporary development and testing environment with synthetic data only. With backups and deletion protection disabled, deleted data may be unrecoverable. Production deployments require a separate review of high availability, backups, deletion protection, storage expansion, encryption, monitoring, and operational contacts.
 
 4. Create and securely store the administrator password. Do not add it to the repository.
 
-5. Create the DB System and wait for both the DB System and MySQL HeatWave Cluster states to become **Active**.
+5. Review the cost and confirm that the compartment, VCN, and private subnet belong to Version 3. Create the DB System and wait for both the DB System and MySQL HeatWave Cluster states to become **Active**.
 
 6. Record the DB System private IP address in your private notes.
 
@@ -398,6 +398,8 @@ The compute instance runs the web application. This workshop uses a paid, genera
     ```bash
     <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
     ```
+
+    This command prompts for the password and requires encryption. It does not verify the server certificate identity; the application connection configuration must address that separately.
 
 8. Confirm the MySQL Server version and the availability of the MySQL HeatWave GenAI routine.
 
@@ -409,13 +411,17 @@ The compute instance runs the web application. This workshop uses a paid, genera
     );</copy>
     ```
 
+    This test uses the in-database `mistral-7b-instruct-v3` model, documented for [MySQL 9.3.1 and later](https://dev.mysql.com/doc/heatwave/en/mys-hwgenai-ml-generate.html). Record the model ID for later application configuration. If the call fails, retain the error without credentials and check cluster status, database version, and model availability before continuing.
+
     The value returned by `SELECT VERSION()` is informational and will change as MySQL HeatWave versions are updated. Do not compare it with a specific workshop version. A successful response from `ML_GENERATE` is the required GenAI capability test.
 
     > **Checkpoint:** The MySQL HeatWave DB System is reachable from the Oracle Linux instance, reports its MySQL Server version, and returns a response from `ML_GENERATE`.
 
 ## Conclusion
 
-You have created the OCI LAMP environment and configured a MySQL HeatWave DB System for MySQL HeatWave GenAI. In the next lab, you will create the saved-comparison database schema.
+After all checkpoints pass, you have a separate V3 LAMP environment and a working HeatWave GenAI connection. Record the region, resource names, and test results in your private workshop notes. Keep passwords and SSH keys out of screenshots and the repository.
+
+Stop here for the first rehearsal. Lab 2 remains an authoring draft for installing Shawn's database and catalog. Do not run the copied Version 1 application or migration scripts on this environment.
 
 ## Learn More
 
@@ -434,4 +440,4 @@ You have created the OCI LAMP environment and configured a MySQL HeatWave DB Sys
 
 * **Author** - Perside Foster, Mark Atkinson, Shawn Kelley
 * **Contributors** - Nick Mader
-* **Last Updated By/Date** - Perside Foster, August 2026
+* **Last Updated By/Date** - Perside Foster, September 2026

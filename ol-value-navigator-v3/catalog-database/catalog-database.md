@@ -1,276 +1,59 @@
-# Lab 2: Create the Workbook-Style Database Schema
+# Lab 2: Identify the Source and Prepare the Database
 
 ## Introduction
 
-In this lab, you download the Oracle Linux Value Navigator source and create its complete database schema in the MySQL HeatWave DB System. The schema preserves the two original freeform inputs, every AI formatting run, the original AI suggestions, representative corrections and decisions, aligned comparison groups, calculated result snapshots, workflow events, and minimal deletion audit records.
+> **Version 3 authoring draft.** This lab is not ready for deployment or a learner run. Read the prerequisites and pending checkpoints before executing anything. Version 1 remains unchanged.
 
-The schema stores product text only inside a representative-created comparison. It does not contain or maintain a master RHEL or Oracle Linux SKU catalog.
+Shawn's application uses a different schema and catalog mechanism from Version 1. Identify the complete source before preparing a fresh Version 3 installation.
 
-Estimated Time: 45 minutes
+Estimated Time: Pending installation rehearsal.
 
 ### Objectives
 
-In this lab, you will:
+* Identify the exact application source and dependencies.
+* Separate schema installation from account provisioning.
+* Explain why a catalog must be selected before coverage review.
 
-* Download and extract the packaged application source used by the remaining labs.
-* Create the eight application tables and demonstration rule version.
-* Create the PHP database account.
-* Grant application data access and MySQL HeatWave GenAI access.
-* Verify the schema and application account.
+## Task 1: Identify the source
 
-### Prerequisites
+1. Use the complete `olvalnav` repository, not only its `app` folder. The reviewed revision is `d419d24d035cabc68b219b9e98be23cd05770742`.
 
-This lab assumes you have:
+2. Confirm that the source contains `app`, `public`, `config`, `database`, `resources`, `tests`, `composer.json`, and `composer.lock`.
 
-* The working Oracle Linux instance from Lab 1.
-* The active MySQL HeatWave DB System and private IP address from Lab 1.
-* The DB System administrator password created in Lab 1.
-* The successful `sys.ML_GENERATE` result from the Lab 1 checkpoint.
+3. Record the revision, dependency-lock hash, and any adaptations in a separate candidate. Preserve the upstream repository. Do not fetch, merge, or change the baseline silently.
 
-> **Note:** Use demonstration information only. Version 1 has no login, user ownership, or production data-governance controls.
+4. Package the accepted candidate only after review. Record the generated archive's SHA-256 and relationship to the source revision. A checksum identifies bytes; it does not independently prove a Git commit.
 
-*This is the fold. The remaining sections are collapsed by default.*
+    **Checkpoint:** A complete local repository is available. An original downloaded ZIP is not a prerequisite.
 
-## Task 1: Download the workshop application package
+## Task 2: Review installation responsibilities
 
-1. Connect to the Oracle Linux compute instance as `opc` if you are not already connected.
+1. Inspect migrations without executing them. Note the catalog tables, analysis tables, coverage revisions, package tables, and audit protections.
 
-2. Install the tools used to download and extract the application package.
+2. Separate schema work from account/grant work. Migration `003_audit_guards.sql` contains synthetic account creation and grants; later coverage grants also contain fixture-specific conditions.
 
-    ```bash
-    <copy>sudo dnf install -y curl unzip</copy>
-    ```
+3. Plan dedicated V3 runtime and catalog-maintenance credentials. Keep runtime access distinct from publication privileges.
 
-3. Download the application ZIP from OCI Object Storage.
+4. Compare the reviewed fresh-install set with the intended V3 database. Do not run the copied Version 1 schema or every upstream migration blindly.
 
-    <!-- Production publishing reminder: After all labs pass end-to-end testing, upload the final ZIP to the LiveLabs production Object Storage location and replace the testing PAR URL below before publishing the workshop. -->
+    **Pending checkpoint:** The deployment-safe migration/account procedure has not been prepared or tested.
 
-    ```bash
-    <copy>cd ~
-    curl --fail --location \
-      --output ol-value-navigator-application.zip \
-      https://objectstorage.us-ashburn-1.oraclecloud.com/p/ZnCMS-_6lV8x3HOM_x_MJH6fFt_aHL6BKYBRxB1rbX_zEZ1olW3yvKpcv2Jz_tD5/n/idhwewbjlvpy/b/ol-value-navigator/o/ol-value-navigator-application.zip</copy>
-    ```
+## Task 3: Prepare the synthetic catalog
 
-4. Verify the downloaded package checksum.
+1. Read upstream `docs/operations/package-publication.md`. Distinguish publishing a validated package from selecting it for runtime use.
 
-    ```bash
-    <copy>cd ~
-    echo '44d7a63ef32757c255dd4febd1ebc5c041e316eb2ed7c84539adf9f63a64f286  ol-value-navigator-application.zip' | sha256sum --check</copy>
-    ```
+2. Prepare independently reviewed synthetic acceptance examples and identify the selected package.
 
-    Confirm that the command returns `ol-value-navigator-application.zip: OK`.
+3. Verify new comparisons use the selected package and saved confirmed comparisons retain their earlier price basis.
 
-5. Extract the package into a dedicated working directory.
-
-    ```bash
-    <copy>mkdir -p ~/ol-value-navigator-application
-    unzip -o ~/ol-value-navigator-application.zip -d ~/ol-value-navigator-application</copy>
-    ```
-
-6. List the extracted application assets.
-
-    ```bash
-    <copy>find ~/ol-value-navigator-application -maxdepth 2 -type f | sort</copy>
-    ```
-
-    Confirm that the output includes `database/schema.sql`, `deploy.sh`, PHP files under `lib` and `public`, and tests under `tests`.
-
-    > **Checkpoint:** The complete workshop application source is available on the compute instance.
-
-## Task 2: Review and load the schema
-
-1. Review the SQL file before executing it.
-
-    ```bash
-    <copy>less ~/ol-value-navigator-application/database/schema.sql</copy>
-    ```
-
-    Press `q` to exit `less`.
-
-2. Understand what the file creates.
-
-    | Table | Purpose |
-    | --- | --- |
-    | `calculation_rule_version` | Identifies the deterministic PHP rule used for a saved result |
-    | `comparison` | Represents one saved workbook, its workflow state, and optional customer name, objective, scope, and next step |
-    | `comparison_input` | Preserves the complete RHEL and Oracle Linux freeform inputs |
-    | `ai_formatting_run` | Records the model, outcome, and validated response for each formatting attempt |
-    | `comparison_line` | Preserves AI suggestions separately from representative-reviewed values and alignment decisions |
-    | `comparison_result` | Stores the annual, three-year, and five-year result snapshot |
-    | `application_event` | Records AI, representative, and application workflow events |
-    | `comparison_deletion_audit` | Retains the comparison ID, name, and deletion time after associated data is deleted |
-
-3. Load the schema as the DB System administrator. Replace the private IP placeholder.
-
-    ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED &lt; ~/ol-value-navigator-application/database/schema.sql</copy>
-    ```
-
-4. Enter the DB System administrator password when prompted.
-
-    The schema file creates the database with `utf8mb4`, creates all tables with foreign keys and fixed-precision decimal money columns, and loads `workshop-v1` calculation-rule metadata.
-
-## Task 3: Create the PHP database account
-
-1. Connect as the DB System administrator.
-
-    ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvnadmin --password --ssl-mode=REQUIRED</copy>
-    ```
-
-2. Create the application account. Replace `CHANGE_THIS_PASSWORD` with a new private password.
-
-    ```sql
-    <copy>CREATE USER 'olvn_app'@'%'
-      IDENTIFIED BY 'CHANGE_THIS_PASSWORD';</copy>
-    ```
-
-    If you are repeating the lab and the account already exists, reset its password instead.
-
-    ```sql
-    <copy>ALTER USER 'olvn_app'@'%'
-      IDENTIFIED BY 'CHANGE_THIS_PASSWORD';</copy>
-    ```
-
-    Store this password securely. Do not add the real value to the repository, a shell script, or a command-line argument.
-
-3. Grant the data permissions required by the PHP application.
-
-    ```sql
-    <copy>GRANT SELECT
-      ON ol_value_navigator.calculation_rule_version
-      TO 'olvn_app'@'%';
-
-    GRANT SELECT, INSERT, UPDATE, DELETE
-      ON ol_value_navigator.comparison
-      TO 'olvn_app'@'%';
-
-    GRANT SELECT, INSERT, UPDATE, DELETE
-      ON ol_value_navigator.comparison_input
-      TO 'olvn_app'@'%';
-
-    GRANT SELECT, INSERT, DELETE
-      ON ol_value_navigator.ai_formatting_run
-      TO 'olvn_app'@'%';
-
-    GRANT SELECT, INSERT, UPDATE, DELETE
-      ON ol_value_navigator.comparison_line
-      TO 'olvn_app'@'%';
-
-    GRANT SELECT, INSERT, UPDATE, DELETE
-      ON ol_value_navigator.comparison_result
-      TO 'olvn_app'@'%';
-
-    GRANT SELECT, INSERT
-      ON ol_value_navigator.application_event
-      TO 'olvn_app'@'%';
-
-    GRANT INSERT
-      ON ol_value_navigator.comparison_deletion_audit
-      TO 'olvn_app'@'%';</copy>
-    ```
-
-4. Grant access to the MySQL HeatWave GenAI system routine.
-
-    ```sql
-    <copy>GRANT SELECT, EXECUTE
-      ON sys.*
-      TO 'olvn_app'@'%';</copy>
-    ```
-
-    The application uses the single-row `sys.ML_GENERATE` routine. It does not receive schema creation, table alteration, or user-administration privileges.
-
-5. Display the resulting grants, and then exit.
-
-    ```sql
-    <copy>SHOW GRANTS FOR 'olvn_app'@'%';
-    EXIT;</copy>
-    ```
-
-## Task 4: Verify the schema and GenAI access
-
-1. Connect with the new application account.
-
-    ```bash
-    <copy>mysql --host=HEATWAVE_PRIVATE_IP --user=olvn_app --password --ssl-mode=REQUIRED ol_value_navigator</copy>
-    ```
-
-2. Confirm that all eight tables exist.
-
-    ```sql
-    <copy>SHOW TABLES;</copy>
-    ```
-
-    Confirm that the output contains:
-
-    ```text
-    ai_formatting_run
-    application_event
-    calculation_rule_version
-    comparison
-    comparison_deletion_audit
-    comparison_input
-    comparison_line
-    comparison_result
-    ```
-
-3. Confirm the active calculation-rule version.
-
-    ```sql
-    <copy>SELECT version_label, governance_status, active
-    FROM calculation_rule_version;</copy>
-    ```
-
-    Confirm that `workshop-v1` is active and has the `DEMONSTRATION` governance status.
-
-4. Confirm that the application account can call MySQL HeatWave GenAI.
-
-    ```sql
-    <copy>SELECT sys.ML_GENERATE(
-      'Return the word READY.',
-      JSON_OBJECT(
-        'task', 'generation',
-        'model_id', 'mistral-7b-instruct-v3',
-        'language', 'en',
-        'temperature', 0
-      )
-    );</copy>
-    ```
-
-    Wait for the response and confirm that its `text` field contains `READY`.
-
-5. Confirm that no master catalog table exists.
-
-    ```sql
-    <copy>SELECT table_name
-    FROM information_schema.tables
-    WHERE table_schema = 'ol_value_navigator'
-      AND table_name LIKE '%catalog%';</copy>
-    ```
-
-    The query must return an empty result.
-
-6. Exit the MySQL client.
-
-    ```sql
-    <copy>EXIT;</copy>
-    ```
-
-    > **Checkpoint:** The application account can manage saved-comparison records, retain minimal deletion audits, and call `sys.ML_GENERATE`, but the schema has no master RHEL or Oracle Linux SKU catalog.
-
-## Conclusion
-
-You have created the full persistence layer. In the next lab, you will deploy the PHP foundation and use it to create, list, and reopen comparison workbooks.
+    **Pending checkpoint:** No package has been published or activated in a V3 environment. Creating the schema alone does not make coverage review available.
 
 ## Learn More
 
-* [MySQL HeatWave GenAI roles and privileges](https://dev.mysql.com/doc/heatwave/en/mys-hw-genai-privileges.html)
-* [MySQL fixed-point data types](https://dev.mysql.com/doc/refman/8.4/en/fixed-point-types.html)
-* [MySQL access control](https://dev.mysql.com/doc/refman/8.4/en/access-control.html)
+* Upstream source references: `database/migrations`, `docs/operations/package-publication.md`, and `app/Infrastructure/Catalog/PdoCatalogSnapshotResolver.php`.
 
 ## Acknowledgements
 
-* **Author** - Perside Foster, Mark Atkinson, Shawn Kelley
+* **Authors** - Perside Foster, Mark Atkinson, and Shawn Kelley
 * **Contributors** - Nick Mader
 * **Last Updated By/Date** - Perside Foster, September 2026
