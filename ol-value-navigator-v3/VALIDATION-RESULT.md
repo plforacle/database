@@ -1,6 +1,6 @@
 # LiveLabs Workshop Validation – ol-value-navigator-v3
 
-Generated on 2026-09-15T23:15:16.145853+00:00
+Generated on 2026-09-16T11:09:35.401031+00:00
 
 ## Structure Check
 - ✅ Required folders and workshop variants present.
@@ -22,23 +22,25 @@ Generated on 2026-09-15T23:15:16.145853+00:00
 - ✅ LiveLabs formatting checks passed.
 - ✍️ Lanham score: 1/5
   - 4 sentence(s) exceed 20 words; tighten wording.
-  - Passive voice detected in 3 instance(s).
+  - Passive voice detected in 4 instance(s).
   - Contractions found; expand them per Lanham rules.
   - Heavy nominalization usage; prefer vivid verbs.
 
 ### catalog-database\catalog-database.md
 - ✅ LiveLabs formatting checks passed.
 - ✍️ Lanham score: 1/5
-  - 2 sentence(s) exceed 20 words; tighten wording.
-  - Passive voice detected in 3 instance(s).
+  - 9 sentence(s) exceed 20 words; tighten wording.
+  - Passive voice detected in 7 instance(s).
   - Contractions found; expand them per Lanham rules.
   - Heavy nominalization usage; prefer vivid verbs.
 
 ### catalog-database\files\README.md
 - ✅ LiveLabs formatting checks passed.
-- ✍️ Lanham score: 3/5
-  - 2 sentence(s) exceed 20 words; tighten wording.
+- ✍️ Lanham score: 1/5
+  - 3 sentence(s) exceed 20 words; tighten wording.
+  - Passive voice detected in 2 instance(s).
   - Contractions found; expand them per Lanham rules.
+  - Heavy nominalization usage; prefer vivid verbs.
 
 ### introduction\introduction.md
 - ✅ LiveLabs formatting checks passed.
@@ -71,7 +73,7 @@ Generated on 2026-09-15T23:15:16.145853+00:00
 ### php-calculator\php-calculator.md
 - ✅ LiveLabs formatting checks passed.
 - ✍️ Lanham score: 2/5
-  - 3 sentence(s) exceed 20 words; tighten wording.
+  - 4 sentence(s) exceed 20 words; tighten wording.
   - Contractions found; expand them per Lanham rules.
   - Heavy nominalization usage; prefer vivid verbs.
 
@@ -79,7 +81,7 @@ Generated on 2026-09-15T23:15:16.145853+00:00
 - ✅ LiveLabs formatting checks passed.
 - ✍️ Lanham score: 1/5
   - 5 sentence(s) exceed 20 words; tighten wording.
-  - Passive voice detected in 6 instance(s).
+  - Passive voice detected in 4 instance(s).
   - Contractions found; expand them per Lanham rules.
   - Heavy nominalization usage; prefer vivid verbs.
 

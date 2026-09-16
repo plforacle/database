@@ -28,6 +28,8 @@ Estimated Time: Pending application and identity rehearsal.
 
 ## Task 2: Review private settings
 
+Lab 2 creates schema `olvn_v3` and runtime account `olvn_v3_app`. This lab must add protected runtime credentials, verify application-account GenAI access, and publish and activate a synthetic catalog through Shawn's PHP commands. Do not use the administrator account in the web application.
+
 1. Inspect `config/app.php` for the required setting names.
 
     | Setting | Purpose |

@@ -4,7 +4,7 @@
 
 This is the separate Version 3 LiveLabs workshop, based on Shawn's application. It reuses the Version 1 layout and Lab 1 LAMP setup sequence with separate V3 resources. The original sibling folder, `ol-value-navigator`, remains unchanged.
 
-**Status: Lab 1 is ready for a user-led rehearsal; Labs 2 through 6 remain authoring drafts.** Lab 1 contains resource-creation instructions, but has not yet been executed for V3. No adapted application or runtime acceptance results are included.
+**Status: Lab 1 passed the user-led rehearsal; Lab 2 is ready for rehearsal; Labs 3 through 6 remain authoring drafts.** Perside supplied successful PHP and HeatWave GenAI results. Lab 2 now includes schema installation and application-account instructions; its SQL has not yet been run against HeatWave.
 
 Estimated Time: 5 minutes to review this status.
 
@@ -39,7 +39,7 @@ The supplied `shawn/app` directory contains only the application-code subtree. U
 ## Workshop sequence
 
 1. Create the compartment `ol-value-navigator-3`, networking, LAMP server, and private HeatWave database.
-2. Identify the source and review database/catalog installation.
+2. Create and verify the application database and runtime account.
 3. Configure the PHP application and identity.
 4. Enter, import, and review subscription information.
 5. Calculate, save, and export comparisons.

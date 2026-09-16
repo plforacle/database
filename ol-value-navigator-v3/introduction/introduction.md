@@ -2,7 +2,7 @@
 
 ## Introduction
 
-> **Version 3 workshop in progress.** Lab 1 contains the setup procedure for a user-led rehearsal. Labs 2 through 6 remain authoring drafts. Version 1 remains unchanged.
+> **Version 3 workshop in progress.** Lab 1 passed the user-led rehearsal. Lab 2 now contains database setup instructions for rehearsal. Labs 3 through 6 remain authoring drafts. Version 1 remains unchanged.
 
 This workshop will guide you through building a subscription-cost comparison application from Shawn's PHP code. It uses the LAMP concept: Oracle Linux and Apache run PHP, and a private MySQL HeatWave DB System stores data and supports HeatWave GenAI.
 

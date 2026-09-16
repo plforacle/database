@@ -389,9 +389,18 @@ The compute instance runs the web application. This workshop uses a paid, genera
 
 4. Create and securely store the administrator password. Do not add it to the repository.
 
-5. Review the cost and confirm that the compartment, VCN, and private subnet belong to Version 3. Create the DB System and wait for both the DB System and MySQL HeatWave Cluster states to become **Active**.
+5. Confirm that the compartment, VCN, and private subnet belong to Version 3. Create the DB System and wait for both the DB System and MySQL HeatWave Cluster states to become **Active**.
 
-6. Record the DB System private IP address in your private notes.
+6. Find and record the DB System private IP address.
+
+    * In the OCI Console, open **Databases**, then **MySQL HeatWave**, then **DB systems**.
+    * Select compartment `ol-value-navigator-3` and open `ol-value-navigator-3-db`.
+    * Select **Connections**. Under **Primary endpoint** (or **Endpoint**), locate **Private IP address**.
+    * Copy this address into your private notes. With the private subnet used in this lab, it will be in the `10.0.1.0/24` range, such as `10.0.1.x`. Use the actual address shown, not this example.
+
+    Use the database's primary endpoint address, not the application server's public or private IP address. In the next step, substitute this address for `HEATWAVE_PRIVATE_IP`.
+
+    See [Viewing DB System Details](https://docs.oracle.com/en-us/iaas/mysql-database/doc/viewing-db-system-details.html) for the Console field descriptions.
 
 7. From the Oracle Linux instance, connect to the private DB System. Replace the placeholders.
 

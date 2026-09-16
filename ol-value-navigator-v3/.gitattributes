@@ -1,2 +1,3 @@
 # Oracle Linux deployment scripts must retain Unix line endings on Windows.
 *.sh text eol=lf
+catalog-database/files/v3-*.sql text eol=lf

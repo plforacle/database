@@ -18,8 +18,8 @@
       "filename": "../../oci-lamp-setup/oci-lamp-setup.md"
     },
     {
-      "title": "Lab 2: Identify the Source and Prepare the Database",
-      "description": "Identify Shawn's complete source and review safe schema, account, and catalog setup.",
+      "title": "Lab 2: Create the Version 3 Application Database",
+      "description": "Install the V3 schema, create the application database account, and verify its permissions.",
       "filename": "../../catalog-database/catalog-database.md"
     },
     {
