@@ -1,62 +1,195 @@
-# Lab 3: Configure the PHP Application and User Access
+# Install and Check the PHP Application
 
 ## Introduction
 
-> **Version 3 authoring draft.** This lab is not ready for deployment or a learner run. Read the prerequisites and pending checkpoints before executing anything. Version 1 remains unchanged.
+Install Shawn's application from one ZIP on the Version 3 compute instance. The ZIP includes the PHP dependencies, so you do not run Composer on OCI. Keep the existing compute instance and HeatWave database.
 
-Configure one PHP application using the approved V3 installation. Authentication must identify each real user before ownership checks can separate their comparisons.
+The bundled catalog supplies subscription choices. HeatWave still stores comparisons, revisions, and catalog snapshots and runs GenAI. This private rehearsal uses a shared demo identity, not individual login or user-owned comparisons. Use invented data only.
 
-Estimated Time: Pending application and identity rehearsal.
+Estimated Time: 30 minutes
 
 ### Objectives
 
-* Identify runtime dependencies and private configuration.
-* Review routing, HTTPS, and private-file boundaries.
-* Define the two-user acceptance check.
+* Download and verify the application package.
+* Install it without changing Version 1.
+* Check database access, GenAI, and the browser workflows.
 
-## Task 1: Prepare the PHP runtime
+### Prerequisites
 
-1. Use a supported PHP 8.3 test/runtime environment and the reviewed Composer lock file. Inspect project scripts before installing dependencies.
+* Completed Labs 1 and 2.
+* SSH access to ol-value-navigator-3-app.
+* The application database password, or the working protected credentials from the earlier Lab 3 installation.
+* Internet access from the compute instance to the workshop download URL.
 
-2. Verify required extensions and dependencies against the actual target. The author's currently observed Windows PHP 8.2.30 is not proof of PHP 8.3 compatibility.
+## Task 1: Download the package to the compute instance
 
-3. Configure Apache to serve only the candidate's `public` directory. Keep configuration, source libraries, vendor files, and uploaded evidence outside direct web access.
+1. This workshop provides [the R3 application ZIP](../catalog-database/files/ol-value-navigator-v3-r3.zip). All learners use the same published download URL.
 
-4. Verify Slim routes and cookie paths. The reviewed source uses `/demo` routes; do not invent a new base path without adapting and testing routing.
+    Use R3 for this lab. Do not install older R1/R2 packages. This is not an upgrade procedure for an already installed R1/R2 package.
 
-    **Pending checkpoint:** The candidate installation and Apache configuration are not yet verified. Do not use Version 1's staged deployment script.
+2. Open Windows PowerShell. Set your private key path and connect to the Version 3 compute instance.
 
-## Task 2: Review private settings
+    ```powershell
+    <copy>
+    $V3Key = 'C:\REPLACE\WITH\YOUR\V3-PRIVATE-KEY.key'
+    ssh -i $V3Key opc@158.101.119.245
+    </copy>
+    ```
 
-Lab 2 creates schema `olvn_v3` and runtime account `olvn_v3_app`. This lab must add protected runtime credentials, verify application-account GenAI access, and publish and activate a synthetic catalog through Shawn's PHP commands. Do not use the administrator account in the web application.
+3. Confirm that the hostname is **ol-value-navigator-3-app**. Run the remaining Linux commands in this SSH session.
 
-1. Inspect `config/app.php` for the required setting names.
+    ```bash
+    <copy>
+    hostname
+    mkdir -m 700 /home/opc/olvn-v3-download-r3
+    cd /home/opc/olvn-v3-download-r3
+    </copy>
+    ```
 
-    | Setting | Purpose |
-    | --- | --- |
-    | `OLVN_DATABASE_DSN` | Selects the database connection |
-    | `OLVN_DATABASE_USER_SECRET_PATH` | Points to the runtime credential file |
-    | `HEATWAVE_MODEL_ID` | Selects the configured extraction model |
-    | `OLVN_DEMO_REPRESENTATIVE_SUBJECT` | Supplies the current demo identity, not production login |
-    | `OLVN_ENVIRONMENT` | Defaults to production; influences secure cookie behavior |
+    If the directory already exists from this same download, inspect it and use it. Do not remove an existing installation.
 
-2. Install V3 credentials through the approved private procedure. Do not copy credentials from Version 1 or put secret values in screenshots or source control.
+4. Download the ZIP from the published workshop location.
 
-3. Verify how the web process receives settings. The current entry point does not automatically load a `.env` file.
+    ```bash
+    <copy>
+    V3_ZIP_URL='https://plforacle.github.io/database/ol-value-navigator-v3/catalog-database/files/ol-value-navigator-v3-r3.zip'
+    curl --fail --location --proto '=https' --proto-redir '=https' "$V3_ZIP_URL" -o ol-value-navigator-v3-r3.zip
+    unset V3_ZIP_URL
+    </copy>
+    ```
 
-4. Verify database encryption and server identity, HTTPS cookies, and private-file denial. Setting a value is not proof that the connection uses it correctly.
+5. Verify the ZIP before extracting it. Continue only if the result is **OK**.
 
-## Task 3: Establish real user identity
+    ```bash
+    <copy>
+    printf '%s  %s\n' '0dbdd3010e0dcff3e6ccd9db82f9b3b91afebf83c0ca694781d245ea41477167' 'ol-value-navigator-v3-r3.zip' | sha256sum -c -
+    </copy>
+    ```
 
-1. Choose the approved identity-provider integration and allowed users. Do not assume installed OAuth/JWT libraries constitute working sign-in.
+## Task 2: Check prerequisites
 
-2. Replace the shared configured identity throughout the request and service flow. The current bootstrap also passes that actor into extraction services.
+1. Install the additional PHP extensions and local setup tools. This does not change the PHP module stream selected in Lab 1.
 
-3. Test User A, User B, and an unauthenticated browser. Check listing, read, edit, confirm, export, source preview, and image access.
+    ```bash
+    <copy>
+    sudo dnf install -y php-gd php-mbstring php-xml php-process php-pecl-zip php-bcmath policycoreutils-python-utils unzip
+    </copy>
+    ```
 
-4. Test logout and session expiry. Record failures without customer data.
+2. Extract the verified ZIP once.
 
-    **Stop here:** Real login is not implemented in the reviewed handoff. Multiuser isolation cannot pass while all visitors receive the same demo identity.
+    ```bash
+    <copy>
+    cd /home/opc/olvn-v3-download-r3
+    unzip ol-value-navigator-v3-r3.zip
+    cd ol-value-navigator-v3-r3
+    </copy>
+    ```
+
+    If you already extracted this exact package, use the existing directory instead of overwriting it.
+
+3. Skip this step if all three GenAI grants have already been applied. Perside completed these grants and verified READY through PHP on September 17.
+
+    For a fresh environment, connect as the database administrator. Use the private DB IP recorded in Lab 1 if it differs from this rehearsal address.
+
+    ```bash
+    <copy>
+    mysql --host=10.0.1.88 --port=3306 --user=olvnadmin --password --ssl-mode=REQUIRED
+    </copy>
+    ```
+
+4. For a fresh environment only, confirm that CURRENT_USER is the administrator, then apply the package's three scoped grants. Do not run these commands as olvn_v3_app.
+
+    ```sql
+    <copy>
+    SELECT CURRENT_USER();
+    SOURCE /home/opc/olvn-v3-download-r3/ol-value-navigator-v3-r3/genai-grant.sql;
+    exit;
+    </copy>
+    ```
+
+    The grants allow execution of ML_GENERATE, ML_CLUSTER_CHECK, and ML_GENAI_VARIABLE. The application never receives the administrator password.
+
+## Task 3: Install and run the checks
+
+1. On the compute instance, run the installer.
+
+    ```bash
+    <copy>
+    cd /home/opc/olvn-v3-download-r3/ol-value-navigator-v3-r3
+    sudo bash install.sh
+    </copy>
+    ```
+
+    The installer validates prerequisites and database credentials before copying application files. It reuses working protected credentials from the earlier Lab 3 installation when available. Otherwise, it prompts for the private DB IP and application password. Type values at the prompts; do not replace the prompt text with passwords.
+
+    A successful installation reports **INSTALLED**. It does not migrate the database, delete comparisons, or change Version 1. A retry accepts only matching package files and configuration. If a conflict is reported, stop and share the error without passwords. Do not delete files to bypass the checks.
+
+2. Run the packaged checks.
+
+    ```bash
+    <copy>
+    sudo bash /opt/olvn-v3/package-r3/test.sh
+    </copy>
+    ```
+
+    Expect offline calculation checks, an encrypted database connection, a GenAI READY response, and HTTP checks to pass. GenAI can take about a minute. Stop on a failed check. A passing script does not replace the browser tests below.
+
+## Task 4: Open Shawn's GUI privately
+
+1. Open a second Windows PowerShell window. Start the SSH tunnel and leave this window open.
+
+    ```powershell
+    <copy>
+    $V3Key = 'C:\REPLACE\WITH\YOUR\V3-PRIVATE-KEY.key'
+    ssh -i $V3Key -o ExitOnForwardFailure=yes -N -L 127.0.0.1:8080:127.0.0.1:8009 opc@158.101.119.245
+    </copy>
+    ```
+
+2. Open these pages in your browser:
+
+    * Legacy coverage comparison: http://127.0.0.1:8080/demo/coverage
+    * New scenario: http://127.0.0.1:8080/demo/coverage/new
+    * Separate extraction demo: http://127.0.0.1:8080/demo
+
+    The application listens only on the compute instance's loopback address. Do not open port 8009 in OCI or the host firewall. The existing port-80 greeting remains available.
+
+    Local browser HTTP travels through the encrypted SSH tunnel. Database traffic is encrypted, but server certificate identity is not verified. This is a private rehearsal, not a public multiuser deployment.
+
+## Task 5: Verify the application workflows
+
+1. Open the legacy coverage comparison at http://127.0.0.1:8080/demo/coverage. Use invented customer data, ten physical systems with two CPUs per system, source SKU **SYN-OS** with quantity ten, and Oracle offering **Synthetic Basic**. Set OLAM required to No. The bundled synthetic annual prices are USD 150 per source unit and USD 60 per Oracle CPU pair.
+
+    The offline test independently checks these synthetic totals:
+
+    | Period | Source cost | Oracle cost |
+    | --- | --- | --- |
+    | Annual | USD 1,500 | USD 600 |
+    | Three years | USD 4,500 | USD 1,800 |
+    | Five years | USD 7,500 | USD 3,000 |
+
+    Annual savings are USD 900, or 60 percent. These are test values, not commercial quotes.
+
+2. Save and reopen the comparison. Review and confirm it, then download the editable PowerPoint. Check that the saved values and presentation match the reviewed comparison. Report any failure rather than treating the command-line tests as full acceptance.
+
+3. In the newer scenario workflow, test import using **examples/synthetic-import.tsv** from the ZIP extracted on your computer. Review imported rows and unresolved inputs before confirming. Test saving, reopening, and export in this workflow as well.
+
+    The newer scenario workflow supports 12 and 36 months. It is separate from the legacy annual, three-year, and five-year workflow. Five-year scenario support and real login remain open requirements.
+
+4. Record which browser checks passed and any errors. These checks are pending until you perform them on this package. Close the tunnel with Ctrl+C when finished.
+
+## Troubleshooting
+
+* **Missing prerequisite:** Install the named PHP extension or tool, then retry the same installer.
+* **Credential error:** Check the application password. Never paste it into chat or a command example.
+* **Permission denied for a GenAI routine:** Confirm Task 2 was completed as olvnadmin. Do not grant broad administrator permissions.
+* **Existing configuration differs:** Stop. This installer does not overwrite another package or perform upgrades.
+* **Browser cannot connect:** Keep the SSH tunnel open and check that local port 8080 is available.
+* **Application error:** Share the safe error and failed step. Do not post protected JSON configuration files.
+
+## Learn More
+
+* [PHP PDO MySQL connection options](https://www.php.net/manual/en/ref.pdo-mysql.php)
 
 ## Acknowledgements
 

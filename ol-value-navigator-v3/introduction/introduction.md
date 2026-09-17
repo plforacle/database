@@ -2,7 +2,7 @@
 
 ## Introduction
 
-> **Version 3 workshop in progress.** Lab 1 passed the user-led rehearsal. Lab 2 now contains database setup instructions for rehearsal. Labs 3 through 6 remain authoring drafts. Version 1 remains unchanged.
+> **Version 3 workshop in progress.** Labs 1 and 2 passed the user-led rehearsal. Lab 3 now contains private installation and connectivity checks for rehearsal. Labs 4 through 6 remain authoring drafts. Version 1 remains unchanged.
 
 This workshop will guide you through building a subscription-cost comparison application from Shawn's PHP code. It uses the LAMP concept: Oracle Linux and Apache run PHP, and a private MySQL HeatWave DB System stores data and supports HeatWave GenAI.
 
@@ -36,7 +36,7 @@ The target column is planned work, not a claim of implemented behavior.
 
 Version 3 must not use Version 1's server, DB System, accounts, or deployment scripts. Lab 1 creates separate resources in compartment `ol-value-navigator-3`. Do not change shared Version 1 network rules.
 
-No new microservice, Kubernetes platform, or separate OCI AI service is required by this application. Lab 1 uses the Version 1 pattern: a public Apache server and a private database. Its HTTP greeting page is only a setup test. HTTPS configuration belongs in Lab 3 before application use.
+No new microservice, Kubernetes platform, or separate OCI AI service is required. Lab 1 creates an Apache server and private database. Its public HTTP greeting is only a setup test. Lab 3 uses a loopback-only application listener and encrypted SSH tunnel for private rehearsal. Public application access still requires HTTPS and real login.
 
 ### Prerequisites and later-lab requirements
 

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Updated September 16, 2026: Lab 1 passed Perside's rehearsal. Lab 2 now contains schema and account installation instructions for rehearsal. Mode: `how-to-guide`, draft maturity. The workshop structure comes from the copied Version 1 workshop; application behavior comes from Shawn's reviewed code.
+Updated September 17, 2026: Labs 1 and 2 passed Perside's rehearsal. GenAI passed through the earlier PHP helper after three scoped grants. Lab 3 now uses one R3 ZIP, including production dependencies and a bundled catalog. R3 Linux installation and browser acceptance remain pending. Mode: `how-to-guide`, private rehearsal. The workshop structure comes from Version 1; application behavior comes from Shawn's reviewed code.
 
 Estimated Time: 5 minutes to review.
 
@@ -29,13 +29,13 @@ Estimated Time: 5 minutes to review.
 
 ## Remaining release work
 
-* Rehearse Lab 2 in the existing V3 DB System. Its schema and runtime-grant files omit upstream fixture account provisioning. The assistant does not provision OCI resources.
-* Prepare and verify the separate PHP 8.3 application candidate and dependencies.
+* Preserve Lab 2's verified restricted runtime account. Perside confirmed the empty comparison table, generation-zero coverage channel, and expected UPDATE permission denial.
+* Rehearse the packaged R3 candidate on Oracle Linux. Local PHP 8.3.33 syntax, arithmetic, mocked credential preflight, four route renders, and 1,666 archive-file hashes passed. Full upstream test failures remain documented in package-source/BUILD-REPORT.md.
 * Implement real identity, coherent AI/scenario input, and 1/3/5-year scenario results.
 * Verify owner-filtered saved work, CSV behavior, and user-facing simplicity.
-* Rehearse the prepared schema and runtime grants; complete catalog publication, activation, and recovery instructions in the application labs.
+* Preserve the verified schema and scoped runtime grants. R3 uses the bundled catalog, so publication and activation are not prerequisites.
 * Validate live HeatWave extraction and all acceptance checks.
-* Complete Labs 3 through 6, then replace their draft stop notices with verified instructions and screenshots.
+* Rehearse Lab 3 and finish Labs 4 through 6 with verified instructions and screenshots.
 * Confirm the support alias and backup maintainer before publication.
 
 ## Copied material
@@ -63,7 +63,8 @@ FreeSQL is not used: the labs target MySQL HeatWave. No second database platform
 * Additional checks passed for local links, sequential task numbers, required objectives, and the no-em-dash rule.
 * The stale-term scan found Version 1 identifiers only in the retained reference application. Active guides no longer include its demo address or old login-delivery promise.
 * All 38 copied application files and the reference ZIP still match Version 1. The original workshop has no Git changes from this task.
-* Lab 1 preserves the original eight-task setup sequence. Lab 2 now has five executable tasks. Labs 3 through 6 still contain authoring checkpoints, not complete application deployment procedures.
+* Lab 1 preserves the original eight-task setup sequence. Lab 2 has five executable tasks. Lab 3 has five tasks covering the ZIP, prerequisites, installation, private access, and browser acceptance. Login is not implemented.
+* Lab 3 local checks: three workshop PHP adapters passed syntax lint with Windows PHP 8.2.30; 18 Bash/PowerShell blocks passed syntax parsing. This is not a PHP 8.3 integration test. No server installation or OCI test was performed by the assistant.
 * Screenshot directories exist, but new screenshots and browser-render verification remain pending. Automated prose warnings also remain for the next editing pass.
 * The skill wrapper encountered the Windows Python alias. The same installed validator ran through the bundled Python runtime without changing global settings.
 

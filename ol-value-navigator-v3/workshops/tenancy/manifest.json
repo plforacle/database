@@ -23,8 +23,8 @@
       "filename": "../../catalog-database/catalog-database.md"
     },
     {
-      "title": "Lab 3: Configure the PHP Application and User Access",
-      "description": "Review PHP configuration and the real-login implementation and verification requirements.",
+      "title": "Lab 3: Install and Check the PHP Application",
+      "description": "Install PHP dependencies, configure private credentials, test GenAI, and open the start page through SSH.",
       "filename": "../../php-calculator/php-calculator.md"
     },
     {

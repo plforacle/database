@@ -32,7 +32,7 @@ SQL files use LF line endings so the SHA-256 values in Lab 2 survive Windows che
 
 Local checks compare each retained SQL section with upstream, count objects, scan for fixture account creation, and check the Markdown and file hashes. These are not MySQL execution tests. The first HeatWave run, effective grants, and object-count checks remain learner rehearsal steps.
 
-Catalog publication and activation require the PHP runtime and an independently reviewed synthetic acceptance package. They belong to Lab 3, not a direct SQL pointer update. Real representative login and owner isolation remain application work.
+The current installation package is [ol-value-navigator-v3-r3.zip](ol-value-navigator-v3-r3.zip), with its [SHA-256 checksum](ol-value-navigator-v3-r3.zip.sha256). Follow Lab 3. R1/R2 ZIPs are retained for provenance, not current installation. R3 includes the bundled catalog and needs no publication or activation workflow. Real representative login and owner isolation remain application work.
 
 No new screenshots or FreeSQL assets are included. The commands target the MySQL HeatWave DB System already created in Lab 1.
 

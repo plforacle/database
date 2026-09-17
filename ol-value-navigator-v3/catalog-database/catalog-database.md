@@ -4,7 +4,7 @@
 
 Create the database structure that Shawn's PHP application expects, then create a separate database account for the application. Use the V3 HeatWave DB System from Lab 1. Do not create another DB System.
 
-This lab prepares storage for catalog data, comparisons, and saved revisions. It does not load or activate a pricing catalog. Catalog publication uses Shawn's PHP commands and will be covered with application installation in Lab 3.
+This lab prepares storage for catalog data, comparisons, and saved revisions. Lab 3 installs the R3 ZIP with a bundled catalog; no separate catalog publication or activation is required for this rehearsal. HeatWave remains the database for saved comparisons and snapshots.
 
 Estimated Time: 30 minutes; confirm during rehearsal.
 
@@ -240,7 +240,7 @@ Use only these two files for this lab. The copied `files/application` folder and
 
 The V3 database structure and application account are ready for application integration. Keep the DB System private IP, schema name `olvn_v3`, account name `olvn_v3_app`, and generated password available for Lab 3.
 
-No catalog package has been activated, and database-account creation does not implement representative sign-in or user-owned comparisons. Lab 3 still needs its PHP installation, catalog publication, and application-access instructions before execution. The GenAI test in Lab 1 used the administrator account; application-account GenAI access must also be checked during integration.
+No catalog package has been activated, and database-account creation does not implement representative sign-in or user-owned comparisons. Continue to Lab 3 for PHP installation and private application access. Lab 3 also repeats the GenAI test with the application account; Lab 1 tested the administrator account.
 
 ## Learn More
 

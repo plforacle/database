@@ -1,6 +1,6 @@
 # LiveLabs Workshop Validation – ol-value-navigator-v3
 
-Generated on 2026-09-16T11:09:35.401031+00:00
+Generated on 2026-09-16T14:38:02.291256+00:00
 
 ## Structure Check
 - ✅ Required folders and workshop variants present.
@@ -21,8 +21,8 @@ Generated on 2026-09-16T11:09:35.401031+00:00
 ### authoring-status.md
 - ✅ LiveLabs formatting checks passed.
 - ✍️ Lanham score: 1/5
-  - 4 sentence(s) exceed 20 words; tighten wording.
-  - Passive voice detected in 4 instance(s).
+  - 8 sentence(s) exceed 20 words; tighten wording.
+  - Passive voice detected in 6 instance(s).
   - Contractions found; expand them per Lanham rules.
   - Heavy nominalization usage; prefer vivid verbs.
 
@@ -30,7 +30,7 @@ Generated on 2026-09-16T11:09:35.401031+00:00
 - ✅ LiveLabs formatting checks passed.
 - ✍️ Lanham score: 1/5
   - 9 sentence(s) exceed 20 words; tighten wording.
-  - Passive voice detected in 7 instance(s).
+  - Passive voice detected in 5 instance(s).
   - Contractions found; expand them per Lanham rules.
   - Heavy nominalization usage; prefer vivid verbs.
 
@@ -70,10 +70,19 @@ Generated on 2026-09-16T11:09:35.401031+00:00
   - Contractions found; expand them per Lanham rules.
   - Heavy nominalization usage; prefer vivid verbs.
 
+### php-calculator\files\README.md
+- ✅ LiveLabs formatting checks passed.
+- ✍️ Lanham score: 1/5
+  - 1 sentence(s) exceed 20 words; tighten wording.
+  - Passive voice detected in 1 instance(s).
+  - Contractions found; expand them per Lanham rules.
+  - Heavy nominalization usage; prefer vivid verbs.
+
 ### php-calculator\php-calculator.md
 - ✅ LiveLabs formatting checks passed.
-- ✍️ Lanham score: 2/5
-  - 4 sentence(s) exceed 20 words; tighten wording.
+- ✍️ Lanham score: 1/5
+  - 17 sentence(s) exceed 20 words; tighten wording.
+  - Passive voice detected in 3 instance(s).
   - Contractions found; expand them per Lanham rules.
   - Heavy nominalization usage; prefer vivid verbs.
 

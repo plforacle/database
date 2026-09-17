@@ -4,7 +4,7 @@
 
 This is the separate Version 3 LiveLabs workshop, based on Shawn's application. It reuses the Version 1 layout and Lab 1 LAMP setup sequence with separate V3 resources. The original sibling folder, `ol-value-navigator`, remains unchanged.
 
-**Status: Lab 1 passed the user-led rehearsal; Lab 2 is ready for rehearsal; Labs 3 through 6 remain authoring drafts.** Perside supplied successful PHP and HeatWave GenAI results. Lab 2 now includes schema installation and application-account instructions; its SQL has not yet been run against HeatWave.
+**Status: Labs 1 and 2 passed the user-led rehearsal. Lab 3 uses the R3 ZIP for a private rehearsal; Labs 4 through 6 remain authoring drafts.** Perside verified GenAI through the earlier PHP helper. Installation and browser acceptance of R3 remain pending. The bundled catalog needs no activation. Real login and user isolation remain unfinished.
 
 Estimated Time: 5 minutes to review this status.
 
@@ -30,7 +30,7 @@ The learner journey is: enter or import RHEL information, review, compare, save,
 | Reviewed commit | `d419d24d035cabc68b219b9e98be23cd05770742` |
 | Integration reference | `perside-integration-quick-start.pdf` in Perside's project folder |
 | Version 3 workshop | This folder, `ol-value-navigator-v3` |
-| Application candidate | Not packaged yet; no additional original ZIP is required to use the verified repository |
+| Application candidate | [R3 ZIP](catalog-database/files/ol-value-navigator-v3-r3.zip), with dependencies included; follow [Lab 3](php-calculator/php-calculator.md) |
 
 The supplied `shawn/app` directory contains only the application-code subtree. Use the complete repository for dependencies, public files, migrations, resources, and tests.
 
@@ -40,7 +40,7 @@ The supplied `shawn/app` directory contains only the application-code subtree. U
 
 1. Create the compartment `ol-value-navigator-3`, networking, LAMP server, and private HeatWave database.
 2. Create and verify the application database and runtime account.
-3. Configure the PHP application and identity.
+3. Install and check the PHP application through a private SSH tunnel.
 4. Enter, import, and review subscription information.
 5. Calculate, save, and export comparisons.
 6. Verify, maintain, recover, and demonstrate.
