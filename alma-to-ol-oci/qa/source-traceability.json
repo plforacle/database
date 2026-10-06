@@ -1,9 +1,9 @@
 {
-  "mode": "publish-ready authoring; live OCI rehearsal pending",
+  "mode": "publish-ready authoring; OS Management Hub and revised Ksplice live rehearsal pending",
   "adapted_from": "C:\\Users\\Perside\\Documents\\GitHub\\database\\oracle-linux-rhel-migration-oci",
   "source_mapping": [
     {
-      "area": "Labs 3 through 7",
+      "area": "Migration, maintenance, and validation labs adapted from the RHEL workshop",
       "source": "Local RHEL workshop",
       "adaptation": "AlmaLinux identity and vendor checks; omit subscription registration; explicit recovery; safe cleanup"
     },
@@ -29,11 +29,6 @@
       "adaptation": "E5.Flex confidential matrix uses OL9 UEK8; both security features disabled in workshop"
     },
     {
-      "area": "Ksplice",
-      "source": "https://docs.oracle.com/en-us/iaas/oracle-linux/oci/install-ksplice.htm",
-      "adaptation": "Install OCI client on converted OS; record unsupported/no-update/error outcomes separately"
-    },
-    {
       "area": "Lab 1 compartment",
       "source": "https://docs.oracle.com/en-us/iaas/Content/Identity/compartments/To_create_a_compartment.htm",
       "adaptation": "Console creates alma-to-ol-lab"
@@ -52,6 +47,81 @@
       "area": "Lab 1 compute",
       "source": "https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/launchinginstance.htm",
       "adaptation": "Console creates E5.Flex 1 OCPU/12 GB instance with SSH key and public address"
+    },
+    {
+      "area": "Lab 6 prerequisites",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/getstarted.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 6 OCI registration",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/register-oci-instance.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 6 IAM",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/policies-manually-create.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 6 profile",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/create-profile.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 6 software sources",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/add-vendor-software-sources.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 6 package installation",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/install-packages-instance.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Labs 6 and 7 jobs",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/create-scheduled-job-instance.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Labs 6 and 7 job messages",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/view-job-logs-errors.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 7 Ksplice",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/linux-package-management.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 8 management cleanup",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/unregister-instance.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 8 job deletion",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/delete-scheduled-job.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 8 profile deletion",
+      "source": "https://docs.oracle.com/en-us/iaas/osmh/doc/delete-profile.htm",
+      "verification": "Oracle documentation reviewed 2026-10-06; live converted-instance execution pending"
+    },
+    {
+      "area": "Lab 6 public subnet routing",
+      "source": "https://docs.oracle.com/en-us/iaas/Content/Network/Reference/known_issues_for_networking.htm",
+      "adaptation": "Keep existing public internet gateway route; do not add conflicting All Services service gateway route"
+    },
+    {
+      "area": "Lab 7 online Oracle Linux 9 client dependencies",
+      "source": "https://docs.oracle.com/en/operating-systems/oracle-linux/ksplice-user/ksplice-InstallingtheKspliceClientsFromULN.html",
+      "adaptation": "Preserve existing Uptrack; install the OCI ksplice package, not non-OCI offline client"
+    },
+    {
+      "area": "Lab 7 preview and effective kernel commands",
+      "source": "https://docs.oracle.com/en/operating-systems/oracle-linux/ksplice-user/ksplice-UsingthekspliceCommandtoManagetheKspliceEnhancedClient.html",
+      "adaptation": "Kernel-only preview, Console application job, boot identifier comparison, and workload evidence"
     }
   ],
   "intentional_flow_changes": [
@@ -59,7 +129,12 @@
     "Remove all subscription registration and portal cleanup",
     "Add restored-instance rehearsal before migration",
     "Check optional OCI agents against baseline",
-    "Delete only newly created workshop resources, including dedicated VCN and compartment"
+    "Delete only newly created workshop resources, including dedicated VCN and compartment",
+    "Insert OS Management Hub as Lab 6 after DNF maintenance; Ksplice becomes Lab 7 and validation becomes Lab 8",
+    "Use Console registration and one-time security update scheduling on the existing converted instance",
+    "Keep paid public E5.Flex networking and scope the new dynamic group to the migrated VM",
+    "Preserve prior Uptrack patch evidence and install the OSMH-required OCI ksplice client",
+    "Export service history and unregister before deleting IAM resources and Compute"
   ],
   "screenshots": {
     "existing_reused": 0,
@@ -73,9 +148,14 @@
       "Available backup and successful recovery boot",
       "AlmaLinux dry run",
       "Oracle Linux RHCK and workload",
-      "Ksplice preview"
+      "Ksplice preview",
+      "OS Management Hub registration profile",
+      "Active managed instance with package inventory",
+      "Successful package installation request and Messages",
+      "One-time security update schedule and result",
+      "OS Management Hub Ksplice job and effective kernel"
     ]
   },
   "freesql": "Not applicable: no SQL or database lab",
-  "runtime_status": "Not executed on OCI; no source VM or cloud resources modified"
+  "runtime_status": "User reported successful completion of the original seven labs. This authoring session did not access OCI or modify cloud resources. New Lab 6 and revised Ksplice integration require live rehearsal."
 }

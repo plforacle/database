@@ -1,4 +1,4 @@
-# Lab 7: Validate and Clean Up
+# Lab 8: Validate and Clean Up
 
 ## Introduction
 
@@ -12,13 +12,16 @@ In this lab, you will:
 - Compare the AlmaLinux and Oracle Linux states.
 - Validate the workload, services, networking, firewall, and SELinux.
 - Review package-migration exceptions.
-- Export evidence and remove disposable OCI resources.
+- Export Linux and OS Management Hub evidence.
+- Unregister the instance and remove workshop-specific management resources.
+- Remove disposable OCI resources.
 
 ### Prerequisites
 
 Before beginning this lab, confirm that you have:
 
-- Recorded Lab 6 results, including any unsupported-kernel or no-applicable-update result.
+- Recorded Lab 6 OS Management Hub registration and job results.
+- Recorded Lab 7 Ksplice results, including any unsupported-kernel or no-applicable-update result.
 - SSH access to the migrated Oracle Linux 9 instance.
 - The AlmaLinux baseline evidence bundle from Lab 2.
 - A healthy post-migration Apache workload.
@@ -76,12 +79,13 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-5. Archive the evidence:
+5. Archive the evidence, including the OS Management Hub and Ksplice records. Create an empty Ksplice folder if the running kernel was unsupported and you skipped live patching:
 
     ```bash
     <copy>
+    mkdir -p "$HOME/ol-migration-evidence/ksplice"
     tar -C "$HOME/ol-migration-evidence" -czf \
-      "$HOME/ol-migration-evidence/oracle-linux-after.tar.gz" after
+      "$HOME/ol-migration-evidence/oracle-linux-after.tar.gz" after osmh ksplice
     </copy>
     ```
 
@@ -110,6 +114,8 @@ Estimated Lab Time: 40 minutes
       "$HOME/ol-migration-evidence/after/repositories.txt" || true
     </copy>
     ```
+
+    OS Management Hub registration can replace the earlier repository configuration with attached service-managed sources. Review that expected change against Lab 6's saved repository evidence.
 
 3. Compare the application checksum:
 
@@ -213,7 +219,9 @@ Estimated Lab Time: 40 minutes
 
     An absent package is not a migration failure if it was absent in the baseline. For an installed agent, verify the plugins you use in the OCI Console. Do not assume conversion installs or configures all platform-image integrations.
 
-3. Review the before-and-after network, firewall, and SELinux files. Resolve unexpected differences before declaring success.
+3. Verify that the instance is Active in OS Management Hub, its inventory is populated, and Lab 6 job outcomes are recorded. This agent is required for the new management lab even if it was absent before migration. Record any Ksplice job result from Lab 7.
+
+4. Review the before-and-after network, firewall, and SELinux files. Resolve unexpected differences before declaring success.
 
 ## Task 5: Review migration exceptions
 
@@ -268,7 +276,7 @@ Estimated Lab Time: 40 minutes
 
 2. If a required condition fails, decide whether to remediate or restore from the pre-migration backup.
 
-## Task 7: Export evidence and remove disposable resources
+## Task 7: Export evidence
 
 1. Archive the migration logs and reports before deleting the VM:
 
@@ -280,30 +288,44 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-2. From your local terminal, download the reports and the post-migration evidence. Use the home directory identified in Lab 2:
+2. From your local Windows PowerShell terminal, download the reports and evidence. Replace the key path with the full path to your private key file. The second remote path is relative to the SSH user's Linux home directory:
 
-    ```bash
+    ```powershell
     <copy>
-    scp -i "<private-key-path>" \
-      <ssh-user>@<public-ip>:/tmp/alma-to-ol-migration-reports.tar.gz .
-    scp -i "<private-key-path>" \
-      <ssh-user>@<public-ip>:<remote-home>/ol-migration-evidence/oracle-linux-after.tar.gz .
+    scp -i "<private-key-path>" "<ssh-user>@<public-ip>:/tmp/alma-to-ol-migration-reports.tar.gz" .
+    scp -i "<private-key-path>" "<ssh-user>@<public-ip>:ol-migration-evidence/oracle-linux-after.tar.gz" .
     </copy>
     ```
 
-3. Match every planned deletion to a workshop-owned OCID in your resource ledger. Keep any pre-existing or shared resources outside the lab compartment.
+3. Save the OS Management Hub profile, inventory, job messages, and change-history screenshots from Labs 6 and 7 on your workstation. Verify the downloaded archive and ledger are available before proceeding. Unregistration removes the service history.
 
-4. Terminate `alma-to-ol-source` and select deletion of its disposable boot volume. Remove `alma-to-ol-recovery-test` and its restored boot volume if they still exist.
+## Task 8: Unregister OS Management Hub and remove lab management resources
 
-5. Delete the workshop backup `alma-to-ol-before-conversion` only after evidence is saved and the recovery point is no longer needed. Remove any unused restored lab volumes recorded as workshop-owned.
+1. Match each planned deletion to a workshop-owned OCID. Keep shared sources, existing groups, and existing policies. Keep the instance and the Lab 6 IAM policy available until unregistration completes.
 
-6. In **Networking**, open `alma-to-ol-vcn` and choose **Delete VCN**. Review the listed dependencies. Remove any remaining lab VNIC attachments or other blocking resources, then complete deletion of the dedicated VCN and its wizard-created resources. Do not delete a shared VCN.
+2. In **OS Management Hub**, open **Jobs**, filter by `alma-to-ol-lab`, and inspect **Scheduled jobs**. Delete the workshop jobs in the ledger, including `alma-to-ol-security-once` if it remains listed. Open a job's **Actions**, select **Delete**, and confirm. Wait for any running work request to finish first. See [deleting a scheduled job](https://docs.oracle.com/en-us/iaas/osmh/doc/delete-scheduled-job.htm).
 
-7. In **Identity & Security**, then **Compartments**, open `alma-to-ol-lab`. After the lab resources are deleted, choose **Delete compartment** when your tenancy permissions allow it. Check for remaining regional resources if deletion is blocked.
+3. Open **OS Management Hub**, **Instances**, and the migrated VM. Confirm the ledger's Compute and managed-instance OCIDs, then select **Unregister**. Verify it leaves the managed-instance list. The Lab 6 `INSTANCE_UPDATE` policy allows the service to disable the plugin. Check the Compute instance's Oracle Cloud Agent panel for the disabled OS Management Hub plugin. Simply disabling the plugin does not unregister the managed instance. See [unregistering an instance](https://docs.oracle.com/en-us/iaas/osmh/doc/unregister-instance.htm).
 
-8. Check the ledger again. Confirm that pre-existing resources remain and the workshop instances, boot volumes, backup, VCN resources, and compartment have been removed.
+4. While the VM still exists, inspect `sudo dnf repolist --enabled`. Unregistration restores the repository configuration from before registration. Compare it with the `osmh/repositories-before.txt` evidence. Investigate unregistration errors before deleting IAM resources or terminating the VM.
 
-## Task 8: Final knowledge review
+5. In **OS Management Hub**, **Profiles**, select `alma-to-ol-lab`, open the ledger's `alma-to-ol-ol9-profile`, and delete it. Keep root vendor sources and service-provided profiles because they may be shared. See [deleting a profile](https://docs.oracle.com/en-us/iaas/osmh/doc/delete-profile.htm).
+
+6. As an administrator, delete only the root policy `alma-to-ol-osmh-policy` and dynamic group `alma-to-ol-osmh-instances` created for this workshop, after checking their OCIDs and dependencies. The policy resides in the root compartment, and the dynamic group resides in its identity domain. Keep the existing user group used in Lab 6 and any pre-existing shared IAM resources.
+
+## Task 9: Remove disposable Compute and network resources
+
+1. Match the remaining resources to workshop-owned OCIDs. Terminate `alma-to-ol-source` and select deletion of its disposable boot volume. Remove `alma-to-ol-recovery-test` and its restored boot volume if they still exist.
+
+2. Delete the workshop backup `alma-to-ol-before-conversion` only after evidence is saved and the recovery point is no longer needed. Remove unused restored lab volumes recorded as workshop-owned.
+
+3. In **Networking**, open `alma-to-ol-vcn` and choose **Delete VCN**. Review its dependencies. Remove remaining lab VNIC attachments or other blocking resources, then delete the dedicated VCN and its wizard-created resources. Keep shared networks.
+
+4. In **Identity & Security**, **Compartments**, open `alma-to-ol-lab`. After the lab resources are deleted, choose **Delete compartment** when your permissions allow it. Check for remaining regional resources if deletion is blocked.
+
+5. Check the ledger. Confirm removal of the workshop jobs, managed-instance registration, profile, policy, dynamic group, Compute instances, boot volumes, backup, network, and compartment. Confirm pre-existing resources remain.
+
+## Task 10: Final knowledge review
 
 1. Why was the migration performed on the same VM?
 
@@ -324,6 +346,10 @@ Estimated Lab Time: 40 minutes
 5. Which source resources must remain?
 
     Keep any pre-existing or shared resources outside the lab. Remove the new workshop resources in the ledger after saving evidence.
+
+6. Why must the instance be unregistered before deleting it?
+
+    Unregistration removes its OS Management Hub record and restores the earlier repository configuration. Save the service history first and keep the cleanup IAM policy until unregistration completes.
 
 ## Learn More
 

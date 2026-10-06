@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Convert an AlmaLinux 9.8 OCI virtual machine to Oracle Linux 9.8 while retaining its test application and configuration. You create a compartment, VCN, and disposable AlmaLinux instance through the OCI Console, capture its baseline, assess readiness, test backup restoration, perform the conversion, and validate the result after reboot. You then practice package maintenance and Oracle Ksplice live patching.
+Convert an AlmaLinux 9.8 OCI virtual machine to Oracle Linux 9.8 while retaining its test application and configuration. You create a compartment, VCN, and disposable AlmaLinux instance through the OCI Console, capture its baseline, assess readiness, test backup restoration, perform the conversion, and validate the result after reboot. You then practice package maintenance, register the converted instance with OS Management Hub, schedule updates through the OCI Console, and apply available Oracle Ksplice live patches.
 
 The workshop starts in your OCI tenancy. Lab 1 creates the compartment, network, and AlmaLinux VM from the official partner image. Select and verify an AlmaLinux 9.8 x86_64 build before continuing.
 
-Estimated Workshop Time: 4 hours 20 minutes, plus OCI backup and restore operations
+Estimated Workshop Time: 5 hours 45 minutes, plus OCI backup and restore operations
 
 ### Objectives
 
@@ -15,7 +15,8 @@ Estimated Workshop Time: 4 hours 20 minutes, plus OCI backup and restore operati
 - Verify a pinned migration script and run its dry run.
 - Create a recovery point and boot a restored copy before conversion.
 - Convert the same lab instance to Oracle Linux 9.8 with RHCK.
-- Apply package updates and available Ksplice patches.
+- Apply package updates, register with OS Management Hub, and schedule security updates.
+- Apply available Ksplice kernel live updates through OS Management Hub.
 - Verify the migrated system and clean up disposable resources.
 
 ### Prerequisites
@@ -25,6 +26,9 @@ Estimated Workshop Time: 4 hours 20 minutes, plus OCI backup and restore operati
 - Quota for VM.Standard.E5.Flex with 1 OCPU and 12 GB memory. A recovery rehearsal temporarily needs another VM with those resources.
 - A workstation public IPv4 address for the lab SSH and HTTP ingress rules.
 - Outbound HTTPS access to raw.githubusercontent.com, yum.oracle.com, and www.ksplice.com; AlmaLinux repositories must also be reachable during preparation.
+- An eligible OCI tenancy for OS Management Hub; Free Tier instances cannot use the service.
+- Administrator access to configure IAM and add regional OS Management Hub vendor software sources, or an administrator who completes those setup steps.
+- Oracle Cloud Agent 1.40.0 or later on the converted instance and HTTPS access to the regional OS Management Hub service.
 - A browser, an SSH client, and a local folder for downloaded evidence.
 
 ## Instance Configuration
@@ -46,6 +50,8 @@ The shape's Security column lists available capabilities. Check the instance's a
 ## Workshop Flow
 
 ![The workshop creates OCI resources and an AlmaLinux VM, tests recovery, migrates to Oracle Linux, and validates the workload.](images/migration-flow.svg)
+
+The eight labs progress from OCI setup and migration to DNF maintenance, OS Management Hub, Ksplice, and final validation. Lab 6 registers the existing converted VM; it does not create another Compute instance. See [OS Management Hub prerequisites](https://docs.oracle.com/en-us/iaas/osmh/doc/getstarted.htm).
 
 ## Workshop Conventions
 

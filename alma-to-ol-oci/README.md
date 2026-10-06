@@ -4,11 +4,11 @@
 
 LiveLabs workshop for converting a disposable AlmaLinux 9.8 x86_64 OCI VM to Oracle Linux 9.8 with RHCK. Lab 1 creates a compartment, VCN, and AlmaLinux instance through the OCI Console. The workshop uses E5.Flex with 1 OCPU, 12 GB RAM, shielded instance disabled, and confidential computing disabled.
 
-Estimated Workshop Time: 4 hours 20 minutes, plus backup and restore operations
+Estimated Workshop Time: 5 hours 45 minutes, plus backup and restore operations
 
 ### Objectives
 
-- Run the seven labs through the tenancy manifest.
+- Run the eight labs through the tenancy manifest.
 - Review source traceability and QA results before publishing.
 - Test the migration and restoration flow in a disposable OCI environment.
 
@@ -16,7 +16,13 @@ Estimated Workshop Time: 4 hours 20 minutes, plus backup and restore operations
 
 Serve the repository root over HTTP and open `alma-to-ol-oci/workshops/tenancy/index.html`. The LiveLabs viewer uses Oracle CDN assets and needs internet access. For a local checkout, run `python -m http.server 8000` from the parent `database` directory and open `http://localhost:8000/alma-to-ol-oci/workshops/tenancy/index.html`.
 
-The workshop folder is authored and checked locally. OCI commands, reboot, backup restoration, and Ksplice execution need a live tenancy rehearsal before publication. `qa/source-traceability.json` records sources and deliberate differences from the RHEL workshop; `qa/validation-results.json` records static checks.
+The user reported successful completion of the original seven labs. The new OS Management Hub lab and revised Ksplice integration are authored from Oracle documentation and require a live rehearsal on the converted instance before publication. `qa/source-traceability.json` records sources and deliberate differences from the RHEL workshop; `qa/validation-results.json` records static checks.
+
+## OS Management Hub Extension
+
+Lab 6 registers the existing converted Oracle Linux 9 instance through the OCI Console, installs a utility, and schedules a one-time security update. Ksplice is now Lab 7 and final validation/cleanup is Lab 8. The extension requires an eligible instance, Oracle Cloud Agent 1.40.0 or later, IAM access, and regional service connectivity.
+
+`qa/osmh-screenshot-plan.json` lists the genuine Console screenshots to capture during rehearsal. The lab has no fabricated Console images or references to missing image files. FreeSQL is not applicable.
 
 ## Supporting Scripts
 

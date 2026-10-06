@@ -36,13 +36,18 @@
       "filename": "../../manage-patch-oracle-linux/manage-patch-oracle-linux.md"
     },
     {
-      "title": "Lab 6: Apply Live Updates with Oracle Ksplice",
-      "description": "Preview and apply available RHCK live updates without rebooting.",
+      "title": "Lab 6: Manage Oracle Linux with OS Management Hub",
+      "description": "Register the converted instance, inspect inventory, install a package, and schedule security updates through the OCI Console.",
+      "filename": "../../os-management-hub/os-management-hub.md"
+    },
+    {
+      "title": "Lab 7: Apply Live Updates with Oracle Ksplice",
+      "description": "Use the OCI Ksplice client and OS Management Hub to apply available RHCK live updates and verify the workload.",
       "filename": "../../ksplice-live-updates/ksplice-live-updates.md"
     },
     {
-      "title": "Lab 7: Validate and Clean Up",
-      "description": "Compare evidence, review AlmaLinux package exceptions, and remove disposable lab resources.",
+      "title": "Lab 8: Validate and Clean Up",
+      "description": "Compare evidence, review exceptions, unregister OS Management Hub, and remove disposable resources.",
       "filename": "../../validate-cleanup/validate-cleanup.md"
     },
     {

@@ -1,83 +1,41 @@
 {
   "status": "passed",
-  "markdown_files": 9,
+  "checked_on": "2026-10-06",
+  "mode": "publish-ready authoring; new integration live rehearsal pending",
+  "markdown_files": 10,
   "shell_helpers": 3,
-  "bash_blocks_checked": 96,
+  "bash_blocks_checked": 106,
   "checks": [
     {
-      "check": "Introduction, seven labs, and help",
+      "check": "No prohibited dash: assess-protect-source/assess-protect-source.md",
       "passed": true
     },
     {
-      "check": "1 OCPU and 12 GB RAM",
+      "check": "Balanced copy tags: assess-protect-source/assess-protect-source.md",
       "passed": true
     },
     {
-      "check": "Console resources match workshop variables",
+      "check": "Sequential tasks: assess-protect-source/assess-protect-source.md",
       "passed": true
     },
     {
-      "check": "Manifest target: ../../introduction/introduction.md",
+      "check": "Sequential steps: assess-protect-source/assess-protect-source.md / Task 1: Assess the source operating system",
       "passed": true
     },
     {
-      "check": "Manifest target: ../../prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: assess-protect-source/assess-protect-source.md / Task 2: Download and verify the pinned migration script",
       "passed": true
     },
     {
-      "check": "Manifest target: ../../baseline-workload/baseline-workload.md",
+      "check": "Sequential steps: assess-protect-source/assess-protect-source.md / Task 3: Run the migration dry run",
       "passed": true
     },
     {
-      "check": "Manifest target: ../../assess-protect-source/assess-protect-source.md",
+      "check": "Sequential steps: assess-protect-source/assess-protect-source.md / Task 4: Create and test the recovery point",
       "passed": true
     },
     {
-      "check": "Manifest target: ../../migrate-to-oracle-linux/migrate-to-oracle-linux.md",
-      "passed": true
-    },
-    {
-      "check": "Manifest target: ../../manage-patch-oracle-linux/manage-patch-oracle-linux.md",
-      "passed": true
-    },
-    {
-      "check": "Manifest target: ../../ksplice-live-updates/ksplice-live-updates.md",
-      "passed": true
-    },
-    {
-      "check": "Manifest target: ../../validate-cleanup/validate-cleanup.md",
-      "passed": true
-    },
-    {
-      "check": "Manifest variable target: ../../variables/variables.json",
-      "passed": true
-    },
-    {
-      "check": "No em dash: assess-protect-source/assess-protect-source.md",
-      "passed": true
-    },
-    {
-      "check": "Task sequence: assess-protect-source/assess-protect-source.md",
-      "passed": true
-    },
-    {
-      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
-      "passed": true
-    },
-    {
-      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
-      "passed": true
-    },
-    {
-      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
-      "passed": true
-    },
-    {
-      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
-      "passed": true
-    },
-    {
-      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
+      "check": "Sequential steps: assess-protect-source/assess-protect-source.md / Task 5: Pass the migration gate",
       "passed": true
     },
     {
@@ -141,23 +99,27 @@
       "passed": true
     },
     {
-      "check": "No em dash: baseline-workload/baseline-workload.md",
+      "check": "No prohibited dash: baseline-workload/baseline-workload.md",
       "passed": true
     },
     {
-      "check": "Task sequence: baseline-workload/baseline-workload.md",
+      "check": "Balanced copy tags: baseline-workload/baseline-workload.md",
       "passed": true
     },
     {
-      "check": "Step sequence: baseline-workload/baseline-workload.md",
+      "check": "Sequential tasks: baseline-workload/baseline-workload.md",
       "passed": true
     },
     {
-      "check": "Step sequence: baseline-workload/baseline-workload.md",
+      "check": "Sequential steps: baseline-workload/baseline-workload.md / Task 1: Prepare AlmaLinux",
       "passed": true
     },
     {
-      "check": "Step sequence: baseline-workload/baseline-workload.md",
+      "check": "Sequential steps: baseline-workload/baseline-workload.md / Task 2: Deploy the test page",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: baseline-workload/baseline-workload.md / Task 3: Capture the AlmaLinux baseline",
       "passed": true
     },
     {
@@ -197,47 +159,59 @@
       "passed": true
     },
     {
-      "check": "No em dash: introduction/introduction.md",
+      "check": "No prohibited dash: introduction/introduction.md",
       "passed": true
     },
     {
-      "check": "Task sequence: introduction/introduction.md",
+      "check": "Balanced copy tags: introduction/introduction.md",
       "passed": true
     },
     {
-      "check": "Image alt text and path: introduction/introduction.md",
+      "check": "Sequential tasks: introduction/introduction.md",
       "passed": true
     },
     {
-      "check": "No em dash: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "Image alt text: introduction/introduction.md",
       "passed": true
     },
     {
-      "check": "Task sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "Image file: introduction/introduction.md / images/migration-flow.svg",
       "passed": true
     },
     {
-      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "No prohibited dash: ksplice-live-updates/ksplice-live-updates.md",
       "passed": true
     },
     {
-      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "Balanced copy tags: ksplice-live-updates/ksplice-live-updates.md",
       "passed": true
     },
     {
-      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "Sequential tasks: ksplice-live-updates/ksplice-live-updates.md",
       "passed": true
     },
     {
-      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "Sequential steps: ksplice-live-updates/ksplice-live-updates.md / Task 1: Confirm the migrated Oracle Linux kernel",
       "passed": true
     },
     {
-      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "Sequential steps: ksplice-live-updates/ksplice-live-updates.md / Task 2: Verify the OCI Ksplice client",
       "passed": true
     },
     {
-      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "Sequential steps: ksplice-live-updates/ksplice-live-updates.md / Task 3: Preview kernel live updates",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: ksplice-live-updates/ksplice-live-updates.md / Task 4: Apply kernel live updates through OS Management Hub",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: ksplice-live-updates/ksplice-live-updates.md / Task 5: Verify Ksplice and the workload",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: ksplice-live-updates/ksplice-live-updates.md / Task 6: Review",
       "passed": true
     },
     {
@@ -273,47 +247,51 @@
       "passed": true
     },
     {
-      "check": "Bash syntax block 33: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "No prohibited dash: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 34: ksplice-live-updates/ksplice-live-updates.md",
+      "check": "Balanced copy tags: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
       "passed": true
     },
     {
-      "check": "No em dash: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Sequential tasks: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
       "passed": true
     },
     {
-      "check": "Task sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Sequential steps: manage-patch-oracle-linux/manage-patch-oracle-linux.md / Task 1: Confirm the Oracle Linux system",
       "passed": true
     },
     {
-      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Sequential steps: manage-patch-oracle-linux/manage-patch-oracle-linux.md / Task 2: Review the Oracle Linux repositories",
       "passed": true
     },
     {
-      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Sequential steps: manage-patch-oracle-linux/manage-patch-oracle-linux.md / Task 3: Review available updates",
       "passed": true
     },
     {
-      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Sequential steps: manage-patch-oracle-linux/manage-patch-oracle-linux.md / Task 4: Apply standard package updates",
       "passed": true
     },
     {
-      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Sequential steps: manage-patch-oracle-linux/manage-patch-oracle-linux.md / Task 5: Determine whether a reboot is recommended",
       "passed": true
     },
     {
-      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Sequential steps: manage-patch-oracle-linux/manage-patch-oracle-linux.md / Task 6: Validate the system after maintenance",
       "passed": true
     },
     {
-      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Sequential steps: manage-patch-oracle-linux/manage-patch-oracle-linux.md / Task 7: Review your knowledge",
       "passed": true
     },
     {
-      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Bash syntax block 33: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 34: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
       "passed": true
     },
     {
@@ -389,43 +367,47 @@
       "passed": true
     },
     {
-      "check": "Bash syntax block 53: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "No prohibited dash: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 54: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "check": "Balanced copy tags: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
       "passed": true
     },
     {
-      "check": "No em dash: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Sequential tasks: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
       "passed": true
     },
     {
-      "check": "Task sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Sequential steps: migrate-to-oracle-linux/migrate-to-oracle-linux.md / Task 1: Reconfirm the migration gate",
       "passed": true
     },
     {
-      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Sequential steps: migrate-to-oracle-linux/migrate-to-oracle-linux.md / Task 2: Execute the migration",
       "passed": true
     },
     {
-      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Sequential steps: migrate-to-oracle-linux/migrate-to-oracle-linux.md / Task 3: Inspect the converted system before reboot",
       "passed": true
     },
     {
-      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Sequential steps: migrate-to-oracle-linux/migrate-to-oracle-linux.md / Task 4: Reboot into Oracle Linux RHCK",
       "passed": true
     },
     {
-      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Sequential steps: migrate-to-oracle-linux/migrate-to-oracle-linux.md / Task 5: Perform the immediate health check",
       "passed": true
     },
     {
-      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Sequential steps: migrate-to-oracle-linux/migrate-to-oracle-linux.md / Task 6: Review what changed and what stayed the same",
       "passed": true
     },
     {
-      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Bash syntax block 53: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 54: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
       "passed": true
     },
     {
@@ -493,147 +475,211 @@
       "passed": true
     },
     {
-      "check": "Bash syntax block 71: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "No prohibited dash: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 72: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "check": "Balanced copy tags: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "No em dash: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential tasks: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Task sequence: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: os-management-hub/os-management-hub.md / Task 1: Prepare the migrated instance and Oracle Cloud Agent",
       "passed": true
     },
     {
-      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: os-management-hub/os-management-hub.md / Task 2: Verify network access to OS Management Hub",
       "passed": true
     },
     {
-      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: os-management-hub/os-management-hub.md / Task 3: Configure IAM access",
       "passed": true
     },
     {
-      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: os-management-hub/os-management-hub.md / Task 4: Select software sources and create a profile",
       "passed": true
     },
     {
-      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: os-management-hub/os-management-hub.md / Task 5: Register and inspect the instance",
       "passed": true
     },
     {
-      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: os-management-hub/os-management-hub.md / Task 6: Install a package through the Console",
       "passed": true
     },
     {
-      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: os-management-hub/os-management-hub.md / Task 7: Schedule a security update",
       "passed": true
     },
     {
-      "check": "Bash syntax block 73: prepare-almalinux/prepare-almalinux.md",
+      "check": "Sequential steps: os-management-hub/os-management-hub.md / Task 8: Validate the workload and save evidence",
       "passed": true
     },
     {
-      "check": "Bash syntax block 74: prepare-almalinux/prepare-almalinux.md",
+      "check": "Bash syntax block 71: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 75: prepare-almalinux/prepare-almalinux.md",
+      "check": "Bash syntax block 72: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "No em dash: README.md",
+      "check": "Bash syntax block 73: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Task sequence: README.md",
+      "check": "Bash syntax block 74: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "No em dash: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 75: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Task sequence: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 76: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 77: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 78: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 79: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 80: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 81: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 82: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 83: os-management-hub/os-management-hub.md",
       "passed": true
     },
     {
-      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "check": "No prohibited dash: prepare-almalinux/prepare-almalinux.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 76: validate-cleanup/validate-cleanup.md",
+      "check": "Balanced copy tags: prepare-almalinux/prepare-almalinux.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 77: validate-cleanup/validate-cleanup.md",
+      "check": "Sequential tasks: prepare-almalinux/prepare-almalinux.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 78: validate-cleanup/validate-cleanup.md",
+      "check": "Sequential steps: prepare-almalinux/prepare-almalinux.md / Task 1: Create the workshop compartment",
       "passed": true
     },
     {
-      "check": "Bash syntax block 79: validate-cleanup/validate-cleanup.md",
+      "check": "Sequential steps: prepare-almalinux/prepare-almalinux.md / Task 2: Create the VCN",
       "passed": true
     },
     {
-      "check": "Bash syntax block 80: validate-cleanup/validate-cleanup.md",
+      "check": "Sequential steps: prepare-almalinux/prepare-almalinux.md / Task 3: Restrict workshop network access",
       "passed": true
     },
     {
-      "check": "Bash syntax block 81: validate-cleanup/validate-cleanup.md",
+      "check": "Sequential steps: prepare-almalinux/prepare-almalinux.md / Task 4: Select AlmaLinux and the E5.Flex shape",
       "passed": true
     },
     {
-      "check": "Bash syntax block 82: validate-cleanup/validate-cleanup.md",
+      "check": "Sequential steps: prepare-almalinux/prepare-almalinux.md / Task 5: Connect and verify the source",
       "passed": true
     },
     {
-      "check": "Bash syntax block 83: validate-cleanup/validate-cleanup.md",
+      "check": "Sequential steps: prepare-almalinux/prepare-almalinux.md / Task 6: Record the resource ledger",
       "passed": true
     },
     {
-      "check": "Bash syntax block 84: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 84: prepare-almalinux/prepare-almalinux.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 85: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 85: prepare-almalinux/prepare-almalinux.md",
       "passed": true
     },
     {
-      "check": "Bash syntax block 86: validate-cleanup/validate-cleanup.md",
+      "check": "Bash syntax block 86: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "No prohibited dash: README.md",
+      "passed": true
+    },
+    {
+      "check": "Balanced copy tags: README.md",
+      "passed": true
+    },
+    {
+      "check": "Sequential tasks: README.md",
+      "passed": true
+    },
+    {
+      "check": "No prohibited dash: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Balanced copy tags: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Sequential tasks: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 1: Capture post-migration evidence",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 2: Compare the before-and-after evidence",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 3: Run the final validation gate",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 4: Check OCI integrations",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 5: Review migration exceptions",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 6: Complete the migration decision",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 7: Export evidence",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 8: Unregister OS Management Hub and remove lab management resources",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 9: Remove disposable Compute and network resources",
+      "passed": true
+    },
+    {
+      "check": "Sequential steps: validate-cleanup/validate-cleanup.md / Task 10: Final knowledge review",
       "passed": true
     },
     {
@@ -677,6 +723,134 @@
       "passed": true
     },
     {
+      "check": "Bash syntax block 97: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 98: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 99: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 100: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 101: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 102: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 103: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 104: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 105: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 106: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "All JSON files parse",
+      "passed": true
+    },
+    {
+      "check": "Manifest contains eight sequential labs",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../introduction/introduction.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest and H1 agree: ../../prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest and H1 agree: ../../baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest and H1 agree: ../../assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest and H1 agree: ../../migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest and H1 agree: ../../manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../os-management-hub/os-management-hub.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest and H1 agree: ../../os-management-hub/os-management-hub.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest and H1 agree: ../../ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest and H1 agree: ../../validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest variables: ../../variables/variables.json",
+      "passed": true
+    },
+    {
+      "check": "LiveLabs launch page exists",
+      "passed": true
+    },
+    {
+      "check": "SVG illustration parses",
+      "passed": true
+    },
+    {
       "check": "Helper Bash syntax: validate-cleanup/files/validate-migration.sh",
       "passed": true
     },
@@ -689,20 +863,21 @@
       "passed": true
     },
     {
-      "check": "Well-formed SVG",
-      "passed": true
-    },
-    {
-      "check": "No obsolete RHEL or existing-instance setup assumptions",
-      "passed": true
+      "check": "Official repository LiveLabs markdown validator",
+      "passed": true,
+      "details": "See livelabs-markdown-validation.txt"
     }
   ],
   "errors": [],
   "official_markdown_validator": "See livelabs-markdown-validation.txt for repository validator output",
+  "runtime_status": "User reported completion of the original seven labs; new Lab 6 and revised Ksplice integration have not been executed on OCI during authoring.",
   "runtime_limitations": [
-    "OCI resources have not been provisioned during authoring",
-    "Regional AlmaLinux 9.8 Marketplace build availability must be checked in the Console",
-    "Migration, recovery, reboot, and Ksplice need a live rehearsal",
-    "Genuine OCI screenshots and live viewer verification are pending"
-  ]
+    "Converted-image Oracle Cloud Agent and OSMH registration require live verification",
+    "IAM, regional software-source selection, installation and scheduled update jobs require live verification",
+    "OCI ksplice client dependencies, RHCK preview and Console live-update job require live verification",
+    "Unregistration and cleanup require live verification",
+    "Genuine Console screenshots are pending; capture plan is in osmh-screenshot-plan.json",
+    "Live viewer rendering has not been verified in a browser"
+  ],
+  "freesql": "Not applicable: Linux management workshop; no SQL"
 }

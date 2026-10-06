@@ -16,5 +16,10 @@
   "vcn_cidr": "10.20.0.0/16",
   "public_subnet_cidr": "10.20.0.0/24",
   "private_subnet_cidr": "10.20.1.0/24",
-  "source_image": "Official AlmaLinux OS 9 x86_64 partner image, 9.8 build"
+  "source_image": "Official AlmaLinux OS 9 x86_64 partner image, 9.8 build",
+  "osmh_profile_name": "alma-to-ol-ol9-profile",
+  "osmh_dynamic_group_name": "alma-to-ol-osmh-instances",
+  "osmh_policy_name": "alma-to-ol-osmh-policy",
+  "osmh_security_job_name": "alma-to-ol-security-once",
+  "osmh_minimum_cloud_agent_version": "1.40.0"
 }

@@ -1,0 +1,54 @@
+{
+  "status": "pending live OCI capture; no fabricated or missing images embedded",
+  "lab": "os-management-hub/os-management-hub.md",
+  "capture_instructions": "Capture genuine Console states during rehearsal, redact identifiers where required, stage PNGs under os-management-hub/images, then embed beneath the corresponding step with meaningful alt text.",
+  "captures": [
+    {
+      "task": 4,
+      "step": 5,
+      "filename": "ol9-registration-profile.png",
+      "alt_text": "The profile targets Oracle Linux 9 x86_64 OCI instances and selects the workshop software sources."
+    },
+    {
+      "task": 5,
+      "step": 3,
+      "filename": "managed-instance-active.png",
+      "alt_text": "The migrated instance is Active in OS Management Hub and reports Oracle Linux 9 x86_64."
+    },
+    {
+      "task": 5,
+      "step": 4,
+      "filename": "package-inventory.png",
+      "alt_text": "The managed instance inventory includes Apache and Oracle Cloud Agent."
+    },
+    {
+      "task": 6,
+      "step": 3,
+      "filename": "package-install-succeeded.png",
+      "alt_text": "The utility installation work request succeeded and its Messages are available."
+    },
+    {
+      "task": 7,
+      "step": 4,
+      "filename": "security-update-once.png",
+      "alt_text": "The security update job targets only the lab instance and runs once."
+    },
+    {
+      "task": 7,
+      "step": 5,
+      "filename": "security-update-result.png",
+      "alt_text": "The completed security update request shows its terminal result and update messages."
+    }
+  ],
+  "live_checklist": [
+    "OCA >= 1.40.0 and plugin available on the converted image",
+    "Manual domain-qualified IAM statements accepted",
+    "Regional root vendor sources selectable in lab profile",
+    "Active registration and populated inventory",
+    "Console utility installation succeeded",
+    "Once-only security job reached successful terminal status",
+    "Workload checksum unchanged",
+    "OCI ksplice client and RHCK preview successful",
+    "Unregister disables plugin and restores repositories before cleanup"
+  ]
+}
