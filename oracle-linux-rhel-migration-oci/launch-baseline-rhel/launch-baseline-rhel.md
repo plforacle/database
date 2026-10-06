@@ -104,6 +104,14 @@ Estimated Lab Time: 35 minutes
 
     Replace `<private-key-path>` with the actual path to the private key. Do not enter the placeholder literally.
 
+    If `cloud-user` is denied, use `opc` with the same key. OCI-targeted images can use `opc` as their SSH user:
+
+    ```bash
+    <copy>ssh opc@<public-ip></copy>
+    ```
+
+    If needed, add `-i "<private-key-path>"` to the `opc` command. Use the account that works for the remaining lab steps. The steps that write to your home directory work with either account.
+
 2. Accept the host key only after confirming that the IP address matches your OCI instance.
 
 3. Verify the operating-system identity and architecture:
@@ -122,7 +130,7 @@ Estimated Lab Time: 35 minutes
 
     ```bash
     <copy>
-    sudo cloud-init status --wait
+    cloud-init status --wait
     </copy>
     ```
 
@@ -138,19 +146,21 @@ Estimated Lab Time: 35 minutes
 
 ## Task 4: Register and prepare RHEL
 
-1. Register the system interactively:
+1. Check whether the image is already registered:
+
+    ```bash
+    <copy>sudo subscription-manager identity</copy>
+    ```
+
+    If this displays a system identity and organization ID, skip registration. Some custom images are registered during image creation.
+
+2. If the image is not registered, register it interactively:
 
     ```bash
     <copy>sudo subscription-manager register</copy>
     ```
 
-    Enter Red Hat credentials only at the protected terminal prompts. Do not place credentials on the command line.
-
-2. Confirm that the system is registered:
-
-    ```bash
-    <copy>sudo subscription-manager identity</copy>
-    ```
+    Enter Red Hat credentials only at the protected terminal prompts. Do not place credentials on the command line. Then run `sudo subscription-manager identity` again to confirm registration.
 
 3. Confirm that the RHEL BaseOS and AppStream repositories are available:
 
@@ -177,8 +187,10 @@ Estimated Lab Time: 35 minutes
 6. Wait for the instance to return to the Running state, then reconnect:
 
     ```bash
-    <copy>ssh cloud-user@<public-ip></copy>
+    <copy>ssh <ssh-user>@<public-ip></copy>
     ```
+
+    Replace `<ssh-user>` with the account you used in Task 3, either `cloud-user` or `opc`.
 
 7. Verify the running kernel and repository access:
 

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="300" viewBox="0 0 1120 300" role="img" aria-labelledby="title desc">
+<title id="title">AlmaLinux to Oracle Linux workshop flow</title>
+<desc id="desc">OCI Console setup creates a compartment, VCN, and disposable AlmaLinux VM. Baseline and recovery checks precede migration to Oracle Linux and validation.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#576675"/></marker></defs>
+<rect width="1120" height="300" rx="20" fill="#f5f7f9"/>
+<g font-family="Arial,sans-serif" text-anchor="middle">
+<text x="560" y="38" font-size="24" fill="#172b3a">Validate the recovery path before conversion</text>
+<g fill="#fff" stroke="#8295a6" stroke-width="2">
+<rect x="24" y="86" width="196" height="126" rx="14"/><rect x="250" y="86" width="196" height="126" rx="14"/><rect x="476" y="86" width="196" height="126" rx="14"/><rect x="702" y="86" width="196" height="126" rx="14"/><rect x="928" y="86" width="168" height="126" rx="14"/>
+</g>
+<g font-size="18" fill="#172b3a">
+<text x="122" y="121">OCI Console</text><text x="122" y="151">Compartment + VCN</text><text x="122" y="183" font-size="14">Official AlmaLinux image</text>
+<text x="348" y="121">AlmaLinux 9.8 VM</text><text x="348" y="151">E5.Flex, 1 OCPU</text><text x="348" y="183" font-size="14">12 GB RAM, x86_64</text>
+<text x="574" y="121">Baseline + dry run</text><text x="574" y="151">Backup + restore</text><text x="574" y="183" font-size="14">Test boot and application</text>
+<text x="800" y="121">Oracle Linux 9.8</text><text x="800" y="151">Convert + reboot</text><text x="800" y="183" font-size="14">Oracle-owned RHCK</text>
+<text x="1012" y="121">Validate</text><text x="1012" y="151">Patch + Ksplice</text><text x="1012" y="183" font-size="14">Save evidence</text>
+</g></g>
+<g stroke="#576675" stroke-width="2" marker-end="url(#arrow)"><path d="M220 148 H246"/><path d="M446 148 H472"/><path d="M672 148 H698"/><path d="M898 148 H924"/></g>
+<text x="560" y="259" font-family="Arial,sans-serif" text-anchor="middle" font-size="16" fill="#576675">Shielded instance and confidential computing are disabled for this workshop path.</text>
+</svg>

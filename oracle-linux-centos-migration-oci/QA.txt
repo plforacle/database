@@ -1,0 +1,14 @@
+Instructor validation checklist
+
+This is a draft tenancy-based OCI workshop with instructor-prepared CentOS Stream 9 VMs. The partner path does not include image download, Object Storage upload, custom image import, networking, or VM launch. Rehearse the complete path before offering it to partners:
+
+1. Follow `instructor/instructor-guide.md` to verify the pinned CentOS Stream 9 QCOW2, import it, and launch a separate VM per participant. Confirm compatible x86_64 shapes and event quota in every region.
+2. On a rehearsal VM, confirm cloud-init, SSH as `cloud-user`, public networking, `/etc/os-release` reporting CentOS Stream 9, and working BaseOS and AppStream repositories.
+3. Run every Lab 2 command, reboot, and confirm the Apache marker and baseline archive.
+4. Download the pinned migration script at commit `82947c960535cfbb632977c70b0fea67f8e0de7a`. Confirm the documented SHA-256 checksum and successful `--dry-run --target-version latest --kernel rhck` output.
+5. Create and verify a full OCI boot-volume backup. Test the restore procedure on a disposable instance or boot volume.
+6. Run Lab 4 and verify the reported package map, successful reboot, Oracle Linux 9 identity, Oracle kernel ownership, and Apache marker.
+7. Run package updates and Ksplice, then compare the before and after evidence. Confirm that participants hand off their VMs rather than deleting shared instructor resources.
+8. Run the official LiveLabs Markdown validator. The validator path referenced by the authoring skill was not present in this workspace, so only local structure checks have been completed.
+
+Sources: [CentOS Stream 9 images](https://cloud.centos.org/centos/9-stream/x86_64/images/), [OCI custom image import](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/custom-images-import.htm), and [migration script documentation](https://github.com/oracle/migrate-to-ol/blob/main/README-migrate-to-oracle-linux.md).

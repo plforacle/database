@@ -1,0 +1,20 @@
+{
+  "workshop_prefix": "alma-to-ol",
+  "source_os": "AlmaLinux",
+  "almalinux_version": "9.8",
+  "oracle_linux_version": "9.8",
+  "compute_shape": "VM.Standard.E5.Flex",
+  "compute_ocpus": "1",
+  "compute_memory_gb": "12",
+  "kernel_flavor": "rhck",
+  "shielded_instance": "disabled",
+  "confidential_computing": "disabled",
+  "migration_commit": "82947c960535cfbb632977c70b0fea67f8e0de7a",
+  "migration_sha256": "5435b59e2f0e672111fd1545b2b428cabe473e7c116a353716c2f7de869d0a42",
+  "compartment_name": "alma-to-ol-lab",
+  "vcn_name": "alma-to-ol-vcn",
+  "vcn_cidr": "10.20.0.0/16",
+  "public_subnet_cidr": "10.20.0.0/24",
+  "private_subnet_cidr": "10.20.1.0/24",
+  "source_image": "Official AlmaLinux OS 9 x86_64 partner image, 9.8 build"
+}

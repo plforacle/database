@@ -1,0 +1,12 @@
+Source markdown files: 8
+Target markdown files: 9
+Fidelity mismatches:
+- acquire-import-rhel\acquire-import-rhel.md: present in source, missing in target
+- assess-protect-source\assess-protect-source.md: task-count source=6 target=5
+- assess-protect-source\assess-protect-source.md: top headings differ
+- baseline-workload\baseline-workload.md: missing in source, present in target
+- introduction\introduction.md: top headings differ
+- launch-baseline-rhel\launch-baseline-rhel.md: present in source, missing in target
+- prepare-almalinux\prepare-almalinux.md: missing in source, present in target
+- README.md: missing in source, present in target
+- validate-cleanup\validate-cleanup.md: top headings differ

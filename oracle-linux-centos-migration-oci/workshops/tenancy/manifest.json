@@ -1,0 +1,51 @@
+{
+  "workshoptitle": "Migrate CentOS Stream 9 to Oracle Linux 9 on OCI",
+  "help": "livelabs-help-linux_us@oracle.com",
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "description": "Review the migration journey, prerequisites, and success criteria.",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Lab 1: Connect to Your CentOS Stream Source",
+      "description": "Connect to the instructor-prepared CentOS Stream 9 VM and check its readiness.",
+      "filename": "../../connect-centos-source/connect-centos-source.md"
+    },
+    {
+      "title": "Lab 2: Baseline CentOS Stream",
+      "description": "Deploy Apache on the assigned VM and save a baseline.",
+      "filename": "../../launch-baseline-centos/launch-baseline-centos.md"
+    },
+    {
+      "title": "Lab 3: Assess Readiness and Protect the Source",
+      "description": "Verify the migration script, run a dry run, and back up the boot volume.",
+      "filename": "../../assess-protect-source/assess-protect-source.md"
+    },
+    {
+      "title": "Lab 4: Migrate to Oracle Linux",
+      "description": "Convert the same VM to the latest Oracle Linux 9 release and reboot into RHCK.",
+      "filename": "../../migrate-to-oracle-linux/migrate-to-oracle-linux.md"
+    },
+    {
+      "title": "Lab 5: Manage and Patch Oracle Linux",
+      "description": "Review repositories, update packages, and verify the workload.",
+      "filename": "../../manage-patch-oracle-linux/manage-patch-oracle-linux.md"
+    },
+    {
+      "title": "Lab 6: Apply Live Updates with Oracle Ksplice",
+      "description": "Install Ksplice and verify live RHCK updates without rebooting.",
+      "filename": "../../ksplice-live-updates/ksplice-live-updates.md"
+    },
+    {
+      "title": "Lab 7: Validate and Hand Off",
+      "description": "Compare migration evidence and hand the VM back to the instructor.",
+      "filename": "../../validate-cleanup/validate-cleanup.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Review common solutions and assistance options.",
+      "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-freetier.md"
+    }
+  ]
+}

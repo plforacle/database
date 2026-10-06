@@ -1,0 +1,81 @@
+{
+  "mode": "publish-ready authoring; live OCI rehearsal pending",
+  "adapted_from": "C:\\Users\\Perside\\Documents\\GitHub\\database\\oracle-linux-rhel-migration-oci",
+  "source_mapping": [
+    {
+      "area": "Labs 3 through 7",
+      "source": "Local RHEL workshop",
+      "adaptation": "AlmaLinux identity and vendor checks; omit subscription registration; explicit recovery; safe cleanup"
+    },
+    {
+      "area": "Lab 3",
+      "source": "https://docs.oracle.com/en-us/iaas/Content/Block/Tasks/create-bv-boot-volume-backup.htm",
+      "adaptation": "Stopped disposable VM backup"
+    },
+    {
+      "area": "Lab 3 recovery",
+      "source": "https://docs.oracle.com/en-us/iaas/Content/Block/Tasks/create-restore-bv-boot-volume-backup.htm",
+      "adaptation": "Boot a new instance from a restored volume and record changed identity"
+    },
+    {
+      "area": "Migration",
+      "source": "https://github.com/oracle/migrate-to-ol/blob/82947c960535cfbb632977c70b0fea67f8e0de7a/migrate-to-oracle-linux.sh",
+      "sha256": "5435b59e2f0e672111fd1545b2b428cabe473e7c116a353716c2f7de869d0a42",
+      "verification": "Downloaded bytes match source workshop checksum; static AlmaLinux family and same-release logic inspected"
+    },
+    {
+      "area": "Security settings",
+      "source": "https://docs.oracle.com/en-us/iaas/Content/Compute/References/confidential_compute.htm",
+      "adaptation": "E5.Flex confidential matrix uses OL9 UEK8; both security features disabled in workshop"
+    },
+    {
+      "area": "Ksplice",
+      "source": "https://docs.oracle.com/en-us/iaas/oracle-linux/oci/install-ksplice.htm",
+      "adaptation": "Install OCI client on converted OS; record unsupported/no-update/error outcomes separately"
+    },
+    {
+      "area": "Lab 1 compartment",
+      "source": "https://docs.oracle.com/en-us/iaas/Content/Identity/compartments/To_create_a_compartment.htm",
+      "adaptation": "Console creates alma-to-ol-lab"
+    },
+    {
+      "area": "Lab 1 VCN",
+      "source": "https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/quickstartnetworking.htm",
+      "adaptation": "Wizard creates dedicated public/private subnets; restrict SSH and HTTP to workstation"
+    },
+    {
+      "area": "Lab 1 image",
+      "source": "https://wiki.almalinux.org/cloud/OCI.html",
+      "adaptation": "Select official AlmaLinux OS 9 x86_64 partner image build 9.8 and verify in guest; actual regional build availability must be confirmed"
+    },
+    {
+      "area": "Lab 1 compute",
+      "source": "https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/launchinginstance.htm",
+      "adaptation": "Console creates E5.Flex 1 OCPU/12 GB instance with SSH key and public address"
+    }
+  ],
+  "intentional_flow_changes": [
+    "Replace RHEL acquisition/import with OCI Console compartment, VCN, and AlmaLinux partner-image instance creation",
+    "Remove all subscription registration and portal cleanup",
+    "Add restored-instance rehearsal before migration",
+    "Check optional OCI agents against baseline",
+    "Delete only newly created workshop resources, including dedicated VCN and compartment"
+  ],
+  "screenshots": {
+    "existing_reused": 0,
+    "new_captures": 0,
+    "illustrations": [
+      "introduction/images/migration-flow.svg"
+    ],
+    "pending": [
+      "Compartment creation and VCN wizard results",
+      "E5.Flex launch configuration",
+      "Available backup and successful recovery boot",
+      "AlmaLinux dry run",
+      "Oracle Linux RHCK and workload",
+      "Ksplice preview"
+    ]
+  },
+  "freesql": "Not applicable: no SQL or database lab",
+  "runtime_status": "Not executed on OCI; no source VM or cloud resources modified"
+}

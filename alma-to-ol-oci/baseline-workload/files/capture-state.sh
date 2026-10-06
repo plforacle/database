@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+label="${1:-before}"
+case "$label" in before|after) ;; *) echo 'Usage: capture-state.sh before|after' >&2; exit 2;; esac
+out="$HOME/ol-migration-evidence/$label"
+mkdir -p "$out"
+cat /etc/os-release > "$out/os-release.txt"
+uname -a > "$out/kernel.txt"
+sudo dnf repolist --enabled > "$out/repositories.txt"
+rpm -qa --qf '%{NAME}\t%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n' | sort > "$out/packages.tsv"
+systemctl is-enabled httpd > "$out/httpd-enabled.txt"
+systemctl is-active httpd > "$out/httpd-active.txt"
+systemctl --failed --no-pager > "$out/failed-services.txt"
+sudo ss -lntup > "$out/listening-ports.txt"
+ip address show > "$out/addresses.txt"
+ip route show > "$out/routes.txt"
+getenforce > "$out/selinux.txt"
+sudo firewall-cmd --list-all > "$out/firewall.txt"
+curl --fail --silent --show-error http://127.0.0.1/ > "$out/application.html"
+grep -q MIGRATION_WORKLOAD_OK "$out/application.html"
+sha256sum /var/www/html/index.html > "$out/application-sha256.txt"
+tar -C "$HOME/ol-migration-evidence" -czf "$HOME/ol-migration-evidence/$label.tar.gz" "$label"
+printf 'Evidence directory: %s\n' "$out"

@@ -1,0 +1,54 @@
+{
+  "workshoptitle": "Migrate AlmaLinux to Oracle Linux on OCI",
+  "help": "livelabs-help-linux_us@oracle.com",
+  "variables": [
+    "../../variables/variables.json"
+  ],
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "description": "Review the AlmaLinux migration path, OCI configuration, and checkpoints.",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Lab 1: Create the OCI Environment and AlmaLinux Instance",
+      "description": "Use the OCI Console to create a compartment, VCN, and AlmaLinux 9.8 E5.Flex VM with 1 OCPU and 12 GB RAM.",
+      "filename": "../../prepare-almalinux/prepare-almalinux.md"
+    },
+    {
+      "title": "Lab 2: Create and Baseline the Workload",
+      "description": "Create an Apache test workload and capture the AlmaLinux baseline.",
+      "filename": "../../baseline-workload/baseline-workload.md"
+    },
+    {
+      "title": "Lab 3: Assess Readiness and Test Recovery",
+      "description": "Verify the pinned script, run its dry run, and rehearse recovery from a boot-volume backup.",
+      "filename": "../../assess-protect-source/assess-protect-source.md"
+    },
+    {
+      "title": "Lab 4: Migrate to Oracle Linux",
+      "description": "Convert AlmaLinux 9.8 to Oracle Linux 9.8 and reboot into RHCK.",
+      "filename": "../../migrate-to-oracle-linux/migrate-to-oracle-linux.md"
+    },
+    {
+      "title": "Lab 5: Manage and Patch Oracle Linux",
+      "description": "Review Oracle Linux repositories, apply updates, and check the workload.",
+      "filename": "../../manage-patch-oracle-linux/manage-patch-oracle-linux.md"
+    },
+    {
+      "title": "Lab 6: Apply Live Updates with Oracle Ksplice",
+      "description": "Preview and apply available RHCK live updates without rebooting.",
+      "filename": "../../ksplice-live-updates/ksplice-live-updates.md"
+    },
+    {
+      "title": "Lab 7: Validate and Clean Up",
+      "description": "Compare evidence, review AlmaLinux package exceptions, and remove disposable lab resources.",
+      "filename": "../../validate-cleanup/validate-cleanup.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Find assistance with workshop access and execution.",
+      "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-freetier.md"
+    }
+  ]
+}

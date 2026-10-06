@@ -1,0 +1,39 @@
+Scanning directory: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update
+
+================================================
+LiveLabs Markdown Formatting Validator
+================================================
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/README.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/README.md passed all required checks
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/assess-protect-source/assess-protect-source.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/assess-protect-source/assess-protect-source.md passed all required checks
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/baseline-workload/baseline-workload.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/baseline-workload/baseline-workload.md passed all required checks
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/introduction/introduction.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/introduction/introduction.md passed all required checks
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/ksplice-live-updates/ksplice-live-updates.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/ksplice-live-updates/ksplice-live-updates.md passed all required checks
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/manage-patch-oracle-linux/manage-patch-oracle-linux.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/manage-patch-oracle-linux/manage-patch-oracle-linux.md passed all required checks
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/migrate-to-oracle-linux/migrate-to-oracle-linux.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/migrate-to-oracle-linux/migrate-to-oracle-linux.md passed all required checks
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/prepare-almalinux/prepare-almalinux.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/prepare-almalinux/prepare-almalinux.md passed all required checks
+
+Checking: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/validate-cleanup/validate-cleanup.md
+[0;32mPASS[0m: C:/Users/Perside/main/_00_linux/_02_linux-fundamentals/_3_rhel-takeout/alma-to-ol-oci-update/validate-cleanup/validate-cleanup.md passed all required checks
+
+================================================
+Summary
+================================================
+Errors: 0
+
+[0;32mValidation PASSED[0m

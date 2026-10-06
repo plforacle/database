@@ -1,0 +1,708 @@
+{
+  "status": "passed",
+  "markdown_files": 9,
+  "shell_helpers": 3,
+  "bash_blocks_checked": 96,
+  "checks": [
+    {
+      "check": "Introduction, seven labs, and help",
+      "passed": true
+    },
+    {
+      "check": "1 OCPU and 12 GB RAM",
+      "passed": true
+    },
+    {
+      "check": "Console resources match workshop variables",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../introduction/introduction.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest target: ../../validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Manifest variable target: ../../variables/variables.json",
+      "passed": true
+    },
+    {
+      "check": "No em dash: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 1: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 2: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 3: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 4: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 5: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 6: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 7: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 8: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 9: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 10: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 11: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 12: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 13: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 14: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 15: assess-protect-source/assess-protect-source.md",
+      "passed": true
+    },
+    {
+      "check": "No em dash: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 16: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 17: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 18: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 19: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 20: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 21: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 22: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 23: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 24: baseline-workload/baseline-workload.md",
+      "passed": true
+    },
+    {
+      "check": "No em dash: introduction/introduction.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: introduction/introduction.md",
+      "passed": true
+    },
+    {
+      "check": "Image alt text and path: introduction/introduction.md",
+      "passed": true
+    },
+    {
+      "check": "No em dash: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 25: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 26: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 27: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 28: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 29: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 30: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 31: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 32: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 33: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 34: ksplice-live-updates/ksplice-live-updates.md",
+      "passed": true
+    },
+    {
+      "check": "No em dash: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 35: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 36: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 37: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 38: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 39: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 40: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 41: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 42: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 43: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 44: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 45: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 46: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 47: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 48: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 49: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 50: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 51: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 52: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 53: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 54: manage-patch-oracle-linux/manage-patch-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "No em dash: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 55: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 56: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 57: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 58: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 59: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 60: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 61: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 62: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 63: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 64: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 65: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 66: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 67: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 68: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 69: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 70: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 71: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 72: migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "passed": true
+    },
+    {
+      "check": "No em dash: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 73: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 74: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 75: prepare-almalinux/prepare-almalinux.md",
+      "passed": true
+    },
+    {
+      "check": "No em dash: README.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: README.md",
+      "passed": true
+    },
+    {
+      "check": "No em dash: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Task sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Step sequence: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 76: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 77: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 78: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 79: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 80: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 81: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 82: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 83: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 84: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 85: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 86: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 87: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 88: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 89: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 90: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 91: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 92: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 93: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 94: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 95: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Bash syntax block 96: validate-cleanup/validate-cleanup.md",
+      "passed": true
+    },
+    {
+      "check": "Helper Bash syntax: validate-cleanup/files/validate-migration.sh",
+      "passed": true
+    },
+    {
+      "check": "Helper Bash syntax: baseline-workload/files/capture-state.sh",
+      "passed": true
+    },
+    {
+      "check": "Helper Bash syntax: baseline-workload/files/workshop-health.sh",
+      "passed": true
+    },
+    {
+      "check": "Well-formed SVG",
+      "passed": true
+    },
+    {
+      "check": "No obsolete RHEL or existing-instance setup assumptions",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "official_markdown_validator": "See livelabs-markdown-validation.txt for repository validator output",
+  "runtime_limitations": [
+    "OCI resources have not been provisioned during authoring",
+    "Regional AlmaLinux 9.8 Marketplace build availability must be checked in the Console",
+    "Migration, recovery, reboot, and Ksplice need a live rehearsal",
+    "Genuine OCI screenshots and live viewer verification are pending"
+  ]
+}
