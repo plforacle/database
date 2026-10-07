@@ -1,0 +1,51 @@
+OS Management Hub lab authoring and QA notes
+Date: October 7, 2026
+Mode: Draft with workshop integration
+WMS workshop: 12229
+
+Delivered
+- Lab 7: Manage the Migrated Instance with OS Management Hub (60 minutes).
+- Manifest places Lab 7 after Ksplice and before Lab 8 cleanup.
+- Introduction states a paid OCI tenancy and 5 hours 45 minutes.
+- Lab 1 prepares IAM before VM launch; Lab 2 points to Lab 8 cleanup.
+- Lab 6 explains the transition from Uptrack to managed package jobs.
+- Lab 8 removes schedules, unregisters the VM, and removes its profile.
+
+Static verification: PASS
+- Both workshop JSON files parse.
+- Manifest contains eight sequential labs; local paths resolve.
+- Nine markdown files have required sections and one H1 outside code.
+- Task headings are sequential; copy tags and code fences are balanced.
+- Local markdown links resolve.
+- New lab contains no em dash.
+- git diff --check reports no whitespace errors in tracked changes.
+
+Source traceability
+- IAM preparation: https://docs.oracle.com/en-us/iaas/osmh/doc/policy-advisor.htm
+- Prerequisites/network: https://docs.oracle.com/en-us/iaas/osmh/doc/getstarted.htm
+- Agent: https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/manage-plugins.htm
+- Connectivity: https://docs.oracle.com/en-us/iaas/osmh/doc/troubleshoot-connection.htm
+- Sources: https://docs.oracle.com/en-us/iaas/osmh/doc/add-vendor-software-sources.htm
+- Profile: https://docs.oracle.com/en-us/iaas/osmh/doc/create-profile.htm
+- Registration: https://docs.oracle.com/en-us/iaas/osmh/doc/register-oci-instance.htm
+- Package jobs: https://docs.oracle.com/en-us/iaas/osmh/doc/create-scheduled-job-instance.htm
+- Installation branch: https://docs.oracle.com/en-us/iaas/osmh/doc/install-packages-instance.htm
+- Ksplice client distinction: https://docs.oracle.com/en-us/iaas/osmh/doc/linux-package-management.htm
+- Schedule deletion: https://docs.oracle.com/en-us/iaas/osmh/doc/delete-scheduled-job.htm
+- Unregister/profile cleanup: https://docs.oracle.com/en-us/iaas/osmh/doc/unregister-instance.htm
+  https://docs.oracle.com/en-us/iaas/osmh/doc/delete-profile.htm
+
+Live validation and visual QA: NOT RUN
+- No authenticated OCI tenancy was available in this authoring session.
+- Confirm ol9_oci_included and Oracle Cloud Agent installation on the converted RHEL image.
+- Confirm OCA >= 1.40, plugin support, compatible profile selection, and Active registration.
+- Confirm IAM access to root vendor sources and workshop resources; test unregister permission.
+- Test service-gateway routing and inventory collection.
+- Test both update-available and no-updates/package-installation branches.
+- Test scheduled-job creation/deletion, any required reboot, and Apache health.
+- Test unregister and profile removal before terminating the VM.
+- Capture real OCI screenshots for agent/profile selection, Active inventory, completed job,
+  and scheduled job. Stage reviewed images under os-management-hub/images and embed them
+  at their matching steps with descriptive alt text. No screenshot assets were fabricated.
+- Rehearse total duration; allow extra time for initial IAM or agent troubleshooting.
+- Browser rendering and the external LiveLabs validator were not run.

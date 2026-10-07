@@ -60,7 +60,7 @@ Estimated Lab Time: 35 minutes
     - Destination port range: `80`
     - Description: `Temporary workshop HTTP access`
 
-    > **Important:** `0.0.0.0/0` permits HTTP connections from any internet address. Use this simple rule only for the temporary workshop VM. Lab 6 removes the network and its rules. In production, restrict the source to approved addresses.
+    > **Important:** `0.0.0.0/0` permits HTTP connections from any internet address. Use this simple rule only for the temporary workshop VM. Lab 8 removes the network and its rules. In production, restrict the source to approved addresses.
 
 ## Task 2: Launch the RHEL source VM
 

@@ -1,4 +1,4 @@
-# Lab 7: Validate and Clean Up
+# Lab 8: Validate and Clean Up
 
 ## Introduction
 
@@ -18,7 +18,8 @@ In this lab, you will:
 
 Before beginning this lab, confirm that you have:
 
-- Completed Lab 6: Apply Live Updates with Oracle Ksplice.
+- Completed Lab 7: Manage the Migrated Instance with OS Management Hub.
+- Recorded the OS Management Hub profile, package-job results, and any workshop IAM changes.
 - SSH access to the migrated Oracle Linux 9.8 instance.
 - The RHEL baseline evidence bundle from Lab 2.
 - A healthy post-migration Apache workload.
@@ -272,23 +273,29 @@ Estimated Lab Time: 35 minutes
 
 ## Task 7: Delete OCI workshop resources
 
-1. In **Compute**, terminate `ol-migrate-rhel-source`.
+1. Before terminating the VM, open **OS Management Hub**, select **Jobs**, filter to `ol-migrate-lab`, and inspect **Scheduled jobs**. Delete any remaining workshop schedules, including `ol-migrate-update-scheduled`. Preserve job logs and inventory evidence locally before unregistering; the service history will no longer be available afterward.
 
-2. Select the option to delete the attached boot volume and confirm termination.
+2. Confirm with your administrator that the instance dynamic group has the [required permission for unregistering OCI instances](https://docs.oracle.com/en-us/iaas/osmh/doc/unregister-instance.htm). In **OS Management Hub**, open **Instances**, select the workshop instance, and select **Unregister**. Confirm that it disappears from the managed-instance list. Unregistering restores the previous repository configuration. Disabling the plugin alone leaves the management record behind.
 
-3. In **Block Storage**, delete the `ol-migrate-before-conversion` boot-volume backup.
+3. In **Profiles**, delete the workshop profile recorded in Lab 7. Keep shared vendor software sources and shared IAM resources. Ask your administrator to remove only the workshop-specific policy statements and matching rules recorded in Lab 1 when they are no longer used.
 
-4. In **Compute**, then **Custom images**, delete `ol-migrate-rhel-9-8`.
+4. In **Compute**, terminate `ol-migrate-rhel-source`.
 
-5. In **Object Storage**, delete the RHEL QCOW2 object.
+5. Select the option to delete the attached boot volume and confirm termination.
 
-6. Delete the now-empty image bucket.
+6. In **Block Storage**, delete the `ol-migrate-before-conversion` boot-volume backup.
 
-7. Delete the VCN resources created by the VCN wizard.
+7. In **Compute**, then **Custom images**, delete `ol-migrate-rhel-9.8`.
 
-8. Delete the `ol-migrate-lab` compartment when your organization permits it.
+8. In **Object Storage**, delete the RHEL QCOW2 object.
 
-9. Confirm that no workshop Compute instance, boot volume, backup, custom image, or Object Storage object remains.
+9. Delete the now-empty image bucket.
+
+10. Delete the VCN resources created by the VCN wizard and any service gateway and route created in Lab 7.
+
+11. Delete the `ol-migrate-lab` compartment when your organization permits it.
+
+12. Confirm that no workshop Compute instance, boot volume, backup, custom image, Object Storage object, managed-instance registration, profile, or future update schedule remains.
 
 ## Task 8: Final knowledge review
 
@@ -316,9 +323,10 @@ Estimated Lab Time: 35 minutes
 
 - [Red Hat Subscription Management](https://access.redhat.com/articles/433903)
 - [Deleting an OCI Compute instance](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/terminatinginstance.htm)
+- [Unregistering an OS Management Hub instance](https://docs.oracle.com/en-us/iaas/osmh/doc/unregister-instance.htm)
 
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
 

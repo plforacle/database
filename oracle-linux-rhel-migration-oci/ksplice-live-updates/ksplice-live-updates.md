@@ -136,7 +136,7 @@ In this lab, you will:
 
 ## Task 6: Review
 
-You installed Oracle Ksplice on the migrated Oracle Linux RHCK instance, applied available live updates, and verified the application without rebooting. Continue to the cleanup lab when you are ready to remove the workshop resources.
+You installed Oracle Ksplice on the migrated Oracle Linux RHCK instance, applied available live updates, and verified the application without rebooting. Continue to **Lab 7: Manage the Migrated Instance with OS Management Hub** to register this VM for centralized package management. Lab 7 uses package jobs; OS Management Hub Ksplice jobs require a separate client configuration from the Uptrack exercise completed here.
 
 ## Learn More
 

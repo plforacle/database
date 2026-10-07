@@ -41,7 +41,12 @@
       "filename": "../../ksplice-live-updates/ksplice-live-updates.md"
     },
     {
-      "title": "Lab 7: Validate and Clean Up",
+      "title": "Lab 7: Manage the Migrated Instance with OS Management Hub",
+      "description": "Register the converted VM, inspect inventory, perform a package job, and schedule maintenance.",
+      "filename": "../../os-management-hub/os-management-hub.md"
+    },
+    {
+      "title": "Lab 8: Validate and Clean Up",
       "description": "Compare before-and-after evidence, validate the workload, and remove resources.",
       "filename": "../../validate-cleanup/validate-cleanup.md"
     },

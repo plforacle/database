@@ -22,7 +22,8 @@ In this lab, you will:
 Before beginning this lab, confirm that you have:
 
 - Completed the workshop introduction and reviewed the architecture and conventions.
-- An OCI tenancy with permission to create compartments, Object Storage buckets, and custom Compute images.
+- A paid OCI tenancy with permission to create compartments, Object Storage buckets, and custom Compute images.
+- Administrator assistance to configure OS Management Hub IAM access for `ol-migrate-lab` after you create the compartment.
 - A Red Hat account with access to the RHEL 9.8 x86_64 KVM guest image and an entitlement authorized for this workshop VM.
 - At least 15 GB of temporary local storage and a reliable internet connection.
 - Access to an x86_64 OCI VM shape certified for the selected RHEL release.
@@ -98,6 +99,12 @@ A compartment keeps the workshop resources together and makes them easier to fin
 4. Select **Create compartment**.
 
 5. Wait until the compartment is available, then select it and record its name.
+
+6. Prepare OS Management Hub access now for Lab 7, before launching the VM. Have your tenancy administrator open **Observability & Management**, then **OS Management Hub**, then **Overview**, select `ol-migrate-lab`, and run **Policy Advisor**. Review its proposed changes, select **Setup**, and complete the setup. The administrator needs permission to manage groups, dynamic groups, and policies in the tenancy.
+
+7. Have the administrator grant your workshop user access to manage OS Management Hub resources, including profiles and jobs, and to read the vendor software sources in the root compartment. The advisor's `osmh-admins` group provides management access in its configured scope; `osmh-operators` is read-only. Root-compartment vendor-source access may require additional policies. If your organization already has equivalent policies, use those. See [Policy Advisor](https://docs.oracle.com/en-us/iaas/osmh/doc/policy-advisor.htm) and [OS Management Hub policies](https://docs.oracle.com/en-us/iaas/osmh/doc/policies.htm).
+
+8. Record the exact IAM resources created or changed for the workshop. Keep shared tenancy policies and groups intact during cleanup. Do not enable OS Management Hub on the RHEL source; registration takes place after conversion in Lab 7.
 
 ## Task 4: Create a private Object Storage bucket
 

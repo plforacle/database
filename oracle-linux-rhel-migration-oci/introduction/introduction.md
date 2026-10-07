@@ -6,7 +6,7 @@ This workshop takes you through a complete migration lifecycle in your own Oracl
 
 The workshop does not provide or redistribute a RHEL image. You download the image through your own Red Hat account and use your own subscription entitlement.
 
-Estimated Workshop Time: 4 hours 45 minutes
+Estimated Workshop Time: 5 hours 45 minutes
 
 ### Objectives
 
@@ -19,6 +19,7 @@ In this workshop, you will:
 - Convert RHEL 9.8 to Oracle Linux 9.8 within the same VM.
 - Review Oracle Linux repositories and apply standard package updates.
 - Apply Oracle Ksplice live updates to the RHCK kernel without rebooting.
+- Register the migrated instance with OS Management Hub, inspect package inventory, and manage package jobs and maintenance schedules.
 - Validate the application, packages, services, networking, SELinux, and firewall configuration.
 - Remove the OCI resources and Red Hat registration created for the workshop.
 
@@ -26,7 +27,8 @@ In this workshop, you will:
 
 This workshop requires:
 
-- An OCI tenancy where you can create networking, Object Storage, custom images, Compute instances, and boot-volume backups.
+- A paid OCI tenancy where you can create networking, Object Storage, custom images, Compute instances, and boot-volume backups.
+- Administrator assistance to configure OS Management Hub IAM access for the workshop compartment before launching the source VM, including access to vendor software sources in the root compartment.
 - A Red Hat account with access to the RHEL 9.8 x86_64 KVM guest image and a valid RHEL entitlement.
 - A local computer with at least 15 GB of temporary free space.
 - A reliable internet connection for a multi-gigabyte download and upload.
@@ -45,6 +47,8 @@ This workshop requires:
 - **Boot volume:** The virtual disk that contains the operating system used to start a Compute instance.
 - **In-place migration:** Changing the operating system on the existing VM instead of creating a replacement VM.
 - **Checkpoint:** A required set of successful checks that you complete before continuing.
+- **OS Management Hub:** An OCI service used to manage operating-system package inventory and update jobs.
+- **Registration profile:** A configuration that assigns software sources when an instance registers with OS Management Hub.
 
 ## Workshop Architecture
 
@@ -65,7 +69,11 @@ RHEL source VM
         v
 Same VM running Oracle Linux 9.8
         |
-        | Package maintenance and Ksplice live patching
+        | DNF maintenance and Ksplice live patching
+        v
+OS Management Hub registration, inventory, and package jobs
+        |
+        | Validation and management-resource removal
         v
 Cleanup
 ```
@@ -73,7 +81,7 @@ Cleanup
 ## Workshop Conventions
 
 - Resource names use the prefix `ol-migrate`.
-- Run Linux commands as `cloud-user` unless a step explicitly uses `sudo`.
+- Run Linux commands using the SSH account that worked in Lab 2, normally `cloud-user`, unless a step explicitly uses `sudo`.
 - Replace values enclosed in angle brackets, such as `<public-ip>`, with values from your environment.
 - Complete each required checkpoint before continuing to operations that modify the system.
 - A successful migration requires application and system evidence, not only a changed `/etc/os-release` file.
@@ -84,8 +92,9 @@ Cleanup
 - [Bring Your Own Image](https://docs.oracle.com/en-us/iaas/Content/Compute/References/bringyourownimage.htm)
 - [RHEL 9.8 Release Notes](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/9.8_release_notes/index)
 - [Oracle Linux](https://www.oracle.com/linux/)
+- [OS Management Hub prerequisites](https://docs.oracle.com/en-us/iaas/osmh/doc/getstarted.htm)
 
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
