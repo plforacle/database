@@ -4,7 +4,7 @@
 
 Oracle Ksplice applies critical kernel updates to a running system without requiring a reboot. In this lab, you install Ksplice on the Oracle Linux 9.8 instance that you migrated in the preceding labs, inspect available updates, apply them, and verify that the Apache workload remains available.
 
-This workshop instance runs the Red Hat Compatible Kernel (RHCK). Oracle Linux 9 RHCK is supported by Ksplice. The custom image imported for this workshop is a bring-your-own-image, so install Ksplice after the migration instead of assuming it is already present.
+This workshop instance runs the Red Hat Compatible Kernel (RHCK). Oracle Linux 9 RHCK is supported by Ksplice. The source was launched from an OCI RHEL image. Check the Ksplice client after conversion instead of assuming the RHEL image included it.
 
 Estimated Lab Time: 25 minutes
 
@@ -28,7 +28,7 @@ In this lab, you will:
 1. Connect to the migrated instance if you are not already connected.
 
     ```bash
-    ssh cloud-user@<public-ip-address>
+    ssh <ssh-user>@<public-ip>
     ```
 
 2. Confirm the operating system, architecture, running kernel, and owning RPM:
@@ -47,7 +47,7 @@ In this lab, you will:
 
 ## Task 2: Install the Ksplice Client
 
-1. Download the Oracle Ksplice installer. This minimal imported image might not include `wget`, so use `curl`:
+1. Check whether the Uptrack client is already present with `command -v uptrack-upgrade`. If it is present, continue to Task 3. Otherwise, download the Oracle Ksplice installer using `curl`:
 
     ```bash
     sudo curl --fail --location \

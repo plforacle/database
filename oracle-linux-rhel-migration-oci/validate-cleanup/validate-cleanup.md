@@ -12,7 +12,7 @@ In this lab, you will:
 - Compare the RHEL and Oracle Linux states.
 - Validate the workload, services, networking, firewall, and SELinux.
 - Review package-migration exceptions.
-- Remove OCI resources and Red Hat registration artifacts.
+- Remove OCI resources and the OS Management Hub registration.
 
 ### Prerequisites
 
@@ -251,25 +251,17 @@ Estimated Lab Time: 35 minutes
 
 2. If a required condition fails, decide whether to remediate or restore from the pre-migration backup.
 
-## Task 6: Remove the Red Hat registration
+## Task 6: Preserve evidence and review the source billing record
 
-1. Sign in to the [Red Hat Hybrid Cloud Console](https://console.redhat.com/) with the Red Hat account that you used to register the temporary RHEL VM.
+1. Copy the baseline, post-migration evidence, and migration logs to your local computer before terminating the VM. Use the SSH account and private key recorded in Lab 2:
 
-2. In the Hybrid Cloud Console, navigate to **RHEL**, then **Inventory**, then **Systems**.
+    ```bash
+    <copy>scp -i "<private-key-path>" -r <ssh-user>@<public-ip>:ol-migration-evidence ./</copy>
+    ```
 
-    Do not use the **Ansible Automation Platform** inventory. The system registered in this workshop is a RHEL system.
+2. Review the source image and usage-based RHEL billing information recorded in Lab 1. Record any Oracle-confirmed guidance on charges after in-place conversion. A changed guest OS identity is not evidence that OCI changed its billing classification.
 
-3. Search for `ol-migrate-rhel-source`. If necessary, search for the consumer ID that you recorded in Lab 3.
-
-    The inventory entry can still display **RHEL 9.8** after the migration because it represents the original registration record.
-
-4. Select the checkbox beside the matching system, select **Delete**, and confirm the deletion.
-
-    Confirm that the system no longer appears in the RHEL systems inventory. This removes the Hybrid Cloud Console inventory record.
-
-5. If the system does not appear in the Hybrid Cloud Console inventory, or you cannot delete it there, sign in to [Red Hat Subscription Management](https://access.redhat.com/management/). Open the system list, locate the temporary system by name or consumer ID, and remove it there.
-
-    The migration can remove the RHEL `subscription-manager` packages, so portal-side cleanup might be required. If your Red Hat account cannot view or delete the record, request a subscription-management role with View/Edit permission from your Red Hat organization administrator.
+3. This direct-image path did not register a personal Red Hat subscription. No Red Hat portal registration cleanup is required. Complete the OCI resource and OS Management Hub cleanup below.
 
 ## Task 7: Delete OCI workshop resources
 
@@ -277,7 +269,7 @@ Estimated Lab Time: 35 minutes
 
 2. Confirm with your administrator that the instance dynamic group has the [required permission for unregistering OCI instances](https://docs.oracle.com/en-us/iaas/osmh/doc/unregister-instance.htm). In **OS Management Hub**, open **Instances**, select the workshop instance, and select **Unregister**. Confirm that it disappears from the managed-instance list. Unregistering restores the previous repository configuration. Disabling the plugin alone leaves the management record behind.
 
-3. In **Profiles**, delete the workshop profile recorded in Lab 7. Keep shared vendor software sources and shared IAM resources. Ask your administrator to remove only the workshop-specific policy statements and matching rules recorded in Lab 1 when they are no longer used.
+3. In **Profiles**, delete the workshop profile recorded in Lab 7. Keep shared vendor software sources and shared IAM resources. Ask your administrator to remove only the workshop-specific policy statements and matching rules recorded in Lab 7 when they are no longer used.
 
 4. In **Compute**, terminate `ol-migrate-rhel-source`.
 
@@ -285,17 +277,11 @@ Estimated Lab Time: 35 minutes
 
 6. In **Block Storage**, delete the `ol-migrate-before-conversion` boot-volume backup.
 
-7. In **Compute**, then **Custom images**, delete `ol-migrate-rhel-9.8`.
+7. Delete the VCN resources created by the wizard and any service gateway and route created in Lab 7. Keep networking resources that are shared with other instances.
 
-8. In **Object Storage**, delete the RHEL QCOW2 object.
+8. Delete the `ol-migrate-lab` compartment when your organization permits it.
 
-9. Delete the now-empty image bucket.
-
-10. Delete the VCN resources created by the VCN wizard and any service gateway and route created in Lab 7.
-
-11. Delete the `ol-migrate-lab` compartment when your organization permits it.
-
-12. Confirm that no workshop Compute instance, boot volume, backup, custom image, Object Storage object, managed-instance registration, profile, or future update schedule remains.
+9. Confirm that no workshop Compute instance, boot volume, backup, managed-instance registration, profile, or future update schedule remains. This direct-image path created no image bucket or custom image to delete.
 
 ## Task 8: Final knowledge review
 
@@ -315,13 +301,12 @@ Estimated Lab Time: 35 minutes
 
     RPM and DNF package management, systemd, SELinux, firewalld, SSH, standard file locations, and common automation patterns remained recognizable.
 
-5. What must be cleaned up outside OCI?
+5. Why is there no Red Hat registration record to remove?
 
-    The temporary Red Hat system registration or entitlement association must also be removed.
+    This OCI-provided RHEL image used RHUI repository access without personal subscription registration. Cleanup focuses on the Compute instance, storage, networking, schedules, and OS Management Hub registration.
 
 ## Learn More
 
-- [Red Hat Subscription Management](https://access.redhat.com/articles/433903)
 - [Deleting an OCI Compute instance](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/terminatinginstance.htm)
 - [Unregistering an OS Management Hub instance](https://docs.oracle.com/en-us/iaas/osmh/doc/unregister-instance.htm)
 

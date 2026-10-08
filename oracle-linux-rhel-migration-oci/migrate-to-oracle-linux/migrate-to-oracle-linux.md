@@ -32,7 +32,7 @@ Estimated Lab Time: 40 minutes
 1. Connect to the RHEL source VM:
 
     ```bash
-    <copy>ssh -i "<private-key-path>" cloud-user@<public-ip></copy>
+    <copy>ssh -i "<private-key-path>" <ssh-user>@<public-ip></copy>
     ```
 
 2. Enter the migration working directory:
@@ -158,11 +158,11 @@ Estimated Lab Time: 40 minutes
 
 2. Wait for the OCI instance to return to Running.
 
-3. Reconnect using the same public IP, SSH private key, and `cloud-user` account:
+3. Reconnect using the same public IP, SSH private key, and the SSH account recorded in Lab 2:
 
     ```bash
     <copy>
-    ssh -i <private-key-path> cloud-user@<public-ip>
+    ssh -i <private-key-path> <ssh-user>@<public-ip>
     </copy>
     ```
 

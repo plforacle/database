@@ -4,9 +4,9 @@
   "oracle_linux_version": "9.8",
   "compute_shape": "VM.Standard.E5.Flex",
   "compute_ocpus": "1",
-  "compute_memory_gb": "8",
-  "boot_volume_gb": "50",
+  "compute_memory_gb": "12",
+  "boot_volume_gb": "64",
   "migration_commit": "82947c960535cfbb632977c70b0fea67f8e0de7a",
-  "migration_sha256": "5435b59e2f0e672111fd1545b2b428cabe473e7c116a353716c2f7de869d0a42"
+  "migration_sha256": "5435b59e2f0e672111fd1545b2b428cabe473e7c116a353716c2f7de869d0a42",
+  "source_image_name": "Red-Hat-Enterprise-Linux-9.8-2026.09.15-8"
 }
-

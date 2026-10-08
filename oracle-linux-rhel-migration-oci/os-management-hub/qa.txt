@@ -1,3 +1,37 @@
+Current workshop state: October 8, 2026
+- Lab 1: Prepare OCI and Launch the RHEL Source contains the former combined
+  Tasks 1-5: compartment, VCN, security rules, network checkpoint, and VM launch.
+- New Lab 2: Prepare and Baseline the RHEL Workload contains former Tasks 6-9,
+  renumbered 1-4: SSH inspection, RHUI preparation, Apache, and source baseline.
+- Lab 1 is 25 minutes; Lab 2 is 30 minutes. Workshop estimate remains provisional
+  at 4h45m. Eight active labs; OS Management Hub is Lab 7 and cleanup is Lab 8.
+- Updated manifest, introduction references, prerequisites, SSH/baseline references,
+  and later lab titles. Image and billing records remain in Lab 1.
+- Static verification passed for nine active markdown files and both JSON files:
+  sequential tasks/labs, manifest titles, headings, code/copy balance, local links,
+  and whitespace. All 25 original source command blocks were preserved.
+- Runtime OCI validation, screenshots, and external LiveLabs validator remain pending.
+- Changes are local and have not been committed, pushed, or published.
+
+Historical authoring notes follow. Earlier counts and titles describe prior revisions.
+
+Previous consolidation state: October 8, 2026
+- Combined former Labs 1 and 2 into Lab 1: Set Up OCI and Baseline the RHEL Workload.
+- Sequence: compartment, VCN, security rules, network checkpoint, Compute launch,
+  SSH inspection, RHUI preparation, Apache workload, and source baseline.
+- Lab 1 estimate: 55 minutes. Workshop estimate remains provisional at 4h45m.
+- Seven active labs; OS Management Hub is Lab 6 and cleanup is Lab 7.
+- Manifest, introduction, prerequisites, and all lab references were updated.
+- Static verification passed: eight active markdown files, sequential lab/task
+  numbers, required sections, title matches, local links, balanced copy tags and
+  fences, and both JSON files. All 25 original source command blocks are unchanged.
+- Retired standalone acquire-import-rhel.md was removed after its network
+  instructions were incorporated into launch-baseline-rhel.md.
+- Runtime OCI validation, screenshot integration, and external LiveLabs validator
+  remain pending. Local edits have not been committed, pushed, or published.
+
+Historical authoring notes follow; earlier lab numbers describe prior revisions.
+
 OS Management Hub lab authoring and QA notes
 Date: October 7, 2026
 Mode: Draft with workshop integration
@@ -6,8 +40,8 @@ WMS workshop: 12229
 Delivered
 - Lab 7: Manage the Migrated Instance with OS Management Hub (60 minutes).
 - Manifest places Lab 7 after Ksplice and before Lab 8 cleanup.
-- Introduction states a paid OCI tenancy and 5 hours 45 minutes.
-- Lab 1 prepares IAM before VM launch; Lab 2 points to Lab 8 cleanup.
+- Introduction states a paid OCI tenancy and 4 hours 45 minutes.
+- Lab 7 prepares IAM before registration; Lab 2 points to Lab 8 cleanup.
 - Lab 6 explains the transition from Uptrack to managed package jobs.
 - Lab 8 removes schedules, unregisters the VM, and removes its profile.
 
@@ -37,7 +71,7 @@ Source traceability
 
 Live validation and visual QA: NOT RUN
 - No authenticated OCI tenancy was available in this authoring session.
-- Confirm ol9_oci_included and Oracle Cloud Agent installation on the converted RHEL image.
+- Confirm ol9_oci_included and Oracle Cloud Agent installation on the converted OCI RHEL image.
 - Confirm OCA >= 1.40, plugin support, compatible profile selection, and Active registration.
 - Confirm IAM access to root vendor sources and workshop resources; test unregister permission.
 - Test service-gateway routing and inventory collection.
@@ -49,3 +83,57 @@ Live validation and visual QA: NOT RUN
   at their matching steps with descriptive alt text. No screenshot assets were fabricated.
 - Rehearse total duration; allow extra time for initial IAM or agent troubleshooting.
 - Browser rendering and the external LiveLabs validator were not run.
+
+October 8 source-path update
+- Replaced download/import instructions with direct OCI RHEL 9.8 image selection.
+- Preserved lab numbering and Lab 2 Task 6 for the active test run.
+- Demonstrated source image: Red-Hat-Enterprise-Linux-9.8-2026.09.15-8 in Ashburn.
+- User-provided evidence: rhel-oci-test Running, E5 Flex, 1 OCPU, 12 GB RAM,
+  selected image showing 64 GB; browser response contains MIGRATION_WORKLOAD_OK.
+- No personal Red Hat registration was needed in the user's source setup.
+- Guest baseline and RHUI package evidence, dry run, conversion, OSMH registration,
+  and post-conversion billing behavior remain to be validated.
+- New duration is a provisional estimate after replacing 60-90 minute import
+  with 20 minute OCI preparation. Confirm through an end-to-end rehearsal.
+- Public/private IPs and unverified image OCIDs were not hardcoded into instructions.
+- Existing import screenshots are not referenced by the new direct-image lab.
+- New screenshots must be staged from the user's original files and reviewed
+  for personal identifiers before publishing. Conversation images were not
+  copied because no local attachment paths were provided to this session.
+
+October 8 static verification: PASS
+- Rechecked all nine markdown files, eight lab-title matches, required sections,
+  task sequence, balanced fences/copy tags, local paths, and both JSON files.
+- Introduction title intentionally names the workshop, not the navigation label.
+- git diff --check passed. No new live migration or billing test was performed.
+
+October 8 IAM task placement correction
+- Moved OS Management Hub IAM preparation from Lab 1 Task 2 to Lab 7 Task 2.
+- Lab 1 Task 2 now identifies the OCI RHEL image.
+- Updated introduction prerequisites, manifest descriptions, cleanup references,
+  and Lab 7 task numbering and profile reference.
+- Static checks passed for all nine markdown files: sequential tasks, required
+  sections, single H1, balanced fences/copy tags, local links, lab titles,
+  and no em dash. Both JSON files parse.
+- Live OCI validation and external LiveLabs validator were not run for this edit.
+
+October 8 network sequence correction
+- Expanded Lab 1 into compartment creation, VCN creation, SSH/HTTP rules,
+  and a required network checkpoint before Compute launch.
+- Lab 2 Task 1 verifies the existing network; image selection happens during
+  the actual launch in Task 2. Tasks 2-6 retain their numbering.
+- Updated introduction architecture/objectives and Lab 1 manifest title.
+- Static checks passed for all nine markdown files and both JSON files,
+  including task sequence, headings, code balance, local links, and titles.
+- Changed files contain no trailing whitespace or em dash.
+- Sources: OCI quickstartnetworking.htm, securitylists.htm, launchinginstance.htm.
+- Current timing remains provisional. Runtime Console validation, screenshots,
+  and the external LiveLabs validator remain pending.
+
+October 8 Lab 1 scope correction
+- Removed RHEL image access prerequisite, RHUI/image explanation, and Compute
+  shape, boot-volume, and SSH-key preparation from Lab 1.
+- Lab 1 covers compartment and networking only; Lab 2 retains image selection
+  and launch preparation. Task sequence and manifest title checks passed.
+- Published GitHub Pages manifest still lists Acquire and Import the RHEL
+  Source Image; these local corrections have not been published.

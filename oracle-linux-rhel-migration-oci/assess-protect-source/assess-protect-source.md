@@ -65,10 +65,13 @@ Estimated Lab Time: 30 minutes
     ```bash
     <copy>
     df -h /
+    df -i /
     sudo rpm --verifydb
     sudo dnf check
     </copy>
     ```
+
+    The selected image showed a 64 GB boot volume, but migration depends on free filesystem space and inodes. Resolve any script-reported space requirement before proceeding.
 
 4. Inventory enabled repositories:
 
@@ -164,6 +167,8 @@ Estimated Lab Time: 30 minutes
 
 2. Review the final dry-run summary.
 
+    This source uses OCI-hosted RHUI rather than personal subscription registration. A successful launch and Apache response do not establish migration compatibility. Verify that this pinned script accepts the RHUI-backed source and reports no unresolved repository or package blocker. Preserve the dry-run log before conversion; do not remove RHUI packages or repository files manually to bypass a failure.
+
     Confirm that the script completed its assessment without converting the operating system. Look for messages marked as errors, failures, or blockers. A warning does not always prevent migration, but you must understand and resolve any warning that affects repositories, packages, disk space, or the running kernel before continuing.
 
     Record the run directory displayed near the end of the output. The directory contains reports and snapshots from this assessment and helps you investigate any reported problem.
@@ -199,18 +204,21 @@ Estimated Lab Time: 30 minutes
     - A newer kernel that is installed but not currently running.
     - RHEL or Oracle Linux software repositories that the VM cannot reach.
 
-## Task 4: Record Red Hat registration identity
+## Task 4: Record source image and RHUI provenance
 
-1. Record the system identity without recording credentials:
+1. Confirm the baseline includes `$HOME/ol-migration-evidence/before/source-instance.txt` with the source image name and OCID, instance name and OCID, region, shape, memory, boot-volume size, and SSH account. Use the OCI instance and image details to complete any missing fields.
+
+2. Capture the current RHUI-related package and repository state:
 
     ```bash
     <copy>
-    sudo subscription-manager identity | tee \
-      "$HOME/ol-migration-evidence/before/red-hat-identity.txt"
+    sudo dnf repolist --enabled > "$HOME/ol-migration-evidence/before/repositories.txt"
+    rpm -qa | grep -Ei 'rhui|subscription-manager|oracle-cloud-agent' \
+      > "$HOME/ol-migration-evidence/before/source-management-packages.txt" || true
     </copy>
     ```
 
-2. Note the system name or consumer ID. You will use it to remove the temporary registration after migration.
+3. Record the successful metadata refresh from Lab 2. This OCI source did not require personal Red Hat registration, so there is no subscription consumer ID to collect. Preserve RHUI evidence to compare repository and vendor-package changes after conversion.
 
 ## Task 5: Create the pre-migration recovery point
 
@@ -255,7 +263,7 @@ Estimated Lab Time: 30 minutes
 
     - Dry run completed without an unresolved blocker.
     - The verified script checksum returned OK.
-    - The RHEL registration identity was recorded.
+    - Source image and instance provenance and RHUI evidence were recorded.
     - The boot-volume backup state is Available.
     - Apache is active after the backup.
     - The workload marker is returned.
@@ -279,5 +287,5 @@ When refreshing this workshop, test a candidate migration-script commit in a dis
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
 

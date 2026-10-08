@@ -14,6 +14,10 @@ run_capture() {
 
 run_capture os-release cat /etc/os-release
 run_capture kernel uname -a
+run_capture ssh-user whoami
+run_capture disk-free df -h /
+run_capture block-devices lsblk
+run_capture source-management-packages bash -c "rpm -qa | grep -Ei 'rhui|subscription-manager|oracle-cloud-agent'"
 run_capture repositories sudo dnf repolist --enabled
 run_capture packages rpm -qa --qf '%{NAME}\t%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n'
 run_capture failed-services systemctl --failed --no-pager

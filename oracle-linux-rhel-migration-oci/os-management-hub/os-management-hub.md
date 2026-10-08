@@ -10,6 +10,7 @@ Estimated Lab Time: 60 minutes
 
 ### Objectives
 
+- Configure OS Management Hub IAM access with your administrator.
 - Prepare Oracle Cloud Agent and check service connectivity.
 - Create an Oracle Linux 9 registration profile and register the existing VM.
 - Review software sources, installed packages, and available updates.
@@ -21,13 +22,13 @@ Estimated Lab Time: 60 minutes
 - Completed Lab 6: Apply Live Updates with Oracle Ksplice.
 - A paid OCI tenancy and the migrated Oracle Linux 9 x86_64 VM running RHCK.
 - SSH access using the account and private key that worked in Lab 2.
-- OS Management Hub IAM setup completed for `ol-migrate-lab`, including access to vendor software sources in the root compartment.
-- Permission to manage profiles and jobs, enable Compute plugins, and unregister the instance during cleanup.
+- Administrator assistance to configure OS Management Hub IAM access for `ol-migrate-lab` in this lab.
+- Permission to enable Compute plugins; your administrator will grant service access for profiles, jobs, and cleanup in Task 2.
 - A network path to OCI services and access to Oracle Linux repositories.
 
-> **Note:** The source VM was imported from a RHEL image. Verify agent installation and plugin support on this converted image before continuing. A paid tenancy alone does not prove that registration will succeed. If the plugin reports `NOT_SUPPORTED`, preserve the details and stop this lab for instructor review.
+> **Note:** The source VM was launched from an OCI RHEL image and then converted. Verify agent installation and plugin support on this converted image before continuing. A paid tenancy alone does not prove that registration will succeed. If the plugin reports `NOT_SUPPORTED`, preserve the details and stop this lab for instructor review.
 
-## Task 1: Verify the system and IAM setup
+## Task 1: Verify the migrated system
 
 1. Connect to the migrated VM. Replace both placeholders, using the SSH account selected in Lab 2:
 
@@ -50,13 +51,19 @@ Estimated Lab Time: 60 minutes
 
     Confirm Oracle Linux major version 9, `x86_64`, an Oracle kernel without `uek` in its release, an active Apache service, and the workload marker.
 
-3. In the OCI Console, open **Observability & Management**, then **OS Management Hub**, then **Overview**. Select the workshop region and `ol-migrate-lab` compartment.
+## Task 2: Prepare OS Management Hub access
 
-4. Confirm that your administrator completed the [policy advisor setup](https://docs.oracle.com/en-us/iaas/osmh/doc/policy-advisor.htm) introduced in Lab 1. The instance must match the dynamic group's rule for this exact compartment. Child compartments are not included automatically.
+1. Have your tenancy administrator open **Observability & Management**, then **OS Management Hub**, then **Overview**, select `ol-migrate-lab`, and run **Policy Advisor**. Review the proposed actions, select **Setup**, and complete the setup. The administrator requires permission to manage groups, dynamic groups, and policies in the tenancy.
 
-5. Confirm that your user can create a profile and a job and read vendor sources in the root compartment. Read-only operator access is insufficient. If any permission is missing, have your tenancy administrator resolve it before continuing.
+2. Have the administrator grant your workshop user management access to profiles and jobs and access to read vendor software sources in the root compartment. The advisor's `osmh-admins` group provides management access in its configured scope; `osmh-operators` is read-only. Root-compartment source access may require additional policies. Existing equivalent policies can be used. See [Policy Advisor](https://docs.oracle.com/en-us/iaas/osmh/doc/policy-advisor.htm) and [service policies](https://docs.oracle.com/en-us/iaas/osmh/doc/policies.htm).
 
-## Task 2: Prepare the agent and network
+3. Record the exact IAM resources created or changed. Keep shared tenancy policies and groups intact during cleanup. Keep this record for cleanup in Lab 8.
+
+4. Confirm that the migrated instance matches the dynamic group's rule for the exact `ol-migrate-lab` compartment. Child compartments are not included automatically.
+
+5. Confirm that your user can create a profile and a job and read vendor software sources in the root compartment. Allow time for IAM changes to take effect. Have your administrator resolve authorization errors before enabling the agent plugin and registering the VM.
+
+## Task 3: Prepare the agent and network
 
 1. Inspect available repositories and install preparation tools:
 
@@ -114,7 +121,7 @@ Estimated Lab Time: 60 minutes
     </copy>
     ```
 
-## Task 3: Add software sources and create a profile
+## Task 4: Add software sources and create a profile
 
 1. Under **OS Management Hub**, open **Software Sources** and select the root compartment. Vendor sources reside there; the profile will reside in `ol-migrate-lab`.
 
@@ -148,13 +155,13 @@ Estimated Lab Time: 60 minutes
 
     If sources are missing, check their region, compartment, availability, and your access. See [adding sources](https://docs.oracle.com/en-us/iaas/osmh/doc/add-vendor-software-sources.htm) and [creating profiles](https://docs.oracle.com/en-us/iaas/osmh/doc/create-profile.htm).
 
-## Task 4: Register and inspect the migrated instance
+## Task 5: Register and inspect the migrated instance
 
 1. Open **Compute**, then **Instances**, and select `ol-migrate-rhel-source`.
 
 2. Select **Management**. Under **Oracle Cloud Agent**, locate **OS Management Hub Agent**, open its actions menu, and select **Enable**.
 
-3. Select the profile created in Task 3. Because this VM uses a custom image, explicitly select **Oracle Linux 9** and **x86_64** when prompted to identify compatible profiles. Use the migrated OS values, even if the original image record still says RHEL or Custom.
+3. Select the profile created in Task 4. Because the guest OS changed after launch, explicitly select **Oracle Linux 9** and **x86_64** when prompted to identify compatible profiles. Use the migrated OS values, even if the original image record still says RHEL.
 
 4. Allow up to ten minutes for registration. In **OS Management Hub**, open **Instances**, filter to `ol-migrate-lab`, and confirm the instance is **Active**. Do not continue with a stopped, unsupported, or failed registration.
 
@@ -170,7 +177,7 @@ Estimated Lab Time: 60 minutes
 
     Registration changes the instance's repository management. Use OS Management Hub for the following package jobs and avoid simultaneous DNF transactions. See [registering OCI instances](https://docs.oracle.com/en-us/iaas/osmh/doc/register-oci-instance.htm).
 
-## Task 5: Complete a managed package operation
+## Task 6: Complete a managed package operation
 
 1. Review available updates on the managed instance. If package updates are available, select **Create update job**.
 
@@ -196,7 +203,7 @@ Estimated Lab Time: 60 minutes
 
 6. Record the job OCID, completion status, and packages changed in your evidence. See [update jobs](https://docs.oracle.com/en-us/iaas/osmh/doc/create-scheduled-job-instance.htm) and [package installation](https://docs.oracle.com/en-us/iaas/osmh/doc/install-packages-instance.htm).
 
-## Task 6: Schedule maintenance
+## Task 7: Schedule maintenance
 
 1. On the managed instance, select **Create update job** and enter `ol-migrate-update-scheduled` as its name.
 
@@ -208,7 +215,7 @@ Estimated Lab Time: 60 minutes
 
 5. Delete this practice schedule before leaving the lab. Open its details, select **Delete** from **Actions**, and confirm. Verify that it no longer appears in **Scheduled jobs**. See [deleting a scheduled job](https://docs.oracle.com/en-us/iaas/osmh/doc/delete-scheduled-job.htm).
 
-## Task 7: Validate the workload and record the checkpoint
+## Task 8: Validate the workload and record the checkpoint
 
 1. Once package jobs have finished, check whether maintenance requires a reboot:
 
@@ -253,7 +260,7 @@ Estimated Lab Time: 60 minutes
 - **Agent missing or unsupported:** Check the installed version and service status. Preserve errors with `sudo journalctl -u oracle-cloud-agent -n 100 --no-pager`. Do not alter image metadata to bypass a support check.
 - **Registration does not become Active:** Check the exact compartment's dynamic-group rule, agent status, service-gateway route, DNS, and HTTPS connectivity. Use [registration troubleshooting](https://docs.oracle.com/en-us/iaas/osmh/doc/register-oci-instance.htm).
 - **Package job fails:** Open its log and verify assigned software sources and dependency errors. Wait for existing package transactions to finish.
-- **No updates remain:** Use the installation branch in Task 5. Lab 5 may already have applied all current updates.
+- **No updates remain:** Use the installation branch in Task 6. Lab 5 may already have applied all current updates.
 
 ## Learn More
 

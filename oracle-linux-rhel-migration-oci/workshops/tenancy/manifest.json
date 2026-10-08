@@ -11,14 +11,14 @@
       "filename": "../../introduction/introduction.md"
     },
     {
-      "title": "Lab 1: Acquire and Import the RHEL Source Image",
-      "description": "Download an authorized RHEL KVM guest image and import it into OCI.",
-      "filename": "../../acquire-import-rhel/acquire-import-rhel.md"
+      "title": "Lab 1: Prepare OCI and Launch the RHEL Source",
+      "description": "Create the compartment and network, configure access rules, and launch the OCI RHEL 9.8 source VM.",
+      "filename": "../../launch-baseline-rhel/launch-baseline-rhel.md"
     },
     {
-      "title": "Lab 2: Launch and Baseline the RHEL Workload",
-      "description": "Launch an actual RHEL source VM, deploy Apache, and capture baseline evidence.",
-      "filename": "../../launch-baseline-rhel/launch-baseline-rhel.md"
+      "title": "Lab 2: Prepare and Baseline the RHEL Workload",
+      "description": "Connect with SSH, verify RHUI access, prepare RHEL, deploy Apache, and capture baseline evidence.",
+      "filename": "../../prepare-baseline-rhel/prepare-baseline-rhel.md"
     },
     {
       "title": "Lab 3: Assess Readiness and Protect the Source",
@@ -42,7 +42,7 @@
     },
     {
       "title": "Lab 7: Manage the Migrated Instance with OS Management Hub",
-      "description": "Register the converted VM, inspect inventory, perform a package job, and schedule maintenance.",
+      "description": "Configure IAM access, register the converted VM, inspect inventory, perform a package job, and schedule maintenance.",
       "filename": "../../os-management-hub/os-management-hub.md"
     },
     {

@@ -1,0 +1,722 @@
+{
+  "date": "2026-10-08",
+  "mode": "publish-ready update of existing Lab 1",
+  "checks": [
+    {
+      "check": "introduction/introduction.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "introduction/introduction.md one H1",
+      "pass": true
+    },
+    {
+      "check": "introduction/introduction.md required sections",
+      "pass": true
+    },
+    {
+      "check": "introduction/introduction.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "introduction/introduction.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "introduction/introduction.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "introduction/introduction.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md one H1",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md required sections",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/create-workshop-compartment.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/create-workshop-compartment.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/vcn-wizard-configuration.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/vcn-wizard-configuration.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/vcn-wizard-review.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/vcn-wizard-review.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/vcn-available.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/vcn-available.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/security-rules-ssh-web.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/security-rules-ssh-web.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/rhel-image-ocid-selection.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/rhel-image-ocid-selection.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/rhel-shape-configuration.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/rhel-shape-configuration.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/compute-security-settings.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/compute-security-settings.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/compute-existing-public-subnet.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/compute-existing-public-subnet.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/compute-public-ip-ssh-keys.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/compute-public-ip-ssh-keys.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/rhel-boot-volume-64gb.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/rhel-boot-volume-64gb.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/compute-review-create.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/compute-review-create.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md descriptive alt: images/rhel-instance-running.png",
+      "pass": true
+    },
+    {
+      "check": "launch-baseline-rhel/launch-baseline-rhel.md image exists: images/rhel-instance-running.png",
+      "pass": true
+    },
+    {
+      "check": "prepare-baseline-rhel/prepare-baseline-rhel.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "prepare-baseline-rhel/prepare-baseline-rhel.md one H1",
+      "pass": true
+    },
+    {
+      "check": "prepare-baseline-rhel/prepare-baseline-rhel.md required sections",
+      "pass": true
+    },
+    {
+      "check": "prepare-baseline-rhel/prepare-baseline-rhel.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "prepare-baseline-rhel/prepare-baseline-rhel.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "prepare-baseline-rhel/prepare-baseline-rhel.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "prepare-baseline-rhel/prepare-baseline-rhel.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "assess-protect-source/assess-protect-source.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "assess-protect-source/assess-protect-source.md one H1",
+      "pass": true
+    },
+    {
+      "check": "assess-protect-source/assess-protect-source.md required sections",
+      "pass": true
+    },
+    {
+      "check": "assess-protect-source/assess-protect-source.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "assess-protect-source/assess-protect-source.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "assess-protect-source/assess-protect-source.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "assess-protect-source/assess-protect-source.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "migrate-to-oracle-linux/migrate-to-oracle-linux.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "migrate-to-oracle-linux/migrate-to-oracle-linux.md one H1",
+      "pass": true
+    },
+    {
+      "check": "migrate-to-oracle-linux/migrate-to-oracle-linux.md required sections",
+      "pass": true
+    },
+    {
+      "check": "migrate-to-oracle-linux/migrate-to-oracle-linux.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "migrate-to-oracle-linux/migrate-to-oracle-linux.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "migrate-to-oracle-linux/migrate-to-oracle-linux.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "migrate-to-oracle-linux/migrate-to-oracle-linux.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "manage-patch-oracle-linux/manage-patch-oracle-linux.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "manage-patch-oracle-linux/manage-patch-oracle-linux.md one H1",
+      "pass": true
+    },
+    {
+      "check": "manage-patch-oracle-linux/manage-patch-oracle-linux.md required sections",
+      "pass": true
+    },
+    {
+      "check": "manage-patch-oracle-linux/manage-patch-oracle-linux.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "manage-patch-oracle-linux/manage-patch-oracle-linux.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "manage-patch-oracle-linux/manage-patch-oracle-linux.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "manage-patch-oracle-linux/manage-patch-oracle-linux.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "ksplice-live-updates/ksplice-live-updates.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "ksplice-live-updates/ksplice-live-updates.md one H1",
+      "pass": true
+    },
+    {
+      "check": "ksplice-live-updates/ksplice-live-updates.md required sections",
+      "pass": true
+    },
+    {
+      "check": "ksplice-live-updates/ksplice-live-updates.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "ksplice-live-updates/ksplice-live-updates.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "ksplice-live-updates/ksplice-live-updates.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "ksplice-live-updates/ksplice-live-updates.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "os-management-hub/os-management-hub.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "os-management-hub/os-management-hub.md one H1",
+      "pass": true
+    },
+    {
+      "check": "os-management-hub/os-management-hub.md required sections",
+      "pass": true
+    },
+    {
+      "check": "os-management-hub/os-management-hub.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "os-management-hub/os-management-hub.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "os-management-hub/os-management-hub.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "os-management-hub/os-management-hub.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "validate-cleanup/validate-cleanup.md first line H1",
+      "pass": true
+    },
+    {
+      "check": "validate-cleanup/validate-cleanup.md one H1",
+      "pass": true
+    },
+    {
+      "check": "validate-cleanup/validate-cleanup.md required sections",
+      "pass": true
+    },
+    {
+      "check": "validate-cleanup/validate-cleanup.md estimated time",
+      "pass": true
+    },
+    {
+      "check": "validate-cleanup/validate-cleanup.md sequential task headings",
+      "pass": true
+    },
+    {
+      "check": "validate-cleanup/validate-cleanup.md balanced copy tags",
+      "pass": true
+    },
+    {
+      "check": "validate-cleanup/validate-cleanup.md balanced code fences",
+      "pass": true
+    },
+    {
+      "check": "manifest includes introduction and eight local labs",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 has five tasks",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 has 13 screenshot references",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 images nested in steps",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 has no em dash",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 1 step 1 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 1 step 2 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 1 step 3 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 1 step 4 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 1 step 5 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 1 step 6 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 1 step 7 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 1 step 8 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 1 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 2 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 3 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 4 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 5 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 6 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 7 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 8 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 9 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 2 step 10 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 3 step 1 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 3 step 2 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 3 step 3 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 3 step 4 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 3 step 5 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 3 step 6 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 3 step 7 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 3 step 8 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 4 step 1 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 4 step 2 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 1 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 2 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 3 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 4 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 5 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 6 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 7 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 8 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 9 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 10 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 11 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 12 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 13 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 14 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 15 sequential",
+      "pass": true
+    },
+    {
+      "check": "Lab 1 Task 5 step 16 sequential",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: create-workshop-compartment.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: vcn-wizard-configuration.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: vcn-wizard-review.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: vcn-available.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: security-rules-ssh-web.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: rhel-image-ocid-selection.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: rhel-shape-configuration.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: compute-security-settings.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: compute-existing-public-subnet.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: compute-public-ip-ssh-keys.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: rhel-boot-volume-64gb.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: compute-review-create.png",
+      "pass": true
+    },
+    {
+      "check": "PNG valid: rhel-instance-running.png",
+      "pass": true
+    },
+    {
+      "check": "supplied audio matches companion Zoom audio",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "limitations": [
+    "Browser rendering was not checked: browser connection unavailable and no enabled browser surfaces.",
+    "The bundled QA runner refers to a validator absent from this environment; local structural checks were used.",
+    "The recording does not show the private subnet CIDR, subnet security-list attachment, or the public subnet route and gateway details.",
+    "SSH, RHUI repository access, Apache, migration, and OS Management Hub were not exercised in this Lab 1 recording."
+  ],
+  "imageLoadingRepair": {
+    "date": "2026-10-08",
+    "cause": "LiveLabs image rewriting skips any relative path containing the substring http.",
+    "renamedFrom": "security-rules-ssh-http.png",
+    "renamedTo": "security-rules-ssh-web.png",
+    "actualRendererFunctionVerified": true,
+    "servedMarkdownMatchesDisk": true,
+    "images": [
+      {
+        "file": "create-workshop-compartment.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/create-workshop-compartment.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "vcn-wizard-configuration.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/vcn-wizard-configuration.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "vcn-wizard-review.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/vcn-wizard-review.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "vcn-available.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/vcn-available.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "security-rules-ssh-web.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/security-rules-ssh-web.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "rhel-image-ocid-selection.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/rhel-image-ocid-selection.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "rhel-shape-configuration.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/rhel-shape-configuration.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "compute-security-settings.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/compute-security-settings.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "compute-existing-public-subnet.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/compute-existing-public-subnet.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "compute-public-ip-ssh-keys.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/compute-public-ip-ssh-keys.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "rhel-boot-volume-64gb.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/rhel-boot-volume-64gb.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "compute-review-create.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/compute-review-create.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      },
+      {
+        "file": "rhel-instance-running.png",
+        "url": "http://127.0.0.1:5500/oracle-linux-rhel-migration-oci/launch-baseline-rhel/images/rhel-instance-running.png",
+        "status": 200,
+        "type": "image/png",
+        "validPng": true
+      }
+    ]
+  }
+}

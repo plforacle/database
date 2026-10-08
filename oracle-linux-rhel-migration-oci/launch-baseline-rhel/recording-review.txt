@@ -1,0 +1,95 @@
+LAB 1 RECORDING REVIEW
+Date: October 8, 2026
+Workshop: Migrate Red Hat Enterprise Linux to Oracle Linux on OCI
+WMS ID: 12229
+Mode: publish-ready update of existing Lab 1
+
+SOURCE
+The supplied rhel-ol-lab1.m4a contains AAC audio only, with no video track.
+Its SHA-256 matches audio1928951068.m4a from the Zoom meeting folder
+2026-10-08 17.33.08 Zoom Meeting.
+The corresponding video1928951068.mp4 is 15:29.81, 1920 x 1080.
+The video was reviewed across the full recording using contact sheets and
+targeted full-resolution frames. Original recordings were read without modification.
+No original recording or SSH private key was copied into the workshop repository.
+
+UPDATED FILE
+launch-baseline-rhel/launch-baseline-rhel.md
+
+CHANGES
+- Retained five tasks and the network checkpoint before Compute launch.
+- Expanded parent-compartment selection and explained the recorded ol-migrate-lab-1 name.
+- Updated prerequisites to allow Console-generated SSH keys.
+- Aligned VCN and public-subnet examples to the observed 10.0.0.0/16 and 10.0.0.0/24 ranges.
+- Required learners to inspect and record the private subnet CIDR instead of asserting an unseen value.
+- Added the VCN Configuration, Next, Review and create, and Create workflow.
+- Clarified the wizard's successful resource-availability message.
+- Added the VCN Security tab and security-list path used in the recording.
+- Clarified blank source-port fields, stateful rules, saving HTTP ingress, and saved-rule verification.
+- Expanded Compute Basic information, Security, Networking, Storage, and Review steps.
+- Documented My Images > Image OCID, the resolved RHEL 9.8 image, and no custom-image import.
+- Added shape verification, public IPv4 assignment, IPv6 warning context, and existing-subnet selection.
+- Added Generate a key pair for me, both key downloads, and the Lab 2 private-key-path handoff.
+- Explained the 64 GB default boot volume and custom-size control.
+- Added creation progress, Running-state confirmation, and instance-address recording.
+- Kept SSH, RHUI, Apache, and baseline work in Lab 2.
+
+SCREENSHOTS
+13 PNGs extracted from the corresponding Zoom screen recording.
+Each screenshot is placed below its matching instruction with descriptive alt text.
+Browser chrome, the Zoom camera overlay, and desktop areas were cropped out.
+The parent-compartment value, image OCID value, and instance IP addresses were masked.
+Screenshots otherwise preserve the recorded UI.
+See screenshot-sources.json for source times, task/step mapping, dimensions,
+alt text, and crop/redaction filters.
+
+QUALITY CHECKS
+152 local structural and media checks passed with zero failures:
+- Nine local manifest destinations exist: Introduction and eight labs.
+- Required headings, objectives, estimated time, and acknowledgements are present.
+- Task headings are sequential.
+- Code fences and copy tags are balanced.
+- Local image and file references resolve.
+- Lab 1 has five tasks and sequential steps.
+- All 13 Lab 1 screenshots have descriptive alt text and four-space nesting.
+- All 13 PNG headers are valid.
+- Lab 1 contains no em dash.
+- Supplied audio and corresponding Zoom audio match by SHA-256.
+Git diff --check passed.
+The bundled skill QA runner points to a validator absent from this environment.
+These are local checks, not a claim of an official Oracle validator run.
+See recording-qa.json for individual check results.
+
+REMAINING EVIDENCE GAPS
+The video confirms VCN availability, saved SSH/HTTP rules, selected launch settings,
+and a Running instance. It does not demonstrate every required network checkpoint:
+the private subnet CIDR, the public subnet's security-list attachment, and its route
+table and enabled internet gateway require learner verification. Those instructions
+remain in the lab, without claiming they were demonstrated.
+SSH connectivity, RHUI access, guest firewall configuration, Apache, migration,
+and OS Management Hub were not exercised in this Lab 1 recording.
+Browser rendering was not checked because the browser connection was unavailable
+and no enabled browser surfaces were reported.
+A new browser preview remains needed before publication.
+
+PRODUCT DOCUMENTATION
+https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/launchinginstance.htm
+https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/quickstartnetworking.htm
+The updated Compute workflow and VCN-first setup were checked against these
+Oracle documentation pages. The recorded image and UI remain the source for
+the workshop-specific selections.
+
+DELIVERY
+All edits are local in:
+C:\Users\Perside\Documents\GitHub\database\oracle-linux-rhel-migration-oci
+No commit, push, WMS edit, or publication was performed.
+No FreeSQL content applies to this operating-system setup lab.
+
+IMAGE LOADING CORRECTION
+The LiveLabs renderer checks for http anywhere in an image path.
+The original security-rules-ssh-http.png name therefore skipped lab-folder
+rewriting and requested the image from workshops/tenancy/images instead.
+Renamed it to security-rules-ssh-web.png and updated Markdown and QA/source references.
+Verified the actual CDN image-rewriting function against the served Markdown.
+All 13 resulting local image URLs returned HTTP 200, image/png, and valid PNG headers.
+Refresh the workshop page to load the corrected Markdown.

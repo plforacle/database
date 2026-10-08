@@ -186,7 +186,7 @@ Estimated Lab Time: 25 minutes
 
     ```bash
     <copy>
-    ssh -i "<private-key-path>" cloud-user@<public-ip>
+    ssh -i "<private-key-path>" <ssh-user>@<public-ip>
     </copy>
     ```
 
