@@ -1,0 +1,51 @@
+{
+  "workshoptitle": "OLVM Self-Study Quiz Bank",
+  "help": "livelabs-help-oci_us@oracle.com",
+  "tutorials": [
+    {
+      "title": "Introduction",
+      "description": "Study workflow, module counts, and release context.",
+      "filename": "../../olvm-self-study/olvm-self-study.md"
+    },
+    {
+      "title": "Module 1: Architecture and Core Components",
+      "description": "85 scored questions with explanations, covering the supplied 17% objective weighting.",
+      "filename": "../../olvm-self-study/01-architecture/01-architecture.md"
+    },
+    {
+      "title": "Module 2: Engine and KVM Host Installation",
+      "description": "80 scored questions with explanations, covering the supplied 16% objective weighting.",
+      "filename": "../../olvm-self-study/02-installation/02-installation.md"
+    },
+    {
+      "title": "Module 3: Storage Domains and Networking",
+      "description": "95 scored questions with explanations, covering the supplied 19% objective weighting.",
+      "filename": "../../olvm-self-study/03-storage-network/03-storage-network.md"
+    },
+    {
+      "title": "Module 4: Virtual Machine Administration",
+      "description": "50 scored questions with explanations, covering the supplied 10% objective weighting.",
+      "filename": "../../olvm-self-study/04-virtual-machines/04-virtual-machines.md"
+    },
+    {
+      "title": "Module 5: Users and Permissions",
+      "description": "45 scored questions with explanations, covering the supplied 9% objective weighting.",
+      "filename": "../../olvm-self-study/05-users-permissions/05-users-permissions.md"
+    },
+    {
+      "title": "Module 6: Optimization, Events, Logs, and Monitoring",
+      "description": "100 scored questions with explanations, covering the supplied 20% objective weighting.",
+      "filename": "../../olvm-self-study/06-optimization-monitoring/06-optimization-monitoring.md"
+    },
+    {
+      "title": "Module 7: Recovery Management",
+      "description": "45 scored questions with explanations, covering the supplied 9% objective weighting.",
+      "filename": "../../olvm-self-study/07-recovery/07-recovery.md"
+    },
+    {
+      "title": "Study Guide and Coverage Map",
+      "description": "All 38 supplied subtopics, transcript review locations, Lab 7 connections, and readiness checklist.",
+      "filename": "../../olvm-self-study/study-guide.md"
+    }
+  ]
+}
