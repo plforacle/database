@@ -12,9 +12,7 @@ Jessica sees an opportunity in Oracle AI Database's converged architecture. A co
 
 In this lab, you take Jessica's role as the DBA. You will write the converged SQL query behind the Risk and Operations Dashboard. It combines relational risk data, vector search, JSON transaction data, and spatial service data in one Oracle AI Database, without separate systems or data copies.
 
-The image below shows the Risk and Operations Dashboard: a business-facing product built on the converged database. It gives business users one place to find risk, exposure, transaction, and service insights. In this lab, you will write the SQL behind that experience.
-
-![Risk and Operations Dashboard page](images/risk-operations-dashboard.png " ")
+![jessica](images/jessica.png)
 
 ### Objectives
 
@@ -45,10 +43,10 @@ The dashboard is a starting point, not the whole decision. Run the query below t
 
 The query intentionally crosses four data models:
 
-1. **Relational:** `RISK_SIGNALS_V`, product mentions, and finance views calculate product risk and exposure.
-2. **Vector:** `PRODUCT_EMBEDDINGS` and `VECTOR_DISTANCE` find products related by meaning to the investigation phrase.
-3. **JSON:** `ORDERS_DV` is read as a document, and `JSON_TABLE` projects its nested line items into rows so transaction activity can be counted.
-4. **Spatial:** `SDO_GEOM.SDO_DISTANCE` finds the closest service center to the high-demand New York Metro region using latitude and longitude information stored as GeoJSON.
+- **Relational:** `RISK_SIGNALS_V`, product mentions, and finance views calculate product risk and exposure.
+- **Vector:** `PRODUCT_EMBEDDINGS` and `VECTOR_DISTANCE` find products related by meaning to the investigation phrase.
+- **JSON:** `ORDERS_DV` is read as a document, and `JSON_TABLE` projects its nested line items into rows so transaction activity can be counted.
+- **Spatial:** `SDO_GEOM.SDO_DISTANCE` finds the closest service center to the high-demand New York Metro region using latitude and longitude information stored as GeoJSON.
 
     These are four operations in one investigation. Every row combines product risk with transaction activity, semantic relevance, and service-routing context.
 
@@ -216,6 +214,6 @@ Next, use JSON Relational Duality to expose the same transaction data as JSON fo
 
 ## Acknowledgements
 
-* **Author** - Kevin Lazarz, Auguste 2026
+* **Author** - Kevin Lazarz
 * **Contributor** - Eugenio Galiano
 * **Last Updated By/Date** - Oracle Database Product Management, August 2026

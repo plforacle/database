@@ -4,6 +4,8 @@
 
 Risk teams often know what they are looking for before they know the exact words used in the data. This lab uses current finance embeddings to search by meaning instead of exact keywords.
 
+Jessica needs to find risk information even when the stored text uses different words from her question. Priya, Seer Bank's AI engineer, prepares the meaning-based search so Jessica can investigate without moving finance text outside the database.
+
 That matters because a risk analyst may ask about "mortgage pre-approval risk" while the data uses related phrases such as loan review, lending exposure, or adjustable-rate mortgage. Vector search helps find the right neighborhood of meaning, not just exact text matches.
 
 After reviewing numeric exposure, analysts often need to search the language behind the signals. Instead of only sorting by counts and scores, you ask the database to find products and signal text that mean roughly the same thing as the analyst's question.
@@ -13,11 +15,13 @@ After reviewing numeric exposure, analysts often need to search the language beh
 
 > - An **embedding** is a numerical profile of what text means. In this lab, product descriptions and risk-signal language can be embedded so similar finance ideas sit near each other mathematically, even when the wording is different.
 >
-> - A **vector** is the stored numerical form of an embedding. Oracle Database can store vectors beside the finance rows they describe, so the meaning-based search stays connected to product names, exposure values, signal counts, and other business columns.
+> - A **vector** is the stored numerical form of an embedding. Oracle AI Database can store vectors beside the finance rows they describe, so the meaning-based search stays connected to product names, exposure values, signal counts, and other business columns.
 >
 > - **Vector distance** measures how close two vectors are. A smaller distance means the meanings are more similar; a larger distance means they are farther apart. In this lab, distance helps rank which products or signals best match a risk analyst's question.
 >
 > - **Semantic search** means searching by meaning instead of exact words. For example, a search for "financial crime screening update affecting Liquidity Investment Sweep, suspicious ACH activity, sanctions compliance, and case review" can find related text about suspicious ACH, sanctions, or AML review even when the wording is not identical. That is useful in finance because risk language often varies across regulatory notices, market bulletins, internal alerts, and product descriptions.
+>
+> - **ALL\_MINILM\_L12\_V2** is the embedding model used in this lab. A model is the trained pattern that turns text into embeddings. This model reads a phrase such as `mortgage pre-approval risk` and returns a vector that Oracle AI Database can compare with the stored finance vectors.
 
 </details>
 
@@ -37,13 +41,13 @@ Estimated Time: **12 minutes**
 | Step | Finance focus |
 | --- | --- |
 | Business Problem | Risk analysts cannot rely only on keyword matching when signals use different words for similar exposure. |
-| Technical Challenge | AI and data teams need semantic search without exporting governed finance text to an external embedding pipeline. |
-| Persona Focus | Risk analysts ask by intent; AI engineers and database developers keep embedding and search work inside the database. |
+| Technical Challenge | AI and data teams need meaning-based search without exporting finance text to an external embedding pipeline. |
+| Persona Focus | Jessica asks by intent; Priya keeps embedding and search work inside the database. |
 | What You Will See | Vector search ranks finance products and risk signals by semantic similarity. |
 | Database Capability | VECTOR\_EMBEDDING, vector columns, and VECTOR\_DISTANCE run inside Oracle AI Database. |
 | Outcome | Analysts can find mortgage, AML, fraud, and exposure signals even when wording varies. |
 
-Persona focus: You support the risk analyst with semantic search while keeping source text, embeddings, and similarity scoring in the governed database boundary.
+Persona focus: You join Jessica and Priya as they use meaning-based search while keeping source text, embeddings, and similarity scores in the same database.
 
 ## Task 1: Search products by meaning
 
@@ -60,7 +64,16 @@ Search for financial products related to mortgage pre-approval risk by meaning, 
 
     > In a fractured environment, teams often export text to an external embedding pipeline or search service. That can create extra copies of sensitive finance text and make it harder to explain which data was searched.
     >
-    > Oracle AI Vector Search keeps the source text, vectors, SQL query, and similarity score close to the governed finance data. That makes semantic search easier to review and safer to operationalize.
+    > Oracle AI Vector Search keeps the source text, vectors, SQL query, and similarity score in the same database as the finance records. That makes meaning-based search easier to review and safer to use.
+
+    </details>
+
+    <details>
+    <summary><strong>Why does the model name include ADMIN?</strong></summary>
+
+    > `ALL_MINILM_L12_V2` is the shared embedding model available in the workshop database. In this environment, the model is owned by `ADMIN`, so the SQL calls it as `ADMIN.ALL_MINILM_L12_V2`.
+    >
+    > The finance tables and views are in your `LLUSER` schema. Only the shared embedding model uses the `ADMIN.` prefix.
 
     </details>
 
@@ -81,13 +94,7 @@ Search for financial products related to mortgage pre-approval risk by meaning, 
 
     **Expected output: Mortgage Product Matches**
 
-    | Product Name | Category | Similarity |
-    | --- | --- | --- |
-    | Mortgage Pre-Approval | Mortgage Lending | 0.6875 |
-    | Loan Modification Review | Loan Servicing | 0.4409 |
-    | Loan Portfolio Review | Risk Analytics | 0.4267 |
-    | Risk Tolerance Assessment | Advisory | 0.4198 |
-    | Adjustable Rate Mortgage | Mortgage Lending | 0.4161 |
+    ![Green Button SQL Worksheet showing mortgage product matches](images/green-button-mortgage-product-matches.png " ")
 
 
 2. Review the ranked products.
@@ -96,38 +103,6 @@ Search for financial products related to mortgage pre-approval risk by meaning, 
     The expected top result is `Mortgage Pre-Approval`, followed by related lending and risk analytics products. The ranking matters because it acts like an analyst assistant: it brings likely matches to the top even when the search phrase and product name are not identical.
 
     In the broader workflow, these ranked products can become the next filter for dashboard review, product exposure analysis, or operational follow-up.
-
-3. 🎯 **Interactive challenge: change the investigation question.**
-
-    Starting with the baseline query above, replace only `mortgage pre-approval risk` with `loan servicing delinquency concern`. Run your revised query and compare its top five results with the mortgage search.
-
-    **Expected output: Servicing Concern Matches**
-
-    The rankings are dynamic, but `Delinquency Outreach Program` should lead the current workshop data. Compare which products enter, leave, or move within the top five.
-
-    <details>
-    <summary><strong>Challenge answer: the question changes the ranking</strong></summary>
-
-    > `Delinquency Outreach Program` moves to the top because the new phrase emphasizes loan servicing and delinquency rather than mortgage pre-approval. Oracle AI Vector Search compares meaning while the product records and embeddings remain in the same governed database.
-
-    If you need the runnable solution, use this query:
-
-    ```sql
-    <copy>
-    SELECT p.product_name,
-           p.category,
-           ROUND(1 - VECTOR_DISTANCE(
-             pe.embedding,
-             VECTOR_EMBEDDING(ADMIN.ALL_MINILM_L12_V2 USING 'loan servicing delinquency concern' AS DATA),
-             COSINE), 4) AS similarity
-    FROM product_embeddings pe
-    JOIN products p ON p.product_id = pe.product_id
-    ORDER BY similarity DESC
-    FETCH FIRST 5 ROWS ONLY;
-    </copy>
-    ```
-
-    </details>
 
 ## Task 2: Search risk signals by meaning
 
@@ -154,13 +129,7 @@ Now apply the same semantic search pattern to risk signal language.
 
     **Expected output: Financial Crime Signal Matches**
 
-    | Signal Id | Signal Excerpt | Similarity |
-    | --- | --- | --- |
-    | 2290 | AML screening update affects Liquidity Investment Sweep; FraudGuard Operations suspicious ACH and sanctions case review | 0.7352 |
-    | 10 | AML screening update affects Liquidity Stress Test; Civic National Bank suspicious ACH and sanctions case review volume | 0.6762 |
-    | 3310 | AML screening update affects Liquidity Stress Test; Civic National Bank suspicious ACH and sanctions case review volume | 0.6762 |
-    | 2530 | AML screening update affects Secure Document Vault; CleanRate Lending suspicious ACH and sanctions case review volume ex | 0.6553 |
-    | 3010 | AML screening update affects Secure Document Vault; CleanRate Lending suspicious ACH and sanctions case review volume ex | 0.6553 |
+    ![Green Button SQL Worksheet showing financial-crime signal matches](images/green-button-financial-crime-signal-matches.png " ")
 
 
 2. Compare the excerpts and scores.
@@ -168,46 +137,16 @@ Now apply the same semantic search pattern to risk signal language.
 
     The returned excerpts contain AML, fraud, sanctions, and suspicious-activity language even though the search phrase does not use the AML abbreviation. The similarity score gives analysts a ranked review queue instead of an unordered pile of signal text.
 
-    This connects dashboard risk signals to semantic investigation. The source text, embeddings, query phrase, and similarity scoring all remain inside Oracle Database, so the analyst can move from a KPI to the language behind the signal without leaving the governed data boundary.
+    This connects dashboard risk signals to semantic investigation. The source text, embeddings, query phrase, and similarity scoring all remain inside Oracle Database, so the analyst can move from a KPI to the language behind the signal without leaving the approved database objects for this lab.
 
-3. 🎯 **Interactive challenge: focus the signal review.**
-
-    Starting with the baseline query above, replace its search phrase with `suspicious ACH activity and sanctions review`. Run your revised query. Which kind of signal now dominates the evidence queue?
-
-    **Expected output: Suspicious ACH Signal Matches**
-
-    Rankings and similarity values can vary slightly by environment. In the current workshop data, suspicious-ACH and AML-monitoring language dominates the top results.
-
-    <details>
-    <summary><strong>Challenge answer: semantic evidence follows intent</strong></summary>
-
-    > The revised phrase elevates signals about suspicious ACH bursts, sanctions, and AML monitoring. This is not an exact-keyword lookup: the database compares the meaning of the analyst's question with governed signal text and returns a prioritized review queue.
-
-    If you need the runnable solution, use this query:
-
-    ```sql
-    <copy>
-    SELECT sp.post_id AS signal_id,
-           SUBSTR(sp.post_text, 1, 120) AS signal_excerpt,
-           ROUND(1 - VECTOR_DISTANCE(
-             se.embedding,
-             VECTOR_EMBEDDING(ADMIN.ALL_MINILM_L12_V2 USING 'suspicious ACH activity and sanctions review' AS DATA),
-             COSINE), 4) AS similarity
-    FROM signal_embeddings se
-    JOIN social_posts sp ON sp.post_id = se.post_id
-    ORDER BY similarity DESC, signal_id
-    FETCH FIRST 5 ROWS ONLY;
-    </copy>
-    ```
-
-    </details>
+    🎯 **Review decision:** Choose one returned signal or product to investigate next. Consider the similarity score, the signal excerpt, and the potential product or institution impact. Your choice is a review priority, not proof of fraud or harm.
 
 ## Next Steps
 
-Congratulations on completing the AI Vector Search lab. You searched finance product and risk-signal text by meaning, not just by matching exact words. For a deeper hands-on workshop focused on AI Vector Search in Oracle Database, open the [AI Vector Search LiveLabs workshop](https://livelabs.oracle.com/ords/r/dbpm/livelabs/view-workshop?clear=RR,180&wid=4166).
+The analyst can find related products and signals even when the wording differs, then choose what to investigate next. For a deeper hands-on workshop focused on AI Vector Search in Oracle Database, open the [AI Vector Search LiveLabs workshop](https://livelabs.oracle.com/ords/r/dbpm/livelabs/view-workshop?clear=RR,180&wid=4166).
 
 ## Acknowledgements
 
-* **Author** - Pat Shepherd, Senior Principal Database Product Manager
-* **Contributor** - Linda Foinding, Principal Database Product Manager
-* **Last Updated By/Date** - Oracle Database Product Management, June 2026
+* **Authors** - Pat Shepherd, Linda Foinding
+* **Contributors** - Teodor Nechita
+* **Last Updated By/Date** - Oracle Database Product Management, September 2026

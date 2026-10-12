@@ -17,8 +17,8 @@ This lab assumes you have:
     - Lab: Environment Setup (*Free-tier* and *Paid Tenants* only)
     - Lab: Get started (*Login to the LiveLabs Sandbox Environment* only)
 
-## Task 1: Get started with your workshop.
-1. From the top left corner within the liveLabs browser session, click on "Activities". It will show widgets list in vertical order.
+## Task 1: View Both Workshop Browser Windows.
+1. If two browser windows are not visible, click "Activities" in the upper-left corner of the LiveLabs browser session to display the widgets list. It will show widgets list in vertical order.
 
     ![activities_raft_livelabs](images/activities_link_top_left_corner.png " ")
 
@@ -62,7 +62,7 @@ This lab assumes you have:
 
 If both browser windows are not shown for some reason, reload the browser windows at anytime with steps as in above Task1.
 
-## Task 2: Validate That Required Processes are Up and Running from a terminal window.
+## Task 3: Validate That Required Processes are Up and Running from a terminal window.
 1. Now with access to your remote desktop session, proceed as indicated below to validate your environment before you start executing the subsequent labs. The following Processes should be up and running:
 
     - Oracle Sharding GSM1 Container
@@ -108,4 +108,4 @@ You may now proceed to the next lab.
 ## Acknowledgements
 * **Authors** - Deeksha Sehgal, Ajay Joshi, Oracle Globally Distributed Database, Product Management
 * **Contributors** - Pankaj Chandiramani, Shefali Bhargava, Param Saini, Jyoti Verma
-* **Last Updated By/Date** - Ajay Joshi, Oracle Globally Distributed Database, Product Management, April 2026
+* **Last Updated By/Date** - Ajay Joshi, Lead Principal Data Systems Engineer, Oracle Globally Distributed Database, September 2026

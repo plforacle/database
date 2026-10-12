@@ -13,6 +13,8 @@ The requests look different, but they share one problem. The data is already in 
 - Otto needs to train and score a product demand model.
 - Nina needs to ask finance questions in plain language and turn the answers into a useful review.
 
+![team](images/team.png)
+
 Jessica's job is to help each team meet its requirement without creating a new data copy or a separate security model for every feature. She uses Oracle AI Database as the shared foundation: relational tables remain the source for finance records, while JSON, vectors, graphs, spatial data, machine learning, and AI services work with those same records.
 
 This workshop follows Jessica and her colleagues as they solve these problems. Each lab focuses on one business requirement, but the database remains the common thread. You will see how the teams use different data types and database capabilities together, and how Jessica keeps access, SQL, and results visible.
@@ -41,19 +43,6 @@ The point is not to use every capability in every query. The point is that Jessi
 
 </details>
 
-### How AI fits into Jessica's work
-
-Oracle AI Database also lets Jessica support AI without hiding the database operation from her team.
-
-- Gilly uses an ONNX embedding model loaded into the database. Product text becomes a vector next to the product row, so the application does not have to send finance text to a separate embedding service.
-- Nina uses a Select AI profile with an explicit list of finance tables. She can inspect the generated SQL before running it.
-- Nina's Select AI Agent uses one approved, read-only SQL tool. The agent runs with the database user's privileges, and team and tool history show what happened.
-
-These controls matter in finance. AI can help create a useful answer, but the team still needs to know which data was available, which SQL ran, and whether the result supports the business question.
-
-This workshop is a guided look behind the Seer Bank Finance LiveStack demo. The demo presents the customer-facing application. The labs show how the database capabilities behind those pages work and how Jessica's team can build on them.
-
-Throughout the workshop, expandable sections provide extra context about a term or database capability. They are closed by default so the main lab stays focused. Select the arrow when you want more detail.
 
 ### Objectives
 
