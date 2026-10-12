@@ -4,27 +4,17 @@
   "tutorials": [
     
     {
-      "title": "Lab 1: Optional Luna OLVM Administration",
+      "title": "Luna OLVM Administration - Training",
       "description": "Complete a separate Luna session covering OLVM deployment, migration, backup, monitoring, snapshots, and users and roles. Allow 6-8 hours; requires the direct Luna lab link.",
       "filename": "../../olvm-luna/olvm-luna.md"
     },
     {
-      "title": "Lab 2: Luna OLVM Administration Quiz",
-      "description": "Answer 100 scored questions from Lab 7, with ten questions per task, explanations, and an 80% passing score.",
-      "filename": "../../olvm-luna-quiz/olvm-luna-quiz.md"
-    },
-    {
-      "title": "Lab 2: OLVM Administration Quiz",
-      "description": "Review OLVM administration with 100 scored questions, ten per topic, explanations, and an 80% passing score.",
-      "filename": "../../olvm-quiz/olvm-quiz.md"
-    },
-    {
-      "title": "Lab 2: OLVM Instructor-Led Training Quiz",
-      "description": "Use alongside Lab 7: 100 scored OLVM questions, ten per task, with discussion explanations and an 80% passing score.",
+      "title": "OLVM Administration - Quiz",
+      "description": "Use alongside Luna OLVM Administration: 100 scored OLVM questions, ten per task, with discussion explanations and an 80% passing score.",
       "filename": "../../olvm-ilt-quiz/olvm-ilt-quiz.md"
     },
     {
-      "title": "Lab 4: OLVM Self-Study Quiz Bank",
+      "title": "OLVM Administration - Self-Study Quiz Bank",
       "description": "Separate 500-question study bank across seven weighted objective areas, with explanations, module badges, and a 38-subtopic coverage guide.",
       "filename": "../../olvm-self-study/olvm-self-study.md"
     },
