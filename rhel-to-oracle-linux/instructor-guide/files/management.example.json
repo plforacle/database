@@ -1,0 +1,6 @@
+{
+  "region": "REPLACE_WITH_REGION",
+  "managed_instance_id": "REPLACE_WITH_MANAGED_INSTANCE_OCID",
+  "oci_cli": "/opt/workshop-cli/bin/oci",
+  "allowed_packages": ["tree"]
+}

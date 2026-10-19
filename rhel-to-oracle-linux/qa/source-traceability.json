@@ -1,0 +1,184 @@
+{
+  "workshop": "RHEL to Oracle Linux",
+  "mode": "draft",
+  "review_date": "2026-10-19",
+  "audience": "Oracle partners with SSH, sudo, and reboot access; no cloud administration in participant tasks",
+  "source_workshop": "../oracle-linux-rhel-migration-oci",
+  "adaptations": [
+    {
+      "area": "Introduction and audience",
+      "local_source": "introduction/introduction.md",
+      "change": "Replaced tenancy prerequisites with assigned SSH server and instructor handoffs."
+    },
+    {
+      "area": "Connect and baseline",
+      "local_source": "prepare-baseline-rhel/prepare-baseline-rhel.md",
+      "change": "Instructor prepares Apache; partners inspect it and capture evidence. Local HTTP replaces public endpoint checks."
+    },
+    {
+      "area": "Readiness",
+      "local_source": "assess-protect-source/assess-protect-source.md",
+      "change": "Retained checks, pinned-script verification and dry run. Instructor owns backup and restore."
+    },
+    {
+      "area": "Migration",
+      "local_source": "migrate-to-oracle-linux/migrate-to-oracle-linux.md",
+      "change": "Retained same-major RHCK conversion and evidence; SSH retry replaces Console state checks."
+    },
+    {
+      "area": "Ksplice",
+      "local_source": "ksplice-live-updates/ksplice-live-updates.md",
+      "change": "Instructor-staged installer, explicit no-patch outcome, boot-ID comparison, no blanket upgrade before live patching."
+    },
+    {
+      "area": "Managed package exercise",
+      "local_source": "os-management-hub/os-management-hub.md",
+      "change": "Registration and IAM moved to instructor; real CLI wrapper supports status, package inventory, submit and request status. No centralized Ksplice or scheduling exercise."
+    },
+    {
+      "area": "Final validation",
+      "local_source": "validate-cleanup/validate-cleanup.md",
+      "change": "Separate post-migration and final snapshots; per-exercise outcomes. Instructor owns cleanup and privileged log export."
+    },
+    {
+      "area": "Instructor environment",
+      "local_source": "launch-baseline-rhel/launch-baseline-rhel.md",
+      "change": "Existing cloud setup retained only as instructor reference."
+    },
+    {
+      "area": "Instructor Setup menu entry",
+      "local_source": "launch-baseline-rhel/launch-baseline-rhel.md",
+      "change": "Standalone instructor-only compartment, VCN, SSH access, and RHEL launch steps; example version left subject to pilot and no public HTTP ingress required."
+    }
+  ],
+  "primary_sources": [
+    {
+      "area": "Migration options and paths",
+      "url": "https://raw.githubusercontent.com/oracle/migrate-to-ol/82947c960535cfbb632977c70b0fea67f8e0de7a/migrate-to-oracle-linux.sh",
+      "verified": "Pinned source text reachable; flags and state/log roots reviewed. No VM execution or byte-level digest recheck."
+    },
+    {
+      "area": "Migration support boundary",
+      "url": "https://github.com/oracle/migrate-to-ol",
+      "verified": "Repository documentation; no claim of supported migration service."
+    },
+    {
+      "area": "Ksplice installer",
+      "url": "https://docs.oracle.com/en-us/iaas/oracle-linux/oci/install-ksplice.htm",
+      "verified": "Hosting-specific installer and entitlement route."
+    },
+    {
+      "area": "Ksplice kernel requirements",
+      "url": "https://docs.oracle.com/en/operating-systems/oracle-linux/ksplice-user/ksplice-MaintainedKernels.html",
+      "verified": "Oracle Linux RHCK coverage and newly released kernel caveat."
+    },
+    {
+      "area": "Uptrack commands",
+      "url": "https://docs.oracle.com/en/operating-systems/oracle-linux/ksplice-user/ksplice-UsingtheuptrackupgradeCommandtoManageKspliceUpdates.html",
+      "verified": "Preview and application flow."
+    },
+    {
+      "area": "Instance principal",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm",
+      "verified": "CLI authentication, inherited privileges, inherent compartment inspection."
+    },
+    {
+      "area": "Managed instance response",
+      "url": "https://docs.oracle.com/en-us/iaas/tools/python/latest/api/os_management_hub/models/oci.os_management_hub.models.ManagedInstance.html",
+      "verified": "Uses status NORMAL and time-last-checkin; not lifecycle-state ACTIVE."
+    },
+    {
+      "area": "Package inventory",
+      "url": "https://docs.oracle.com/en-us/iaas/tools/oci-cli/latest/oci_cli_docs/cmdref/os-management-hub/managed-instance/list-installed-packages.html",
+      "verified": "Managed instance ID and display-name filter."
+    },
+    {
+      "area": "Package availability",
+      "url": "https://docs.oracle.com/en-us/iaas/tools/oci-cli/latest/oci_cli_docs/cmdref/os-management-hub/managed-instance/list-available-packages.html",
+      "verified": "Managed instance ID and display-name filter."
+    },
+    {
+      "area": "Managed submission",
+      "url": "https://docs.oracle.com/en-us/iaas/tools/oci-cli/latest/oci_cli_docs/cmdref/os-management-hub/managed-instance/install-packages.html",
+      "verified": "JSON package list and asynchronous work-request model. Actual CLI header serialization requires pilot."
+    },
+    {
+      "area": "Request status",
+      "url": "https://docs.oracle.com/en-us/iaas/tools/oci-cli/latest/oci_cli_docs/cmdref/os-management-hub/work-request/get.html",
+      "verified": "Read-only request tracking."
+    },
+    {
+      "area": "Request errors",
+      "url": "https://docs.oracle.com/en-us/iaas/tools/oci-cli/latest/oci_cli_docs/cmdref/os-management-hub/work-request/list-errors.html",
+      "verified": "Read-only error inspection."
+    },
+    {
+      "area": "Registration",
+      "url": "https://docs.oracle.com/en-us/iaas/osmh/doc/register-oci-instance.htm",
+      "verified": "Agent and compatible profile requirements; converted image untested."
+    },
+    {
+      "area": "Managed Ksplice distinction",
+      "url": "https://docs.oracle.com/en-us/iaas/osmh/doc/linux-package-management.htm",
+      "verified": "Separate client/source requirements; no managed Ksplice job in this edition."
+    },
+    {
+      "area": "Compartment creation",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Identity/compartments/To_create_a_compartment.htm",
+      "verified": "Console navigation and creation sequence checked on 2026-10-19; no cloud provisioning performed."
+    },
+    {
+      "area": "VCN setup",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/quickstartnetworking.htm",
+      "verified": "Console navigation and creation sequence checked on 2026-10-19; no cloud provisioning performed."
+    },
+    {
+      "area": "Compute launch",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/launchinginstance.htm",
+      "verified": "Console navigation and creation sequence checked on 2026-10-19; no cloud provisioning performed."
+    }
+  ],
+  "media": {
+    "screenshots": "No source Console screenshots copied. Terminal screenshots await real pilot.",
+    "freesql": "Not applicable."
+  },
+  "fidelity_review": "Intentional audience and task restructuring: source has 8 labs, partner edition has 6. Instructor work removed from participant navigation; no claim of verbatim preservation.",
+  "source_file_hashes": {
+    "acquire-import-rhel/images/compatible-shapes.png": "6013a8c68b70eb45f7f26b95bf48d8a3fabcfb342334c4ff173d32337f38e905",
+    "acquire-import-rhel/images/import-image-settings.png": "99676ef8ca1f8ad10350d0b6657352d7e751ca07c84ea2632a4d80a16499ace0",
+    "assess-protect-source/assess-protect-source.md": "dab51fb9f81c4f526e814fa132d25fa668ac79c4f8ade0f605ea993b18ec198a",
+    "introduction/introduction.md": "046676db66ba5425e84465fc3fefd6e7cb8c83c108ece65cfcdc252b4d8dfd6d",
+    "ksplice-live-updates/ksplice-live-updates.md": "57be88bc1b0e427659332fa3b6bb8ab878b1dea9f05597c701e10064eca606dd",
+    "launch-baseline-rhel/files/capture-state.sh": "dda564c07e11ea7facdc8ecbb5911900d715b9f938b3e7b838a45eaa62321b49",
+    "launch-baseline-rhel/files/create-workload.sh": "bb82a045b05e3615056bc9fbcfe88b698278b511fd88a809b0b92839a5e03ce0",
+    "launch-baseline-rhel/files/workshop-health.sh": "da66f78bca27238dbf578a4225584eef4d689104f6cac31e8480b7579cb763a0",
+    "launch-baseline-rhel/images/compute-existing-public-subnet.png": "1b0e91752bf3488f1648c572fa9049a0e2fa53e0dd871fb2bfa331ed69302951",
+    "launch-baseline-rhel/images/compute-public-ip-ssh-keys.png": "8219376aa5115b7aa635d3adbc0f6acc6a9db4af5f92e8f0f151926c7dc591c5",
+    "launch-baseline-rhel/images/compute-review-create.png": "c0cd40b3f0a1cea3cd5612907cfa007dba703645c312a484e2bd51e3c0540ef2",
+    "launch-baseline-rhel/images/compute-security-settings.png": "d9a96aeac5c42e641708566af4e6f7295f6b559aa08a119bae4ffc5409d7c467",
+    "launch-baseline-rhel/images/create-workshop-compartment.png": "c3fca1a77197ae09ea160158339468d28eb51b4fa7489f4745cb4ddb375078d0",
+    "launch-baseline-rhel/images/rhel-boot-volume-64gb.png": "1cf6a3378874463d70475f06d06232c87150d07c78b21158a0517b6b96c5e876",
+    "launch-baseline-rhel/images/rhel-image-ocid-selection.png": "458dbe7f4f0f14009bbb8957c1b73719908bc8ebc008e4aad81193bc50878f22",
+    "launch-baseline-rhel/images/rhel-instance-running.png": "1c389f2ef42ef0dd5046c86ea18685dbd86bb7642655156a15c1ef0905f3b4be",
+    "launch-baseline-rhel/images/rhel-shape-configuration.png": "aa739751ed6b80b84f05e8ca7974c760b1fc01c6861ed8a5663851846fd04487",
+    "launch-baseline-rhel/images/security-rules-ssh-web.png": "86fb9e8f32f3452cde218d6a8fcfc653e11aae1e2b89dd5e66cc63f3ba0caa37",
+    "launch-baseline-rhel/images/vcn-available.png": "485badac90574718143639e022e290c9d6f303ad302e51533ba8ec7c5da44d0d",
+    "launch-baseline-rhel/images/vcn-wizard-configuration.png": "f0ec96c41d61ee8be12acd1c9e2c772c477ef8c03939b97e2ff86b9193412953",
+    "launch-baseline-rhel/images/vcn-wizard-review.png": "e951ddcfc06e770520db679769c1068c909d781bcd32202541e913286d6cb1bc",
+    "launch-baseline-rhel/launch-baseline-rhel.md": "cb7636058ab73b5c2e3763066542bae6743509b7133de13c871278ece3965ecc",
+    "launch-baseline-rhel/recording-qa.json": "f66780a9eb00ba70b4dfd1e3d0debb943e01b016985b1584276e5690fab6c80f",
+    "launch-baseline-rhel/recording-review.txt": "a1063bc2d158c73409437aadb5e19ac629512327dec35919e1f070616315c198",
+    "launch-baseline-rhel/screenshot-sources.json": "5d00176233369c35a883be6b565aff34540ef09229bba13e7502791448ce5f17",
+    "manage-patch-oracle-linux/manage-patch-oracle-linux.md": "4d81a53d222d4cb39159fca1bac72cd0b33d01fe36b50d55933183655fa8caf0",
+    "migrate-to-oracle-linux/migrate-to-oracle-linux.md": "768d2ba5c88fe921b34fcc80d3d0dfcbc61480ed1fd3654467b77fd7bb6edf28",
+    "os-management-hub/os-management-hub.md": "75661fb2851c4863f980c04d09675bca2f5e90cb897d067dcbb6c3e3f12f595c",
+    "os-management-hub/qa.txt": "c4cdf97bee3ee413256ed46e8aaf7b66620808bfc267ace9f320760194656994",
+    "prepare-baseline-rhel/prepare-baseline-rhel.md": "4b236efc8c7dc350913ae83b959117be4a64ed6e31e4b3f38e8ea97388d59f2f",
+    "validate-cleanup/files/validate-migration.sh": "eaf5118e3ea98bdac78cdbb3d3365fbb2153607d56d7f99e8e697e93d04f3b79",
+    "validate-cleanup/images/rhel-registration-remove.png": "64da34e99cee170e18806364520f47b7d85d2c400b77c348081175d47b4c6de1",
+    "validate-cleanup/validate-cleanup.md": "c6b1f978505cb42fb970be5a7a766ada76ae00276d69b2b0782941b71f7946b1",
+    "variables/variables.json": "12aca7536fbee8052d7349bc7abf8f970617e9aeb71d45ee5c835f6ac71475db",
+    "workshops/tenancy/index.html": "891f4db20043c727f8108db92d42eb4e3158fd4ace7cde474eacc7e10e7dec51",
+    "workshops/tenancy/manifest.json": "d5a59e844fcb679894eac6aea3ed95e589d6e7720cc09715c84843fb4425d302"
+  }
+}

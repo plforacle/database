@@ -1,0 +1,65 @@
+{
+  "workshoptitle": "RHEL to Oracle Linux",
+  "help": "livelabs-help-linux_us@oracle.com",
+  "tutorials": [
+    {
+      "title": "Instructor Setup: Create the Compartment, VCN, and Compute Instance",
+      "description": "Instructor-only OCI Console setup before preparing the guest and starting the partner labs.",
+      "type": "livelabs",
+      "filename": "../../instructor-setup/instructor-setup.md"
+    },
+    {
+      "title": "Instructor Guide",
+      "description": "Prepare the servers, rehearse the workshop, configure management access, and operate recovery and cleanup.",
+      "type": "livelabs",
+      "filename": "../../instructor-guide/instructor-guide.md"
+    },
+    {
+      "title": "Introduction",
+      "description": "Review the SSH-only partner journey and the supplied environment.",
+      "type": "livelabs",
+      "filename": "../../introduction/introduction.md"
+    },
+    {
+      "title": "Lab 1: Connect and Capture the Baseline",
+      "description": "Connect and Capture the Baseline through the assigned SSH session.",
+      "type": "livelabs",
+      "filename": "../../connect-baseline/connect-baseline.md"
+    },
+    {
+      "title": "Lab 2: Assess Migration Readiness",
+      "description": "Assess Migration Readiness through the assigned SSH session.",
+      "type": "livelabs",
+      "filename": "../../assess-readiness/assess-readiness.md"
+    },
+    {
+      "title": "Lab 3: Migrate to Oracle Linux",
+      "description": "Migrate to Oracle Linux through the assigned SSH session.",
+      "type": "livelabs",
+      "filename": "../../migrate-to-oracle-linux/migrate-to-oracle-linux.md"
+    },
+    {
+      "title": "Lab 4: Apply Ksplice Live Updates",
+      "description": "Apply Ksplice Live Updates through the assigned SSH session.",
+      "type": "livelabs",
+      "filename": "../../ksplice-live-updates/ksplice-live-updates.md"
+    },
+    {
+      "title": "Lab 5: Manage Packages with OS Management Hub",
+      "description": "Manage Packages with OS Management Hub through the assigned SSH session.",
+      "type": "livelabs",
+      "filename": "../../os-management-hub/os-management-hub.md"
+    },
+    {
+      "title": "Lab 6: Validate the Results",
+      "description": "Validate the Results through the assigned SSH session.",
+      "type": "livelabs",
+      "filename": "../../validate-results/validate-results.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Use the instructor support channel and preserve evidence.",
+      "filename": "../../need-help/need-help.md"
+    }
+  ]
+}
