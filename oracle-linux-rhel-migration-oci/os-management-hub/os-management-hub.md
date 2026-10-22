@@ -300,7 +300,7 @@ Estimated Lab Time: 60 minutes
     <copy>sudo dnf needs-restarting -r</copy>
     ```
 
-    A return code of 1 means a reboot is recommended. If required, reboot, reconnect using the same account, and wait for the managed instance to become Active again. Recheck that the running kernel is Oracle RHCK.
+    A return code of `0` means no reboot is recommended; `1` means a reboot is recommended. Investigate any other status before continuing. Before a recommended reboot, complete Lab 4, Task 3's independent boot-artifact, storage, driver and argument checks against the intended Oracle RHCK. Use Lab 8, Task 3's post-Ksplice wrapper review if the frozen verifier stops on the known Uptrack wrapper case. Require complete boot acceptance, healthy packages and libraries, and saved evidence before rebooting; an unexplained failure remains a stop condition. After those checks pass, reboot, reconnect using the same account, wait for normal boot completion and for the managed instance to become Active again, and confirm that the running and default kernels match the verified Oracle RHCK.
 
 2. Validate Apache and the security configuration:
 

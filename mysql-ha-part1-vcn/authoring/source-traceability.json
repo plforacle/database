@@ -1,0 +1,106 @@
+{
+  "source_file": "MySQL_Part1_VCN.mp4",
+  "sha256": "805f78b0923af7d21a435135e54f7bedba718a7c77dedbe443e5e7d1d2801d49",
+  "duration_seconds": 98.75,
+  "frame_rate": 25,
+  "resolution": [
+    1512,
+    982
+  ],
+  "audio": "AAC track present; decoded mean and maximum volume both -91 dB; no usable narration",
+  "mode": "how-to-guide",
+  "environment": "tenancy",
+  "assumptions": [
+    "Learner uses an OCI training compartment.",
+    "Follow-on target is a managed MySQL DB system in the private subnet; video does not establish DB product or topology.",
+    "No database, HA setup, or failover is taught by the supplied recording."
+  ],
+  "timeline": [
+    {
+      "time": "00:10",
+      "observed": "Virtual cloud networks list and wizard launch point",
+      "target": "create-vcn Task 1"
+    },
+    {
+      "time": "00:20",
+      "observed": "Standalone Create VCN form briefly appears",
+      "target": "Excluded; use wizard, which is the successful flow"
+    },
+    {
+      "time": "00:30-00:40",
+      "observed": "Internet connectivity wizard, VCN CIDR, public and private subnet configuration",
+      "target": "create-vcn Task 2"
+    },
+    {
+      "time": "00:50-01:00",
+      "observed": "Resource creation progress and completion",
+      "target": "create-vcn Task 3"
+    },
+    {
+      "time": "01:10",
+      "observed": "Available private 10.0.1.0/24 and public 10.0.0.0/24 regional subnets",
+      "target": "create-vcn Task 3"
+    },
+    {
+      "time": "01:14-01:16",
+      "observed": "Public subnet Security tab and default security list selected",
+      "target": "Explicit divergence: workshop targets private subnet list"
+    },
+    {
+      "time": "01:20-01:30",
+      "observed": "Ingress form with TCP 3306 and source 0.0.0.0/0",
+      "target": "Explicit divergence: source becomes client subnet 10.0.0.0/24; original form retained as author evidence"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "create-vcn/images/vcn-configuration.png",
+      "seconds": 35,
+      "processing": "Cropped to remove browser chrome and call overlay; name entry incomplete in source; caption explains full name."
+    },
+    {
+      "file": "create-vcn/images/private-subnet-configuration.png",
+      "seconds": 40,
+      "processing": "Cropped to remove browser chrome and call overlay."
+    },
+    {
+      "file": "create-vcn/images/creation-complete.png",
+      "seconds": 60,
+      "processing": "Cropped to remove browser chrome and call overlay."
+    },
+    {
+      "file": "create-vcn/images/subnets-available.png",
+      "seconds": 70,
+      "processing": "Cropped to subnet content; UI values preserved."
+    }
+  ],
+  "supplemental_sources": [
+    {
+      "url": "https://docs.oracle.com/en-us/iaas/mysql-database/doc/creating-virtual-cloud-network.html",
+      "supports": "Wizard configuration and address plan"
+    },
+    {
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/quickstartnetworking.htm",
+      "supports": "Current wizard entry points, gateways, subnet routing checks"
+    },
+    {
+      "url": "https://docs.oracle.com/en-us/iaas/mysql-database/doc/adding-ingress-rules-compute-instance-bastion-session-or-vpn-connection.html",
+      "supports": "Private subnet security list, authorized client source, TCP rule fields and protocol ports"
+    },
+    {
+      "url": "https://docs.oracle.com/en-us/iaas/mysql-database/doc/overview-networking.html",
+      "supports": "Managed MySQL networking context"
+    },
+    {
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/delete_vcn.htm",
+      "supports": "Supplemental cleanup procedure, absent from recording"
+    }
+  ],
+  "review_gaps": [
+    "Confirm intended follow-on database product and HA topology.",
+    "Learner private ingress checkpoint requires a fresh tenancy screenshot; video only shows a different form.",
+    "OCI procedure has not been executed in a tenancy.",
+    "Workshop owner should confirm support alias before publication."
+  ],
+  "freesql": "Not applicable: OCI networking procedure, no runnable SQL; FreeSQL does not create OCI network resources."
+}

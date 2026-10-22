@@ -1,3 +1,5 @@
 __pycache__/
 *.pyc
 qa/live-evidence/
+qa/reference-run-*/
+!qa/migration-safety.patch

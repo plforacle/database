@@ -1,0 +1,1268 @@
+--- a/migrate-to-oracle-linux.sh
++++ b/migrate-to-oracle-linux.sh
+@@ -24,7 +24,14 @@
+ 
+ PROGRAM_NAME="$(basename "$0")"
+ readonly PROGRAM_NAME
+-readonly SCRIPT_VERSION="0.2.1"
++readonly SCRIPT_VERSION="0.2.1-workshop.5"
++# Workshop safety candidate based on oracle/migrate-to-ol commit
++# 82947c960535cfbb632977c70b0fea67f8e0de7a. Not yet validated by an OCI reboot.
++# Restricted to the workshop's RHEL 9.8 x86_64 to Oracle Linux 9.8 RHCK path.
++BOOT_DIR=/boot
++MODULES_ROOT=/lib/modules
++DRACUT_INSTALL=/usr/lib/dracut/dracut-install
++EFI_FIRMWARE_DIR=/sys/firmware/efi
+ readonly STATE_ROOT="/var/lib/migrate-to-oracle-linux"
+ readonly LOG_ROOT="/var/log/migrate-to-oracle-linux"
+ readonly DEFAULT_ORACLE_YUM_BASE="https://yum.oracle.com"
+@@ -62,10 +69,21 @@
+ DNF_BASE_ARGS=()
+ ORACLE_REPO_ARGS=()
+ ORACLE_TARGET_EXCLUDE_ARGS=()
++NONKERNEL_EXCLUDE_ARGS=(
++    --exclude=kernel --exclude=kernel-core --exclude=kernel-modules
++    --exclude=kernel-modules-core --exclude=kernel-modules-extra
++    --exclude=kernel-uek --exclude=kernel-uek-core --exclude=kernel-uek-modules
++    --exclude=kernel-uek-modules-core --exclude=kernel-uek-modules-extra
++)
++BOOTCHAIN_READY=0
++PREKERNEL_BOOTCHAIN_EXCLUDE_ARGS=(--exclude=shim-* --exclude=grub2-*)
+ 
+ usage() {
+     cat <<EOF
+ Usage: ${PROGRAM_NAME} [options]
++Workshop candidate scope: RHEL 9.8 x86_64 to Oracle Linux 9.8 with RHCK.
++Read-only boot gate: ${PROGRAM_NAME} --verify-boot-only --kernel rhck --target-version 9.8
++This gate writes evidence and logs but does not change packages or boot settings.
+ 
+ Migrate CentOS, CentOS Stream, AlmaLinux, Amazon Linux 2, RHEL, or Rocky Linux
+ to Oracle Linux. Major-version upgrades are not supported during migration. The
+@@ -194,7 +212,9 @@
+     if (( DRY_RUN )); then
+         return 0
+     fi
+-    "$@" 2>&1 | tee -a "$LOG_FILE"
++    if ! "$@" 2>&1 | tee -a "$LOG_FILE"; then
++        die "command failed: $*; stop without rebooting"
++    fi
+ }
+ 
+ run_capture() {
+@@ -565,6 +585,7 @@
+             "--releasever=${SOURCE_MAJOR}"
+             "--setopt=module_platform_id=platform:el${SOURCE_MAJOR}"
+             "--setopt=keepcache=1"
++            "--setopt=installonly_limit=0"
+         )
+     fi
+ 
+@@ -692,7 +713,9 @@
+         ORACLE_REPO_ARGS+=("--enablerepo=$(uek_repo_id)")
+     fi
+ 
+-    if [[ "$MIGRATION_MODE" == "release-sync" && "$EFFECTIVE_TARGET_VERSION" == "${SOURCE_MAJOR}."* ]]; then
++    if [[ ( "$MIGRATION_MODE" == "release-sync" ||
++        ( "$SOURCE_ID" == rhel && "$SOURCE_VERSION_ID" == 9.8 && "$MIGRATION_MODE" == preserve-release ) ) &&
++        "$EFFECTIVE_TARGET_VERSION" == "${SOURCE_MAJOR}."* ]]; then
+         set_target_minor_exclude_args
+     fi
+ }
+@@ -825,7 +848,9 @@
+     fi
+ 
+     local baseos_path="baseos/latest"
+-    if [[ "$MIGRATION_MODE" != "latest-sync" ]]; then
++    if [[ "$MIGRATION_MODE" != "latest-sync" ]] &&
++        ! [[ "$SOURCE_ID" == rhel && "$SOURCE_VERSION_ID" == 9.8 && "$BASEARCH" == x86_64 &&
++            "$EFFECTIVE_TARGET_VERSION" == 9.8 && "$KERNEL_FLAVOR" == rhck ]]; then
+         baseos_path="${EFFECTIVE_TARGET_VERSION#"${SOURCE_MAJOR}".}/baseos/base"
+     fi
+ 
+@@ -1249,6 +1274,7 @@
+     ' "${STATE_DIR}/rpmdb.before.tsv" > "$removed_tsv"
+ 
+     tail -n +2 "$removed_tsv" | cut -f 1 | sort -u > "$removed_nevra"
++    [[ "${1:-}" == --plan-only ]] && return 0
+     if [[ ! -s "$removed_nevra" ]]; then
+         info "no source-only subscription or GPG pseudo-packages found"
+         return 0
+@@ -1290,13 +1316,13 @@
+ }
+ 
+ install_oracle_release_packages() {
+-    local release_pkgs=("oraclelinux-release-el${SOURCE_MAJOR}" "oraclelinux-release")
++    local release_pkgs=()
++    [[ -s "${STATE_DIR}/oracle-release-install.nevra" ]] \
++        || die "pinned Oracle release installation plan is missing; do not continue or reboot"
++    mapfile -t release_pkgs < "${STATE_DIR}/oracle-release-install.nevra"
+ 
+     info "installing Oracle Linux release packages"
+-    run "$DNF_CMD" -y \
+-        "${DNF_BASE_ARGS[@]}" \
+-        "${ORACLE_REPO_ARGS[@]}" \
+-        install "${release_pkgs[@]}"
++    run_nonkernel_transaction release-install "" install "${release_pkgs[@]}"
+ }
+ 
+ refresh_oracle_repos() {
+@@ -1511,6 +1537,15 @@
+             }
+         ' "${STATE_DIR}/wanted-names" "${STATE_DIR}/rpmdb.before.tsv" | sort -u > "$wanted_tsv"
+     fi
++
++    # Keep source runtime kernel packages out of bulk Oracle reinstalls.
++    # Preserving their files is a precaution, not a guaranteed rollback path.
++    awk -F '\t' '$1 !~ /^kernel(-core|-modules|-modules-core|-modules-extra)?$/ &&
++        $1 !~ /^kernel-uek(-core|-modules|-modules-core|-modules-extra)?$/' \
++        "$wanted_tsv" > "${wanted_tsv}.without-runtime-kernels" \
++        || die "could not exclude source runtime kernels from the reinstall plan"
++    mv "${wanted_tsv}.without-runtime-kernels" "$wanted_tsv" \
++        || die "could not save the protected reinstall plan"
+ 
+     if [[ -s "${STATE_DIR}/rhel-only-packages.removed.nevra" ]]; then
+         awk -F '\t' '
+@@ -2773,11 +2808,7 @@
+         return 0
+     fi
+ 
+-    xargs -r -a "$exact_standard_nevra" -n 80 "$DNF_CMD" -y \
+-        "${DNF_BASE_ARGS[@]}" \
+-        "${ORACLE_REPO_ARGS[@]}" \
+-        ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
+-        reinstall 2>&1 | tee -a "$LOG_FILE"
++    run_nonkernel_batches exact-reinstall reinstall "$exact_standard_nevra"
+ }
+ 
+ reinstall_nearest_packages() {
+@@ -2798,38 +2829,11 @@
+     fi
+ 
+     if [[ -s "$nearest_higher_standard_nevra" ]]; then
+-        if [[ "$DNF_CMD" == "dnf" ]]; then
+-            xargs -r -a "$nearest_higher_standard_nevra" -n 80 "$DNF_CMD" -y \
+-                "${DNF_BASE_ARGS[@]}" \
+-                "${ORACLE_REPO_ARGS[@]}" \
+-                ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
+-                --nobest \
+-                --skip-broken \
+-                install 2>&1 | tee -a "$LOG_FILE"
+-        else
+-            xargs -r -a "$nearest_higher_standard_nevra" -n 80 "$DNF_CMD" -y \
+-                "${DNF_BASE_ARGS[@]}" \
+-                "${ORACLE_REPO_ARGS[@]}" \
+-                ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
+-                install 2>&1 | tee -a "$LOG_FILE"
+-        fi
++        run_nonkernel_batches nearest-higher install "$nearest_higher_standard_nevra" --nobest
+     fi
+ 
+     if [[ -s "$nearest_lower_nevra" ]]; then
+-        if [[ "$DNF_CMD" == "dnf" ]]; then
+-            xargs -r -a "$nearest_lower_nevra" -n 80 "$DNF_CMD" -y \
+-                "${DNF_BASE_ARGS[@]}" \
+-                "${ORACLE_REPO_ARGS[@]}" \
+-                ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
+-                --skip-broken \
+-                downgrade 2>&1 | tee -a "$LOG_FILE"
+-        else
+-            xargs -r -a "$nearest_lower_nevra" -n 80 "$DNF_CMD" -y \
+-                "${DNF_BASE_ARGS[@]}" \
+-                "${ORACLE_REPO_ARGS[@]}" \
+-                ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
+-                downgrade 2>&1 | tee -a "$LOG_FILE"
+-        fi
++        run_nonkernel_batches nearest-lower downgrade "$nearest_lower_nevra"
+     fi
+ }
+ 
+@@ -2843,17 +2847,10 @@
+         return 0
+     fi
+ 
+-    xargs -r -a "$update_exception_nevra" -n 80 "$DNF_CMD" -y \
+-        "${DNF_BASE_ARGS[@]}" \
+-        "${ORACLE_REPO_ARGS[@]}" \
+-        "--enablerepo=ol${SOURCE_MAJOR}_baseos_exception_latest" \
+-        install 2>&1 | tee -a "$LOG_FILE"
+-
+-    xargs -r -a "$update_exception_nevra" -n 80 "$DNF_CMD" -y \
+-        "${DNF_BASE_ARGS[@]}" \
+-        "${ORACLE_REPO_ARGS[@]}" \
+-        "--enablerepo=ol${SOURCE_MAJOR}_baseos_exception_latest" \
+-        reinstall 2>&1 | tee -a "$LOG_FILE"
++    run_nonkernel_batches update-exception-install install "$update_exception_nevra" \
++        "--enablerepo=ol${SOURCE_MAJOR}_baseos_exception_latest"
++    run_nonkernel_batches update-exception-reinstall reinstall "$update_exception_nevra" \
++        "--enablerepo=ol${SOURCE_MAJOR}_baseos_exception_latest"
+ }
+ 
+ install_uek_firmware_exception() {
+@@ -2945,61 +2942,11 @@
+ }
+ 
+ remove_nonrunning_runtime_kernels() {
+-    local running_kernel remove_list=()
+-    local name nvra kernel_version vendor
+-    local keep_oracle_rhck=0
+-
+-    running_kernel="$(uname -r)"
+-
+-    if [[ "$KERNEL_FLAVOR" == "uek" ]] && kernel_capability_required_by_non_kernel_package; then
+-        keep_oracle_rhck=1
+-        info "keeping Oracle Linux RHCK runtime kernel packages because installed RPMs require the kernel capability"
+-    fi
+-
+-    while IFS=$'\t' read -r name nvra kernel_version vendor; do
+-        [[ -n "$name" && -n "$nvra" && -n "$kernel_version" ]] || continue
+-        is_runtime_kernel_package_name "$name" || continue
+-        [[ "$kernel_version" != "$running_kernel" ]] || continue
+-        if is_selected_kernel_flavor_package_name "$name" && is_oracle_vendor "$vendor"; then
+-            continue
+-        fi
+-        if (( keep_oracle_rhck )) && is_rhck_runtime_kernel_package_name "$name" && is_oracle_vendor "$vendor"; then
+-            continue
+-        fi
+-        remove_list+=("$nvra")
+-    done < <(rpm -qa --qf '%{NAME}\t%{NVRA}\t%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n' | sort -u)
+-
+-    if [[ "${#remove_list[@]}" -eq 0 ]]; then
+-        info "no non-running runtime kernel packages need removal before selected kernel install"
+-        return 0
+-    fi
+-
+-    info "removing non-running runtime kernel packages to free /boot space: ${remove_list[*]}"
+-    run rpm -e --nodeps "${remove_list[@]}"
++    info "workshop candidate retains all source runtime kernels; no kernel cleanup is performed"
+ }
+ 
+ remove_source_vendor_runtime_kernels() {
+-    local vendor_regex
+-
+-    vendor_regex="$(source_vendor_regex)" || return 0
+-
+-    local remove_list=()
+-    local name nvra vendor
+-
+-    while IFS=$'\t' read -r name nvra vendor; do
+-        [[ -n "$name" && -n "$nvra" ]] || continue
+-        is_runtime_kernel_package_name "$name" || continue
+-        [[ "$vendor" =~ $vendor_regex ]] || continue
+-        remove_list+=("$nvra")
+-    done < <(rpm -qa --qf '%{NAME}\t%{NVRA}\t%{VENDOR}\n' | sort -u)
+-
+-    if [[ "${#remove_list[@]}" -eq 0 ]]; then
+-        info "no remaining source-vendor runtime kernel packages need removal"
+-        return 0
+-    fi
+-
+-    info "removing source-vendor runtime kernel packages after selected Oracle kernel install: ${remove_list[*]}"
+-    run rpm -e --nodeps "${remove_list[@]}"
++    info "workshop candidate retains all source runtime kernels; no kernel cleanup is performed"
+ }
+ 
+ distro_sync_oracle() {
+@@ -3057,19 +3004,20 @@
+     local redhat_tsv="${STATE_DIR}/redhat-vendor-packages.after-sync.tsv"
+     local reinstall_nevra="${STATE_DIR}/redhat-vendor-oracle-reinstall.nevra"
+     local replacement_install_nevra="${STATE_DIR}/redhat-vendor-oracle-replacement-install.nevra"
+-    local replacement_preremove_nvra="${STATE_DIR}/redhat-vendor-source-preremoval.nvra"
+-    local replacement_remove_nvra="${STATE_DIR}/redhat-vendor-source-removal.nvra"
+-    local replacement_still_installed_nvra="${STATE_DIR}/redhat-vendor-source-removal.still-installed.nvra"
++    local replacement_downgrade_nevra="${STATE_DIR}/redhat-vendor-oracle-replacement-downgrade.nevra"
++    local replacement_swap_tsv="${STATE_DIR}/redhat-vendor-oracle-replacement-swap.tsv"
+     local replacement_remove_tsv="${STATE_DIR}/redhat-vendor-source-removal.tsv"
+     local unavailable_tsv="${STATE_DIR}/redhat-vendor-oracle-unavailable.tsv"
+     local remaining_tsv="${STATE_DIR}/redhat-vendor-packages.after-reinstall.tsv"
+     local remaining_after_exact_tsv="${STATE_DIR}/redhat-vendor-packages.after-exact-reinstall.tsv"
+-    local installed_nvra="${STATE_DIR}/installed.after-source-vendor-replacement.nvra"
++    local source_nvra target_nevra
+ 
+     info "checking for installed RPMs still signed by the source vendor"
+     rpm -qa --qf '%{NAME}\t%{EPOCHNUM}\t%{VERSION}\t%{RELEASE}\t%{ARCH}\t%{VENDOR}\n' | awk -F '\t' -v vendor_regex="$vendor_regex" '
+         BEGIN { IGNORECASE = 1 }
+-        $6 ~ vendor_regex {
++        $6 ~ vendor_regex &&
++        $1 !~ /^kernel(-core|-modules|-modules-core|-modules-extra)?$/ &&
++        $1 !~ /^kernel-uek(-core|-modules|-modules-core|-modules-extra)?$/ {
+             print
+         }
+     ' | sort -u > "$redhat_tsv"
+@@ -3079,6 +3027,9 @@
+         : > "$reinstall_nevra"
+         printf 'source_nevra\tname\tepoch\tversion\trelease\tarch\tvendor\tstatus\n' > "$unavailable_tsv"
+         return 0
++    fi
++    if awk -F '\t' '$1 ~ /^(shim|grub2)(-|$)/ { found = 1 } END { exit found ? 0 : 1 }' "$redhat_tsv"; then
++        die "source-vendor bootchain remains outside its verified deferred plan; do not replace it through fallback or reboot"
+     fi
+ 
+     repoquery_available_packages "$available_tsv"
+@@ -3113,24 +3064,22 @@
+ 
+     if [[ -s "$reinstall_nevra" ]]; then
+         info "reinstalling $(wc -l < "$reinstall_nevra" | tr -d ' ') source-vendor RPMs from Oracle repositories"
+-        xargs -r -a "$reinstall_nevra" -n 80 "$DNF_CMD" -y \
+-            "${DNF_BASE_ARGS[@]}" \
+-            "${ORACLE_REPO_ARGS[@]}" \
+-            ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
+-            reinstall 2>&1 | tee -a "$LOG_FILE"
++        run_nonkernel_batches fallback-exact reinstall "$reinstall_nevra"
+     fi
+ 
+     rpm -qa --qf '%{NAME}\t%{NVRA}\t%{EPOCHNUM}\t%{VERSION}\t%{RELEASE}\t%{ARCH}\t%{VENDOR}\n' | awk -F '\t' -v vendor_regex="$vendor_regex" '
+         BEGIN { IGNORECASE = 1 }
+-        $7 ~ vendor_regex {
++        $7 ~ vendor_regex &&
++        $1 !~ /^kernel(-core|-modules|-modules-core|-modules-extra)?$/ &&
++        $1 !~ /^kernel-uek(-core|-modules|-modules-core|-modules-extra)?$/ {
+             print
+         }
+     ' | sort -u > "$remaining_after_exact_tsv"
+ 
+     : > "$replacement_install_nevra"
+-    : > "$replacement_preremove_nvra"
+-    : > "$replacement_remove_nvra"
+-    awk -F '\t' -v install_nevra="$replacement_install_nevra" -v preremove_nvra="$replacement_preremove_nvra" -v remove_nvra="$replacement_remove_nvra" -v remove_tsv="$replacement_remove_tsv" -v unavailable_tsv="$unavailable_tsv" '
++    : > "$replacement_downgrade_nevra"
++    : > "$replacement_swap_tsv"
++    awk -F '\t' -v install_nevra="$replacement_install_nevra" -v downgrade_nevra="$replacement_downgrade_nevra" -v swap_tsv="$replacement_swap_tsv" -v remove_tsv="$replacement_remove_tsv" -v unavailable_tsv="$unavailable_tsv" '
+         function normalize_epoch(epoch) {
+             return (epoch == "" || epoch == "(none)") ? 0 : epoch
+         }
+@@ -3281,11 +3230,12 @@
+             source = nevra(name, epoch, version, release, arch)
+             if (best_idx > 0) {
+                 target = available_nevras[group SUBSEP best_idx]
+-                print target >> install_nevra
+-                if (target_name != name || compare_evr(best_version, best_release, version, release) < 0) {
+-                    print nvra >> preremove_nvra
++                if (target_name != name) {
++                    print nvra "\t" target >> swap_tsv
++                } else if (compare_evr(best_version, best_release, version, release) < 0) {
++                    print target >> downgrade_nevra
+                 } else {
+-                    print nvra >> remove_nvra
++                    print target >> install_nevra
+                 }
+                 print nvra "\t" target "\t" name "\t" epoch "\t" version "\t" release "\t" best_release "\t" arch "\treplaced-source-vendor" >> remove_tsv
+             } else {
+@@ -3294,37 +3244,26 @@
+         }
+     ' "$available_tsv" "$remaining_after_exact_tsv"
+     sort -u "$replacement_install_nevra" -o "$replacement_install_nevra"
+-    sort -u "$replacement_preremove_nvra" -o "$replacement_preremove_nvra"
+-    sort -u "$replacement_remove_nvra" -o "$replacement_remove_nvra"
+-
+-    if [[ -s "$replacement_preremove_nvra" ]]; then
+-        rpm -qa --qf '%{NVRA}\n' | sort -u > "$installed_nvra"
+-        awk 'NR == FNR { installed[$0] = 1; next } installed[$0]' "$installed_nvra" "$replacement_preremove_nvra" > "$replacement_still_installed_nvra"
+-        if [[ -s "$replacement_still_installed_nvra" ]]; then
+-            info "removing $(wc -l < "$replacement_still_installed_nvra" | tr -d ' ') source-vendor RPM instances before cross-name Oracle replacement install"
+-            xargs -r -a "$replacement_still_installed_nvra" -n 80 rpm -e --nodeps 2>&1 | tee -a "$LOG_FILE"
+-        fi
++    sort -u "$replacement_downgrade_nevra" -o "$replacement_downgrade_nevra"
++    sort -u "$replacement_swap_tsv" -o "$replacement_swap_tsv"
++
++    if [[ -s "$replacement_downgrade_nevra" ]]; then
++        info "downgrading remaining source-vendor RPMs in dependency-checked DNF transactions"
++        run_nonkernel_batches fallback-downgrade downgrade "$replacement_downgrade_nevra"
+     fi
+ 
+     if [[ -s "$replacement_install_nevra" ]]; then
+         info "installing $(wc -l < "$replacement_install_nevra" | tr -d ' ') Oracle replacements for remaining source-vendor RPMs"
+-        xargs -r -a "$replacement_install_nevra" -n 80 "$DNF_CMD" -y \
+-            "${DNF_BASE_ARGS[@]}" \
+-            "${ORACLE_REPO_ARGS[@]}" \
+-            ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
+-            install 2>&1 | tee -a "$LOG_FILE"
+-    fi
+-
+-    if [[ -s "$replacement_remove_nvra" ]]; then
+-        rpm -qa --qf '%{NVRA}\n' | sort -u > "$installed_nvra"
+-        awk 'NR == FNR { installed[$0] = 1; next } installed[$0]' "$installed_nvra" "$replacement_remove_nvra" > "$replacement_still_installed_nvra"
+-        if [[ -s "$replacement_still_installed_nvra" ]]; then
+-            info "removing $(wc -l < "$replacement_still_installed_nvra" | tr -d ' ') replaced source-vendor RPM instances"
+-            xargs -r -a "$replacement_still_installed_nvra" -n 80 rpm -e --nodeps 2>&1 | tee -a "$LOG_FILE"
+-        else
+-            info "all replaced source-vendor RPM instances were already removed by the package transaction"
+-        fi
+-    fi
++        run_nonkernel_batches fallback-install install "$replacement_install_nevra"
++    fi
++
++    while IFS=$'\t' read -r source_nvra target_nevra; do
++        [[ -n "$source_nvra" && -n "$target_nevra" ]] || continue
++        [[ "$source_nvra" == redhat-logos-httpd-* && "$target_nevra" == oracle-logos-httpd-* ]] \
++            || die "unqualified cross-name replacement ${source_nvra} to ${target_nevra}; do not reboot"
++        info "swapping ${source_nvra} for ${target_nevra} in one DNF transaction"
++        run_nonkernel_transaction fallback-branding redhat-logos-httpd swap "$source_nvra" "$target_nevra"
++    done < "$replacement_swap_tsv"
+ 
+     rpm -qa --qf '%{NAME}\t%{EPOCHNUM}\t%{VERSION}\t%{RELEASE}\t%{ARCH}\t%{VENDOR}\n' | awk -F '\t' -v vendor_regex="$vendor_regex" '
+         BEGIN { IGNORECASE = 1 }
+@@ -3340,20 +3279,605 @@
+     fi
+ }
+ 
++check_target_catalogue() {
++    local available="${STATE_DIR}/target-catalogue.oracle-release.tsv"
++    local selected="${STATE_DIR}/target-catalogue.oracle-release.selected.tsv"
++    local name epoch version release arch vendor nevra
++    # Do not apply target-minor excludes here: a later catalogue must be seen
++    # and rejected rather than hidden by filtering its release RPM.
++    if ! "$DNF_CMD" --refresh --disableexcludes=all "${DNF_BASE_ARGS[@]}" "${ORACLE_REPO_ARGS[@]}" \
++        repoquery --available --arch "$BASEARCH" --arch noarch --latest-limit 1 \
++        --queryformat $'%{name}\t%{epoch}\t%{version}\t%{release}\t%{arch}\t%{vendor}\t%{name}-%{epoch}:%{version}-%{release}.%{arch}' \
++        oraclelinux-release > "$available"; then
++        die "could not identify the current Oracle target catalogue; source packages were not changed"
++    fi
++    awk -F '\t' -v arch="$BASEARCH" '$1 == "oraclelinux-release" && ($5 == arch || $5 == "noarch") { print }' \
++        "$available" | sort -u > "$selected"
++    [[ "$(wc -l < "$selected" | tr -d ' ')" == 1 ]] \
++        || die "Oracle target catalogue release is missing or ambiguous; see ${available}; source packages were not changed"
++    IFS=$'\t' read -r name epoch version release arch vendor nevra < "$selected"
++    is_oracle_vendor "$vendor" && [[ "$version" == "$EFFECTIVE_TARGET_VERSION" && "$version" == 9.8 ]] \
++        || die "current Oracle catalogue is not Oracle Linux 9.8; see ${available}; source packages were not changed"
++    printf '%s\noraclelinux-release-el%s\n' "$nevra" "$SOURCE_MAJOR" > "${STATE_DIR}/oracle-release-install.nevra" \
++        || die "could not pin the Oracle Linux 9.8 release package; source packages were not changed"
++    info "current Oracle catalogue release verified as ${version}: ${nevra}"
++}
++
++plan_deferred_bootchain_packages() {
++    local plan="${STATE_DIR}/bootchain-deferred.nevra"
++    local missing="${STATE_DIR}/bootchain-deferred.unavailable.tsv"
++    local file
++    awk -F '\t' 'NR > 1 && $3 ~ /^(shim|grub2)(-|$)/ { print }' \
++        "${STATE_DIR}/unavailable-reinstall.tsv" > "$missing"
++    [[ ! -s "$missing" ]] || die "an installed bootchain package has no Oracle replacement; see ${missing}; source packages were not changed"
++    awk -F '\t' '$3 ~ /^(shim|grub2)(-|$)/ && $2 != "" { print $2 }' \
++        "${STATE_DIR}/exact-reinstall.tsv" "${STATE_DIR}/nearest-reinstall.tsv" | sort -u > "$plan"
++    for file in exact-standard-reinstall.nevra nearest-higher-standard-reinstall.nevra nearest-lower-reinstall.nevra; do
++        awk '$0 !~ /^(shim|grub2)-/' "${STATE_DIR}/${file}" > "${STATE_DIR}/${file}.without-bootchain" \
++            || die "could not protect the deferred bootchain plan"
++        mv "${STATE_DIR}/${file}.without-bootchain" "${STATE_DIR}/${file}" \
++            || die "could not save the deferred bootchain plan"
++    done
++    info "deferred Oracle bootchain targets: $(wc -l < "$plan" | tr -d ' '); evidence: ${plan}"
++}
++
++resolve_selected_kernel_plan() {
++    local available="${STATE_DIR}/kernel-install.available.tsv"
++    local selected="${STATE_DIR}/kernel-install.selected.tsv"
++    local plan="${STATE_DIR}/kernel-install.nevra"
++    local name epoch version release arch vendor nevra installed_vendor
++    local selected_epoch selected_version selected_release selected_arch selected_nevra
++
++    [[ "$KERNEL_FLAVOR" == rhck && "$DNF_CMD" == dnf ]] \
++        || die "this workshop kernel preflight requires RHCK and DNF"
++    info "resolving an explicit Oracle RHCK version before changing source packages"
++    if ! "$DNF_CMD" "${DNF_BASE_ARGS[@]}" "${ORACLE_REPO_ARGS[@]}" \
++        ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
++        repoquery --available --arch "$BASEARCH" --latest-limit 1 \
++        --queryformat $'%{name}\t%{epoch}\t%{version}\t%{release}\t%{arch}\t%{vendor}\t%{name}-%{epoch}:%{version}-%{release}.%{arch}' \
++        kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra > "$available"; then
++        die "could not resolve Oracle RHCK metadata; source packages were not changed"
++    fi
++    awk -F '\t' -v arch="$BASEARCH" '$1 == "kernel" && $5 == arch && $6 ~ /Oracle[[:space:]]+America/ { print }' \
++        "$available" | sort -u > "$selected"
++    [[ "$(wc -l < "$selected" | tr -d ' ')" == 1 ]] \
++        || die "Oracle RHCK selection is missing or ambiguous; see ${available}; source packages were not changed"
++    IFS=$'\t' read -r name selected_epoch selected_version selected_release selected_arch vendor selected_nevra < "$selected"
++    [[ "$selected_nevra" == "kernel-${selected_epoch}:${selected_version}-${selected_release}.${selected_arch}" ]] \
++        || die "Oracle RHCK metadata contains an invalid package identity"
++
++    # An equal source NEVRA cannot coexist with its Oracle replacement. Stop
++    # before release/package changes rather than overwrite a retained kernel.
++    while IFS=$'\t' read -r name epoch version release arch vendor nevra; do
++        is_runtime_kernel_package_name "$name" || continue
++        [[ "$epoch" == "$selected_epoch" && "$version" == "$selected_version" &&
++            "$release" == "$selected_release" && "$arch" == "$selected_arch" ]] || continue
++        is_oracle_vendor "$vendor" || die "selected RHCK dependency metadata has a non-Oracle vendor"
++        if installed_vendor="$(rpm -q "$nevra" --qf '%{VENDOR}\n' 2>/dev/null)"; then
++            while IFS= read -r vendor; do
++                is_oracle_vendor "$vendor" \
++                    || die "source kernel collision at ${nevra}; retaining its files and installing the equal Oracle NEVRA cannot be guaranteed; source packages were not changed"
++            done <<< "$installed_vendor"
++        fi
++    done < "$available"
++    printf '%s\ngrubby\n' "$selected_nevra" > "$plan" \
++        || die "could not save the exact Oracle RHCK installation plan"
++    info "exact Oracle RHCK plan: ${selected_nevra}; evidence: ${plan}"
++}
++
++check_selected_kernel_solver() {
++    local plan="${STATE_DIR}/kernel-install.nevra"
++    local extra_plan="${1:-}" label="${2:-kernel-install}"
++    local solver_log="${STATE_DIR}/${label}.solver.log"
++    local status installed_vendor expected_evr
++    local packages=()
++    local extra_packages=()
++    local bootchain_excludes=()
++    [[ -s "$plan" ]] || die "exact Oracle RHCK installation plan is missing"
++    mapfile -t packages < "$plan"
++    if [[ -n "$extra_plan" ]]; then
++        [[ -s "$extra_plan" ]] || die "deferred Oracle bootchain installation plan is missing"
++        mapfile -t extra_packages < "$extra_plan"
++        packages+=("${extra_packages[@]}")
++    else
++        bootchain_excludes=("${PREKERNEL_BOOTCHAIN_EXCLUDE_ARGS[@]}")
++    fi
++    expected_evr="${packages[0]#kernel-}"
++    expected_evr="${expected_evr#0:}"
++    expected_evr="${expected_evr%.${BASEARCH}}"
++    info "checking the exact Oracle RHCK transaction without installing packages"
++    if LC_ALL=C "$DNF_CMD" --assumeno --setopt=assumeyes=False \
++        "${DNF_BASE_ARGS[@]}" "${ORACLE_REPO_ARGS[@]}" \
++        ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
++        ${bootchain_excludes[@]+"${bootchain_excludes[@]}"} \
++        install "${packages[@]}" > "$solver_log" 2>&1; then
++        status=0
++    else
++        status=$?
++    fi
++    cat "$solver_log" | tee -a "$LOG_FILE"
++    printf '%s\n' "$status" > "${STATE_DIR}/${label}.solver.status"
++    if grep -Eq '^[[:space:]]*(Error:|Problem:|Removing:|Removing dependent packages:|Removing unused dependencies:)' "$solver_log" ||
++        ! awk -v evr="$expected_evr" -v arch="$BASEARCH" -v allow_bootchain="${extra_plan:+1}" '
++            /^(Installing|Upgrading|Downgrading|Reinstalling|Obsoleting|Replacing)[^:]*:/ { action = $1; active = 1; next }
++            /^[^[:space:]].*:/ || /^Transaction Summary$/ { active = 0 }
++            active && NF {
++                if ($1 == "oraclelinux-release") {
++                    release_evr = $3
++                    sub(/^[0-9]+:/, "", release_evr)
++                    if (release_evr !~ /^9[.]8-/) bad = 1
++                }
++                if (action ~ /^Downgrading/ && ($1 == "libattr" || $1 == "libacl")) bad = 1
++                if (!allow_bootchain && $1 ~ /^(shim|grub2)(-|$)/) bad = 1
++            }
++            NF {
++                if ($1 ~ /^kernel(-core|-modules|-modules-core|-modules-extra)?$/) {
++                    version = $3
++                    sub(/^0:/, "", version)
++                    if (!active || action !~ /^Installing/ || $2 != arch || version != evr || $4 !~ /^ol[0-9]+_/) bad = 1
++                } else if ($1 ~ /^kernel-uek(-core|-modules|-modules-core|-modules-extra)?$/) bad = 1
++                if (($1 == "replacing" || $1 == "obsoleting") && $2 ~ /^kernel(-core|-modules|-modules-core|-modules-extra|-uek(-core|-modules|-modules-core|-modules-extra)?)?$/) bad = 1
++            }
++            END { exit bad ? 1 : 0 }
++        ' "$solver_log"; then
++        die "Oracle RHCK preflight reported an error, removal, unplanned kernel or critical library downgrade; see ${solver_log}; this solver check did not change packages; do not reboot"
++    fi
++    if [[ "$status" -eq 1 ]] && grep -Fxq 'Dependencies resolved.' "$solver_log" &&
++        grep -Fxq 'Transaction Summary' "$solver_log" && grep -Fxq 'Operation aborted.' "$solver_log"; then
++        info "Oracle RHCK solver passed; the proposed transaction was declined without package changes"
++        return 0
++    fi
++    if [[ "$status" -eq 0 ]] && grep -Fxq 'Nothing to do.' "$solver_log"; then
++        if installed_vendor="$(rpm -q "${packages[0]}" --qf '%{VENDOR}\n' 2>/dev/null)" &&
++            is_oracle_vendor "$installed_vendor"; then
++            info "exact planned Oracle RHCK is already installed; solver requires no changes"
++            return 0
++        fi
++    fi
++    die "Oracle RHCK preflight did not prove a resolved, declined transaction; see ${solver_log}; this solver check did not change packages; do not reboot"
++}
++
++check_deferred_bootchain_solver() {
++    local plan="${STATE_DIR}/bootchain-deferred.nevra"
++    [[ -s "$plan" ]] || return 0
++    check_selected_kernel_solver "$plan" bootchain-deferred
++}
++
++install_deferred_bootchain_packages() {
++    local plan="${STATE_DIR}/bootchain-deferred.nevra"
++    local packages=()
++    # Open the bootchain phase only after the installed Oracle kernel and
++    # its boot artifacts/default pass the independent verification again.
++    verify_selected_kernel
++    BOOTCHAIN_READY=1
++    [[ -s "$plan" ]] || return 0
++    mapfile -t packages < "$plan"
++    run_nonkernel_transaction deferred-bootchain-install "" install "${packages[@]}"
++    # Explicit install selects the planned versions; reinstall also switches
++    # the payload vendor when a source RPM already had the same NEVRA.
++    run_nonkernel_transaction deferred-bootchain-reinstall "" reinstall "${packages[@]}"
++    verify_deferred_bootchain_packages
++    verify_selected_kernel
++}
++
++verify_fat_bootchain_timestamps() {
++    local target="$1" package_verify_log="$2"
++    local line path canonical_path filesystem owner expected actual actual_stat rows=0
++    local manifest="${STATE_DIR}/bootchain-rpm-file-times.tsv"
++    local allowances="${STATE_DIR}/bootchain-fat-mtime.tsv"
++    # FAT modification times have two-second precision. Accept only the exact
++    # one-second truncation observed on this image, with every other RPM file
++    # attribute still verified. Do not disable RPM's mtime check globally.
++    require_cmd findmnt
++    require_cmd readlink
++    require_cmd stat
++    if ! rpm -q "$target" --qf '[%{FILENAMES}\t%{FILEMTIMES}\n]' > "$manifest"; then
++        die "cannot query bootchain RPM file timestamps; do not reboot"
++    fi
++    while IFS= read -r line || [[ -n "$line" ]]; do
++        [[ "$line" =~ ^\.\.\.\.\.\.\.T\.[[:space:]]+(/.*)$ ]] || return 1
++        path="${BASH_REMATCH[1]}"
++        [[ "$path" == "${BOOT_DIR}/efi/EFI/"* && -f "$path" && ! -L "$path" && -s "$path" ]] || return 1
++        canonical_path="$(readlink -e -- "$path")" || return 1
++        [[ "$canonical_path" == "$path" ]] || return 1
++        filesystem="$(findmnt -n -o FSTYPE --target "$path")" || return 1
++        [[ "$filesystem" == vfat ]] || return 1
++        owner="$(rpm -qf "$path" --qf '%{VENDOR}\n' 2>/dev/null)" || return 1
++        [[ "$owner" != *$'\n'* ]] || return 1
++        is_oracle_vendor "$owner" || return 1
++        expected="$(awk -F '\t' -v path="$path" '
++            $1 == path { count++; value = $2; if (NF != 2) bad = 1 }
++            END { if (count == 1 && !bad) print value; else exit 1 }
++        ' "$manifest")" || return 1
++        [[ "$expected" =~ ^[0-9]{1,10}$ ]] || return 1
++        actual_stat="$(LC_ALL=C stat --format='%Y %y' -- "$path")" || return 1
++        [[ "$actual_stat" =~ ^([0-9]{1,10})\ [0-9]{4}-[0-9]{2}-[0-9]{2}\ [0-9]{2}:[0-9]{2}:[0-9]{2}\.000000000\ [+-][0-9]{4}$ ]] || return 1
++        actual="${BASH_REMATCH[1]}"
++        (( 10#$expected % 2 == 1 && 10#$actual == 10#$expected - 1 )) || return 1
++        printf '%s\t%s\t%s\t%s\t%s\n' "$target" "$path" "$filesystem" "$expected" "$actual" >> "$allowances" || return 1
++        rows=$((rows + 1))
++    done < "$package_verify_log"
++    (( rows > 0 )) || return 1
++    info "accepted ${rows} exact FAT two-second timestamp truncations for ${target}; all other RPM file attributes passed"
++}
++
++verify_deferred_bootchain_packages() {
++    local plan="${STATE_DIR}/bootchain-deferred.nevra"
++    local target vendor path owner verify_status efi_files=0
++    local verify_log="${STATE_DIR}/bootchain-rpm.verify"
++    local package_verify_log="${STATE_DIR}/bootchain-rpm-package.verify"
++    local efi_list="${STATE_DIR}/bootchain-efi-files.tsv"
++    : > "$verify_log"
++    : > "$efi_list"
++    printf 'target\tpath\tfilesystem\trpm_mtime\tactual_mtime\n' > "${STATE_DIR}/bootchain-fat-mtime.tsv"
++    while IFS= read -r target; do
++        [[ -n "$target" ]] || continue
++        if ! vendor="$(rpm -q "$target" --qf '%{VENDOR}\n' 2>/dev/null)"; then
++            die "deferred bootchain target ${target} is not installed; do not reboot"
++        fi
++        is_oracle_vendor "$vendor" || die "deferred bootchain target ${target} is not Oracle-owned; do not reboot"
++        if rpm -V --noconfig "$target" > "$package_verify_log" 2>&1; then
++            verify_status=0
++        else
++            verify_status=$?
++        fi
++        cat "$package_verify_log" >> "$verify_log" || die "cannot save bootchain RPM verification evidence; do not reboot"
++        if [[ "$verify_status" -eq 0 && ! -s "$package_verify_log" ]]; then
++            :
++        elif [[ "$verify_status" -eq 1 ]] && verify_fat_bootchain_timestamps "$target" "$package_verify_log"; then
++            :
++        else
++            die "deferred bootchain package files failed verification; see ${verify_log}; do not reboot"
++        fi
++        if [[ -d "$EFI_FIRMWARE_DIR" ]]; then
++            if ! rpm -ql "$target" > "${STATE_DIR}/bootchain-package-files.txt"; then
++                die "could not list deferred bootchain package files; do not reboot"
++            fi
++            while IFS= read -r path; do
++                [[ "$path" == "${BOOT_DIR}/efi/"*.efi ]] || continue
++                [[ -s "$path" ]] || die "installed EFI binary ${path} is missing or empty; do not reboot"
++                if ! owner="$(rpm -qf "$path" --qf '%{VENDOR}\n' 2>/dev/null)"; then
++                    die "EFI binary ${path} has no RPM owner; do not reboot"
++                fi
++                is_oracle_vendor "$owner" || die "EFI binary ${path} is not Oracle-owned; do not reboot"
++                printf '%s\t%s\n' "$target" "$path" >> "$efi_list"
++                efi_files=$((efi_files + 1))
++            done < "${STATE_DIR}/bootchain-package-files.txt"
++        fi
++    done < "$plan"
++    if [[ -d "$EFI_FIRMWARE_DIR" && "$efi_files" -eq 0 ]]; then
++        die "no nonempty Oracle-owned EFI binaries were verified for this UEFI guest; do not reboot"
++    fi
++    info "deferred Oracle bootchain vendor and nonconfiguration package files verified"
++}
++
++check_reinstall_plan_eligibility() {
++    local plan="${STATE_DIR}/nearest-lower-reinstall.nevra"
++    local evidence="${STATE_DIR}/libattr-transition.blocked.nevra"
++    local scan_status
++    [[ -f "$plan" ]] || die "nearest-lower package plan is missing"
++    if grep -E '^libattr-[0-9]' "$plan" > "$evidence"; then
++        die "planned libattr downgrade from RHEL 9.8 is not qualified: the fresh-VM rehearsal reproduced a broken libattr.so.1 link during that transaction; source packages were not changed; see ${evidence}"
++    else
++        scan_status=$?
++        [[ "$scan_status" -eq 1 ]] || die "could not inspect the libattr transition plan; source packages were not changed"
++    fi
++    if grep -E '^libacl-[0-9]' "$plan" > "${STATE_DIR}/libacl-transition.blocked.nevra"; then
++        die "planned libacl downgrade from RHEL 9.8 is not qualified; source packages were not changed; see ${STATE_DIR}/libacl-transition.blocked.nevra"
++    else
++        scan_status=$?
++        [[ "$scan_status" -eq 1 ]] || die "could not inspect the libacl transition plan; source packages were not changed"
++    fi
++    return 0
++}
++
++check_libattr_downgrade_args() {
++    local arg downgrade=0
++    for arg in "$@"; do
++        if [[ "$arg" == downgrade ]]; then
++            downgrade=1
++        elif (( downgrade )) && [[ "$arg" == libattr || "$arg" =~ ^libattr-[0-9] ]]; then
++            die "libattr downgrade is not qualified; do not change packages or reboot"
++        elif (( downgrade )) && [[ "$arg" == libacl || "$arg" =~ ^libacl-[0-9] ]]; then
++            die "libacl downgrade is not qualified; do not change packages or reboot"
++        fi
++    done
++    return 0
++}
++
++check_nonkernel_solver() {
++    local label="$1" allowed_removal="$2"
++    shift 2
++    local solver_log="${STATE_DIR}/${label}.solver.log"
++    local status
++    local protected_args=("${NONKERNEL_EXCLUDE_ARGS[@]}")
++    if [[ "$BOOTCHAIN_READY" -eq 0 ]]; then
++        protected_args+=("${PREKERNEL_BOOTCHAIN_EXCLUDE_ARGS[@]}")
++    fi
++    check_libattr_downgrade_args "$@"
++    info "checking ${label} without changing packages"
++    if LC_ALL=C "$DNF_CMD" --assumeno --setopt=assumeyes=False \
++        "${DNF_BASE_ARGS[@]}" "${ORACLE_REPO_ARGS[@]}" \
++        ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
++        "${protected_args[@]}" "$@" > "$solver_log" 2>&1; then
++        status=0
++    else
++        status=$?
++    fi
++    cat "$solver_log" | tee -a "$LOG_FILE"
++    printf '%s\n' "$status" > "${STATE_DIR}/${label}.solver.status"
++    if grep -Eq '^[[:space:]]*(Error:|Problem:)' "$solver_log" ||
++        ! awk -v allowed="$allowed_removal" -v bootchain_ready="$BOOTCHAIN_READY" '
++            function runtime(name) {
++                return name ~ /^kernel(-core|-modules|-modules-core|-modules-extra)?$/ ||
++                    name ~ /^kernel-uek(-core|-modules|-modules-core|-modules-extra)?$/
++            }
++            /^(Installing|Upgrading|Downgrading|Reinstalling|Removing|Obsoleting|Replacing)[^:]*:/ {
++                action = $1
++                active = 1
++                removing = $1 ~ /^Removing/
++                next
++            }
++            /^[^[:space:]].*:/ || /^Transaction Summary$/ { active = 0; removing = 0 }
++            active && NF {
++                if ($1 == "oraclelinux-release") {
++                    release_evr = $3
++                    sub(/^[0-9]+:/, "", release_evr)
++                    if (release_evr !~ /^9[.]8-/) bad = 1
++                }
++                if (runtime($1) || (($1 == "replacing" || $1 == "obsoleting") && runtime($2))) bad = 1
++                if (action ~ /^Downgrading/ && ($1 == "libattr" || $1 == "libacl")) bad = 1
++                if (!bootchain_ready && $1 ~ /^(shim|grub2)(-|$)/) bad = 1
++                if (removing) {
++                    if (allowed == "" || $1 != allowed) bad = 1
++                    else expected++
++                }
++            }
++            END { exit bad || (allowed != "" && expected != 1) ? 1 : 0 }
++        ' "$solver_log"; then
++        die "${label} preflight reported an error, runtime kernel change, premature bootchain change, critical library downgrade or unexpected removal; see ${solver_log}; no package transaction was started by this check"
++    fi
++    if [[ "$status" -eq 1 ]] && grep -Fxq 'Dependencies resolved.' "$solver_log" &&
++        grep -Fxq 'Transaction Summary' "$solver_log" && grep -Fxq 'Operation aborted.' "$solver_log"; then
++        info "${label} solver passed; the proposed transaction was declined"
++        return 0
++    fi
++    if [[ "$status" -eq 0 ]] && grep -Fxq 'Nothing to do.' "$solver_log"; then
++        info "${label} solver requires no package changes"
++        return 0
++    fi
++    die "${label} preflight did not prove a resolved, declined transaction; see ${solver_log}; no package transaction was started by this check"
++}
++
++check_package_solver_plan() {
++    local label="$1" operation="$2" plan="$3"
++    shift 3
++    local packages=()
++    [[ -s "$plan" ]] || return 0
++    mapfile -t packages < "$plan"
++    check_nonkernel_solver "$label" "" "$@" "$operation" "${packages[@]}"
++}
++
++run_nonkernel_transaction() {
++    local label="$1" allowed_removal="$2"
++    shift 2
++    local transaction_log="${STATE_DIR}/${label}.transaction.log"
++    local scan_status
++    local protected_args=("${NONKERNEL_EXCLUDE_ARGS[@]}")
++    if [[ "$BOOTCHAIN_READY" -eq 0 ]]; then
++        protected_args+=("${PREKERNEL_BOOTCHAIN_EXCLUDE_ARGS[@]}")
++    fi
++    check_libattr_downgrade_args "$@"
++    check_nonkernel_solver "$label" "$allowed_removal" "$@"
++    if (( DRY_RUN )); then
++        info "dry-run: declined ${label}; no packages were changed"
++        return 0
++    fi
++    info "applying dependency-checked nonkernel transaction ${label}"
++    if ! LC_ALL=C "$DNF_CMD" -y "${DNF_BASE_ARGS[@]}" "${ORACLE_REPO_ARGS[@]}" \
++        ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
++        "${protected_args[@]}" "$@" 2>&1 | tee "$transaction_log" | tee -a "$LOG_FILE"; then
++        die "${label} package transaction failed; see ${transaction_log}; do not reboot"
++    fi
++    if grep -Eiq 'scriptlet.*(failed|failure)|error in (prein|postin|preun|postun|posttrans)|error while loading shared libraries|kernel-install.*(failed|error)|dracut.*(failed|error|fatal)|depmod:.*(error|fatal)|(^|[[:space:]/])(grub(2)?-[[:alnum:]_-]+|grubby):[[:space:]]*(error|fatal)(:|[[:space:]])' "$transaction_log"; then
++        die "${label} reported a runtime or scriptlet error; see ${transaction_log}; do not reboot"
++    else
++        scan_status=$?
++        [[ "$scan_status" -eq 1 ]] || die "cannot inspect ${transaction_log}; do not reboot"
++    fi
++    check_kernel_install_dependencies
++}
++
++run_nonkernel_batches() {
++    local label="$1" operation="$2" plan="$3"
++    shift 3
++    local package batch_number=0
++    local packages=()
++    [[ -s "$plan" ]] || return 0
++    while IFS= read -r package; do
++        [[ -n "$package" ]] || continue
++        packages+=("$package")
++        if [[ "${#packages[@]}" -eq 80 ]]; then
++            batch_number=$((batch_number + 1))
++            run_nonkernel_transaction "${label}-${batch_number}" "" "$@" "$operation" "${packages[@]}"
++            packages=()
++        fi
++    done < "$plan"
++    if [[ "${#packages[@]}" -gt 0 ]]; then
++        batch_number=$((batch_number + 1))
++        run_nonkernel_transaction "${label}-${batch_number}" "" "$@" "$operation" "${packages[@]}"
++    fi
++}
++
++check_reinstall_plan_solvers() {
++    check_package_solver_plan exact-reinstall reinstall "${STATE_DIR}/exact-standard-reinstall.nevra"
++    check_package_solver_plan nearest-higher install "${STATE_DIR}/nearest-higher-standard-reinstall.nevra" --nobest
++    check_package_solver_plan nearest-lower downgrade "${STATE_DIR}/nearest-lower-reinstall.nevra"
++    check_package_solver_plan update-exception install "${STATE_DIR}/update-exception-reinstall.nevra" \
++        "--enablerepo=ol${SOURCE_MAJOR}_baseos_exception_latest"
++}
++
++check_branding_swap_solver() {
++    local source_nvra
++    if ! source_nvra="$(rpm -q redhat-logos-httpd --qf '%{NVRA}\n' 2>/dev/null)"; then
++        return 0
++    fi
++    [[ "$source_nvra" == redhat-logos-httpd-* && "$source_nvra" != *$'\n'* ]] \
++        || die "source HTTP branding package identity is ambiguous"
++    printf '%s\toracle-logos-httpd\n' "$source_nvra" > "${STATE_DIR}/branding-swap.tsv"
++    check_nonkernel_solver branding-swap redhat-logos-httpd swap "$source_nvra" oracle-logos-httpd
++    info "HTTP branding solver passed; only the source branding package would be removed"
++}
++
++check_kernel_install_dependencies() {
++    local tool executable dependencies source_default helper_owner library
++    info "checking the kernel installation runtime and critical library dependencies"
++    for tool in rpm python3 ldd dracut depmod grubby lsinitrd bash cp install find; do
++        require_cmd "$tool"
++    done
++    if ! rpm -q libattr libacl dracut kmod coreutils grubby >/dev/null 2>&1; then
++        die "required kernel installation packages are missing; install them from healthy source repositories before conversion"
++    fi
++    for library in libattr libacl; do
++        if ! rpm -V "$library" > "${STATE_DIR}/${library}.verify" 2>&1; then
++            die "${library} package verification failed; see ${STATE_DIR}/${library}.verify; do not convert or reboot"
++        fi
++    done
++    [[ -x "$DRACUT_INSTALL" ]] || die "dracut installation helper ${DRACUT_INSTALL} is missing or not executable"
++    if ! helper_owner="$(rpm -qf "$DRACUT_INSTALL" --qf '%{NAME}\n' 2>> "$LOG_FILE")"; then
++        die "dracut installation helper has no verifiable RPM owner; do not convert or reboot"
++    fi
++    case "$helper_owner" in
++        dracut|dracut-core) ;;
++        *) die "unexpected dracut installation helper RPM owner: ${helper_owner:-unknown}" ;;
++    esac
++    if ! rpm -V "$helper_owner" > "${STATE_DIR}/dracut-helper-package.verify" 2>&1; then
++        die "${helper_owner} package verification failed; see ${STATE_DIR}/dracut-helper-package.verify; do not convert or reboot"
++    fi
++    if ! python3 -c 'import ctypes; ctypes.CDLL("libattr.so.1")' >> "$LOG_FILE" 2>&1; then
++        die "libattr.so.1 cannot be loaded; do not convert or reboot"
++    fi
++    if ! python3 -c 'import ctypes; ctypes.CDLL("libacl.so.1")' >> "$LOG_FILE" 2>&1; then
++        die "libacl.so.1 cannot be loaded; do not convert or reboot"
++    fi
++    # grubby and dracut can be shell wrappers. Inspect their ELF runtimes and
++    # the actual dracut-install helper rather than passing wrappers to ldd.
++    for tool in bash cp install depmod "$DRACUT_INSTALL"; do
++        if [[ "$tool" == "$DRACUT_INSTALL" ]]; then
++            executable="$DRACUT_INSTALL"
++        else
++            executable="$(command -v "$tool")" || die "cannot locate ${tool}"
++        fi
++        if ! dependencies="$(ldd "$executable" 2>&1)"; then
++            die "cannot inspect runtime libraries for ${executable}: ${dependencies}"
++        fi
++        if grep -Fq 'not found' <<< "$dependencies"; then
++            die "unresolved runtime library for ${executable}: ${dependencies}"
++        fi
++    done
++    if ! "$DRACUT_INSTALL" --help >> "$LOG_FILE" 2>&1; then
++        die "dracut-install cannot execute; do not convert or reboot"
++    fi
++    # RHEL's dracut can return 1 for informational --version and --help calls.
++    # Listing installed modules exercises a read-only operation with exit 0.
++    if ! dracut --list-modules > "${STATE_DIR}/dracut-available-modules" 2>> "$LOG_FILE"; then
++        die "dracut cannot list its installed modules; do not convert or reboot"
++    fi
++    [[ -s "${STATE_DIR}/dracut-available-modules" ]] \
++        || die "dracut returned an empty installed-module list; do not convert or reboot"
++    if ! depmod --version >> "$LOG_FILE" 2>&1; then
++        die "depmod cannot execute; do not convert or reboot"
++    fi
++    if ! source_default="$(grubby --default-kernel 2>> "$LOG_FILE")"; then
++        die "grubby cannot read the default kernel; do not convert or reboot"
++    fi
++    [[ "$source_default" == "${BOOT_DIR}/vmlinuz-"* && -s "$source_default" ]] \
++        || die "grubby reports a missing or unexpected default kernel image: ${source_default:-unknown}"
++    info "kernel installation runtime checks passed"
++}
++
++run_kernel_transaction() {
++    local transaction_log="${STATE_DIR}/kernel-install.transaction.log"
++    local scan_status
++    info "+ $*"
++    if ! "$@" 2>&1 | tee "$transaction_log" | tee -a "$LOG_FILE"; then
++        die "kernel package transaction failed; see ${transaction_log}; do not reboot"
++    fi
++    # RPM package registration is insufficient when a scriptlet failed to
++    # create the actual boot files. Check the isolated transaction output too.
++    if grep -Eiq 'scriptlet.*(failed|failure)|error in (prein|postin|preun|postun|posttrans)|error while loading shared libraries|kernel-install.*(failed|error)|dracut.*(failed|error|fatal)|depmod:.*(error|fatal)|(^|[[:space:]/])(grub(2)?-[[:alnum:]_-]+|grubby):[[:space:]]*(error|fatal)(:|[[:space:]])' "$transaction_log"; then
++        die "kernel installation reported a runtime or scriptlet error; see ${transaction_log}; do not reboot"
++    else
++        scan_status=$?
++        [[ "$scan_status" -eq 1 ]] || die "cannot inspect the kernel transaction log; do not reboot"
++    fi
++}
++
+ latest_installed_kernel_version() {
+     local package="$1"
+-    local oracle_version
+-
+-    oracle_version="$(rpm -q --qf '%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n' "$package" 2>/dev/null \
+-        | awk -F '\t' '$2 ~ /Oracle[[:space:]]+America/ { print $1 }' \
+-        | sort -V \
+-        | tail -n 1)"
+-    if [[ -n "$oracle_version" ]]; then
+-        printf '%s\n' "$oracle_version"
+-        return
+-    fi
+-
+-    rpm -q --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n' "$package" 2>/dev/null | sort -V | tail -n 1
++    local installed oracle_version
++    if ! installed="$(rpm -q --qf '%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n' "$package" 2>/dev/null)"; then
++        die "cannot query installed ${package}"
++    fi
++    if ! oracle_version="$(awk -F '\t' '$2 ~ /Oracle[[:space:]]+America/ { print $1 }' <<< "$installed" | sort -V | tail -n 1)"; then
++        die "cannot select an Oracle kernel version for ${package}"
++    fi
++    [[ -n "$oracle_version" ]] || die "no Oracle-vendor ${package} is installed"
++    printf '%s\n' "$oracle_version"
++}
++
++verify_kernel_boot_artifacts() {
++    local kernel_pkg="$1"
++    local kernel_version kernel_path initramfs owner owner_name owner_version owner_vendor module_file
++    local initrd_listing="${STATE_DIR}/kernel-initramfs.list"
++    local entry="${STATE_DIR}/kernel-grubby.entry"
++    kernel_version="$(latest_installed_kernel_version "$kernel_pkg")" \
++        || die "cannot select the Oracle kernel for boot verification"
++    kernel_path="${BOOT_DIR}/vmlinuz-${kernel_version}"
++    initramfs="${BOOT_DIR}/initramfs-${kernel_version}.img"
++    [[ -s "$kernel_path" ]] || die "kernel image ${kernel_path} is missing or empty; do not reboot"
++    [[ -s "$initramfs" ]] || die "initramfs ${initramfs} is missing or empty; do not reboot"
++    [[ -d "${MODULES_ROOT}/${kernel_version}/kernel" ]] \
++        || die "kernel module directory is missing for ${kernel_version}; do not reboot"
++    [[ -s "${MODULES_ROOT}/${kernel_version}/modules.dep" ]] \
++        || die "kernel module dependency index is missing for ${kernel_version}; do not reboot"
++    if ! module_file="$(find "${MODULES_ROOT}/${kernel_version}/kernel" -type f \
++        \( -name '*.ko' -o -name '*.ko.*' \) -size +0c -print -quit)"; then
++        die "cannot inspect kernel modules for ${kernel_version}; do not reboot"
++    fi
++    [[ -n "$module_file" ]] || die "no nonempty kernel modules exist for ${kernel_version}; do not reboot"
++    if ! owner="$(rpm -qf "$kernel_path" --qf '%{NAME}\t%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n' 2>/dev/null)"; then
++        die "kernel image ownership cannot be verified for ${kernel_path}; do not reboot"
++    fi
++    IFS=$'\t' read -r owner_name owner_version owner_vendor <<< "$owner"
++    is_runtime_kernel_package_name "$owner_name" || die "unexpected kernel image owner ${owner_name}"
++    is_selected_kernel_flavor_package_name "$owner_name" || die "kernel image has the wrong kernel flavor"
++    is_oracle_vendor "$owner_vendor" || die "kernel image is not owned by an Oracle-vendor package"
++    [[ "$owner_version" == "$kernel_version" ]] || die "kernel image owner version does not match ${kernel_version}"
++    require_cmd lsinitrd
++    if ! lsinitrd "$initramfs" > "$initrd_listing" 2>> "$LOG_FILE"; then
++        die "initramfs inspection failed for ${initramfs}; do not reboot"
++    fi
++    grep -Fq "lib/modules/${kernel_version}/" "$initrd_listing" \
++        || die "initramfs does not list modules for ${kernel_version}; do not reboot"
++    require_cmd grubby
++    if ! grubby --info="$kernel_path" > "$entry" 2>> "$LOG_FILE"; then
++        die "no readable grubby entry for ${kernel_path}; do not reboot"
++    fi
++    grep -Fxq "kernel=\"${kernel_path}\"" "$entry" \
++        || die "grubby entry does not identify ${kernel_path}; do not reboot"
++    if ! awk -F '"' -v image="$initramfs" -v relative="/initramfs-${kernel_version}.img" '
++        $1 == "initrd=" {
++            count = split($2, paths, " ")
++            for (idx = 1; idx <= count; idx++) {
++                if (paths[idx] == image || paths[idx] == relative) found = 1
++            }
++        }
++        END { exit found ? 0 : 1 }
++    ' "$entry"; then
++        die "grubby entry does not reference ${initramfs}; do not reboot"
++    fi
++    info "Oracle kernel image, modules, initramfs, and boot entry checks passed for ${kernel_version}"
+ }
+ 
+ selected_kernel_package() {
+@@ -3372,6 +3896,7 @@
+ install_selected_kernel() {
+     local kernel_pkg packages
+ 
++    check_kernel_install_dependencies
+     printf '%s\n' "$KERNEL_FLAVOR" > "${STATE_DIR}/kernel-flavor.selected"
+ 
+     if [[ "$KERNEL_FLAVOR" == "uek" ]]; then
+@@ -3379,26 +3904,33 @@
+         info "installing Oracle Linux UEK and boot default tooling"
+         install_uek_firmware_exception
+     else
+-        packages=(kernel grubby)
+-        info "installing Oracle Linux RHCK and boot default tooling"
++        [[ -s "${STATE_DIR}/kernel-install.nevra" ]] \
++            || die "exact Oracle RHCK preflight plan is missing; do not convert or reboot"
++        mapfile -t packages < "${STATE_DIR}/kernel-install.nevra"
++        info "installing the preflighted exact Oracle Linux RHCK and boot default tooling"
++    fi
++
++    if [[ "$KERNEL_FLAVOR" == rhck ]]; then
++        check_selected_kernel_solver
+     fi
+ 
+     if [[ "$KERNEL_FLAVOR" == "uek" && "$DNF_CMD" == "dnf" ]]; then
+-        run "$DNF_CMD" -y \
++        run_kernel_transaction "$DNF_CMD" -y \
+             "${DNF_BASE_ARGS[@]}" \
+             "${ORACLE_REPO_ARGS[@]}" \
+             "--enablerepo=ol${SOURCE_MAJOR}_baseos_exception_latest" \
+             --nobest \
+             install "${packages[@]}"
+     else
+-        run "$DNF_CMD" -y \
++        run_kernel_transaction "$DNF_CMD" -y \
+             "${DNF_BASE_ARGS[@]}" \
+             "${ORACLE_REPO_ARGS[@]}" \
+             ${ORACLE_TARGET_EXCLUDE_ARGS[@]+"${ORACLE_TARGET_EXCLUDE_ARGS[@]}"} \
++            "${PREKERNEL_BOOTCHAIN_EXCLUDE_ARGS[@]}" \
+             install "${packages[@]}"
+     fi
+ 
+-    kernel_pkg="$(selected_kernel_package)"
++    kernel_pkg="$(selected_kernel_package)" || die "cannot select installed kernel package"
+     set_default_boot_kernel "$kernel_pkg"
+ }
+ 
+@@ -3414,31 +3946,21 @@
+     local kernel_pkg="$1"
+     local kernel_version kernel_path
+ 
+-    if ! command -v grubby >/dev/null 2>&1; then
+-        warn "grubby is not available; cannot set default boot kernel"
+-        return 0
+-    fi
+-
+-    kernel_version="$(latest_installed_kernel_version "$kernel_pkg")"
+-    if [[ -z "$kernel_version" ]]; then
+-        warn "could not determine installed ${kernel_pkg} version; cannot set default boot kernel"
+-        return 0
+-    fi
+-
+-    kernel_path="/boot/vmlinuz-${kernel_version}"
++    verify_kernel_boot_artifacts "$kernel_pkg"
++    kernel_version="$(latest_installed_kernel_version "$kernel_pkg")" \
++        || die "cannot select installed Oracle kernel"
++    kernel_path="${BOOT_DIR}/vmlinuz-${kernel_version}"
+     printf '%s\n' "$kernel_path" > "${STATE_DIR}/kernel-default.requested"
+-    if [[ ! -f "$kernel_path" ]]; then
+-        warn "kernel image ${kernel_path} is not present; skipping grubby default-kernel update"
+-        return 0
+-    fi
+-
+     info "+ grubby --set-default ${kernel_path}"
+-    if grubby --set-default "$kernel_path" 2>&1 | tee -a "$LOG_FILE"; then
+-        grubby --default-kernel > "${STATE_DIR}/kernel-default.after" 2>> "$LOG_FILE" || true
+-        info "default boot kernel set to ${kernel_path}"
+-    else
+-        warn "grubby could not set ${kernel_path} as the default boot kernel; continuing"
+-    fi
++    if ! grubby --set-default "$kernel_path" 2>&1 | tee -a "$LOG_FILE"; then
++        die "grubby could not set ${kernel_path} as the default boot kernel; do not reboot"
++    fi
++    if ! grubby --default-kernel > "${STATE_DIR}/kernel-default.after" 2>> "$LOG_FILE"; then
++        die "grubby cannot read back the default kernel; do not reboot"
++    fi
++    [[ "$(<"${STATE_DIR}/kernel-default.after")" == "$kernel_path" ]] \
++        || die "default boot kernel readback does not match ${kernel_path}; do not reboot"
++    info "default boot kernel set and verified as ${kernel_path}"
+ }
+ 
+ cleanup_bootstrap_repos() {
+@@ -3500,24 +4022,21 @@
+ verify_selected_kernel() {
+     local kernel_pkg kernel_version kernel_path current_default
+ 
+-    kernel_pkg="$(selected_kernel_package)"
++    kernel_pkg="$(selected_kernel_package)" || die "cannot select installed kernel package"
+     if ! rpm -q "$kernel_pkg" >/dev/null 2>&1; then
+         die "selected kernel package ${kernel_pkg} is not installed"
+     fi
+ 
+-    kernel_version="$(latest_installed_kernel_version "$kernel_pkg")"
+-    if [[ -z "$kernel_version" ]]; then
+-        die "unable to determine installed selected kernel version for ${kernel_pkg}"
+-    fi
+-
+-    kernel_path="/boot/vmlinuz-${kernel_version}"
+-    if command -v grubby >/dev/null 2>&1 && [[ -f "$kernel_path" ]]; then
+-        current_default="$(grubby --default-kernel 2>/dev/null || true)"
+-        printf '%s\n' "$current_default" > "${STATE_DIR}/kernel-default.verified"
+-        if [[ "$current_default" != "$kernel_path" ]]; then
+-            die "default boot kernel is ${current_default:-unknown}, expected ${kernel_path}"
+-        fi
+-    fi
++    verify_kernel_boot_artifacts "$kernel_pkg"
++    kernel_version="$(latest_installed_kernel_version "$kernel_pkg")" \
++        || die "unable to determine installed selected Oracle kernel version"
++    kernel_path="${BOOT_DIR}/vmlinuz-${kernel_version}"
++    if ! current_default="$(grubby --default-kernel 2>> "$LOG_FILE")"; then
++        die "cannot read default boot kernel; do not reboot"
++    fi
++    printf '%s\n' "$current_default" > "${STATE_DIR}/kernel-default.verified"
++    [[ "$current_default" == "$kernel_path" ]] \
++        || die "default boot kernel is ${current_default:-unknown}, expected ${kernel_path}; do not reboot"
+ 
+     info "selected ${KERNEL_FLAVOR} kernel verified through ${kernel_pkg}"
+ }
+@@ -3561,7 +4080,8 @@
+   ${STATE_DIR}/reinstalled-oracle-nearest.html
+   ${STATE_DIR}/not-reinstalled-oracle.html
+ 
+-Reboot into Oracle Linux when ready:
++Boot checks passed, but a successful boot still requires the workshop reboot gate.
++After recording that gate, the reboot command is:
+   reboot
+ EOF
+     else
+@@ -3581,7 +4101,8 @@
+ HTML report:
+   ${STATE_DIR}/migration-rpm-map.html
+ 
+-Reboot into Oracle Linux when ready:
++Boot checks passed, but a successful boot still requires the workshop reboot gate.
++After recording that gate, the reboot command is:
+   reboot
+ EOF
+     fi
+@@ -3634,29 +4155,69 @@
+     fi
+ }
+ 
++check_workshop_scope() {
++    [[ "$SOURCE_ID" == rhel && "$SOURCE_VERSION_ID" == 9.8 && "$BASEARCH" == x86_64 &&
++        "$EFFECTIVE_TARGET_VERSION" == 9.8 && "$KERNEL_FLAVOR" == rhck && "$MIGRATION_MODE" == preserve-release ]] \
++        || die "this workshop candidate only permits RHEL 9.8 x86_64 to Oracle Linux 9.8 with --kernel rhck"
++}
++
++verify_boot_only() {
++    KERNEL_FLAVOR=rhck
++    TARGET_VERSION=9.8
++    parse_args "$@"
++    [[ "$(id -u)" -eq 0 ]] || die "run the boot verification as root"
++    load_os_release
++    [[ "$SOURCE_ID" == ol && "$SOURCE_VERSION_ID" == 9.8 && "$(uname -m)" == x86_64 &&
++        "$TARGET_VERSION" == 9.8 && "$KERNEL_FLAVOR" == rhck ]] \
++        || die "boot verification requires Oracle Linux 9.8 x86_64 and RHCK"
++    mkdir -p "$STATE_DIR" "$LOG_ROOT" || die "cannot create boot verification evidence directories"
++    touch "$LOG_FILE" || die "cannot create boot verification log"
++    chmod 0600 "$LOG_FILE" || die "cannot protect boot verification log"
++    info "boot verification evidence: ${STATE_DIR}; log: ${LOG_FILE}"
++    check_kernel_install_dependencies
++    verify_selected_kernel
++    info "Boot verification gate passed. A successful boot still requires a recorded VM reboot and workload checks."
++}
++
+ main() {
++    if [[ "${1:-}" == --verify-boot-only ]]; then
++        shift
++        verify_boot_only "$@"
++        return
++    fi
+     parse_args "$@"
+     detect_source
+     select_migration_mode
++    check_workshop_scope
+     prepare_environment
+     snapshot_system
+     check_kernel_state
+     check_rpmdb
++    check_kernel_install_dependencies
+     confirm
+     write_bootstrap_repos
++    check_target_catalogue
++    resolve_selected_kernel_plan
++    check_selected_kernel_solver
++    if [[ "$MIGRATION_MODE" == "preserve-release" ]]; then
++        remove_rhel_only_packages --plan-only
++        build_reinstall_plan
++        plan_deferred_bootchain_packages
++        check_reinstall_plan_eligibility
++        check_reinstall_plan_solvers
++        check_branding_swap_solver
++        check_deferred_bootchain_solver
++    fi
++    if (( DRY_RUN )); then
++        info "dry-run completed; no packages were changed"
++        print_dry_run_summary
++        exit 0
++    fi
+     disable_source_repos
+     remove_source_release_packages
+     remove_rhel_only_packages
+     install_oracle_release_packages
+     refresh_oracle_repos
+-    if [[ "$MIGRATION_MODE" == "preserve-release" ]]; then
+-        build_reinstall_plan
+-    fi
+-    if (( DRY_RUN )); then
+-        info "dry-run completed; no packages were changed"
+-        print_dry_run_summary
+-        exit 0
+-    fi
+     remove_amazon_only_packages
+     remove_el10_split_firmware_packages
+     if [[ "$MIGRATION_MODE" == "preserve-release" ]]; then
+@@ -3669,14 +4230,17 @@
+     if [[ "$MIGRATION_MODE" == "preserve-release" ]]; then
+         install_update_exception_packages
+     fi
+-    remove_nonrunning_runtime_kernels
++    info "retaining source runtime kernels as a precaution; they are not a guaranteed bootable fallback"
+     install_selected_kernel
+-    remove_source_vendor_runtime_kernels
++    install_deferred_bootchain_packages
+     replace_source_vendor_packages
++    check_kernel_install_dependencies
+     reassert_selected_kernel_default
+     cleanup_bootstrap_repos
+     verify_result
+     print_summary
+ }
+ 
+-main "$@"
++if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
++    main "$@"
++fi

@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checks": 33,
+  "manifest_tutorials": 5,
+  "referenced_images": 4,
+  "local_link_targets": 5,
+  "errors": [],
+  "upstream_validator": "See livelabs-validator.txt; separate upstream Oracle markdown validation.",
+  "limits": [
+    "No OCI runtime execution.",
+    "No browser render verification.",
+    "No saved private-ingress screenshot in source recording."
+  ],
+  "mode": "how-to-guide"
+}

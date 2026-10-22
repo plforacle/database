@@ -1,3 +1,21 @@
+October 22 folder reinspection before manual practice:
+- Frozen workshop.5, launcher and upstream SHA256 values match.
+- Main lab fixes, 13 Lab 1 screenshots, manifest and QA records are present.
+- Restored the exact missing QA patch and private local evidence from the
+  preserved hold copy: 574 live-evidence files and eight reference-run files.
+- All restored file hashes match the saved source; 191 indexed evidence
+  files and the final archive plus acceptance-input hashes verified.
+- Added an ignore exception for the required QA patch; private evidence
+  remains ignored.
+- Clarified the mandatory RHEL reboot after a metadata correction and the
+  independent boot gate before any Lab 7 maintenance reboot.
+- Local workshop checker: 2,055 checks, zero failures. Whitespace checks pass.
+- Located and ran the LiveLabs Markdown validator: all eleven active workshop
+  inputs passed with zero errors (nine tutorials, launch page and manifest).
+  Used the installed Python interpreter through a shell-local python3 function
+  because the WindowsApps python3 alias could not execute. No system changes.
+- No migration/launcher changes, VM/OCI access, commit, push or publication.
+
 Workshop: Migrate Red Hat Enterprise Linux to Oracle Linux on OCI
 WMS ID: 12229
 Updated: 2026-10-22

@@ -1,0 +1,33 @@
+Scanning directory: mysql-ha-part1-vcn
+
+================================================
+LiveLabs Markdown Formatting Validator
+================================================
+
+Checking: mysql-ha-part1-vcn/configure-mysql-access/configure-mysql-access.md
+PASS: mysql-ha-part1-vcn/configure-mysql-access/configure-mysql-access.md passed all required checks
+
+Checking: mysql-ha-part1-vcn/create-vcn/create-vcn.md
+PASS: mysql-ha-part1-vcn/create-vcn/create-vcn.md passed all required checks
+
+Checking: mysql-ha-part1-vcn/introduction/introduction.md
+PASS: mysql-ha-part1-vcn/introduction/introduction.md passed all required checks
+
+Checking: mysql-ha-part1-vcn/need-help/need-help.md
+PASS: mysql-ha-part1-vcn/need-help/need-help.md passed all required checks
+
+Checking: mysql-ha-part1-vcn/verify-and-cleanup/verify-and-cleanup.md
+PASS: mysql-ha-part1-vcn/verify-and-cleanup/verify-and-cleanup.md passed all required checks
+
+Checking: mysql-ha-part1-vcn/workshops/tenancy/index.html
+PASS: mysql-ha-part1-vcn/workshops/tenancy/index.html passed all required checks
+
+Checking: mysql-ha-part1-vcn/workshops/tenancy/manifest.json
+PASS: mysql-ha-part1-vcn/workshops/tenancy/manifest.json passed all required checks
+
+================================================
+Summary
+================================================
+Errors: 0
+
+Validation PASSED

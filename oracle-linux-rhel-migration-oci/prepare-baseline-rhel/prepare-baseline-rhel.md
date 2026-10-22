@@ -161,7 +161,7 @@ Before beginning this lab, confirm that you have:
     </copy>
     ```
 
-    If the source is already updated and running its newest installed kernel, skip the update and reboot. The GRUB checks still apply. A 64 GB volume does not guarantee sufficient free space.
+    If the source is already updated and running its newest installed kernel, you can skip the update. Skip the reboot only if no metadata correction was performed. After any approved metadata correction, complete Step 6's source boot gate and RHEL reboot even when no new kernel was installed. The GRUB checks still apply. A 64 GB volume does not guarantee sufficient free space.
 
 5. If updates are needed, update the source system:
 
@@ -169,7 +169,7 @@ Before beginning this lab, confirm that you have:
     <copy>sudo dnf update -y</copy>
     ```
 
-6. If the update installed a new kernel, verify its boot files and repeat the GRUB checks before rebooting:
+6. If the update installed a new kernel or an approved metadata correction was performed, verify the source boot files and repeat the GRUB checks before rebooting:
 
     ```bash
     <copy>

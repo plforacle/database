@@ -1,0 +1,36 @@
+{
+    "workshoptitle": "MySQL HA Part 1: Prepare the OCI Network",
+    "help": "livelabs-help-db_us@oracle.com",
+    "tutorials": [
+        {
+            "title": "Introduction",
+            "description": "Scope, prerequisites, address plan, and source adaptations.",
+            "type": "livelabs",
+            "filename": "../../introduction/introduction.md"
+        },
+        {
+            "title": "Lab 1: Create the VCN",
+            "description": "Create the VCN and two regional subnets.",
+            "type": "livelabs",
+            "filename": "../../create-vcn/create-vcn.md"
+        },
+        {
+            "title": "Lab 2: Configure MySQL Access",
+            "description": "Prepare private subnet access for a future managed MySQL system.",
+            "type": "livelabs",
+            "filename": "../../configure-mysql-access/configure-mysql-access.md"
+        },
+        {
+            "title": "Lab 3: Verify and Clean Up",
+            "description": "Inspect resources, record identifiers, and clean up when finished.",
+            "type": "livelabs",
+            "filename": "../../verify-and-cleanup/verify-and-cleanup.md"
+        },
+        {
+            "title": "Need Help?",
+            "description": "Collect error details and find documentation.",
+            "type": "livelabs",
+            "filename": "../../need-help/need-help.md"
+        }
+    ]
+}

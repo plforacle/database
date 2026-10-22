@@ -2,6 +2,16 @@
 
 Updated October 22, 2026. This record supersedes earlier proposed next actions. The assignment remains migration of the OCI-provided RHEL image to Oracle Linux. The successful imported-image workshop supplies a comparison, not replacement acceptance for that assignment.
 
+## Folder inspection before manual practice
+
+A local reinspection confirmed the tested workshop.5 candidate and launcher still match their recorded SHA256 values. All required main-lab fixes, the 13 Lab 1 screenshots and naming repair, manifests, validation scripts, tests and sanitized run reports are present.
+
+The required `qa/migration-safety.patch` and ignored private evidence were absent from this checkout. Their saved local hold copy was found and preserved. The exact patch, 574 live-evidence files and eight reference-run files were copied back without changing the saved source. Every copied file matched its saved-source hash; the five latest source-4 indexes verified 191 evidence files, and the final 6,065,474-byte archive and all hash-bound acceptance inputs verified. The folder's ignore rules now allow the required patch while keeping private evidence ignored.
+
+Two instruction gaps were corrected for manual practice: Lab 2 now explicitly requires its boot gate and a RHEL reboot after an approved metadata correction even without a new kernel, and Lab 7 requires independent boot acceptance and the reviewed post-Ksplice wrapper handling before a recommended maintenance reboot. No migration or launcher code changed.
+
+Fresh local workshop checks passed 2,055 checks with zero failures, and scoped whitespace checks passed. The locally available LiveLabs Markdown validator also passed all eleven active inputs: the introduction, eight labs, launch page and tenancy manifest. QA reports and private evidence are outside the published-lab formatting scope. No VM, OCI, commit, push or publication action occurred during this inspection. The recorded Lab 7 stop and unresolved Policy Advisor outcome remain in effect.
+
 ## Stopped at Lab 7 by operator request
 
 The operator reports that Policy Advisor setup is stuck and explicitly requested stopping at Lab 7. Setup completion is unconfirmed; some IAM changes may have been applied. Do not retry Setup, enable plugins, resume registration, run further guest commands, or investigate the hang without a new instruction. No cancellation or rollback of the Console operation was attempted. The last confirmed plugin state is not enabled. Source-4 remains running with the previously verified Oracle Linux, maintenance and Ksplice results. Earlier Lab 8 checks were preliminary guest validation before registration; the full lab and cleanup are not complete. The next interaction is a summary and any later operator-directed resumption.
