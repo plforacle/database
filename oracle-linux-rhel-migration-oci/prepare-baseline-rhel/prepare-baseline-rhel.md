@@ -36,24 +36,24 @@ Before beginning this lab, confirm that you have:
 1. From your local terminal, connect using the default RHEL image user. If your SSH agent or default SSH key is configured, run:
 
     ```bash
-    <copy>ssh cloud-user@<public-ip></copy>
+    <copy>ssh opc@<public-ip></copy>
     ```
 
     If you must identify a specific private key, run:
 
     ```bash
-    <copy>ssh -i "<private-key-path>" cloud-user@<public-ip></copy>
+    <copy>ssh -i "<private-key-path>" opc@<public-ip></copy>
     ```
 
     Replace `<private-key-path>` with the actual path to the private key. Do not enter the placeholder literally.
 
-    If `cloud-user` is denied, use `opc` with the same key. OCI-targeted images can use `opc` as their SSH user:
+    The tested OCI-provided image uses `opc`. If your selected image instead specifies `cloud-user`, use that account with the same key:
 
     ```bash
-    <copy>ssh opc@<public-ip></copy>
+    <copy>ssh cloud-user@<public-ip></copy>
     ```
 
-    If needed, add `-i "<private-key-path>"` to the `opc` command. Use the account that works for the remaining lab steps. The steps that write to your home directory work with either account.
+    If needed, add `-i "<private-key-path>"` to the `cloud-user` command. Use the verified account for the remaining lab steps. The steps that write to your home directory work with either account.
 
 2. Accept the host key only after confirming that the IP address matches your OCI instance.
 
@@ -105,7 +105,52 @@ Before beginning this lab, confirm that you have:
 
     If access fails, check DNS, outbound connectivity, and the image RHUI configuration. Resolve repository access before continuing.
 
-3. Check source disk space and kernel state:
+3. Capture read-only GRUB probes before source updates. Keep this terminal open through the source boot checks:
+
+    ```bash
+    <copy>
+    mkdir -p "$HOME/ol-migration-evidence"
+    PROBE_DIR=$(mktemp -d "$HOME/ol-migration-evidence/source-grub.XXXXXXXX")
+    sudo bash -c '
+    status=0
+    for path in / /boot; do
+      for target in device drive fs fs_uuid abstraction; do
+        printf "\n%s %s\n" "$path" "$target"
+        grub2-probe --target="$target" "$path" || status=1
+      done
+      findmnt -n -o SOURCE,FSTYPE,UUID --target "$path" || status=1
+    done
+    if root_device=$(grub2-probe --target=device /); then
+      grub2-probe --device "$root_device" --target=fs || status=1
+    else
+      status=1
+    fi
+    exit "$status"
+    ' > "$PROBE_DIR/stdout.txt" 2> "$PROBE_DIR/stderr.txt"
+    PROBE_STATUS=$?
+    printf '%s\n' "$PROBE_STATUS" > "$PROBE_DIR/status.txt"
+    cat "$PROBE_DIR/stdout.txt" "$PROBE_DIR/stderr.txt"
+    printf 'Source GRUB probe status: %s; evidence: %s\n' "$PROBE_STATUS" "$PROBE_DIR"
+    </copy>
+    ```
+
+    Require status `0`, no GRUB errors, and filesystem types and UUIDs that agree with `findmnt`. A running VM can still have a source GRUB lookup failure. Do not reboot or begin conversion with an unresolved failure, even if DNF or a kernel-file check succeeds.
+
+    **Known image-specific failure:** The tested OCI image had valid LVM metadata that native LVM tools could read, but its brace formatting caused the installed GRUB parser to skip `rootlv`. The exact source-4 case had one complete PV at `/dev/sda4`, VG `rootvg`, two known ordinary linear LVs, healthy metadata, and no historical LVs or pending LVM operations. A missing `lvmid` error alone does not establish this diagnosis. Have the instructor compare the captured evidence with the [correction plan and prerequisites](../qa/metadata-format-correction-plan.md).
+
+    Before any metadata write, create and verify a **Full, Available backup of this instance's currently attached boot volume**. Record its identifiers, creation time and attachment. This protects the correction and is separate from Lab 3's later migration-ready backup. Capture unrestricted and device-restricted LVM reports, metadata, headers, PV/VG/LV IDs and sizes, extent mappings, active device-mapper tables, mounted filesystem UUIDs, package inventory, kernel selections, and protected boot-file and workload checksums. The unrestricted report must prove that `/dev/sda4` is the complete PV set; `--devices` hides omitted PVs.
+
+    Only after the exact topology and diagnosis are confirmed, the backup is verified, and the correction is approved, the reviewed source-4 command is:
+
+    ```bash
+    sudo vgck --updatemetadata --devices /dev/sda4 rootvg
+    ```
+
+    This is a conditional, one-time correction, not a command for every LVM source. It writes active VG metadata through LVM's own serializer. Do not apply it to another topology or an unexplained GRUB failure. Do not use force options, locking overrides, manual metadata edits, or `vgcfgrestore` on the active root. If it fails, stop and preserve the evidence without speculative retries.
+
+    Afterward, require unchanged storage IDs, sizes, mappings, mounted filesystems, protected-file hashes, packages and kernel selections; healthy LVM metadata; and successful direct root, `/boot`, home, and nested root GRUB probes. Metadata formatting, sequence number, checksums and descriptive fields may change. Source-4 passed these comparisons, including all 327 protected-file hashes; see its [correction acceptance](../qa/source4-correction-20261022.md). Preserve both before and after records. Complete the source boot gate and RHEL reboot below before taking the final migration-ready baseline.
+
+4. Check source disk space and kernel state:
 
     ```bash
     <copy>
@@ -116,15 +161,42 @@ Before beginning this lab, confirm that you have:
     </copy>
     ```
 
-    If the source is already updated and running its newest installed kernel, skip the update and reboot in Steps 4 and 5. A 64 GB volume does not guarantee sufficient free space.
+    If the source is already updated and running its newest installed kernel, skip the update and reboot. The GRUB checks still apply. A 64 GB volume does not guarantee sufficient free space.
 
-4. If updates are needed, update the source system:
+5. If updates are needed, update the source system:
 
     ```bash
     <copy>sudo dnf update -y</copy>
     ```
 
-5. If the update installed a new kernel, reboot so it is running:
+6. If the update installed a new kernel, verify its boot files and repeat the GRUB checks before rebooting:
+
+    ```bash
+    <copy>
+    sudo bash -c '
+    set -euo pipefail
+    version=$(rpm -q kernel-core --qf "%{VERSION}-%{RELEASE}.%{ARCH}\n" | sort -V | tail -1)
+    image="/boot/vmlinuz-$version"
+    initramfs="/boot/initramfs-$version.img"
+    test -s "$image"
+    test -s "$initramfs"
+    test -s "/lib/modules/$version/modules.dep"
+    lsinitrd "$initramfs" >/dev/null
+    grubby --info "$image"
+    test "$(grubby --default-kernel)" = "$image"
+    for path in / /boot; do
+      for target in device drive fs fs_uuid abstraction; do
+        grub2-probe --target="$target" "$path"
+      done
+    done
+    root_device=$(grub2-probe --target=device /)
+    grub2-probe --device "$root_device" --target=fs
+    echo SOURCE_BOOT_FILES_PASS
+    '
+    </copy>
+    ```
+
+    Require exit status `0`, `SOURCE_BOOT_FILES_PASS`, no GRUB errors, and UUIDs matching the mounted root and boot filesystems. Save the output with the source evidence. Stop if any check fails. The controlled source-4 update installed RHEL `5.14.0-687.59.1.el9_8.x86_64`; its kernel files were present before the separate metadata correction resolved the existing GRUB error. DNF success alone did not permit reboot. Reboot only after the complete gate passes:
 
     ```bash
     <copy>sudo reboot</copy>
@@ -132,7 +204,7 @@ Before beginning this lab, confirm that you have:
 
     The SSH session closes when the VM restarts.
 
-6. Wait for the instance to return to the Running state, then reconnect:
+7. Wait for the instance to return to the Running state, then reconnect:
 
     ```bash
     <copy>ssh <ssh-user>@<public-ip></copy>
@@ -140,7 +212,7 @@ Before beginning this lab, confirm that you have:
 
     Replace `<ssh-user>` with the account you used in Task 1, either `cloud-user` or `opc`.
 
-7. Verify the running kernel and repository access:
+8. Verify the running kernel and repository access:
 
     ```bash
     <copy>uname -r</copy>
@@ -158,9 +230,16 @@ Before beginning this lab, confirm that you have:
 
     ```bash
     <copy>
-    sudo dnf install -y httpd firewalld curl policycoreutils
+    sudo dnf install -y httpd firewalld curl policycoreutils python3 libattr dracut kmod coreutils grubby
+    sudo rpm -V libattr
+    rpm -qf /usr/lib/dracut/dracut-install
+    python3 -c 'import ctypes; ctypes.CDLL("libattr.so.1"); print("libattr load: PASS")'
+    dracut --list-modules
+    depmod --version
     </copy>
     ```
+
+    Require every command to succeed. RHEL can supply `dracut-install` in the `dracut` package; do not assume a separate `dracut-core` package exists. The candidate resolves and verifies the helper's actual RPM owner. Stop if the loader cannot open `libattr.so.1`, a library verification fails, or a tool is unavailable. Repair package integrity through the source RHUI repositories and repeat these checks on the fresh VM before migration. Do not create manual library symlinks or bypass dependencies with `--nodeps`. The migration checks these dependencies again because package conversion can change them.
 
 2. Create the static application page:
 
@@ -219,11 +298,11 @@ Before beginning this lab, confirm that you have:
 
     This final test confirms that the webpage is reachable through the OCI network, security list, operating-system firewall, and Apache service.
 
-    >**Note**: Wait about 30 seconds for the security rule to take effect, then open http://<public-ip>/. If the page does not load, refresh the browser and confirm that the TCP port 80 ingress rule is attached to the instance’s subnet.
+    > **Note:** Wait about 30 seconds for the security rule to take effect, then open `http://<public-ip>/`. If the page does not load, refresh the browser and confirm that the TCP port 80 ingress rule is attached to the instance's subnet.
 
 ## Task 4: Record the RHEL system before migration
 
-In this task, you record important information about the RHEL system and its Apache workload before migration. You will compare these results with the Oracle Linux system after migration to confirm that the operating system changed and the workload still functions correctly.
+In this task, you record the final prepared RHEL system and its Apache workload after source updates, any approved correction, and the required RHEL reboot have passed. Recapture an earlier baseline if it predates that preparation. You will compare these results with the Oracle Linux system after migration to confirm that the operating system changed and the workload still functions correctly.
 
 1. Create an evidence directory:
 

@@ -2,7 +2,9 @@
 
 ## Introduction
 
-A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and remove every workshop resource. The final validation gate is a checklist that must pass before you declare the migration successful.
+A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and remove only the resources approved for cleanup. The final validation gate is a checklist that must pass before you declare the migration successful.
+
+**Preserve-list requirement:** Keep the original failed migration instance and its boot volume. Record their OCIDs and exclude them from every cleanup action. Keep the existing network and compartment while either preserved resource or another instance depends on them. A repeated lab name is not sufficient to identify a deletion target.
 
 ### Objectives
 
@@ -151,10 +153,73 @@ Estimated Lab Time: 35 minutes
     <copy>
     . /etc/os-release
     test "$ID" = ol
-    test "${VERSION_ID%%.*}" = 9
+    test "$VERSION_ID" = 9.8
     rpm -qf "/boot/vmlinuz-$(uname -r)" --qf '%{VENDOR}\n' | grep Oracle
+    test "$(sudo grubby --default-kernel)" = "/boot/vmlinuz-$(uname -r)"
     </copy>
     ```
+
+    Repeat Lab 4, Task 3's independent boot-artifact, storage and network inspection against the current Oracle RHCK. Save it in a new final-review directory without overwriting the migration or maintenance records. Require a nonempty kernel image and matching initramfs, module tree and dependency file; a readable initramfs; an Oracle-owned default kernel matching the running RHCK; and a matching GRUB/BLS kernel and initrd entry. Direct root and `/boot` GRUB probes must agree with mounted filesystem UUIDs. The root device, LVM identities and mappings must still match the accepted source. Verify the observed root-storage, LVM, filesystem and NIC dependencies and tooling inside the target initramfs as in Lab 4. Preserve the accepted storage and network arguments and the separately reviewed Oracle crash-reservation default. An unexplained difference remains a stop condition. Retained source kernels are deliberate exceptions; they do not replace an actual Oracle RHCK boot.
+
+    **Post-Ksplice verification:** The frozen workshop.5 candidate passed its boot checks before Ksplice installation. After Lab 6, do not assume the same executable layout. In the October 22 run, Oracle Uptrack `1.2.80` deliberately replaced the `depmod` and `modprobe` links with package-owned Bash wrappers. The candidate's repeated `--verify-boot-only` returned `1` because it attempted `ldd` on the `depmod` script as though it were an ELF executable. Preserve that original STOP result. It is not a candidate pass, and it does not waive the independent final boot checks above.
+
+    If, and only if, the failure is this exact Uptrack wrapper case, have the instructor review the installed package provenance and link chain with these non-changing commands:
+
+    ```bash
+    <copy>
+    rpm -q uptrack kmod
+    rpm -qf /sbin/depmod.ksplice /sbin/ksplice-depmod /sbin/modprobe.ksplice \
+      /usr/bin/kmod /usr/bin/bash /usr/bin/python3 \
+      --qf '%{NAME} %{VERSION}-%{RELEASE} %{VENDOR}\n'
+    sudo rpm -V --noconfig uptrack
+    sudo rpm -V bash python3 python3-libs libattr libacl coreutils
+    DRACUT_OWNER=$(rpm -qf /usr/lib/dracut/dracut-install --qf '%{NAME}')
+    sudo rpm -V "$DRACUT_OWNER"
+    sudo rpm -V kmod
+    KMOD_VERIFY_STATUS=$?
+    printf 'kmod verification status: %s\n' "$KMOD_VERIFY_STATUS"
+    readlink /usr/sbin/depmod /usr/sbin/modprobe
+    readlink -f /sbin/depmod.ksplice-orig /sbin/modprobe.ksplice-orig
+    head -n 1 /sbin/depmod.ksplice /sbin/ksplice-depmod /sbin/modprobe.ksplice
+    sudo rpm -q --scripts uptrack
+    </copy>
+    ```
+
+    Run and record each command's status; all commands above must return `0` except for the specifically reviewed `rpm -V kmod` result. Require Oracle package ownership, clean Uptrack non-configuration payload verification, and clean interpreter, library, coreutils and dracut-helper-owner verification. Do not display Ksplice credentials or configuration secrets. For the tested layout, `rpm -V kmod` returns `1` with exactly these two link-target differences and no other output:
+
+    ```text
+    ....L....    /usr/sbin/depmod
+    ....L....    /usr/sbin/modprobe
+    ```
+
+    The links must point to `/sbin/depmod.ksplice` and `/sbin/modprobe.ksplice`; both `.ksplice-orig` paths must resolve to `/usr/bin/kmod`. The verified wrappers must use the verified Bash interpreter, and the package scriptlets and payload must explain the intentional interposition. `/sbin` and `/usr/sbin` identify the same directory on this image. Unknown wrappers, an unexplained link, missing files, digest or size differences, any additional kmod difference, or a different unexplained package layout remain stop conditions.
+
+    Check the actual ELF executables, interpreters and helper dependencies, then use supported read-only functional commands:
+
+    ```bash
+    <copy>
+    (
+      set -e -o pipefail
+      for executable in /usr/bin/kmod /usr/bin/bash /usr/bin/python3 \
+        /usr/lib/dracut/dracut-install /usr/bin/cp /usr/bin/install; do
+        printf '\nELF header and dependencies: %s\n' "$executable"
+        od -An -tx1 -N4 "$executable"
+        ldd "$executable"
+      done
+      /usr/lib/dracut/dracut-install --help
+      dracut --list-modules
+      depmod --version
+      modprobe --version
+      sudo grubby --default-kernel
+    )
+    WRAPPER_RUNTIME_STATUS=$?
+    printf 'Wrapper runtime review status: %s\n' "$WRAPPER_RUNTIME_STATUS"
+    </copy>
+    ```
+
+    Require status `0`, ELF magic `7f 45 4c 46` for every listed executable, and no missing library or loader error. A script can correctly make `ldd` return `1` with `not a dynamic executable`, but that observation alone never passes dependency verification; inspect and verify its interpreter and real executable as above. Do not globally ignore `ldd` failures. `dracut --version` and `grubby --version` are not the supported functional checks used for this review.
+
+    Accept only this fully explained wrapper limitation after all other independent boot, package, security and workload checks pass. Save the original failed candidate result, command outputs and statuses, package and link evidence, and the instructor's separate decision tied to the captured evidence hashes. Do not relabel the candidate result as zero, remove Uptrack, relink commands, rerun conversion, or change the frozen candidate to obtain a pass. The October 22 source-4 run used this separate acceptance after all remaining boot checks passed; a new source or unexplained failure requires its own review.
 
 2. Validate the application and services:
 
@@ -271,17 +336,17 @@ Estimated Lab Time: 35 minutes
 
 3. In **Profiles**, delete the workshop profile recorded in Lab 7. Keep shared vendor software sources and shared IAM resources. Ask your administrator to remove only the workshop-specific policy statements and matching rules recorded in Lab 7 when they are no longer used.
 
-4. In **Compute**, terminate `ol-migrate-rhel-source`.
+4. In **Compute**, select the fresh, successfully validated rehearsal instance by its recorded OCID. Confirm that its OCID is absent from the preserve list before terminating it. Do not select the original failed instance.
 
-5. Select the option to delete the attached boot volume and confirm termination.
+5. Check the attached boot-volume OCID against the fresh run's record and the preserve list before choosing to delete it. Preserve the original failed boot volume. Confirm termination only for the approved fresh instance and disk.
 
-6. In **Block Storage**, delete the `ol-migrate-before-conversion` boot-volume backup.
+6. In **Block Storage**, delete only the backup OCID for the completed fresh run after its evidence and recovery test are accepted. Do not select a backup by name alone.
 
-7. Delete the VCN resources created by the wizard and any service gateway and route created in Lab 7. Keep networking resources that are shared with other instances.
+7. Keep the reused VCN, subnets, gateways, security rules, and routes while the preserved failed instance or another VM uses them. Delete only separate resources confirmed to belong exclusively to the completed fresh run.
 
-8. Delete the `ol-migrate-lab` compartment when your organization permits it.
+8. Keep the compartment containing preserved resources. Delete an empty, separate rehearsal compartment only when your organization permits it.
 
-9. Confirm that no workshop Compute instance, boot volume, backup, managed-instance registration, profile, or future update schedule remains. This direct-image path created no image bucket or custom image to delete.
+9. Reconcile the completed run's resources against the preserve list. Confirm that its approved cleanup is complete and that the original failed instance, failed boot volume, and shared network remain. This direct-image path created no image bucket or custom image to delete.
 
 ## Task 8: Final knowledge review
 

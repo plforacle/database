@@ -1,0 +1,291 @@
+Workshop: Migrate Red Hat Enterprise Linux to Oracle Linux on OCI
+WMS ID: 12229
+Updated: 2026-10-22
+Current status: qa/current-status.md
+Operator stop: Lab 7 Policy Advisor setup stuck; completion and partial IAM
+changes unconfirmed. No retry, further guest work or cleanup is authorized.
+
+October 22 controlled OCI-image source-4 rehearsal:
+- Approved metadata correction passed all storage/protected-file invariants.
+- Lab 2 corrected source reboot and final RHEL baseline passed.
+- Lab 3 exact workshop.5 dry run and operator Console backup checkpoint passed.
+- Lab 4 conversion, independent target checks, actual Oracle RHCK reboot,
+  settled system state and unchanged local/public HTTP workload passed.
+- Lab 5 package maintenance and its recommended Oracle RHCK reboot passed.
+  A missed UEKR7 xfsprogs selection was explicitly restored to BaseOS after
+  a one-package preview; the UEK repository is now disabled for RHCK.
+- Lab 6 Uptrack 1.2.80 applied both previewed enablement updates without a
+  reboot. Boot ID and application checksum stayed unchanged.
+- Lab 7 signed OCI repository bootstrap and Cloud Agent 1.64 preparation
+  passed. Console/IAM/profile/registration/package-job work remains pending.
+- Lab 8 validation checks passed before service registration. Independent
+  post-maintenance boot review passed after separately proving the known
+  Oracle Uptrack wrapper chain. The frozen verifier's original non-ELF
+  depmod STOP is preserved; its code and checksums were not changed.
+- Complete evidence copied locally and checksum-verified. No cleanup.
+- Current local workshop checks: 2,053 checks, zero failures.
+- Scoped git diff --check passed. Lab 1 retains its 13 screenshots and fix.
+- Checker now excludes ignored private live-evidence transport files from
+  deliverable syntax/line-ending checks. Historical evidence was preserved.
+- Previous 150 migration and 43 launcher tests were not rerun for these
+  documentation/checker changes. The exact candidate was tested live instead.
+- Official LiveLabs validator remains unavailable. These are local checks.
+- No failed/reference VM access, commit, push or publication.
+- Detailed records: source4-run-20261022.md, source4-maintenance-20261022.md,
+  source4-final-validation-20261022.md and current-status.md.
+
+Historical records below preserve earlier failures and superseded next actions.
+The current October 22 status above takes precedence.
+
+Workshop: Migrate Red Hat Enterprise Linux to Oracle Linux on OCI
+WMS ID: 12229
+Updated: 2026-10-21
+Mode: local evidence review and procedure-status correction; no live rehearsal
+OCI-image qualification: workshop.2 and workshop.4 FAILED; no reboot; NOT qualified
+Imported-image reference: migration and Oracle-kernel reboot independently verified
+Current next work: qa/current-status.md; source-4 proposal withdrawn
+
+October 21 focused correction preparation, not execution:
+- Static disassembly of installed Red Hat grub2-probe confirms the exact
+  brace-search, three-byte advance, and LV-list closing-brace control flow.
+- Executable SHA2568cb96b2218a4310f1c65eed4f98f290a121ce91511651148089abaf4840b383b;
+  grub2-tools-minimal2.06-126.el9_8 RPM verification passed.
+- Installed vgck help supports --updatemetadata and --devices. Normal vgck
+  with the single source PV returned0 without warnings.
+- VG rootvg has one PV and two linear LVs, no tags, seqno3. Active root/home
+  device-mapper tables are captured locally for post-correction comparison.
+- Proposed one-transaction metadata rewrite and acceptance checks are in
+  metadata-format-correction-plan.md. It has NOT been applied or approved.
+- A current Full, Available source-4 boot-volume backup and explicit approval
+  are required before the metadata write. No migration or reboot is included.
+- Local checker after plan/report updates: 1,764 checks, zero failures.
+  git diff --check passed. Migration script remains unchanged.
+
+October 21 existing source-4 read-only inspection:
+- Operator supplied an already available unconverted RHEL source-4.
+- RHEL 9.8 running/default kernel687.45.1, no Oracle release RPM, system running.
+- The exact source-3 root LVM GRUB error reproduces before conversion. Its VG/LV
+  identifiers match the current root volume. All separate /boot probes pass.
+- The home LV probe passes. Verbose GRUB finds home but omits root.
+- Source LVM metadata formatting matches a reviewed GRUB cursor limitation;
+  a local string-only reproduction supports this lead. It is not execution of
+  the complete installed parser or a verified metadata repair.
+- Committed metadata does not wrap; both LVs are ordinary linear volumes.
+- Read-only hook-condition reproduction emits the diagnostic with status0.
+  No kernel-install hook was executed and no metadata was rewritten.
+- Package inventory, protected files, and boot ID matched before/after checks.
+- No conversion, package changes, configuration changes, or reboot occurred.
+  Failed instances were not accessed.
+- Sanitized findings: source4-readonly-20261021.md. Raw evidence and SHA256 index
+  remain ignored under qa/live-evidence/source4-readonly-20261021/.
+- Post-update local checker: 1,763 checks, zero failures. git diff --check passed.
+- Frozen workshop.5 migration script checksum is unchanged. No live acceptance.
+
+October 21 local review and documentation validation:
+- Corrected the Lab 4 hold and QA status to distinguish verified imported-image
+  migration/reboot from the unresolved OCI platform-image procedure.
+- Removed the active source-4 creation instructions; no new VM is requested.
+- Recorded the existing workshop.5 checksum and prior-session 150+43 test results.
+  Migration and launcher tests were not rerun for these documentation changes.
+- python qa/check-workshop.py: 1,760 local checks, zero failures.
+- git diff --check passed. Candidate script hash remains unchanged.
+- The official LiveLabs validator remains unavailable; this is local QA only.
+- No SSH or VM commands were performed during this local follow-up review.
+- Earlier October 21 SSH evidence collection accessed only the successful VM.
+  Its Oracle kernel, HTTP response, and saved workload checksum were verified.
+- Exact transaction-time Red Hat hook and matching VG/LV identity remain missing.
+  Read-only checks on an already available clean OCI RHEL source would supply
+  discriminating evidence. No new VM, conversion, or reboot is prescribed.
+
+Tested failed candidate: 0.2.1-workshop.2
+Tested candidate SHA-256:
+477ca307d9c1709fef420d7594a8be7870d82acf26b70c4aa999f3fe19345289
+Tested launcher SHA-256:
+ff545a3a92c10031c53decc1245bcc7489cf55e8a7176cd1eb5bda39921648e1
+Upstream base commit:
+82947c960535cfbb632977c70b0fea67f8e0de7a
+Upstream base SHA-256:
+5435b59e2f0e672111fd1545b2b428cabe473e7c116a353716c2f7de869d0a42
+
+Actual tested failed candidate: 0.2.1-workshop.4
+Tested candidate SHA-256:
+99fff3877ac697e38d28fda047171402c2231709114b49ae6e3056a5775e83a8
+Historical local verification: PASSED before the failed workshop.4 live conversion
+- 135 migration safety tests passed against the frozen candidate: 134 in the
+  full run and one targeted rerun after a Windows-only fixture correction.
+- That repository-generation fixture mocks only directory creation after
+  Python creates the directory; actual repository text generation is tested.
+- 43 launcher/checkpoint tests passed. Total: 178 regression tests passed.
+- 1,618 local structure/reference/image/checksum/patch/syntax checks passed
+  after the restored-source inspection helper and recovery record updates.
+- git diff --check passed; all 13 Lab 1 screenshots remain intact.
+- The official LiveLabs validator remains unavailable, as recorded below.
+- Use coherent BaseOS latest with rolling AppStream.
+- Require highest unfiltered Oracle release version 9.8 before source changes.
+- Reject libattr and libacl downgrades; verify installed library payloads and ABI.
+- Defer installed shim/GRUB until after explicit Oracle kernel artifact checks;
+  exclude runtime kernels and deferred bootloaders from earlier replacements.
+- Verify installed Oracle EFI binaries and reassert the selected default,
+  then verify final boot state after bootloader work.
+- Public metadata and exact RPM-header evidence: repository-review-20261020.md.
+- Next clean-source and Console recovery plan: next-rehearsal.md.
+- Workshop.4 live dry run on source-3 passed on October 20, 2026, from
+  20:06:41 to 20:07:37 UTC. Script exit status 0; wrapper status passed.
+- Package inventory, OS identity, source repository files, all boot-file
+  hashes, running/default kernel and boot ID matched before and after.
+- RPM database, both library payloads/loaders, Apache and baseline checksum
+  passed afterward. No conversion, package installation or reboot occurred.
+- Selected Oracle release 9:9.8-1.0.7.el9 and RHCK
+  5.14.0-687.58.1.el9_8; no nearest-lower standard replacements were planned.
+- Raw dry-run evidence: ignored qa/live-evidence/source-3-20261020/
+  dryrun-20261020T200642Z.tar.gz, 83 members, 1,149,071 bytes, SHA-256:
+  e0197b48c0c888044d09189e41466ea19c821b02dee101bae90ebf027b3c921e
+- Operator explicitly confirmed the saved backup-to-new-volume and
+  new-volume-to-source-3 relationships in Console. Combined with guest checks,
+  recovery and readiness are accepted; no authenticated API lookup was performed.
+- Backup preparation succeeded at 2026-10-20T20:16:53.951586Z: source state still
+  matched the dry run, baseline checksum passed, no package operation was active,
+  sync/stop Apache/sync completed, and Apache was confirmed inactive. Temporary
+  webpage unavailability is expected. No backup was created by this preparation.
+- Source-3 Full backup was operator-confirmed Available, created at 20:22:11 UTC
+  on 2026-10-20. Apache restart, active/enabled state, marker and checksum passed.
+- Recorder-only launcher exited 0 at 20:26:21 UTC; saved manual checkpoint:
+  /home/opc/ol-migration-workshop-4-20261020T2005Z/console-checkpoint-source-3.json
+  This was manual Console evidence validated against guest identity, not an
+  authenticated backup-service lookup.
+- Source boot baseline captured/readable: BIOS, VirtIO SCSI root with LVM/XFS,
+  NIC virtio_net. Preserve actual driver chains and all source boot arguments.
+- Controlled workshop.4 conversion started 2026-10-20T20:28:43Z under unit
+  ol-source3-conversion-20261020t2028, using the frozen candidate and new checkpoint.
+- Launcher log:
+  /home/opc/ol-migration-evidence/source3-conversion/20261020T202843Z-eabb5059/migration.log
+- Actual run ended at 2026-10-20T20:34:42Z, conversion/final status 1. No reboot.
+- All exact/higher batches and both library checks passed. Four Oracle RHCK
+  687.58.1 packages installed; initial image/initramfs/modules/entry/default
+  checks passed before deferred shim/GRUB work.
+- Kernel transaction log line 40 contained a grub2-probe LVM disk-not-found
+  error missed by the scanner. Its effect remains unresolved; artifact presence
+  does not establish bootability.
+- Deferred bootloader install/reinstall completed; final guard failed seven
+  shim-file mtime-only rows on vfat. Read-only follow-up found exact size/SHA256
+  matches and every mtime one second below RPM metadata. No repair was applied.
+- This timestamp evidence does not resolve the earlier GRUB error. Full final
+  launcher boot/package stages were not reached; no migration acceptance.
+- Actual-run archive: ignored qa/live-evidence/source-3-20261020/
+  actual-conversion-20261020T202843Z.tar.gz, 167 members, 1,323,234 bytes.
+  SHA-256: c5c6adcce21ba566b3c09f59d6ce847fce6ccc124e9a765820ecf18950c723ac
+- Sanitized record: source3-run-20261020.md. Running kernel remains RHEL
+  687.45.1; default is Oracle 687.58.1. Apache/checksum passed after failure.
+
+Frozen local candidate: 0.2.1-workshop.5
+SHA-256: bad3bf7487ab2a4b7650e91c56af81ae332e26381a3941b275a33029f05d9df0
+- Prior-session results: 150 migration safety and 43 launcher tests passed.
+  Those tests were not rerun for the October 21 documentation review.
+- Narrow FAT timestamp handling and missed GRUB-error detection are present.
+  The underlying GRUB issue and OCI-image bootability remain unresolved.
+- No live workshop.5 pass or completed migration fix is claimed.
+
+Historical safety-rejection candidate: 0.2.1-workshop.3
+Historical candidate SHA-256:
+360864fcc526dd164b68bda401289a77fae90fb637eb050323fc7654dee74a10
+Historical local verification: PASSED, safety rejection only
+- 99 migration safety regression tests passed against the frozen checksum.
+- 43 launcher/checkpoint tests passed. Total: 142 regression tests passed.
+- The exact observed libattr row stopped the real main flow with DRY_RUN=0,
+  before source-mutation markers or any DNF invocation in the mocked harness.
+- 1,603 local structure/reference/image/checksum/patch/syntax checks passed.
+- git diff --check passed. The official LiveLabs validator remains unavailable.
+- Tested workshop.2 script and launcher bytes were copied read-only from the
+  guest into ignored qa/live-evidence/tested-workshop.2; hashes match the run.
+Workshop.3 rejects the observed libattr downgrade before operating-system
+mutation. Kernel protection/output scanning covers exact, nearest,
+update-exception and fallback replacement phases, not every transaction.
+Release installation and raw distribution synchronization are unchanged.
+Safe rejection does not solve the library transition or establish a tested
+migration path for this image.
+
+Historical local verification, before the failed workshop.2 conversion:
+- 85 mocked Bash kernel/runtime/control-flow regression tests passed.
+- 43 launcher checkpoint, integrity, logging and sequencing tests passed.
+- Total 128 historical local tests. Do not apply that count to workshop.4.
+- Structure/reference/image/checksum/patch/syntax checks passed on that
+  earlier bundle. The updated bundle and documents require a new check.
+- The official validator wrapper reported its external validate_workshop.py
+  dependency missing. The local checker is not the official LiveLabs validator.
+- Lab 1 has 13 screenshots; preserve them and the repaired image reference.
+- No new screenshots or FreeSQL content are required for this correction.
+
+Historical source and checkpoint results on ol-migrate-rhel-source-2:
+- SSH account opc; guest IMDS ID matched the operator-provided fresh instance.
+- Source RHEL 9.8 x86_64, kernel 5.14.0-687.45.1.el9_8.x86_64.
+- Before conversion: RHUI, RPM/DNF, libattr loading, source boot files,
+  dracut helper verification, Apache, local/public HTTP and baseline passed.
+- Baseline saved under ~/ol-migration-evidence/before and rhel-before.tar.gz.
+- Initial dry-run state: /var/lib/migrate-to-oracle-linux/20261020T114321Z.
+- Package exceptions and source-state DNF solver plans were reviewed.
+- Missing-backup launcher guard blocked conversion on the fresh guest.
+- Operator confirmed Full, Available, current source-volume attachment and
+  backup creation time 2026-10-20T14:28:46Z. No backup API query was performed.
+- Console recorder saved /home/opc/ol-migration/console-checkpoint.json,
+  matched live guest ID, and exited 0 without conversion or reboot.
+- Cloud Shell, authenticated OCI CLI and fabricated CLI JSON were not needed.
+- Lab 3, Task 6 passed for the controlled workshop.2 attempt. That historical
+  readiness pass is superseded by the failed conversion for qualification.
+- Workshop.2 final complete dry run exited 0. Source package inventory,
+  OS identity and source repository hashes were unchanged during the dry run.
+- Final dry-run state: /var/lib/migrate-to-oracle-linux/20261020T155005Z.
+- Final dry-run log: /var/log/migrate-to-oracle-linux/20261020T155005Z.log.
+- Readable output: ~/ol-migration-evidence/readiness-v2-final.log.
+
+Actual controlled conversion, workshop.2:
+- Started 2026-10-20T15:56:18Z on ol-migrate-rhel-source-2.
+- Nearest-lower transaction added the Oracle kernel as a dependency while
+  downgrading libattr 2.6.0 to 2.5.1.
+- During that transaction libattr.so.1 pointed to the missing .2600 target
+  while .2501 existed. Kernel scriptlet tools reported loader failures and
+  target initramfs creation failed.
+- At transaction completion the link healed automatically. A later runtime
+  probe passed. This did not repair or establish success of earlier scriptlets.
+- The later explicit Oracle kernel installation was a no-op because RPM
+  already considered the target package installed.
+- Target boot-artifact check rejected the missing Oracle kernel image.
+- Conversion exit status: 1. FINAL STATUS: 1. No reboot was performed.
+- Launcher evidence:
+  /home/opc/ol-migration-evidence/conversion/20261020T155618Z-7fc88b04/migration.log
+- Candidate state: /var/lib/migrate-to-oracle-linux/20261020T155618Z.
+- Oracle /boot/vmlinuz-5.14.0-687.5.3.el9_8.x86_64 and matching initramfs absent.
+- Source vmlinuz/initramfs remain; GRUB default remains the source RHEL kernel.
+  These observations do not prove a bootable fallback or a recoverable guest.
+- Sanitized summary: fresh-run-20261020.md. Raw local evidence remains ignored
+  under qa/live-evidence/fresh-run-20261020T155618Z.tar.gz, 295 archive members.
+- Archive SHA-256:
+  9fe6c85a03e5084bbc54613347a776dca5cf599135590e9b5bb3ad0cf6ee2c8e
+
+Not performed or still required for the OCI-image procedure:
+- Successful package conversion and independent target boot verification.
+- Oracle RHCK reboot, SSH reconnect and post-reboot workload/security checks.
+- Restoration of source-3's new conversion backup remains untested. The
+  saved source-2 backup was recovered to source-3 and accepted as recorded above.
+- Review the unresolved GRUB cause and remaining boot-check limits. Workshop.5
+  local guard tests do not qualify a migration. No next attempt is prescribed.
+- Remaining Labs 5 through 8 end-to-end management qualification.
+
+Current position and boundaries:
+- Lab 4 was started on source-2 and failed before reboot. It is not pending start.
+- Source-2 is partially converted. Do not treat it as a clean RHEL source,
+  rerun conversion, or reboot it. Preserve its instance, disk, backup and evidence.
+- Source-3 recovery and the corrected dry run are accepted, with operator-
+  confirmed Console lineage and observed guest health. Both failed instances
+  and their disks remain preserved.
+- Source-3's new Full backup and manual checkpoint were accepted before the
+  failed workshop.4 conversion. Source-3 is now partially converted; preserve
+  all three instances/disks and both backups. Do not rerun or reboot it.
+- Do not reuse source-2's checkpoint: new source-3 has different instance and
+  boot-volume OCIDs. Do not perform a conversion from either failed guest.
+- Original failed instance and boot volume were not accessed or changed.
+- Existing network was reused; no network resource changes were made.
+- No commit, push, or publication was performed.
+
+Reproduce final local checks from the database repository root:
+python -m unittest discover -s oracle-linux-rhel-migration-oci/qa -p "test_*.py" -v
+python oracle-linux-rhel-migration-oci/qa/check-workshop.py

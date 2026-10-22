@@ -81,7 +81,22 @@ Estimated Lab Time: 25 minutes
     - `ol9_baseos_latest`
     - `ol9_appstream`
 
-3. Display a summary of the enabled repository configuration:
+3. After Task 1 confirms that RHCK is running and no `kernel-uek` packages are installed, disable the UEK repository for this RHCK workshop:
+
+    ```bash
+    <copy>
+    sudo dnf config-manager --set-disabled ol9_UEKR7
+    sudo dnf repolist --enabled
+    </copy>
+    ```
+
+    Require `ol9_baseos_latest` and `ol9_appstream`, with `ol9_UEKR7` absent from the enabled list. If UEK is installed or running, stop for instructor review before changing repositories. Do not remove or switch kernels to complete this step.
+
+    The UEK repository also supplies userspace tools. A standard upgrade can select its newer `xfsprogs` even without installing a UEK kernel. Oracle's [UEK R7 userspace package guidance](https://docs.oracle.com/en/operating-systems/uek/7/relnotes7.0/uek7.0-RelatedUserSpacePackages.html) restricts these packages to UEK R7. Keep this repository disabled while maintaining the workshop's RHCK system.
+
+    Disabling the repository does not replace packages already installed from it. If an earlier update installed UEK userspace packages, stop for an instructor-reviewed package correction before continuing.
+
+4. Display a summary of the enabled repository configuration:
 
     ```bash
     <copy>
@@ -105,11 +120,16 @@ Estimated Lab Time: 25 minutes
 
     ```bash
     <copy>
-    sudo dnf check-update
+    if sudo dnf check-update; then
+      UPDATE_CHECK_STATUS=0
+    else
+      UPDATE_CHECK_STATUS=$?
+    fi
+    printf 'Update check exit status: %s\n' "$UPDATE_CHECK_STATUS"
     </copy>
     ```
 
-    DNF lists available updates when updates exist. If the system is current, the command returns no package list.
+    Status `100` means updates are available; it is not an update failure. Status `0` means no updates are available. Stop and review any other status or repository error. These are the [documented DNF check-update return values](https://dnf.readthedocs.io/en/latest/command_ref.html#check-update-command).
 
 3. Display the update advisory summary:
 
@@ -140,17 +160,29 @@ Estimated Lab Time: 25 minutes
     </copy>
     ```
 
-2. Apply all available package updates:
+2. Preview the update transaction before applying it:
+
+    ```bash
+    <copy>
+    sudo dnf --assumeno --setopt=assumeyes=False upgrade
+    </copy>
+    ```
+
+    Require a resolved plan from the intended Oracle repositories. A resolved transaction deliberately declined with `Operation aborted.` normally returns status `1`; a dependency or repository error does not pass this review. Confirm that the plan does not install UEK, select UEK userspace packages, remove retained source kernels, or change the Oracle Linux 9.8 release. Resolve any discrepancy before continuing.
+
+3. Apply the reviewed package updates:
 
     ```bash
     <copy>
     sudo dnf upgrade -y
+    UPGRADE_STATUS=$?
+    printf 'Upgrade exit status: %s\n' "$UPGRADE_STATUS"
     </copy>
     ```
 
-    Review the transaction summary. DNF might update packages without changing the running kernel until the next reboot.
+    Require status `0` and no transaction, scriptlet or loader errors. DNF might update packages without changing the running kernel until the next reboot. If the result fails or is unknown, preserve the output and stop without rebooting or applying ad hoc repairs.
 
-3. Check the RPM database and package dependencies:
+4. Check the RPM database and package dependencies:
 
     ```bash
     <copy>
@@ -167,22 +199,71 @@ Estimated Lab Time: 25 minutes
 
     ```bash
     <copy>
-    sudo dnf needs-restarting -r
+    if sudo dnf needs-restarting -r; then
+      REBOOT_HINT_STATUS=0
+    else
+      REBOOT_HINT_STATUS=$?
+    fi
+    printf 'Reboot hint exit status: %s\n' "$REBOOT_HINT_STATUS"
     </copy>
     ```
 
+    For a successfully executed check, status `0` means no reboot is recommended and status `1` means a reboot is recommended. This is the [needs-restarting plugin's documented convention](https://dnf-plugins-core.readthedocs.io/en/latest/needs_restarting.html). A missing plugin, permission problem or other DNF error is not a valid reboot recommendation. Review the output as well as the status; stop on errors or other statuses.
+
 2. Follow the result that matches your system:
 
-    - If the command reports that no reboot is needed, continue with Task 6.
-    - If the command reports that a reboot is required, reboot the VM:
+    - For a valid status `0`, continue with Task 6.
+    - For a valid status `1`, pass the checks in Steps 3 and 4 before rebooting. Core userspace updates can recommend a reboot even when no kernel package changed.
 
-        ```bash
-        <copy>
-        sudo reboot
-        </copy>
-        ```
+3. Repeat the candidate's boot verification and source health checks before a maintenance reboot:
 
-3. If you rebooted, wait for the OCI instance to return to Running and reconnect:
+    ```bash
+    <copy>
+    (
+      set -e -o pipefail
+      cd "$HOME/ol-migration"
+      sha256sum --check SHA256SUMS
+      sudo bash ./migrate-to-oracle-linux.sh \
+        --verify-boot-only --target-version 9.8 --kernel rhck
+      sudo rpm --verifydb
+      sudo dnf check
+      sudo rpm -V libattr libacl
+      python3 -c 'import ctypes; ctypes.CDLL("libattr.so.1"); ctypes.CDLL("libacl.so.1"); print("Library load checks: PASS")'
+      DEFAULT_KERNEL=$(sudo grubby --default-kernel)
+      printf 'Default kernel: %s\n' "$DEFAULT_KERNEL"
+      sudo grubby --info "$DEFAULT_KERNEL"
+      rpm -qf "$DEFAULT_KERNEL" --qf '%{NAME} %{VERSION}-%{RELEASE}.%{ARCH} %{VENDOR}\n'
+      sudo grub2-probe --target=fs_uuid /
+      findmnt -n -o UUID --target /
+      sudo grub2-probe --target=fs_uuid /boot
+      findmnt -n -o UUID --target /boot
+      systemctl is-active httpd
+      curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
+      sha256sum --check "$HOME/ol-migration-evidence/before/application-sha256.txt"
+      printf 'LAB5_PRE_REBOOT_CHECKS_PASS\n'
+    )
+    MAINTENANCE_BOOT_STATUS=$?
+    printf 'Maintenance boot check exit status: %s\n' "$MAINTENANCE_BOOT_STATUS"
+    </copy>
+    ```
+
+    Require status `0`, the pass marker, an Oracle-owned RHCK as default, and matching GRUB and mounted UUIDs for both root and `/boot`. Require the same root device and storage/network boot arguments as the successfully booted Oracle entry captured in Lab 4. Keep the reviewed Oracle crash-reservation default when comparing with the earlier RHEL reference. A working workload or a reboot recommendation cannot override a boot-check failure.
+
+4. Review the boot files and save maintenance evidence before reboot:
+
+    Repeat Lab 4, Task 3's target initramfs and required-driver inspection if the selected kernel or its initramfs changed, including a rebuild caused by a `dracut` update. Require the observed root-storage, LVM, filesystem and NIC dependencies and tooling. Do not infer a safe image from its presence or from an unchanged kernel package alone. Resolve every boot discrepancy without rebooting.
+
+    Save the upgrade result, reboot hint, current kernel/default, boot checks and application checksum in a new maintenance evidence directory. Copy that evidence locally before reboot. Preserve the existing migration evidence and backups.
+
+5. After Steps 3 and 4 pass, perform the recommended reboot:
+
+    ```bash
+    <copy>
+    sudo reboot
+    </copy>
+    ```
+
+6. Reconnect using SSH after the reboot:
 
     ```bash
     <copy>
@@ -190,14 +271,20 @@ Estimated Lab Time: 25 minutes
     </copy>
     ```
 
-4. Display the running kernel after maintenance:
+    OCI's Running state does not establish a successful guest boot. If reconnect fails, preserve the instance and its evidence and stop this rehearsal.
+
+7. Display and verify the running kernel after maintenance:
 
     ```bash
     <copy>
     uname -r
     sudo grubby --default-kernel
+    rpm -qf "/boot/vmlinuz-$(uname -r)" --qf '%{NAME} %{VERSION}-%{RELEASE} %{VENDOR}\n'
+    test "$(sudo grubby --default-kernel)" = "/boot/vmlinuz-$(uname -r)"
     </copy>
     ```
+
+    Require the selected Oracle RHCK to be both running and default, then complete Task 6.
 
 ## Task 6: Validate the system after maintenance
 
@@ -205,11 +292,12 @@ Estimated Lab Time: 25 minutes
 
     ```bash
     <copy>
+    sudo systemctl is-system-running --wait
     systemctl --failed --no-pager
     </copy>
     ```
 
-    Investigate any failed unit before continuing.
+    Wait for normal boot completion, then require the system to report running with no failed units. An early `starting` result is incomplete; preserve it and repeat the check after startup settles. Review any failed unit before continuing.
 
 2. Verify the Apache service:
 
@@ -225,6 +313,7 @@ Estimated Lab Time: 25 minutes
     ```bash
     <copy>
     curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
+    sha256sum --check "$HOME/ol-migration-evidence/before/application-sha256.txt"
     </copy>
     ```
 
@@ -237,7 +326,18 @@ Estimated Lab Time: 25 minutes
     </copy>
     ```
 
-5. Open `http://<public-ip>/` in your browser and confirm that the workshop page still appears.
+5. Repeat the package checks after maintenance:
+
+    ```bash
+    <copy>
+    sudo rpm --verifydb
+    sudo dnf check
+    </copy>
+    ```
+
+    Require both commands to pass.
+
+6. Open `http://<public-ip>/` in your browser and confirm that the workshop page still appears.
 
 ## Task 7: Review your knowledge
 
@@ -261,9 +361,10 @@ Estimated Lab Time: 25 minutes
 
 - [Oracle Linux 9 package repositories](https://yum.oracle.com/oracle-linux-9.html)
 - [DNF command reference](https://docs.oracle.com/en/operating-systems/oracle-linux/software-management/sfw-mgmt-UseDNFCommand.html)
+- [UEK R7 userspace package restrictions](https://docs.oracle.com/en/operating-systems/uek/7/relnotes7.0/uek7.0-RelatedUserSpacePackages.html)
 - [Managing kernels and system boot](https://docs.oracle.com/en-us/iaas/oracle-linux/boot/boot-about-system-boot-kernels.htm)
 
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026

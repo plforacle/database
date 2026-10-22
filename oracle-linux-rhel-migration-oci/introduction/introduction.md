@@ -22,7 +22,7 @@ In this workshop, you will:
 - Apply Oracle Ksplice live updates to the RHCK kernel without rebooting.
 - Register the migrated instance with OS Management Hub, inspect package inventory, and manage package jobs and maintenance schedules.
 - Validate the application, packages, services, networking, SELinux, and firewall configuration.
-- Remove the OCI resources and OS Management Hub registration created for the workshop.
+- Review cleanup while preserving resources that the instructor has excluded from removal.
 
 ### Prerequisites
 
@@ -80,16 +80,24 @@ Cleanup
 ## Workshop Conventions
 
 - Resource names use the prefix `ol-migrate`.
-- Run Linux commands using the SSH account that worked in Lab 2, normally `cloud-user`, unless a step explicitly uses `sudo`.
+- Run Linux commands using the SSH account that worked in Lab 2, `opc` on the tested OCI-provided image, unless a step explicitly uses `sudo`.
 - Replace values enclosed in angle brackets, such as `<public-ip>`, with values from your environment.
 - Complete each required checkpoint before continuing to operations that modify the system.
 - A successful migration requires application and system evidence, not only a changed `/etc/os-release` file.
 
-## Source Setup Validation
+## Tested Source and Migration Path
 
 The direct launch and Apache workload were demonstrated on `rhel-oci-test` in US East (Ashburn), using image `Red-Hat-Enterprise-Linux-9.8-2026.09.15-8`, `VM.Standard.E5.Flex`, 1 OCPU, and 12 GB RAM. The selected image displayed a 64 GB boot volume. The application returned `MIGRATION_WORKLOAD_OK` without personal Red Hat subscription registration.
 
-This confirms source setup and application deployment. The pinned script dry run, RHUI-to-Oracle Linux conversion, post-migration management, and billing behavior still require validation for this image. Confirm the estimated duration with an end-to-end rehearsal.
+On October 22, 2026, the workshop.5 safety candidate completed a controlled migration of an OCI-provided RHEL 9.8 source using RHUI, an LVM/XFS root, BIOS firmware, and VirtIO SCSI storage. The source first passed its RHEL update and reboot checks. After conversion, the same VM rebooted into Oracle Linux 9.8 with Oracle RHCK `5.14.0-687.58.1.el9_8.x86_64`. SSH, the default and running kernel, package consistency, SELinux Enforcing, the HTTP firewall rule, the unchanged application checksum, and local and public HTTP checks passed. See the [controlled migration record](../qa/source4-run-20261022.md).
+
+### Scope and required preparation
+
+WMS ID: **12229**. The tested path uses the local workshop.5 candidate and its verified launcher, not an unmodified upstream download. Before conversion, the source exposed a pre-existing GRUB lookup failure caused by the format of its LVM metadata. A separately backed-up, reviewed native LVM metadata transaction resolved that specific failure without changing storage identities, mappings, or protected boot files. Lab 2 explains the narrow applicability and required checks. The prepared-source migration backup was created after the correction and successful RHEL reboot.
+
+Earlier attempts failed during kernel installation or boot verification. Their records explain the candidate's library-downgrade, kernel-artifact, bootloader-order, GRUB-error, and FAT-timestamp guards. The October 22 result establishes one controlled image-to-Oracle-Linux migration and boot test. It does not establish compatibility with every OCI RHEL image, production suitability, official support for the community migration script, or acceptance of later management labs and billing behavior. Repository contents can change; repeat every readiness and boot check on the actual source. Confirm the estimated workshop duration after a complete end-to-end rehearsal.
+
+Preserve the original failed instance and boot volume, source-2 and source-3, all recovery backups and controlled-run evidence, the successful imported-image reference, and the shared network. Do not rerun conversion or reboot a failed guest. Exclude these resources from cleanup. Each new source must complete the labs in order and have its own verified recovery checkpoint before conversion.
 
 ## Learn More
 

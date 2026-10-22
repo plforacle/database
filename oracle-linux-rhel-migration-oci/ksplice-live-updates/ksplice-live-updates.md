@@ -45,6 +45,15 @@ In this lab, you will:
 
     > **Note:** RHCK package names use the standard `kernel`, `kernel-core`, and `kernel-modules` names. They do not contain the word `rhck`. Packages whose names begin with `kernel-uek` are UEK packages, which are not the kernel used in this workshop.
 
+3. Record the boot ID before installing or applying live updates. Keep this SSH session open through Task 5:
+
+    ```bash
+    KSPLICE_BOOT_ID_BEFORE=$(cat /proc/sys/kernel/random/boot_id)
+    printf 'Boot ID before Ksplice: %s\n' "$KSPLICE_BOOT_ID_BEFORE"
+    ```
+
+    Keep the displayed value with your evidence. An unchanged boot ID at the end confirms that this exercise did not reboot the VM.
+
 ## Task 2: Install the Ksplice Client
 
 1. Check whether the Uptrack client is already present with `command -v uptrack-upgrade`. If it is present, continue to Task 3. Otherwise, download the Oracle Ksplice installer using `curl`:
@@ -79,6 +88,8 @@ In this lab, you will:
     /usr/sbin/uptrack-upgrade
     ```
 
+    `/sbin/uptrack-upgrade` is also valid on this image: `/sbin` is an alias for `/usr/sbin`. The command must resolve and execute successfully; do not change the installation merely to match the displayed path.
+
 2. Display the currently installed Ksplice updates and preview available updates:
 
     ```bash
@@ -99,6 +110,14 @@ In this lab, you will:
     ```
 
 2. The command completes without restarting the instance. Ksplice changes the effective running kernel in memory while the base kernel reported by `uname -r` can remain the same.
+
+3. Repeat the preview after applying the live updates:
+
+    ```bash
+    sudo uptrack-upgrade -n
+    ```
+
+    Require a successful preview with no updates still available. If updates remain or the command reports an error, preserve the output and review it before declaring this exercise complete.
 
 ## Task 5: Verify Ksplice and the Workload
 
@@ -134,9 +153,19 @@ In this lab, you will:
 
     A successful result reports `0 loaded units listed.`
 
+4. Compare the boot ID with the value recorded before Ksplice:
+
+    ```bash
+    test -n "${KSPLICE_BOOT_ID_BEFORE:-}" &&
+      test "$(cat /proc/sys/kernel/random/boot_id)" = "$KSPLICE_BOOT_ID_BEFORE" &&
+      printf 'KSPLICE_NO_REBOOT_PASS\n'
+    ```
+
+    Require exit status `0` and `KSPLICE_NO_REBOOT_PASS`. If the SSH session changed and the variable is missing, compare the current boot ID with the value saved in Task 1. A missing record does not prove that no reboot occurred. A changed boot ID means this exercise cannot be recorded as a no-reboot result.
+
 ## Task 6: Review
 
-You installed Oracle Ksplice on the migrated Oracle Linux RHCK instance, applied available live updates, and verified the application without rebooting. Continue to **Lab 7: Manage the Migrated Instance with OS Management Hub** to register this VM for centralized package management. Lab 7 uses package jobs; OS Management Hub Ksplice jobs require a separate client configuration from the Uptrack exercise completed here.
+Record whether live updates were applied or the initial preview had no available updates. An empty initial preview is a valid result, but does not demonstrate an update being applied. Keep the installed-update list, final preview, workload checks and boot-ID comparison as evidence. Continue to **Lab 7: Manage the Migrated Instance with OS Management Hub** to register this VM for centralized package management. Lab 7 uses package jobs; OS Management Hub Ksplice jobs require a separate client configuration from the Uptrack exercise completed here.
 
 ## Learn More
 

@@ -35,6 +35,8 @@ Before beginning this lab, confirm that you have:
 
 > **Note:** If you already launched a source VM, verify its compartment, network, access rules, and launch settings before continuing to Lab 2. Use its actual name and IP addresses in later labs. For a new run, complete all five tasks in order.
 
+> **Repeat-run checkpoint:** Keep the failed migration instance and its boot volume. Record their OCIDs in a preserve list. For the next rehearsal, reuse the existing compartment, VCN, public subnet, routes, and security rules after verifying Tasks 1 through 4. Continue at Task 5 with a fresh RHEL image and a unique name such as `ol-migrate-rhel-rehearsal-01`. Use the new instance's public IP and boot-volume OCID in every later step. Do not create another VCN or attach the failed boot volume.
+
 ## Task 1: Prepare the workshop compartment
 
 1. Sign in to the OCI Console using your paid tenancy.

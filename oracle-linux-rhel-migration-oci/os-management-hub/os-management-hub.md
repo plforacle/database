@@ -74,7 +74,84 @@ Estimated Lab Time: 60 minutes
     </copy>
     ```
 
-2. Confirm that `ol9_oci_included` appears in the repository list. Enable it and install or update Oracle Cloud Agent:
+2. Look for `ol9_oci_included` in the repository list. If it already appears, skip the bootstrap commands below and continue with the agent commands at the end of this step.
+
+    A converted RHEL instance can lack this repository definition. Oracle provides it through the signed `oci-included-release-el9` package. First check whether an existing repository supplies that package:
+
+    ```bash
+    <copy>sudo dnf repoquery --available --info oci-included-release-el9</copy>
+    ```
+
+    If the package is available, preview its installation with `sudo dnf --assumeno --setopt=assumeyes=False install oci-included-release-el9`. Review the resolved transaction, then install it with `sudo dnf install -y oci-included-release-el9` and continue with the agent commands below.
+
+    If the package is unavailable, use the documented OCI regional repository for this bootstrap. The following commands require Oracle Linux 9 on `x86_64`, existing nonempty OCI yum variables, and the Oracle signing key. They download the release RPM without creating a repository file. The temporary repository exists only for this DNF command.
+
+    ```bash
+    <copy>
+    bash <<'OCI_REPO_PREVIEW'
+    set -euo pipefail
+    . /etc/os-release
+    test "$ID" = ol
+    test "${VERSION_ID%%.*}" = 9
+    test "$(uname -m)" = x86_64
+    test -s /etc/yum/vars/ociregion
+    test -s /etc/yum/vars/ocidomain
+    test -s /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+    OCI_REGION_SUFFIX=$(tr -d '\r\n' < /etc/yum/vars/ociregion)
+    OCI_YUM_DOMAIN=$(tr -d '\r\n' < /etc/yum/vars/ocidomain)
+    [[ "$OCI_REGION_SUFFIX" =~ ^[.-][a-z0-9-]+$ ]]
+    [[ "$OCI_YUM_DOMAIN" =~ ^[a-z0-9]+([.-][a-z0-9]+)*$ ]]
+    OCI_BOOTSTRAP_URL="https://yum${OCI_REGION_SUFFIX}.${OCI_YUM_DOMAIN}/repo/OracleLinux/OL9/oci/included/x86_64/"
+    printf 'Regional Oracle repository: %s\n' "$OCI_BOOTSTRAP_URL"
+    BOOTSTRAP_DIR="$HOME/ol-migration-evidence/osmh/repo-bootstrap"
+    test ! -e "$BOOTSTRAP_DIR"
+    mkdir -p "$BOOTSTRAP_DIR"
+    sudo dnf --disablerepo='*' \
+      --repofrompath="oci-bootstrap,$OCI_BOOTSTRAP_URL" \
+      --enablerepo=oci-bootstrap \
+      --setopt=oci-bootstrap.gpgcheck=1 \
+      --setopt=oci-bootstrap.gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle \
+      --setopt=oci-bootstrap.sslverify=1 \
+      download --destdir="$BOOTSTRAP_DIR" oci-included-release-el9
+    shopt -s nullglob
+    RELEASE_RPMS=("$BOOTSTRAP_DIR"/oci-included-release-el9-*.x86_64.rpm)
+    test "${#RELEASE_RPMS[@]}" -eq 1
+    RELEASE_RPM=${RELEASE_RPMS[0]}
+    test "$(rpm -qp --qf '%{NAME}' "$RELEASE_RPM")" = oci-included-release-el9
+    rpm -qp --qf '%{NAME} %{VERSION}-%{RELEASE}.%{ARCH}\nVendor: %{VENDOR}\n' "$RELEASE_RPM"
+    sudo rpmkeys --checksig --verbose "$RELEASE_RPM" \
+      | tee "$BOOTSTRAP_DIR/signature.txt"
+    grep -Eq 'Signature, key ID 8d8b756f: OK' "$BOOTSTRAP_DIR/signature.txt"
+    rpm -qp --scripts "$RELEASE_RPM"
+    sha256sum "$RELEASE_RPM" > "$BOOTSTRAP_DIR/release-rpm.sha256"
+    sudo dnf --assumeno --setopt=assumeyes=False \
+      --setopt=localpkg_gpgcheck=1 install "$RELEASE_RPM"
+    OCI_REPO_PREVIEW
+    </copy>
+    ```
+
+    The final command previews the transaction and deliberately declines it; `Operation aborted.` is expected only after dependency resolution succeeds. Require the Oracle vendor, a valid signature from Oracle Linux 9 key `8d8b756f`, all digest checks passing, and a transaction that installs only the release package. The rehearsed package had no scriptlets. Review any scriptlet output or additional package changes before proceeding. If the evidence directory already exists, preserve it and use a new directory consistently in both command blocks.
+
+    Stop if the OS, architecture, variables, endpoint, signature, package lookup, or dependency resolution checks fail. Do not invent missing region values, substitute a package for another Oracle Linux version, disable signature or TLS checks, or force dependency changes. See [Oracle regional repository configuration](https://docs.oracle.com/en-us/iaas/oracle-linux/oci/install-software-on-instance.htm) and the [Oracle Linux 9 OCI Included example](https://blogs.oracle.com/linux/ocifs-oke-and-object-storage).
+
+    After reviewing the preview, install the same verified local RPM:
+
+    ```bash
+    <copy>
+    bash <<'OCI_REPO_INSTALL'
+    set -euo pipefail
+    BOOTSTRAP_DIR="$HOME/ol-migration-evidence/osmh/repo-bootstrap"
+    sha256sum --check "$BOOTSTRAP_DIR/release-rpm.sha256"
+    shopt -s nullglob
+    RELEASE_RPMS=("$BOOTSTRAP_DIR"/oci-included-release-el9-*.x86_64.rpm)
+    test "${#RELEASE_RPMS[@]}" -eq 1
+    sudo rpmkeys --checksig --verbose "${RELEASE_RPMS[0]}"
+    sudo dnf --setopt=localpkg_gpgcheck=1 install -y "${RELEASE_RPMS[0]}"
+    OCI_REPO_INSTALL
+    </copy>
+    ```
+
+    With the repository definition present, enable it and install or update Oracle Cloud Agent:
 
     ```bash
     <copy>
