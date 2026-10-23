@@ -1,0 +1,54 @@
+﻿{
+    "workshop":  "WMS 12229",
+    "lab":  5,
+    "instance_name":  "ol-migrate-rhel-9-8-2",
+    "public_ip":  "129.213.41.222",
+    "kernel_choices":  {
+                           "source":  "User-provided SSH dnf list output",
+                           "command":  "sudo dnf list --available kernel kernel-uek",
+                           "exit_status":  0,
+                           "running_kernel":  "5.14.0-687.5.3.el9_8.x86_64",
+                           "running_kernel_vendor":  "Oracle America",
+                           "available_rhck":  {
+                                                  "package":  "kernel.x86_64",
+                                                  "version_release":  "5.14.0-687.58.1.el9_8",
+                                                  "repository":  "ol9_baseos_latest"
+                                              },
+                           "available_uek":  {
+                                                 "package":  "kernel-uek.x86_64",
+                                                 "version_release":  "5.15.0-325.221.6.5.el9uek",
+                                                 "repository":  "ol9_UEKR7"
+                                             },
+                           "installed_or_changed_packages":  false,
+                           "decision":  "Keep running RHCK per reference workshop"
+                       },
+    "oracle_cloud_agent":  {
+                               "source":  "User-provided SSH transcript",
+                               "installed_query":  "rpm -q oracle-cloud-agent",
+                               "installed_result":  "package oracle-cloud-agent is not installed",
+                               "installed_exit_status":  1,
+                               "repository_query":  "sudo dnf info oracle-cloud-agent",
+                               "repository_result":  "Error: No matching Packages to list",
+                               "repository_exit_status":  1,
+                               "enabled_repositories":  [
+                                                            "ol9_UEKR7",
+                                                            "ol9_appstream",
+                                                            "ol9_baseos_latest"
+                                                        ],
+                               "installed_or_changed_packages":  false,
+                               "original_workshop_rule":  "If the package is unavailable, stop this task and use the Oracle documentation support path. Do not download an agent RPM from an unverified site.",
+                               "next_step":  "Pending Oracle Support-provided installer and clarification of support for converted imported image",
+                               "official_guidance":  {
+                                                         "url":  "https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/manage-plugins.htm",
+                                                         "repository_unavailable_path":  "Obtain Oracle Cloud Agent installation file by contacting Oracle Support",
+                                                         "supported_images":  "Current platform images and custom images based on current platform images",
+                                                         "other_images":  "Manual installation may succeed but is not tested or guaranteed",
+                                                         "current_image_origin":  "Imported Red Hat KVM QCOW2 converted to Oracle Linux; not derived from OCI platform image",
+                                                         "action":  "No unverified installer or speculative repository configuration used"
+                                                     }
+                           },
+    "os_management_hub":  "Pending Oracle Cloud Agent availability; profile creation and registration not attempted",
+    "ksplice":  "Not yet configured in this run",
+    "next_step":  "Continue independent Lab 5 Task 5 by verifying Ksplice RHCK support and official OCI BYOI installation instructions",
+    "preserve_existing_resources":  true
+}

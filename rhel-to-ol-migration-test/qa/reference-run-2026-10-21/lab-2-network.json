@@ -1,0 +1,77 @@
+﻿{
+    "workshop":  "WMS 12229",
+    "lab":  2,
+    "task":  1,
+    "region":  "us-ashburn-1",
+    "source":  "User-provided OCI Console VCN details screenshot",
+    "vcn_name":  "ol-migrate-vcn",
+    "state":  "Available",
+    "compartment":  "ol-migrate-lab",
+    "created_utc":  "2026-10-19T20:51:12Z",
+    "ipv4_cidr":  "10.0.0.0/16",
+    "default_route_table_display_name":  "default route table for ol-migrate-vcn",
+    "dns_domain_name":  "olmigratevcn.oraclevcn.com",
+    "workshop_example_ipv4_cidr":  "10.20.0.0/16",
+    "subnet_verification":  "Pending",
+    "routing_verification":  "Pending",
+    "effective_security_rules_verification":  "Pending",
+    "decision":  "User requests reuse of existing network rather than creating separate network resources. Subnet and connection path remain to be selected.",
+    "captured_at":  "2026-10-21T13:54:09.1188856+00:00",
+    "existing_default_security_list":  {
+                                           "source":  "User-provided default security list screenshot",
+                                           "name":  "Default Security List for ol-migrate-vcn",
+                                           "state":  "Available",
+                                           "ingress":  [
+                                                           {
+                                                               "source":  "0.0.0.0/0",
+                                                               "protocol":  "TCP",
+                                                               "destination_port":  22,
+                                                               "stateful":  true
+                                                           },
+                                                           {
+                                                               "source":  "0.0.0.0/0",
+                                                               "protocol":  "ICMP",
+                                                               "type":  3,
+                                                               "code":  4,
+                                                               "stateful":  true
+                                                           },
+                                                           {
+                                                               "source":  "10.0.0.0/16",
+                                                               "protocol":  "ICMP",
+                                                               "type":  3,
+                                                               "stateful":  true
+                                                           },
+                                                           {
+                                                               "source":  "0.0.0.0/0",
+                                                               "protocol":  "TCP",
+                                                               "destination_port":  80,
+                                                               "stateful":  true
+                                                           }
+                                                       ],
+                                           "egress":  [
+                                                          {
+                                                              "destination":  "0.0.0.0/0",
+                                                              "protocol":  "All",
+                                                              "stateful":  true
+                                                          }
+                                                      ],
+                                           "attached_subnets":  "Not yet verified",
+                                           "change_performed":  false,
+                                           "suitability":  "Does not meet workshop client-IP-only SSH and HTTP access if attached to the new instance subnet"
+                                       },
+    "existing_private_security_list":  {
+                                           "source":  "User-provided private-subnet security list screenshot",
+                                           "name":  "security list for private subnet-ol-migrate-vcn",
+                                           "state":  "Available",
+                                           "ssh_source_cidr":  "10.0.0.0/16",
+                                           "ssh_destination_port":  22,
+                                           "additional_ingress":  [
+                                                                      "ICMP type 3 code 4 from 0.0.0.0/0",
+                                                                      "ICMP type 3 from 10.0.0.0/16"
+                                                                  ],
+                                           "egress":  "All protocols to 0.0.0.0/0",
+                                           "stateful":  true,
+                                           "subnet_association":  "Not independently verified",
+                                           "changes_performed":  false
+                                       }
+}
