@@ -1,10 +1,10 @@
-# Lab 3: Assess Readiness and Protect the Source
+# Lab 5: Assess Readiness and Protect the Source
 
 ## Introduction
 
 Begin this lab after the prepared custom image has been moved to the destination OCI tenancy and a new RHEL instance has been launched from it. Connect to that instance using its public IP, SSH key, and `cloud-user` account. Red Hat registration was removed in Lab 2 and is not required here.
 
-First capture the destination instance baseline. Then inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and decide whether to create a boot-volume backup before changing the operating system.
+Complete the read-only system exercises in Lab 4 first. Capture the destination instance baseline, then inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and decide whether to create a boot-volume backup before changing the operating system.
 
 The migration script is maintained in an Oracle-owned GitHub repository, but the repository states that the scripts are community-based and are not officially supported by Oracle.
 
@@ -19,7 +19,7 @@ In this lab, you will:
 - Choose an optional boot-volume backup or record that the disposable VM will be rebuilt if needed.
 - Document the rollback decision point.
 
-Estimated Lab Time: 30 minutes, plus backup time if selected
+Estimated Lab Time: 30 minutes
 
 ## Task 1: Create the baseline evidence bundle
 

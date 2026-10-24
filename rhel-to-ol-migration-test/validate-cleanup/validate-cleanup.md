@@ -1,8 +1,8 @@
-# Lab 5: Validate and Optionally Clean Up
+# Lab 7: Validate the Migration
 
 ## Introduction
 
-A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and save your results. You then choose whether to retain the instance or remove temporary resources.
+A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and save your results. Keep the instance for the post-migration practice labs. Optional resource cleanup is at the end of Lab 14.
 
 ### Objectives
 
@@ -13,9 +13,8 @@ In this lab, you will:
 - Validate the workload, services, networking, firewall, and SELinux.
 - Review package-migration exceptions.
 - Preserve evidence and the reusable source image.
-- Optionally remove temporary OCI resources when finished.
 
-Estimated Lab Time: 30 minutes, plus optional cleanup time
+Estimated Lab Time: 25 minutes
 
 ## Task 1: Capture post-migration evidence
 
@@ -132,7 +131,7 @@ Estimated Lab Time: 30 minutes, plus optional cleanup time
     </copy>
     ```
 
-## Task 3: Run the final validation gate
+## Task 3: Run the migration validation gate
 
 1. Validate operating-system identity and kernel ownership:
 
@@ -145,6 +144,8 @@ Estimated Lab Time: 30 minutes, plus optional cleanup time
     rpm -qf "/boot/vmlinuz-$(uname -r)" --qf '%{VENDOR}\n' | grep Oracle
     </copy>
     ```
+
+    This gate validates the RHCK conversion before the separate UEK exercise in Lab 8. Keep this recorded result after switching kernels; a later, deliberate UEK boot does not invalidate the earlier migration.
 
     Confirm `ID=ol`, version 9.8, an Oracle kernel package vendor, and a running kernel name without `uek`. The exact RHCK build may differ from the original RHEL kernel. The `test` commands return no output when successful; any nonzero exit status is a failed check.
 
@@ -264,7 +265,7 @@ Estimated Lab Time: 30 minutes, plus optional cleanup time
 
 3. Record the migration outcome and accepted package exceptions. A successful conversion does not require registration with a cloud management service.
 
-## Task 6: Preserve evidence and choose whether to clean up
+## Task 6: Preserve migration evidence before further practice
 
 1. Keep the destination instance running if you want to inspect it or continue practicing. Resource deletion is optional and is not part of the migration success criteria.
 
@@ -283,27 +284,9 @@ Estimated Lab Time: 30 minutes, plus optional cleanup time
 
 5. Confirm that registration was removed from the preparation VM in Lab 2. The destination instance was never registered with Red Hat, so there is no destination registration to remove.
 
-6. If you want to keep the instance, skip Task 7 and continue to the knowledge review. If you are finished and have saved your results, follow the optional cleanup task.
+6. Keep the instance running for Labs 8 through 14. Preserve these migration archives unchanged; use separate practice reports and backups for later work. Optional resource cleanup is at the end of Lab 14.
 
-## Task 7: Optionally delete temporary OCI resources
-
-1. Confirm that you no longer need the instance and have saved the evidence you want to retain. Perform only the deletions you choose below.
-
-2. In the destination tenancy, open **Compute** and terminate `ol-migrate-rhel-source`. Select boot-volume deletion only if you no longer need that volume.
-
-3. If you created `ol-migrate-before-conversion` and no longer need it, delete that boot-volume backup. Skip this step if no backup was created.
-
-4. Delete the preparation `rhel-9-8-source` VM and its boot volume only if image preparation is finished and the prepared image is retained.
-
-5. Remove the object-read PAR when no further imports require it. Retain the exported image object and its private bucket for reuse. A new PAR can be created for a future import.
-
-6. Delete network security groups and VCN resources only if they were created for this exercise and no retained instances or other resources depend on them. Keep shared networking.
-
-7. Delete a workshop compartment only if it is empty and no longer needed. A compartment containing reusable images or image objects should be retained.
-
-8. Review resources in both tenancies and record what was retained. Do not delete `rhel-9-8-apache-source` or its exported object as routine workshop cleanup.
-
-## Task 8: Final knowledge review
+## Task 7: Review migration knowledge
 
 1. Why was the migration performed on the same VM?
 
@@ -324,6 +307,8 @@ Estimated Lab Time: 30 minutes, plus optional cleanup time
 5. What must be cleaned up outside OCI?
 
     The preparation VM must be unregistered from Red Hat before image capture, as completed in Lab 2. The destination instance does not create a new Red Hat registration.
+
+Complete the migration validation and knowledge review before starting Lab 8: Explore Oracle Linux Kernel Choices.
 
 ## Learn More
 

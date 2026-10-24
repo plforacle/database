@@ -15,7 +15,7 @@ In this lab, you will:
 - Upload the QCOW2 image to OCI.
 - Import and verify a compatible custom image.
 
-Estimated Lab Time: 60 to 90 minutes
+Estimated Lab Time: 45 minutes
 
 ## Task 1: Confirm Red Hat and OCI readiness
 

@@ -1,0 +1,19 @@
+Expanded workshop validation: October 24, 2026
+
+Current sequence: 14 numbered labs plus 15-minute orientation; 480 planned minutes.
+Labs 8 and 9 add UEK kernel choice and Ksplice. Daily administration remains in Labs 10-14; optional cleanup remains at the end.
+
+PASS: LiveLabs Markdown validator: zero errors.
+PASS: Manifest paths, matching titles, local links, contiguous task/step numbering, balanced code fences/copy tags, and no em dash characters in learner Markdown.
+PASS: 165 executable Bash snippets syntax-checked; shell-file syntax checked.
+PASS: Original RHCK conversion command, pinned script commit, and checksum unchanged.
+PASS: Three isolated kernel-selection guard cases: empty path, missing file, existing fixture file.
+PASS: Three isolated HTTP monitor cases: healthy marker, missing marker, HTTP error despite marker. Simulated commands only; no live grubby or HTTP operation.
+
+The original core conversion was walked through by the user. New skills labs, including UEK installation/reboot/fallback and actual Ksplice eligibility, installation, patch availability, and patch application, still need end-to-end testing on Oracle Linux. Static and simulated checks do not establish successful live patching. Kernel commands and client installation were authored, not executed on the running instance.
+
+The Ksplice lab records three distinct outcomes: applied updates, no additional updates, or blocked access/support. It captures boot identity and samples HTTP from before client setup, provides monitor shutdown instructions, and does not downgrade a kernel to manufacture patches. Outside OCI, a separately entitled installation path is required.
+
+Earlier checks of the unchanged health-automation script covered five simulated cases: healthy, Apache stopped, missing marker, HTTP error despite marker, and disk threshold. The original migration evidence remains separate from all later practice reports.
+
+The 480-minute agenda is a planning allocation, not measured learner timing. Breaks, optional backup/cleanup, and unusually long image transfers add elapsed time. No running VM or OCI resources were changed during authoring.

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# RHCK conversion gate for Lab 7; run before the separate UEK exercise in Lab 8.
 set -u
 
 failures=0
