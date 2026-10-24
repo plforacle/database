@@ -4,7 +4,7 @@
 
 Begin this lab after the prepared custom image has been moved to the destination OCI tenancy and a new RHEL instance has been launched from it. Connect to that instance using its public IP, SSH key, and `cloud-user` account. Red Hat registration was removed in Lab 2 and is not required here.
 
-First capture the destination instance baseline. Then inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and create a boot-volume backup before changing the operating system.
+First capture the destination instance baseline. Then inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and decide whether to create a boot-volume backup before changing the operating system.
 
 The migration script is maintained in an Oracle-owned GitHub repository, but the repository states that the scripts are community-based and are not officially supported by Oracle.
 
@@ -16,10 +16,10 @@ In this lab, you will:
 - Assess the source system for common migration risks.
 - Download and verify a pinned migration script.
 - Run a non-changing migration dry run.
-- Create and verify a boot-volume backup.
+- Choose an optional boot-volume backup or record that the disposable VM will be rebuilt if needed.
 - Document the rollback decision point.
 
-Estimated Lab Time: 40 minutes
+Estimated Lab Time: 30 minutes, plus backup time if selected
 
 ## Task 1: Create the baseline evidence bundle
 
@@ -43,6 +43,8 @@ Estimated Lab Time: 40 minutes
       | sort > "$EVIDENCE/packages.tsv"
     </copy>
     ```
+
+    `No repositories available` is expected for this unregistered source. The repository evidence file may be empty. Do not register the VM to change this result.
 
 3. Capture services, networking, firewall, and SELinux:
 
@@ -136,7 +138,7 @@ Estimated Lab Time: 40 minutes
 
     No enabled source repositories are expected after the Lab 2 registration cleanup. Oracle repositories are configured by the migration script.
 
-5. Identify packages that are not signed by Red Hat or have a different vendor:
+5. Identify packages with a different or unspecified vendor:
 
     ```bash
     <copy>
@@ -219,6 +221,8 @@ Estimated Lab Time: 40 minutes
 
 2. Review the final status and the run directory reported by the script.
 
+    Expected completion is `Dry-run completed. No package changes were made.` Exact and nearest-release candidate counts can vary as repositories change. Printed removal and installation commands describe the proposed migration; they are not executed in this dry run.
+
 3. Locate the newest migration state directory and log:
 
     ```bash
@@ -237,9 +241,13 @@ Estimated Lab Time: 40 minutes
     - A source kernel newer than the running kernel
     - Unreachable Oracle repositories
 
-## Task 5: Create the pre-migration recovery point
+## Task 5: Create an optional pre-migration recovery point
 
-1. Flush filesystem changes and stop the workshop application:
+1. Choose whether to create a backup. For this disposable practice VM, you may skip the rest of Task 5 and record `Backup skipped; rebuild from rhel-9-8-apache-source if needed`. Do not stop Apache when skipping this task.
+
+    A backup is recommended for systems with valuable data. Rebuilding from the prepared image does not recover changes made after image capture. If you choose a backup, continue below.
+
+2. Flush filesystem changes and stop the workshop application:
 
     ```bash
     <copy>
@@ -248,17 +256,17 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-2. In the OCI Console, open the `ol-migrate-rhel-source` instance.
+3. In the OCI Console, open the `ol-migrate-rhel-source` instance.
 
-3. Under **Resources**, open the boot volume.
+4. Under **Resources**, open the boot volume.
 
-4. Select **Create manual backup**.
+5. Select **Create manual backup**.
 
-5. Enter `ol-migrate-before-conversion` as the backup name and create the backup.
+6. Enter `ol-migrate-before-conversion` as the backup name and create the backup.
 
-6. Monitor the backup until its state becomes Available.
+7. Monitor the backup until its state becomes Available.
 
-7. Return to the SSH session and restart the application:
+8. Return to the SSH session and restart the application:
 
     ```bash
     <copy>
@@ -267,7 +275,7 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-8. Record the backup OCID and creation time in your workshop notes.
+9. Record the backup OCID and creation time in your workshop notes.
 
 ## Task 6: Pass the migration gate
 
@@ -277,15 +285,15 @@ Estimated Lab Time: 40 minutes
     - The verified script checksum returned OK.
     - The baseline evidence bundle was captured on the destination instance.
     - Red Hat registration was removed and subscription plugins were disabled in Lab 2.
-    - The boot-volume backup state is Available.
-    - Apache is active after the backup.
+    - If a backup was selected, its state is Available and its OCID was recorded. Otherwise, the rebuild decision was recorded.
+    - Apache is active, including after any optional backup.
     - The workload marker is returned.
 
 2. If any condition fails, stop here and correct it before continuing.
 
 3. Review the rollback decision:
 
-    If the migration fails and the VM cannot return to a stable boot and application state within the bootcamp recovery window, preserve the logs, stop troubleshooting, and restore from the pre-migration boot-volume backup using the instructor-tested procedure.
+    If the migration fails and the VM cannot return to a stable state, preserve the logs. If you created a backup, use your approved boot-volume restore procedure. If you skipped the backup, rebuild the disposable destination VM from `rhel-9-8-apache-source`, repeat this lab, and use a new baseline.
 
 ## Learn More
 

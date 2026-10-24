@@ -47,7 +47,7 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-4. In the OCI Console, confirm that the `ol-migrate-before-conversion` boot-volume backup is Available.
+4. Confirm the recovery choice recorded in Lab 3. If a backup was selected, verify that `ol-migrate-before-conversion` is Available. If it was skipped for this disposable VM, confirm that `rhel-9-8-apache-source` is retained for rebuilding.
 
 5. Continue only when all checks pass.
 
@@ -110,6 +110,8 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
+    The selected Oracle RHCK build may differ from the source RHEL kernel, including a lower release suffix. Verify that it is installed and selected for boot; the running kernel is checked after reboot.
+
 4. Locate the newest migration run directory:
 
     ```bash
@@ -128,7 +130,9 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-    Pay attention to entries marked `3rd Party`, `unavailable`, `removed-rhel-only`, or `source-vendor-retained`.
+    These first 40 rows are a preview, not a complete exception review. The `unavailable` plan can include source package names that are removed or replaced later in the run. Review the final retained-package report in Lab 5.
+
+    Warnings about EVRA differences or retained source-vendor packages require review, but do not by themselves establish a failed conversion. Do not remove packages simply to eliminate a vendor warning.
 
 ## Task 4: Reboot into Oracle Linux RHCK
 
@@ -140,7 +144,7 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-2. Wait for the OCI instance to return to Running.
+2. Wait for the VM to finish rebooting and accept SSH connections again. A Running status alone does not prove SSH is ready.
 
 3. Reconnect using the same public IP, SSH private key, and `cloud-user` account:
 
@@ -166,6 +170,8 @@ Estimated Lab Time: 40 minutes
     - `VERSION_ID="9.8"`
     - The running kernel package vendor identifies Oracle.
     - The kernel name does not contain `uek` on the core RHCK path.
+
+    The exact kernel build can vary. The vendor and RHCK checks establish the selected boot path; do not require the pre-migration kernel version string to stay unchanged.
 
 ## Task 5: Perform the immediate health check
 
@@ -239,5 +245,5 @@ Estimated Lab Time: 40 minutes
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
 

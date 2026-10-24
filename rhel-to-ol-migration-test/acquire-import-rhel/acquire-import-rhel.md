@@ -25,7 +25,7 @@ Estimated Lab Time: 60 to 90 minutes
 
 3. Sign in to the [OCI Console](https://cloud.oracle.com/).
 
-4. Select the OCI region where you will complete every lab.
+4. Select the preparation tenancy and region for Labs 1 and 2. The destination tenancy and region are selected later when importing the prepared image.
 
 5. Confirm that the region offers `VM.Standard.E5.Flex` or another RHEL-certified x86_64 flexible VM shape.
 
@@ -93,7 +93,7 @@ Estimated Lab Time: 60 to 90 minutes
 
 5. Keep the default storage tier as **Standard** and the visibility as **Private**.
 
-6. Do not enable a public bucket or create a pre-authenticated request.
+6. Keep this bucket private. The raw QCOW2 is imported from the bucket directly. An object-read pre-authenticated request is created later for the prepared export in Lab 2.
 
 7. Select **Create**.
 
@@ -117,7 +117,7 @@ Estimated Lab Time: 60 to 90 minutes
 
 2. Select the `ol-migrate-lab` compartment and then select **Import image**.
 
-3. Enter `ol-migrate-rhel-9-8` for the image name.
+3. Enter `rhel-9-8-migration-import` for the image name.
 
 4. Select **Linux** as the operating system.
 
@@ -138,7 +138,7 @@ Estimated Lab Time: 60 to 90 minutes
 
 ## Task 7: Configure and verify shape compatibility
 
-1. Open the `ol-migrate-rhel-9-8` custom image.
+1. Open the `rhel-9-8-migration-import` custom image.
 
 2. Under **Resources**, select **Compatible shapes**.
 
@@ -147,7 +147,7 @@ Estimated Lab Time: 60 to 90 minutes
 4. Confirm the following checkpoint:
 
     - Image state is Available.
-    - Operating system is Linux.
+    - Operating system identifies a Linux image.
     - Image type is QCOW2.
     - Launch mode is paravirtualized.
     - At least one tested x86_64 flexible shape is compatible.
@@ -176,5 +176,5 @@ Estimated Lab Time: 60 to 90 minutes
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
 

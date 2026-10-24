@@ -13,8 +13,10 @@ In this lab, you will:
 - Register and update the RHEL system securely.
 - Deploy an Apache workload.
 - Remove Red Hat registration and disable subscription plugins before image capture.
+- Capture and export the prepared image.
+- Import it into the destination tenancy and verify a new instance.
 
-Estimated Lab Time: 35 minutes
+Estimated Lab Time: 60 to 90 minutes, including image capture, export, and destination import
 
 ## Task 1: Create the workshop network
 
@@ -48,13 +50,13 @@ Estimated Lab Time: 35 minutes
 
 1. Open **Compute**, then **Instances**, and select **Create instance**.
 
-2. Enter `ol-migrate-rhel-source` for the instance name.
+2. Enter `rhel-9-8-source` for the instance name.
 
 3. Select the `ol-migrate-lab` compartment.
 
 4. Under **Image and shape**, select **Change image**.
 
-5. Select **My images**, then **Custom images**, and choose `ol-migrate-rhel-9-8`.
+5. Select **My images**, then **Custom images**, and choose `rhel-9-8-migration-import`.
 
 6. Select `VM.Standard.E5.Flex` or the tested compatible fallback shape.
 
@@ -302,12 +304,121 @@ Estimated Lab Time: 35 minutes
 
 7. Confirm that the application still opens at `http://<public-ip>/` before saving the prepared custom image.
 
-    Complete image capture, transfer, and launch in the destination OCI tenancy before starting Lab 3. Capture the baseline on that destination instance, not on this preparation VM. Do not register the destination instance with Red Hat.
+    Continue with Tasks 7 through 10 to capture and move the image. Capture the baseline in Lab 3 on the destination instance. Do not register the destination instance with Red Hat.
+
+## Task 7: Capture the prepared source image
+
+1. In the preparation tenancy, open **Compute**, then **Instances**, and select `rhel-9-8-source`.
+
+2. Select **More actions**, then **Create custom image**. Depending on the Console layout, this option is under **Actions**.
+
+3. Select the preparation compartment and enter `rhel-9-8-apache-source` as the image name.
+
+4. Select **Create custom image** and wait until the image becomes Available.
+
+    The instance is briefly unavailable during capture. This image contains the installed RHEL workload and the registration cleanup completed in Task 6. Keep it for future workshops.
+
+## Task 8: Export the prepared image and create an object-read PAR
+
+1. Open `rhel-9-8-apache-source` under **Compute**, then **Custom images** in the preparation tenancy.
+
+2. From **Actions**, select **Export**.
+
+3. Choose **Export to an Object Storage bucket** and select your private preparation bucket.
+
+4. Enter `rhel-9-8-apache-source.oci` as the object name and choose **OCI** as the image format.
+
+    OCI format includes the disk and OCI launch metadata. The raw image imported in Lab 1 used QCOW2; this prepared export uses OCI format.
+
+5. Select **Export image**. Wait for the image to return to Available and confirm the exported object is present in the bucket.
+
+6. In the bucket, open **Management**, then **Pre-authenticated requests**, and select **Create pre-authenticated request**.
+
+7. Configure the request:
+
+    - Name: `rhel-9-8-apache-source-read`
+    - Target: **Object**
+    - Object name: `rhel-9-8-apache-source.oci`
+    - Access type: **Permit object reads**
+    - Expiration: A time that covers the planned destination import
+
+8. Create the request and copy the complete PAR URL into your private notes. Use it in Task 9.
+
+    The bucket stays private. The PAR grants access to this object to anyone holding the URL, so do not publish it in the workshop or screenshots.
+
+## Task 9: Import into the destination tenancy
+
+1. Sign in to the destination OCI tenancy and select its destination region and compartment. An existing authorized compartment is sufficient.
+
+2. Open **Compute**, then **Custom images**, and select **Import image**.
+
+3. Enter `rhel-9-8-apache-source` as the image name.
+
+4. Select **Red Hat Enterprise Linux** if offered, or **Linux** in a Console layout with generic operating-system choices.
+
+5. Choose **Import from an Object Storage URL** and paste the complete PAR URL from Task 8.
+
+6. Select **OCI** as the image type. The launch mode is selected from the exported metadata automatically.
+
+7. Select **Import image** and wait until its state is Available. If it fails, inspect the work request and confirm that the PAR permits reads and has not expired.
+
+## Task 10: Launch and verify the destination instance
+
+1. Use an existing destination network that permits SSH and HTTP from your client IP, or repeat Task 1 in the destination tenancy to create one.
+
+2. Open the destination `rhel-9-8-apache-source` image and confirm that `VM.Standard.E5.Flex` is listed under compatible shapes. Add the tested shape if needed.
+
+3. Select **Create instance** and enter `ol-migrate-rhel-source` as the instance name.
+
+4. Configure 1 OCPU, 8 GB memory, and a boot volume of at least 50 GB or the image minimum. Select the destination network, attach the SSH/HTTP network security group, assign a public IP, and supply your SSH public key.
+
+5. Create the instance, wait until it is Running, and record its public IP. Connect from your local terminal:
+
+    ```bash
+    <copy>
+    ssh -i <private-key-path> cloud-user@<public-ip>
+    </copy>
+    ```
+
+6. Verify the operating system and application:
+
+    ```bash
+    <copy>
+    cat /etc/os-release
+    systemctl is-enabled httpd
+    systemctl is-active httpd
+    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
+    </copy>
+    ```
+
+    Expected results are RHEL 9.8, `enabled`, `active`, and the workload marker.
+
+7. Verify registration cleanup:
+
+    ```bash
+    <copy>
+    sudo find /etc/pki/consumer /etc/pki/entitlement \
+      -type f -name '*.pem' -print 2>/dev/null
+    sudo grep '^enabled=' \
+      /etc/dnf/plugins/subscription-manager.conf \
+      /etc/dnf/plugins/product-id.conf
+    </copy>
+    ```
+
+    No registration certificate files should be listed, and both plugins must show `enabled=0`. The login banner suggesting `rhc connect` is not proof of registration. Do not run that command.
+
+8. Open `http://<public-ip>/` in your browser and confirm that the HTML page displays `MIGRATION_WORKLOAD_OK`.
+
+9. Continue to Lab 3 on this destination instance. Do not repeat the preparation registration or package installation steps.
 
 ## Learn More
 
 - [Creating an OCI Compute instance](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/launchinginstance.htm)
 - [Connecting to a Linux instance](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/connect-to-linux-instance.htm)
+- [Creating a custom image](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/custom-images-create.htm)
+- [Exporting a custom image](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/custom-images-export.htm)
+- [Creating an Object Storage PAR](https://docs.oracle.com/en-us/iaas/Content/Object/Tasks/usingpreauthenticatedrequests_topic-To_create_a_preauthenticated_request_for_all_objects_in_a_bucket.htm)
+- [Importing a custom image](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/custom-images-import.htm)
 - [Red Hat Subscription Management](https://access.redhat.com/articles/433903)
 
 ## Acknowledgements

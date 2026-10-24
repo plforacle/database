@@ -1,8 +1,8 @@
-# Lab 6: Validate and Clean Up
+# Lab 5: Validate and Optionally Clean Up
 
 ## Introduction
 
-A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and remove every workshop resource.
+A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and save your results. You then choose whether to retain the instance or remove temporary resources.
 
 ### Objectives
 
@@ -12,9 +12,10 @@ In this lab, you will:
 - Compare the RHEL and Oracle Linux states.
 - Validate the workload, services, networking, firewall, and SELinux.
 - Review package-migration exceptions.
-- Remove OCI resources and Red Hat registration artifacts.
+- Preserve evidence and the reusable source image.
+- Optionally remove temporary OCI resources when finished.
 
-Estimated Lab Time: 35 minutes
+Estimated Lab Time: 30 minutes, plus optional cleanup time
 
 ## Task 1: Capture post-migration evidence
 
@@ -139,10 +140,13 @@ Estimated Lab Time: 35 minutes
     <copy>
     . /etc/os-release
     test "$ID" = ol
-    test "${VERSION_ID%%.*}" = 9
+    test "$VERSION_ID" = 9.8
+    uname -r
     rpm -qf "/boot/vmlinuz-$(uname -r)" --qf '%{VENDOR}\n' | grep Oracle
     </copy>
     ```
+
+    Confirm `ID=ol`, version 9.8, an Oracle kernel package vendor, and a running kernel name without `uek`. The exact RHCK build may differ from the original RHEL kernel. The `test` commands return no output when successful; any nonzero exit status is a failed check.
 
 2. Validate the application and services:
 
@@ -196,7 +200,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-2. Review packages without an Oracle replacement, if the file exists:
+2. Review the unavailable source-package plan, if the file exists:
 
     ```bash
     <copy>
@@ -206,7 +210,9 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-3. Review retained or unavailable Red Hat-vendor packages:
+    This is a plan generated before the final package replacement passes. Entries can include source release packages that were removed and firmware or branding packages replaced later. It is not the final list of retained Red Hat packages.
+
+3. Review the final retained or unavailable Red Hat-vendor packages:
 
     ```bash
     <copy>
@@ -216,12 +222,30 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-4. Classify each exception as:
+4. Confirm the current release, firmware, and Apache branding packages:
 
-    - Accepted third-party application dependency
-    - Package requiring a replacement
-    - Package requiring application-owner validation
-    - Migration blocker requiring rollback
+    ```bash
+    <copy>
+    rpm -q oraclelinux-release oraclelinux-release-el9 linux-firmware linux-firmware-whence oracle-logos-httpd \
+      --qf '%{NAME} %{VERSION}-%{RELEASE} %{VENDOR}\n'
+    rpm -q redhat-release redhat-release-eula redhat-logos-httpd
+    </copy>
+    ```
+
+    Oracle replacements should be installed. The old Red Hat release, EULA, and Apache logo packages should report `is not installed`; a nonzero exit status for that second query is expected. Investigate other missing replacements rather than treating the original plan as the final state.
+
+5. Review any packages that still identify Red Hat as their vendor:
+
+    ```bash
+    <copy>
+    rpm -qa --qf '%{NAME}\t%{VERSION}-%{RELEASE}\t%{VENDOR}\n' \
+      | awk -F '\t' '$3 ~ /Red Hat/ {print}' | sort
+    </copy>
+    ```
+
+    In the tested October 24, 2026 run, only `insights-core` and `insights-core-selinux` remained from Red Hat. They were deliberately retained as accepted exceptions for this disposable workshop. Their presence alone did not invalidate the conversion or the application checks, and removal is not required for this exercise.
+
+6. Record your exception decision. If only those two Insights packages remain and validation passes, record them as accepted retained packages. Review any additional retained package for application or boot impact before accepting it. Do not assume that a new exception is harmless because this test passed.
 
 ## Task 5: Complete the migration decision
 
@@ -235,39 +259,49 @@ Estimated Lab Time: 35 minutes
     - Application content and checksum match the baseline.
     - Networking, SELinux, and firewall checks pass.
     - Package exceptions are reviewed and accepted.
-    - Management and Ksplice results are recorded.
 
-2. If a required condition fails, decide whether to remediate or restore from the pre-migration backup.
+2. If a required condition fails, preserve logs and decide whether to remediate, restore the optional backup if one was created, or rebuild the disposable VM from `rhel-9-8-apache-source`.
 
-## Task 6: Remove service registrations
+3. Record the migration outcome and accepted package exceptions. A successful conversion does not require registration with a cloud management service.
 
-1. In OS Management Hub, open the converted instance and select **Unregister**.
+## Task 6: Preserve evidence and choose whether to clean up
 
-2. Wait until the instance is removed from the managed-instance list.
+1. Keep the destination instance running if you want to inspect it or continue practicing. Resource deletion is optional and is not part of the migration success criteria.
 
-3. Confirm that Red Hat registration was removed from the preparation VM in Lab 2 before image capture. The destination instance does not need to be registered or unregistered for this workflow.
+2. Save the before-and-after archives to your local computer before terminating the instance. From your local terminal, run:
 
-## Task 7: Delete OCI workshop resources
+    ```bash
+    <copy>
+    scp -i <private-key-path> cloud-user@<public-ip>:ol-migration-evidence/rhel-before.tar.gz .
+    scp -i <private-key-path> cloud-user@<public-ip>:ol-migration-evidence/oracle-linux-after.tar.gz .
+    </copy>
+    ```
 
-1. In **Compute**, terminate `ol-migrate-rhel-source`.
+3. Retain the migration reports and log if needed for review. Record the run directory shown in Task 4 and the corresponding log under `/var/log/migrate-to-oracle-linux/` before deleting the VM.
 
-2. Select the option to delete the attached boot volume and confirm termination.
+4. Keep the preparation and destination `rhel-9-8-apache-source` custom images and the prepared export object for future workshops. Keep the raw source image if it is still needed. Deleting a VM does not require deleting these reusable assets.
 
-3. In **Block Storage**, delete the `ol-migrate-before-conversion` boot-volume backup.
+5. Confirm that registration was removed from the preparation VM in Lab 2. The destination instance was never registered with Red Hat, so there is no destination registration to remove.
 
-4. In **Compute**, then **Custom images**, delete `ol-migrate-rhel-9-8`.
+6. If you want to keep the instance, skip Task 7 and continue to the knowledge review. If you are finished and have saved your results, follow the optional cleanup task.
 
-5. In **Object Storage**, delete the RHEL QCOW2 object.
+## Task 7: Optionally delete temporary OCI resources
 
-6. Delete the now-empty image bucket.
+1. Confirm that you no longer need the instance and have saved the evidence you want to retain. Perform only the deletions you choose below.
 
-7. Delete the OS Management Hub profile if it was created only for this workshop.
+2. In the destination tenancy, open **Compute** and terminate `ol-migrate-rhel-source`. Select boot-volume deletion only if you no longer need that volume.
 
-8. Delete `ol-migrate-nsg` and the VCN resources created by the VCN wizard.
+3. If you created `ol-migrate-before-conversion` and no longer need it, delete that boot-volume backup. Skip this step if no backup was created.
 
-9. Delete the `ol-migrate-lab` compartment when your organization permits it.
+4. Delete the preparation `rhel-9-8-source` VM and its boot volume only if image preparation is finished and the prepared image is retained.
 
-10. Confirm that no workshop Compute instance, boot volume, backup, custom image, or Object Storage object remains.
+5. Remove the object-read PAR when no further imports require it. Retain the exported image object and its private bucket for reuse. A new PAR can be created for a future import.
+
+6. Delete network security groups and VCN resources only if they were created for this exercise and no retained instances or other resources depend on them. Keep shared networking.
+
+7. Delete a workshop compartment only if it is empty and no longer needed. A compartment containing reusable images or image objects should be retained.
+
+8. Review resources in both tenancies and record what was retained. Do not delete `rhel-9-8-apache-source` or its exported object as routine workshop cleanup.
 
 ## Task 8: Final knowledge review
 
@@ -275,13 +309,13 @@ Estimated Lab Time: 35 minutes
 
     The exercise demonstrates an in-place distribution conversion while preserving the OCI instance, workload, configuration, and evidence.
 
-2. Why was a boot-volume backup mandatory?
+2. Why is the boot-volume backup optional for this disposable practice VM?
 
-    The migration changes repositories, packages, release identity, and the boot kernel. The backup provides a recovery point if the system cannot return to a validated state.
+    A backup provides a recovery point. For this disposable workshop, the destination VM can instead be rebuilt from the prepared image. Rebuilding loses changes made after capture, so systems with valuable data need an appropriate verified recovery plan.
 
 3. Why is `/etc/os-release` insufficient proof of success?
 
-    It does not prove that the kernel, services, applications, packages, networking, security controls, and management integrations still operate correctly.
+    It does not prove that the kernel, services, applications, packages, networking, and security controls still operate correctly.
 
 4. Which parts of the RHEL administration experience remained familiar?
 
@@ -293,12 +327,11 @@ Estimated Lab Time: 35 minutes
 
 ## Learn More
 
-- [Unregistering an OS Management Hub instance](https://docs.oracle.com/en-us/iaas/osmh/doc/unregister-instance.htm)
 - [Red Hat Subscription Management](https://access.redhat.com/articles/433903)
 - [Deleting an OCI Compute instance](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/terminatinginstance.htm)
 
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
 

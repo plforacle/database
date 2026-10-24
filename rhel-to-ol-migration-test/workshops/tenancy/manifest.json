@@ -17,12 +17,12 @@
     },
     {
       "title": "Lab 2: Launch and Prepare the RHEL Workload",
-      "description": "Launch and prepare RHEL with Apache, then remove Red Hat registration before image capture.",
+      "description": "Prepare RHEL with Apache, remove registration, and capture, export, and import the reusable source image.",
       "filename": "../../launch-baseline-rhel/launch-baseline-rhel.md"
     },
     {
       "title": "Lab 3: Assess Readiness and Protect the Source",
-      "description": "Capture the destination baseline, run migration readiness checks, and create a boot-volume recovery point.",
+      "description": "Capture the destination baseline, run readiness checks, and choose an optional backup.",
       "filename": "../../assess-protect-source/assess-protect-source.md"
     },
     {
@@ -31,13 +31,8 @@
       "filename": "../../migrate-to-oracle-linux/migrate-to-oracle-linux.md"
     },
     {
-      "title": "Lab 5: Manage and Patch Oracle Linux",
-      "description": "Configure OCI management and examine Ksplice live patching.",
-      "filename": "../../manage-patch-oracle-linux/manage-patch-oracle-linux.md"
-    },
-    {
-      "title": "Lab 6: Validate and Clean Up",
-      "description": "Compare before-and-after evidence, validate the workload, and remove resources.",
+      "title": "Lab 5: Validate and Optionally Clean Up",
+      "description": "Compare evidence, review package exceptions, preserve results, and optionally delete temporary resources.",
       "filename": "../../validate-cleanup/validate-cleanup.md"
     },
     {
@@ -47,4 +42,3 @@
     }
   ]
 }
-
