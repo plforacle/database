@@ -16,13 +16,13 @@
       "filename": "../../acquire-import-rhel/acquire-import-rhel.md"
     },
     {
-      "title": "Lab 2: Launch and Baseline the RHEL Workload",
-      "description": "Launch an actual RHEL source VM, deploy Apache, and capture baseline evidence.",
+      "title": "Lab 2: Launch and Prepare the RHEL Workload",
+      "description": "Launch and prepare RHEL with Apache, then remove Red Hat registration before image capture.",
       "filename": "../../launch-baseline-rhel/launch-baseline-rhel.md"
     },
     {
       "title": "Lab 3: Assess Readiness and Protect the Source",
-      "description": "Run migration readiness checks and create a boot-volume recovery point.",
+      "description": "Capture the destination baseline, run migration readiness checks, and create a boot-volume recovery point.",
       "filename": "../../assess-protect-source/assess-protect-source.md"
     },
     {

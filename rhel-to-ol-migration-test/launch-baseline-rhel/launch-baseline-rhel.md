@@ -1,8 +1,8 @@
-# Lab 2: Launch and Baseline the RHEL Workload
+# Lab 2: Launch and Prepare the RHEL Workload
 
 ## Introduction
 
-In this lab, you launch the imported custom image as an actual RHEL VM. You then register and update RHEL, deploy an Apache workload, and capture evidence that will be compared after the migration.
+In this lab, you launch the imported custom image as an actual RHEL VM. You then register and update RHEL, deploy an Apache workload, and remove Red Hat registration before saving the reusable image. Baseline evidence is captured in Lab 3 on the destination instance after the move.
 
 ### Objectives
 
@@ -12,7 +12,7 @@ In this lab, you will:
 - Launch and connect to the RHEL source VM.
 - Register and update the RHEL system securely.
 - Deploy an Apache workload.
-- Capture a repeatable source-system baseline.
+- Remove Red Hat registration and disable subscription plugins before image capture.
 
 Estimated Lab Time: 35 minutes
 
@@ -124,17 +124,9 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-    Enter Red Hat credentials only at the protected terminal prompts. Do not place credentials on the command line.
+    Enter Red Hat credentials only at the protected terminal prompts. Do not place credentials on the command line. This workshop uses Simple Content Access, so no subscription attachment command is needed.
 
-2. If your organization does not use Simple Content Access and no entitlement is attached, run:
-
-    ```bash
-    <copy>
-    sudo subscription-manager attach --auto
-    </copy>
-    ```
-
-3. Enable the RHEL 9 BaseOS and AppStream repositories:
+2. Enable the RHEL 9 BaseOS and AppStream repositories:
 
     ```bash
     <copy>
@@ -144,7 +136,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-4. Verify repository access:
+3. Verify repository access:
 
     ```bash
     <copy>
@@ -153,7 +145,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-5. Update the source system:
+4. Update the source system:
 
     ```bash
     <copy>
@@ -161,7 +153,7 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-6. Reboot so the newest installed source kernel is running:
+5. Reboot so the newest installed source kernel is running:
 
     ```bash
     <copy>
@@ -169,9 +161,9 @@ Estimated Lab Time: 35 minutes
     </copy>
     ```
 
-7. Reconnect after the instance returns to Running.
+6. Reconnect after the instance returns to Running.
 
-8. Verify the current kernel and ensure no package transaction remains incomplete:
+7. Verify the current kernel and ensure no package transaction remains incomplete:
 
     ```bash
     <copy>
@@ -238,74 +230,79 @@ Estimated Lab Time: 35 minutes
 
 6. Open `http://<public-ip>/` in your browser and confirm that `MIGRATION_WORKLOAD_OK` appears.
 
-## Task 6: Create the baseline evidence bundle
+## Task 6: Remove Red Hat registration before saving the image
 
-1. Create an evidence directory:
+1. Unregister the preparation VM from Red Hat:
 
     ```bash
     <copy>
-    mkdir -p "$HOME/ol-migration-evidence/before"
-    EVIDENCE="$HOME/ol-migration-evidence/before"
+    sudo subscription-manager unregister
     </copy>
     ```
 
-2. Capture the operating system, kernel, repositories, and packages:
+    Expected output includes `System has been unregistered.` If unregistration fails, stop and resolve it before cleaning local data.
+
+2. Remove local subscription data:
 
     ```bash
     <copy>
-    cat /etc/os-release > "$EVIDENCE/os-release.txt"
-    uname -a > "$EVIDENCE/kernel.txt"
-    sudo dnf repolist --enabled > "$EVIDENCE/repositories.txt"
-    rpm -qa --qf '%{NAME}\t%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n' \
-      | sort > "$EVIDENCE/packages.tsv"
+    sudo subscription-manager clean
     </copy>
     ```
 
-3. Capture services, networking, firewall, and SELinux:
+    Expected output is `All local data removed`.
+
+3. Verify that no registration certificates remain and the application still works:
 
     ```bash
     <copy>
-    systemctl is-enabled httpd > "$EVIDENCE/httpd-enabled.txt"
-    systemctl is-active httpd > "$EVIDENCE/httpd-active.txt"
-    sudo ss -lntup > "$EVIDENCE/listening-ports.txt"
-    ip address show > "$EVIDENCE/addresses.txt"
-    ip route show > "$EVIDENCE/routes.txt"
-    getenforce > "$EVIDENCE/selinux.txt"
-    sudo firewall-cmd --list-all > "$EVIDENCE/firewall.txt"
-    </copy>
-    ```
-
-4. Capture the workload response and checksum:
-
-    ```bash
-    <copy>
-    curl --fail --silent http://127.0.0.1/ > "$EVIDENCE/application.html"
-    sha256sum /var/www/html/index.html > "$EVIDENCE/application-sha256.txt"
-    </copy>
-    ```
-
-5. Create an archive:
-
-    ```bash
-    <copy>
-    tar -C "$HOME/ol-migration-evidence" -czf \
-      "$HOME/ol-migration-evidence/rhel-before.tar.gz" before
-    ls -lh "$HOME/ol-migration-evidence/rhel-before.tar.gz"
-    </copy>
-    ```
-
-6. Confirm the source checkpoint:
-
-    ```bash
-    <copy>
-    grep '^ID=' /etc/os-release
+    sudo find /etc/pki/consumer /etc/pki/entitlement \
+      -type f -name '*.pem' -print 2>/dev/null
     systemctl is-active httpd
-    getenforce
     curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
     </copy>
     ```
 
-    Expected results are `ID="rhel"`, `active`, `Enforcing`, and the workload marker.
+    Expected results are no certificate files, `active`, and the workload marker.
+
+4. Inspect the subscription plugins and remaining repository files:
+
+    ```bash
+    <copy>
+    sudo cat /etc/dnf/plugins/subscription-manager.conf \
+      /etc/dnf/plugins/product-id.conf
+    sudo find /etc/yum.repos.d -maxdepth 1 -type f \
+      -name '*.repo' -exec cat {} +
+    </copy>
+    ```
+
+    Registration can enable both plugins. After cleanup, no enabled Red Hat repository definitions should remain. If any remain enabled, stop and resolve them before saving the image.
+
+5. Disable the two subscription-management plugins:
+
+    ```bash
+    <copy>
+    sudo sed -i 's/^enabled=1$/enabled=0/' \
+      /etc/dnf/plugins/subscription-manager.conf \
+      /etc/dnf/plugins/product-id.conf
+    </copy>
+    ```
+
+6. Verify that both plugins are disabled:
+
+    ```bash
+    <copy>
+    sudo grep '^enabled=' \
+      /etc/dnf/plugins/subscription-manager.conf \
+      /etc/dnf/plugins/product-id.conf
+    </copy>
+    ```
+
+    Both files must show `enabled=0`. These changes leave Apache and the HTML application installed.
+
+7. Confirm that the application still opens at `http://<public-ip>/` before saving the prepared custom image.
+
+    Complete image capture, transfer, and launch in the destination OCI tenancy before starting Lab 3. Capture the baseline on that destination instance, not on this preparation VM. Do not register the destination instance with Red Hat.
 
 ## Learn More
 
@@ -316,5 +313,5 @@ Estimated Lab Time: 35 minutes
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
 

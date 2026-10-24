@@ -80,6 +80,8 @@ Estimated Lab Time: 40 minutes
 
 4. At successful completion, record the run directory and log file.
 
+    Ignore the script's `Reboot into Oracle Linux when ready:` message and the `reboot` command displayed below it. Complete Task 3 before rebooting in Task 4.
+
 ## Task 3: Inspect the converted system before reboot
 
 1. Verify that the installed user space identifies as Oracle Linux:

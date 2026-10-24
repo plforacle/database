@@ -2,7 +2,9 @@
 
 ## Introduction
 
-Migration begins with assessment and a recoverable checkpoint. In this lab, you inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and create a boot-volume backup before changing the operating system.
+Begin this lab after the prepared custom image has been moved to the destination OCI tenancy and a new RHEL instance has been launched from it. Connect to that instance using its public IP, SSH key, and `cloud-user` account. Red Hat registration was removed in Lab 2 and is not required here.
+
+First capture the destination instance baseline. Then inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and create a boot-volume backup before changing the operating system.
 
 The migration script is maintained in an Oracle-owned GitHub repository, but the repository states that the scripts are community-based and are not officially supported by Oracle.
 
@@ -10,15 +12,85 @@ The migration script is maintained in an Oracle-owned GitHub repository, but the
 
 In this lab, you will:
 
+- Capture a repeatable baseline on the destination instance before migration.
 - Assess the source system for common migration risks.
 - Download and verify a pinned migration script.
 - Run a non-changing migration dry run.
 - Create and verify a boot-volume backup.
 - Document the rollback decision point.
 
-Estimated Lab Time: 30 minutes
+Estimated Lab Time: 40 minutes
 
-## Task 1: Assess the source operating system
+## Task 1: Create the baseline evidence bundle
+
+1. Create an evidence directory:
+
+    ```bash
+    <copy>
+    mkdir -p "$HOME/ol-migration-evidence/before"
+    EVIDENCE="$HOME/ol-migration-evidence/before"
+    </copy>
+    ```
+
+2. Capture the operating system, kernel, repositories, and packages:
+
+    ```bash
+    <copy>
+    cat /etc/os-release > "$EVIDENCE/os-release.txt"
+    uname -a > "$EVIDENCE/kernel.txt"
+    sudo dnf repolist --enabled > "$EVIDENCE/repositories.txt"
+    rpm -qa --qf '%{NAME}\t%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n' \
+      | sort > "$EVIDENCE/packages.tsv"
+    </copy>
+    ```
+
+3. Capture services, networking, firewall, and SELinux:
+
+    ```bash
+    <copy>
+    systemctl is-enabled httpd > "$EVIDENCE/httpd-enabled.txt"
+    systemctl is-active httpd > "$EVIDENCE/httpd-active.txt"
+    sudo ss -lntup > "$EVIDENCE/listening-ports.txt"
+    ip address show > "$EVIDENCE/addresses.txt"
+    ip route show > "$EVIDENCE/routes.txt"
+    getenforce > "$EVIDENCE/selinux.txt"
+    sudo firewall-cmd --list-all > "$EVIDENCE/firewall.txt"
+    </copy>
+    ```
+
+4. Capture the workload response and checksum:
+
+    ```bash
+    <copy>
+    curl --fail --silent http://127.0.0.1/ > "$EVIDENCE/application.html"
+    sha256sum /var/www/html/index.html > "$EVIDENCE/application-sha256.txt"
+    </copy>
+    ```
+
+5. Create an archive:
+
+    ```bash
+    <copy>
+    tar -C "$HOME/ol-migration-evidence" -czf \
+      "$HOME/ol-migration-evidence/rhel-before.tar.gz" before
+    ls -lh "$HOME/ol-migration-evidence/rhel-before.tar.gz"
+    </copy>
+    ```
+
+6. Confirm the source checkpoint:
+
+    ```bash
+    <copy>
+    grep '^ID=' /etc/os-release
+    systemctl is-active httpd
+    getenforce
+    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
+    </copy>
+    ```
+
+    Expected results are `ID="rhel"`, `active`, `Enforcing`, and the workload marker.
+
+## Task 2: Assess the source operating system
 
 1. Confirm the source version and architecture:
 
@@ -62,6 +134,8 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
+    No enabled source repositories are expected after the Lab 2 registration cleanup. Oracle repositories are configured by the migration script.
+
 5. Identify packages that are not signed by Red Hat or have a different vendor:
 
     ```bash
@@ -84,7 +158,7 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-## Task 2: Download and verify the pinned migration script
+## Task 3: Download and verify the pinned migration script
 
 1. Create a working directory:
 
@@ -130,7 +204,7 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-## Task 3: Run the migration dry run
+## Task 4: Run the migration dry run
 
 1. Run the non-changing assessment for an Oracle Linux 9.8 RHCK target:
 
@@ -161,20 +235,7 @@ Estimated Lab Time: 30 minutes
     - Broken RPM database
     - Insufficient disk space
     - A source kernel newer than the running kernel
-    - Unreachable source or Oracle repositories
-
-## Task 4: Record Red Hat registration identity
-
-1. Record the system identity without recording credentials:
-
-    ```bash
-    <copy>
-    sudo subscription-manager identity | tee \
-      "$HOME/ol-migration-evidence/before/red-hat-identity.txt"
-    </copy>
-    ```
-
-2. Note the system name or consumer ID. You will use it to remove the temporary registration after migration.
+    - Unreachable Oracle repositories
 
 ## Task 5: Create the pre-migration recovery point
 
@@ -214,7 +275,8 @@ Estimated Lab Time: 30 minutes
 
     - Dry run completed without an unresolved blocker.
     - The verified script checksum returned OK.
-    - The RHEL registration identity was recorded.
+    - The baseline evidence bundle was captured on the destination instance.
+    - Red Hat registration was removed and subscription plugins were disabled in Lab 2.
     - The boot-volume backup state is Available.
     - Apache is active after the backup.
     - The workload marker is returned.
@@ -234,5 +296,5 @@ Estimated Lab Time: 30 minutes
 ## Acknowledgements
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
-- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, July 2026
+- **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
 

@@ -245,13 +245,7 @@ Estimated Lab Time: 35 minutes
 
 2. Wait until the instance is removed from the managed-instance list.
 
-3. Sign in to the Red Hat Hybrid Cloud Console or Customer Portal inventory.
-
-4. Locate the temporary system using the system name or consumer ID recorded in Lab 3.
-
-5. Remove the system registration so the temporary VM no longer consumes or appears against your entitlement.
-
-    The migration might remove RHEL subscription-management packages, so portal-side removal is an important cleanup step.
+3. Confirm that Red Hat registration was removed from the preparation VM in Lab 2 before image capture. The destination instance does not need to be registered or unregistered for this workflow.
 
 ## Task 7: Delete OCI workshop resources
 
@@ -295,7 +289,7 @@ Estimated Lab Time: 35 minutes
 
 5. What must be cleaned up outside OCI?
 
-    The temporary Red Hat system registration or entitlement association must also be removed.
+    The preparation VM must be unregistered from Red Hat before image capture, as completed in Lab 2. The destination instance does not create a new Red Hat registration.
 
 ## Learn More
 
