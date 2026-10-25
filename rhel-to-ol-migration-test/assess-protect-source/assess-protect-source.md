@@ -232,7 +232,18 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-4. Do not continue if the dry run reports an unresolved error involving:
+4. If the dry run reports packages without an Oracle replacement, review the proposed unavailable-package list. Set `RUN_DIR` to the state directory printed by your run:
+
+    ```bash
+    <copy>
+    RUN_DIR="$(sudo ls -1dt /var/lib/migrate-to-oracle-linux/* | head -1)"
+    sudo cat "$RUN_DIR/unavailable-reinstall.nevra"
+    </copy>
+    ```
+
+    This is a proposed package plan, not the final list of retained packages. Source release packages can be removed and other packages replaced during conversion. Review unfamiliar packages or packages needed by the workload before passing the migration gate. Lab 7 checks the final package state.
+
+5. Do not continue if the dry run reports an unresolved error involving:
 
     - Unsupported source release or architecture
     - Cross-major target selection
@@ -289,9 +300,20 @@ Estimated Lab Time: 30 minutes
     - Apache is active, including after any optional backup.
     - The workload marker is returned.
 
-2. If any condition fails, stop here and correct it before continuing.
+2. Recheck Apache and the workload response:
 
-3. Review the rollback decision:
+    ```bash
+    <copy>
+    systemctl is-active httpd
+    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
+    </copy>
+    ```
+
+    Expected results are `active` and the `MIGRATION_WORKLOAD_OK` marker.
+
+3. If any condition fails, stop here and correct it before continuing.
+
+4. Review the rollback decision:
 
     If the migration fails and the VM cannot return to a stable state, preserve the logs. If you created a backup, use your approved boot-volume restore procedure. If you skipped the backup, rebuild the disposable destination VM from `rhel-9-8-apache-source`, repeat this lab, and use a new baseline.
 

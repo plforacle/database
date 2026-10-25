@@ -31,7 +31,11 @@ Complete Lab 2, or obtain the authorized `rhel-9-8-apache-source` OCI export and
 
 5. Choose **Import from an Object Storage URL** and paste the complete PAR URL from Lab 2, Task 8.
 
+    Keep the PAR URL private and hide it in any screenshots you share.
+
 6. Select **OCI** as the image type. The launch mode is selected from the exported metadata automatically.
+
+    ![Import image settings show the prepared RHEL image name, Object Storage URL source, and OCI image type, with the PAR URL redacted.](./images/import-prepared-rhel-image.png)
 
 7. Select **Import image** and wait until its state is Available. If it fails, inspect the work request and confirm that the PAR permits reads and has not expired.
 
@@ -43,9 +47,31 @@ Complete Lab 2, or obtain the authorized `rhel-9-8-apache-source` OCI export and
 
 3. Select **Create instance** and enter `ol-migrate-rhel-source` as the instance name.
 
-4. Configure 1 OCPU, 8 GB memory, and a boot volume of at least 50 GB or the image minimum. Select the destination network, attach the SSH/HTTP network security group, assign a public IP, and supply your SSH public key.
+    The wizard may initially use the image name, `rhel-9-8-apache-source`, as the instance name. Replace it with `ol-migrate-rhel-source`; keep the selected image unchanged.
 
-5. Create the instance, wait until it is Running, and record its public IP. Connect from your local terminal:
+4. Under **Basic information**, select an availability domain and confirm that the selected image is `rhel-9-8-apache-source`. Select `VM.Standard.E5.Flex` and configure 1 OCPU and at least 8 GB of memory. A 12 GB configuration is also sufficient.
+
+    The example shows the wizard's default instance name. Use `ol-migrate-rhel-source` for your instance.
+
+    ![Basic information shows the default instance name, availability domain selection, and prepared RHEL image.](./images/create-instance-basic-info.png)
+
+5. Under **Networking**, select the destination VCN and public subnet. Keep automatic private IPv4 assignment and attach the SSH/HTTP network security group.
+
+    ![Networking settings select the workshop VCN, public subnet, and automatic private IPv4 assignment.](./images/create-instance-networking.png)
+
+6. Enable **Automatically assign public IPv4 address** and leave IPv6 disabled for this workshop. Under **Add SSH keys**, upload or paste your SSH public key. If you select **Generate a key pair for me**, download and securely save the private key before continuing; it will not be shown again.
+
+    ![Public IPv4 assignment is enabled, and the generated SSH key option provides a Download private key button.](./images/create-instance-add-ssh.png)
+
+7. Under **Storage**, enable **Specify a custom volume size and performance setting**. Set the boot volume to at least 50 GB or the image minimum, whichever is larger.
+
+    ![Storage settings enable a custom boot volume size of 50 GB.](./images/create-instance-storage.png)
+
+8. Under **Review**, confirm the instance name, selected image, shape, memory, networking, and SSH key. If the name still matches the image name shown in the example, select **Edit** and change it to `ol-migrate-rhel-source`. Select **Create**.
+
+    ![The review page shows the prepared RHEL image, E5 Flex shape with 1 OCPU and 12 GB of memory, and the Create button.](./images/create-instance-review.png)
+
+9. Wait until the instance is Running and record its public IP. Connect from your local terminal:
 
     ```bash
     <copy>
@@ -53,7 +79,7 @@ Complete Lab 2, or obtain the authorized `rhel-9-8-apache-source` OCI export and
     </copy>
     ```
 
-6. Verify the operating system and application:
+10. Verify the operating system and application:
 
     ```bash
     <copy>
@@ -66,7 +92,7 @@ Complete Lab 2, or obtain the authorized `rhel-9-8-apache-source` OCI export and
 
     Expected results are RHEL 9.8, `enabled`, `active`, and the workload marker.
 
-7. Verify registration cleanup:
+11. Verify registration cleanup:
 
     ```bash
     <copy>
@@ -80,9 +106,9 @@ Complete Lab 2, or obtain the authorized `rhel-9-8-apache-source` OCI export and
 
     No registration certificate files should be listed, and both plugins must show `enabled=0`. The login banner suggesting `rhc connect` is not proof of registration. Do not run that command.
 
-8. Open `http://<public-ip>/` in your browser and confirm that the HTML page displays `MIGRATION_WORKLOAD_OK`.
+12. Open `http://<public-ip>/` in your browser and confirm that the HTML page displays `MIGRATION_WORKLOAD_OK`.
 
-9. Continue to Lab 4, the Linux Command-Line Quickstart, on this destination instance. Capture the migration baseline afterward in Lab 5. Do not repeat the preparation registration or package installation steps.
+13. Continue to Lab 4, the Linux Command-Line Quickstart, on this destination instance. Capture the migration baseline afterward in Lab 5. Do not repeat the preparation registration or package installation steps.
 
 ## Learn More
 
