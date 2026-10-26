@@ -1,4 +1,4 @@
-# Lab 13: Back Up and Restore the Application
+# Lab 11: Back Up and Restore the Application
 
 ## Introduction
 
@@ -17,7 +17,7 @@ Estimated Lab Time: 20 minutes
 
 ### Prerequisites
 
-Complete Lab 12 with `/practice/`, `/secure-practice/`, and the original page working. This lab keeps its archives in `$HOME/ol-practice-backups`; migration evidence remains unchanged.
+Complete Lab 10 with `/practice/`, `/secure-practice/`, and the original page working. This lab keeps its archives in `$HOME/ol-practice-backups`; migration evidence remains unchanged.
 
 Follow the guided path if you are new to the tools. Experienced learners can attempt the independent challenge within the same lab time and must still pass the completion checks.
 
@@ -141,7 +141,7 @@ Follow the guided path if you are new to the tools. Experienced learners can att
 
 2. Record the archive path, restored files, and verification outcome in `$HOME/ol-practice-reports/restore-result.txt`. Keep the archive and checksum manifest.
 
-3. Complete when the content and configuration checksums match and all three pages work. Continue to Lab 14.
+3. Complete when the content and configuration checksums match and all three pages work. Continue to Lab 12.
 
 ## Learn More
 

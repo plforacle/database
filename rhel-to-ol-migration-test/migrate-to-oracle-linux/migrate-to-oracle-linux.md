@@ -1,4 +1,4 @@
-# Lab 6: Migrate to Oracle Linux
+# Lab 4: Migrate to Oracle Linux
 
 ## Introduction
 
@@ -47,7 +47,7 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-4. Confirm the recovery choice recorded in Lab 5. If a backup was selected, verify that `ol-migrate-before-conversion` is Available. If it was skipped for this disposable VM, confirm that `rhel-9-8-apache-source` is retained for rebuilding.
+4. Confirm the recovery choice recorded in Lab 3. If a backup was selected, verify that `ol-migrate-before-conversion` is Available. If it was skipped for this disposable VM, confirm that `rhel-9-8-apache-source` is retained for rebuilding.
 
 5. Continue only when all checks pass.
 
@@ -130,7 +130,7 @@ Estimated Lab Time: 40 minutes
     </copy>
     ```
 
-    These first 40 rows are a preview, not a complete exception review. The `unavailable` plan can include source package names that are removed or replaced later in the run. Review the final retained-package report in Lab 7.
+    These first 40 rows are a preview, not a complete exception review. The `unavailable` plan can include source package names that are removed or replaced later in the run. Review the final retained-package report in Lab 5.
 
     Warnings about EVRA differences or retained source-vendor packages require review, but do not by themselves establish a failed conversion. Do not remove packages simply to eliminate a vendor warning.
 
@@ -248,4 +248,3 @@ Estimated Lab Time: 40 minutes
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
 - **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
-

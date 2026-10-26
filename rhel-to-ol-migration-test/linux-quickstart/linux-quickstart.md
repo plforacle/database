@@ -1,4 +1,4 @@
-# Lab 4: Linux Command-Line Quickstart
+# Lab 2: Linux Command-Line Quickstart
 
 ## Introduction
 
@@ -17,7 +17,7 @@ Estimated Lab Time: 60 minutes
 
 ### Prerequisites
 
-Complete Lab 3 Task 2 and connect as `cloud-user` to the destination VM. Apache must already serve `MIGRATION_WORKLOAD_OK`. No Red Hat registration or additional packages are needed.
+Complete Lab 1 Task 4 and connect as `cloud-user` to the destination VM. Apache must already serve `MIGRATION_WORKLOAD_OK`. No Red Hat registration or additional packages are needed.
 
 Use the guided steps if you are new to Linux. Experienced learners can attempt the independent challenge within the same lab time, then verify every completion check.
 
@@ -212,7 +212,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
     </copy>
     ```
 
-    Expect Apache to be `enabled` and `active`. An enabled service is configured to start at boot; an active service is running now. RPM queries the local package database. Oracle repository operations are introduced after conversion in Lab 10.
+    Expect Apache to be `enabled` and `active`. An enabled service is configured to start at boot; an active service is running now. RPM queries the local package database. Oracle repository operations are introduced after conversion in Lab 8.
 
 ## Task 7: Complete the independent challenge and readiness report
 
@@ -247,7 +247,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
     </copy>
     ```
 
-    Complete only when the three PASS messages, workload marker, and `active` appear. If a workspace exercise fails, repeat that task without editing system files. Continue to Lab 5 to capture the actual migration baseline.
+    Complete only when the three PASS messages, workload marker, and `active` appear. If a workspace exercise fails, repeat that task without editing system files. Continue to Lab 3 to capture the actual migration baseline.
 
 ## Learn More
 

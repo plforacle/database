@@ -1,10 +1,10 @@
-# Lab 8: Explore Oracle Linux Kernel Choices
+# Lab 6: Explore Oracle Linux Kernel Choices
 
 ## Introduction
 
-The core conversion used Oracle Linux RHCK and was validated in Lab 7. Now explore the Unbreakable Enterprise Kernel (UEK) as a separate post-migration choice. Install UEK 8, select it for boot, reboot, and verify the same Apache application. Keep the working RHCK installed as a fallback.
+The core conversion used Oracle Linux RHCK and was validated in Lab 5. Now explore the Unbreakable Enterprise Kernel (UEK) as a separate post-migration choice. Install UEK 8, select it for boot, reboot, and verify the same Apache application. Keep the working RHCK installed as a fallback.
 
-Kernel choice depends on workload requirements, hardware, and software certification. This small Apache exercise demonstrates boot and application continuity; it does not establish performance improvements or certify another application. Switching the boot kernel requires a reboot, unlike the Ksplice live-patching exercise in Lab 9.
+Kernel choice depends on workload requirements, hardware, and software certification. This small Apache exercise demonstrates boot and application continuity; it does not establish performance improvements or certify another application. Switching the boot kernel requires a reboot, unlike the Ksplice live-patching exercise in Lab 7.
 
 ### Objectives
 
@@ -19,7 +19,7 @@ Estimated Lab Time: 30 minutes
 
 ### Prerequisites
 
-Complete Lab 7 with a successful RHCK migration decision and saved evidence. Use the Oracle Linux 9.8 x86_64 destination VM and keep your SSH key and connection details available. The original application checksum must still match its baseline. Run these changes only on the workshop VM.
+Complete Lab 5 with a successful RHCK migration decision and saved evidence. Use the Oracle Linux 9.8 x86_64 destination VM and keep your SSH key and connection details available. The original application checksum must still match its baseline. Run these changes only on the workshop VM.
 
 Beginners should follow the guided path. Experienced learners can explain and perform the kernel selection independently, but must record the fallback path and pass the same verification checks.
 
@@ -196,7 +196,7 @@ Beginners should follow the guided path. Experienced learners can explain and pe
 
     If the VM cannot boot or accept SSH, use the instance console or your approved recovery procedure to select the retained RHCK, or rebuild the disposable VM from the prepared image. Do not remove kernels while diagnosing an inaccessible system. Record a fallback as a fallback result, not a successful UEK test.
 
-3. In the normal guided path, leave UEK selected and running. Record the RHCK path, booted UEK version, application result, and fallback decision in `$HOME/ol-practice-reports/kernel-choice/result.txt`. Continue to Lab 9 only after the chosen Oracle kernel and application are healthy. Ksplice can be evaluated on a maintained Oracle UEK or Oracle RHCK; a retained Red Hat-built kernel is not an acceptable substitute.
+3. In the normal guided path, leave UEK selected and running. Record the RHCK path, booted UEK version, application result, and fallback decision in `$HOME/ol-practice-reports/kernel-choice/result.txt`. Continue to Lab 7 only after the chosen Oracle kernel and application are healthy. Ksplice can be evaluated on a maintained Oracle UEK or Oracle RHCK; a retained Red Hat-built kernel is not an acceptable substitute.
 
 ## Learn More
 

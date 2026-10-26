@@ -1,5 +1,5 @@
 {
-  "workshoptitle": "Migrate Red Hat Enterprise Linux to Oracle Linux on OCI",
+  "workshoptitle": "Migrate Red Hat Enterprise Linux to Oracle Linux: Student Workshop",
   "help": "livelabs-help-linux_us@oracle.com",
   "variables": [
     "../../variables/variables.json"
@@ -7,76 +7,66 @@
   "tutorials": [
     {
       "title": "Introduction",
-      "description": "Review the complete migration journey, architecture, prerequisites, and success criteria.",
+      "description": "Review the student environment, prerequisites, lab order, and migration success criteria.",
       "filename": "../../introduction/introduction.md"
     },
     {
-      "title": "Lab 1: Acquire and Import the RHEL Source Image",
-      "description": "Obtain and import the authorized raw RHEL image.",
-      "filename": "../../acquire-import-rhel/acquire-import-rhel.md"
-    },
-    {
-      "title": "Lab 2: Prepare and Export the RHEL Application Image",
-      "description": "Prepare RHEL with Apache, remove registration, capture and export the reusable image, and create its object-read PAR.",
-      "filename": "../../launch-baseline-rhel/launch-baseline-rhel.md"
-    },
-    {
-      "title": "Lab 3: Import and Verify the RHEL Application Image",
-      "description": "Import the prepared image into the destination tenancy, launch a VM, and verify the application and registration cleanup.",
+      "title": "Lab 1: Build and Verify the Migration Environment",
+      "description": "Create the destination VCN and access rules, import the instructor-provided image, launch a VM, and verify the application and registration cleanup.",
       "filename": "../../import-verify-rhel/import-verify-rhel.md"
     },
     {
-      "title": "Lab 4: Linux Command-Line Quickstart",
+      "title": "Lab 2: Linux Command-Line Quickstart",
       "description": "Practice everyday commands and produce a readiness report.",
       "filename": "../../linux-quickstart/linux-quickstart.md"
     },
     {
-      "title": "Lab 5: Assess Readiness and Protect the Source",
+      "title": "Lab 3: Assess Readiness and Protect the Source",
       "description": "Capture the destination baseline, assess readiness, and choose an optional backup.",
       "filename": "../../assess-protect-source/assess-protect-source.md"
     },
     {
-      "title": "Lab 6: Migrate to Oracle Linux",
+      "title": "Lab 4: Migrate to Oracle Linux",
       "description": "Convert in place, reboot into Oracle RHCK, and verify the application.",
       "filename": "../../migrate-to-oracle-linux/migrate-to-oracle-linux.md"
     },
     {
-      "title": "Lab 7: Validate the Migration",
+      "title": "Lab 5: Validate the Migration",
       "description": "Compare migration evidence and review package exceptions before further practice.",
       "filename": "../../validate-cleanup/validate-cleanup.md"
     },
     {
-      "title": "Lab 8: Explore Oracle Linux Kernel Choices",
+      "title": "Lab 6: Explore Oracle Linux Kernel Choices",
       "description": "Install and boot UEK 8, retain RHCK as fallback, and retest the migrated application.",
       "filename": "../../kernel-choice/kernel-choice.md"
     },
     {
-      "title": "Lab 9: Explore Rebootless Patching with Ksplice",
+      "title": "Lab 7: Explore Rebootless Patching with Ksplice",
       "description": "Check eligibility, install Uptrack, evaluate available live patches, and compare boot identity and application observations.",
       "filename": "../../ksplice-live-patching/ksplice-live-patching.md"
     },
     {
-      "title": "Lab 10: Maintain Oracle Linux Packages",
+      "title": "Lab 8: Maintain Oracle Linux Packages",
       "description": "Inspect repositories, preview selected maintenance, install a utility, and verify the application.",
       "filename": "../../maintain-packages/maintain-packages.md"
     },
     {
-      "title": "Lab 11: Configure and Troubleshoot Apache",
+      "title": "Lab 9: Configure and Troubleshoot Apache",
       "description": "Configure practice content, inspect logs, and recover a stopped service.",
       "filename": "../../apache-troubleshooting/apache-troubleshooting.md"
     },
     {
-      "title": "Lab 12: Manage Application Security",
+      "title": "Lab 10: Manage Application Security",
       "description": "Practice permissions, SELinux file contexts, and runtime/permanent firewall rules.",
       "filename": "../../application-security/application-security.md"
     },
     {
-      "title": "Lab 13: Back Up and Restore the Application",
+      "title": "Lab 11: Back Up and Restore the Application",
       "description": "Archive application content and configuration, restore selected files, and verify recovery.",
       "filename": "../../application-backup/application-backup.md"
     },
     {
-      "title": "Lab 14: Automate Application Health Checks",
+      "title": "Lab 12: Automate Application Health Checks",
       "description": "Create a script and systemd timer, detect a fault, recover, and optionally clean up.",
       "filename": "../../health-automation/health-automation.md"
     },

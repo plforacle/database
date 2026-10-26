@@ -1,4 +1,4 @@
-# Lab 12: Manage Application Security
+# Lab 10: Manage Application Security
 
 ## Introduction
 
@@ -17,7 +17,7 @@ Estimated Lab Time: 30 minutes
 
 ### Prerequisites
 
-Complete Lab 11 on the Oracle Linux destination VM. The `/practice/` page and original migration page must work. This lab reserves `/srv/workshop-secure`, `workshop-security.conf`, and TCP port 8088 for practice.
+Complete Lab 9 on the Oracle Linux destination VM. The `/practice/` page and original migration page must work. This lab reserves `/srv/workshop-secure`, `workshop-security.conf`, and TCP port 8088 for practice.
 
 Follow the guided path if you are new to the tools. Experienced learners can attempt the independent challenge within the same lab time and must still pass the completion checks.
 
@@ -221,7 +221,7 @@ Follow the guided path if you are new to the tools. Experienced learners can att
     </copy>
     ```
 
-3. Complete when all pages work, the original checksum is OK, SELinux is Enforcing, and the temporary 8088 rules have been removed. Keep the secure alias and file-context rule for the next lab. Record your findings in `$HOME/ol-practice-reports/security-findings.txt` and continue to Lab 13.
+3. Complete when all pages work, the original checksum is OK, SELinux is Enforcing, and the temporary 8088 rules have been removed. Keep the secure alias and file-context rule for the next lab. Record your findings in `$HOME/ol-practice-reports/security-findings.txt` and continue to Lab 11.
 
 ## Learn More
 

@@ -1,129 +1,102 @@
-# Migrate Red Hat Enterprise Linux to Oracle Linux on OCI
+# Migrate Red Hat Enterprise Linux to Oracle Linux: Student Workshop
 
 ## Introduction
 
-This workshop demonstrates an in-place conversion from Red Hat Enterprise Linux (RHEL) 9.8 to Oracle Linux 9.8 while preserving a working Apache/HTML application.
+Convert a prepared RHEL 9.8 VM to Oracle Linux 9.8 while preserving a working Apache/HTML application. Begin with Student Lab 1 and complete the labs in order.
 
-Labs 1 and 2 prepare the reusable source image. The image owner imports an authorized RHEL KVM guest image, registers and updates the preparation VM, installs Apache, and removes Red Hat registration before capturing `rhel-9-8-apache-source`. Lab 2 ends with the prepared export and its object-read PAR URL. Lab 3 imports that image into the destination tenancy and verifies a new instance.
+Your instructor prepares the source image in a separate instructor workshop and supplies its object-read PAR URL. You create the destination network and VM yourself. You do not need a Red Hat account or access to the preparation tenancy.
 
-Lab 4 introduces everyday Linux commands on the prepared RHEL destination VM. Labs 5 through 7 capture the baseline, assess readiness, convert the instance, reboot, and validate the result. The destination VM is not registered with Red Hat. If your image owner supplies the prepared image, begin Lab 3, then follow the Lab 4 quickstart; the full eight-hour agenda includes the image-preparation work.
+Lab 1 builds the network, imports the prepared image, launches the VM, and verifies the application and registration cleanup. Lab 2 introduces everyday Linux commands. Labs 3 through 5 capture the baseline, assess readiness, convert the same VM, reboot, and validate the result.
 
-Labs 8 and 9 demonstrate Oracle Linux benefits after the RHCK conversion is validated: kernel choice with UEK, followed by Ksplice live patching when supported updates and access are available. The kernel switch requires a reboot; Ksplice observations distinguish subsequent live patching from that boot change.
+Labs 6 and 7 explore UEK kernel choice and Ksplice live patching when supported updates and access are available. Labs 8 through 12 cover package maintenance, Apache troubleshooting, application security, backup and restore, and automated health checks. Keep the VM through the final lab.
 
-Labs 10 through 14 develop daily administration skills on the migrated Oracle Linux instance: package maintenance, Apache troubleshooting, application security, backup and restore, and automated health checks. These skill exercises use terminal commands and standard Linux tools. Keep the instance through all labs; optional resource cleanup is at the end of Lab 14.
-
-The workshop does not provide or redistribute RHEL images. The image owner must obtain and use the source software through an authorized account or organizational process.
-
-Estimated Workshop Time: 8 hours (480 minutes), including 15 minutes of orientation
+Estimated Workshop Time: 6 hours 45 minutes (405 minutes), including 15 minutes of orientation
 
 ### Objectives
 
-In this workshop, you will:
-
-- Import an authorized RHEL 9.8 KVM guest image into OCI.
-- Prepare RHEL with a working Apache/HTML application.
-- Remove registration and capture a reusable custom image.
-- Export and import the prepared image into the destination tenancy.
-- Capture a destination baseline and assess migration readiness.
-- Convert the destination VM to Oracle Linux 9.8 with RHCK.
-- Validate the application, packages, services, networking, SELinux, and firewall.
-- Practice everyday Linux commands with guided exercises and independent challenges.
-- Explore UEK after validating the compatibility-focused RHCK migration.
-- Evaluate supported rebootless kernel patching with Ksplice and record the actual outcome.
-- Maintain Oracle packages and troubleshoot Apache.
-- Configure file permissions, SELinux labels, and firewall rules.
-- Back up and restore the application and automate health checks.
-- Save evidence and choose whether to retain or delete temporary resources at the end.
+- Create the destination network and import an instructor-provided RHEL application image.
+- Launch and verify a RHEL VM without registering it with Red Hat.
+- Practice Linux commands and capture a migration baseline.
+- Convert the VM to Oracle Linux 9.8 with RHCK and verify application continuity.
+- Compare evidence and review package exceptions.
+- Explore UEK and supported Ksplice patching.
+- Practice package, Apache, security, backup, restore, and automation tasks.
+- Preserve evidence and decide whether to retain your student resources after the workshop.
 
 ### Prerequisites
 
-This workshop requires:
+- An OCI tenancy, an assigned region and compartment, and permissions to create networking, import custom images, and launch Compute instances. Lab 1 includes compartment creation if permitted.
+- A valid object-read PAR URL for the authorized `rhel-9-8-apache-source` OCI export from your instructor.
+- A browser and SSH client, plus an SSH key pair or permission to generate one in the launch wizard.
+- Quota and regional capacity for `VM.Standard.E5.Flex` with 1 OCPU and at least 8 GB memory, or an instructor-tested compatible x86_64 alternative. The boot volume must be at least 50 GB or the image minimum.
+- For Ksplice: a maintained Oracle kernel, service connectivity, and eligible access. The OCI BYOI path uses Oracle's OCI installer without ULN registration. Record any access or support failure as unresolved.
+- Boot-volume backup permission only if you choose the optional backup in Lab 3. Otherwise, retain the prepared image for rebuilding the disposable VM; rebuilding loses changes made after image capture.
 
-- Access to preparation and destination OCI tenancies or authorized environments, with permission to create networking, Object Storage objects and object-read pre-authenticated requests, custom images, and Compute instances.
-- For Labs 1 and 2 preparation: an authorized Red Hat account with RHEL 9.8 x86_64 KVM guest image access and Simple Content Access for package installation.
-- For Lab 3 and the destination workflow: the prepared `rhel-9-8-apache-source` image or a valid object-read PAR URL supplied by the image owner. No Red Hat credentials are required in the destination tenancy.
-- For image preparation: a local computer with at least 15 GB of temporary free space and a reliable connection for image upload.
-- A modern browser and an SSH client.
-- For Ksplice: a currently maintained Oracle kernel, network access to the Ksplice service, and eligible access. The OCI BYOI lab path uses Oracle's OCI installer without ULN registration. Outside OCI, arrange the required Oracle Linux support entitlement and use the corresponding documented installation path. An access/support failure must be recorded rather than treated as successful patching.
-- Sufficient quota for a `VM.Standard.E5.Flex` VM with 1 OCPU and 8 GB of memory in each environment used, or a tested compatible alternative.
-- Permission to create boot-volume backups only if you choose the optional backup task. Without a backup, this disposable practice VM can be rebuilt from the prepared image; work added after image capture will be lost.
-
-> **Important:** Do not paste Red Hat passwords, activation keys, OCI private keys, or other secrets into workshop fields, screenshots, or shared terminals.
+> **Important:** Keep PAR URLs and SSH private keys private. Hide them in screenshots and shared output. The instructor supplies the prepared image through an authorized organizational process.
 
 ## Workshop Architecture
 
-You will create the following flow:
-
 ```text
-Authorized RHEL 9.8 KVM guest image
+Instructor-provided prepared RHEL image and object-read PAR URL
         |
-        | Labs 1-2: import, register, update, deploy Apache
+        | Lab 1: create VCN, import image, launch and verify VM
         v
-RHEL preparation VM: rhel-9-8-source
+Student VM: ol-migrate-rhel-source, running RHEL 9.8 and Apache
         |
-        | Unregister, clean subscription data, capture and export
+        | Lab 2: Linux quickstart
+        | Lab 3: baseline, assessment, dry run, recovery choice
+        | Lab 4: conversion to Oracle Linux RHCK and reboot
+        | Lab 5: compare evidence and review exceptions
         v
-Reusable image: rhel-9-8-apache-source
+Same VM running Oracle Linux 9.8 with a working application
         |
-        | Lab 3: import and launch in destination tenancy
+        | Labs 6-7: UEK and Ksplice
+        | Labs 8-12: daily administration and application practice
         v
-Destination VM: ol-migrate-rhel-source
-        |
-        | Lab 4: Linux quickstart
-        | Lab 5: baseline, assessment, dry run, optional backup
-        | Lab 6: conversion, reboot, health checks
-        v
-Same destination VM running Oracle Linux 9.8 and Apache
-        |
-        | Lab 7: compare evidence, review exceptions
-        | Labs 8-9: UEK kernel choice and Ksplice live patching
-        | Labs 10-14: packages, Apache, security, recovery, automation
-        v
-Retain for further work or optionally delete temporary resources
+Save evidence and retain resources or choose optional student cleanup
 ```
 
 ## Workshop Conventions
 
-- The raw imported image is `rhel-9-8-migration-import`; the reusable prepared image is `rhel-9-8-apache-source`.
-- The preparation VM is `rhel-9-8-source`; the destination VM is `ol-migrate-rhel-source`.
-- In Labs 4 through 14, `<public-ip>` always means the destination VM public IP.
-- Keep PAR URLs private and use your own values rather than copying a URL from a screenshot.
-- Run Linux commands as `cloud-user` unless a step explicitly uses `sudo`.
-- Replace values enclosed in angle brackets, such as `<public-ip>`, with values from your environment.
-- Complete each lab's starting checks before its changes. Lab 4 confines practice file changes to your home directory; Labs 8 through 14 change the migrated system after evidence is preserved.
-- Complete every recovery step after a controlled fault, even if you choose to stop a lab early.
-- Each new lab offers a guided path and an independent challenge. Experienced learners may use the challenge within the same time budget, but must pass the same completion checks.
-- The original migration page and its evidence archives remain unchanged during later practice; use the separate practice pages and reports.
-- A successful migration requires application and system evidence, not only a changed `/etc/os-release` file.
+- Lab numbers throughout this workshop refer to student labs.
+- The prepared custom image is `rhel-9-8-apache-source`; the destination VM is `ol-migrate-rhel-source`.
+- `<public-ip>` always means your student VM's public IP. Replace angle-bracket placeholders with your values.
+- Use the same region and compartment throughout. Use unique resource names when sharing a compartment.
+- Run Linux commands as `cloud-user` unless a step uses `sudo`.
+- Keep PAR URLs private; never copy a URL from a screenshot.
+- Verify registration cleanup in Lab 1. Do not register the destination VM with Red Hat.
+- Complete each lab's starting checks. Lab 2 confines file practice to your home directory; Labs 6 through 12 change the migrated system after evidence is preserved.
+- Complete every recovery step after a controlled fault, even if you stop a lab early.
+- Preserve the original application page and migration archives. Use separate practice pages, reports, and backups later.
+- Independent challenges use the same completion checks as the guided path.
+- A successful migration requires application and system evidence, including final package review.
+- Resource cleanup is optional at the end of Lab 12 and applies only to your student resources. Instructor images, export objects, PARs, and preparation resources remain under instructor control.
 
 ## Workshop Schedule
 
-The learning agenda totals 480 minutes. Lab times include guided practice, investigation, independent challenges, and result review. They are planning estimates, not measured completion guarantees. Breaks, optional backup/cleanup, and unusually long image transfers require additional elapsed time.
+The agenda totals 405 minutes. These are planning estimates. Breaks, optional backup or cleanup, and unusually long image transfers require additional time.
 
 | Session | Minutes |
 | --- | ---: |
 | Orientation | 15 |
-| Lab 1: Acquire and Import the RHEL Source Image | 45 |
-| Lab 2: Prepare and Export the RHEL Application Image | 50 |
-| Lab 3: Import and Verify the RHEL Application Image | 25 |
-| Lab 4: Linux Command-Line Quickstart | 60 |
-| Lab 5: Assess Readiness and Protect the Source | 30 |
-| Lab 6: Migrate to Oracle Linux | 40 |
-| Lab 7: Validate the Migration | 25 |
-| Lab 8: Explore Oracle Linux Kernel Choices | 30 |
-| Lab 9: Explore Rebootless Patching with Ksplice | 30 |
-| Lab 10: Maintain Oracle Linux Packages | 25 |
-| Lab 11: Configure and Troubleshoot Apache | 25 |
-| Lab 12: Manage Application Security | 30 |
-| Lab 13: Back Up and Restore the Application | 20 |
-| Lab 14: Automate Application Health Checks | 30 |
-| **Total** | **480** |
+| Lab 1: Build and Verify the Migration Environment | 45 |
+| Lab 2: Linux Command-Line Quickstart | 60 |
+| Lab 3: Assess Readiness and Protect the Source | 30 |
+| Lab 4: Migrate to Oracle Linux | 40 |
+| Lab 5: Validate the Migration | 25 |
+| Lab 6: Explore Oracle Linux Kernel Choices | 30 |
+| Lab 7: Explore Rebootless Patching with Ksplice | 30 |
+| Lab 8: Maintain Oracle Linux Packages | 25 |
+| Lab 9: Configure and Troubleshoot Apache | 25 |
+| Lab 10: Manage Application Security | 30 |
+| Lab 11: Back Up and Restore the Application | 20 |
+| Lab 12: Automate Application Health Checks | 30 |
+| **Total** | **405** |
 
 ## Learn More
 
-- [Importing Custom Linux Images](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/importingcustomimagelinux.htm)
-- [Bring Your Own Image](https://docs.oracle.com/en-us/iaas/Content/Compute/References/bringyourownimage.htm)
-- [RHEL 9.8 Release Notes](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/9.8_release_notes/index)
+- [Creating a VCN with internet connectivity](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/quickstartnetworking.htm)
+- [Importing a custom image](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/custom-images-import.htm)
 - [Oracle Linux](https://www.oracle.com/linux/)
 - [Oracle Linux kernel choices](https://docs.oracle.com/en/operating-systems/oracle-linux/9/boot/oracle_linux9_kernel_version_matrix.html)
 - [Ksplice availability](https://docs.oracle.com/en/operating-systems/oracle-linux/ksplice-user/ksplice-AboutOracleKsplice.html)
@@ -132,4 +105,3 @@ The learning agenda totals 480 minutes. Lab times include guided practice, inves
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
 - **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
-

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this lab, you launch the imported custom image as an actual RHEL VM. You then register and update RHEL, deploy an Apache workload, and remove Red Hat registration before capturing and exporting the reusable image. Destination import and instance verification are covered in Lab 3. Baseline evidence is captured in Lab 5 after the move.
+In this lab, you launch the imported custom image as an actual RHEL VM. You then register and update RHEL, deploy an Apache workload, and remove Red Hat registration before capturing and exporting the reusable image. This is an instructor preparation lab. Students create their own network, import the prepared image, and verify their instance in Student Lab 1. They capture baseline evidence in Student Lab 3.
 
 ### Objectives
 
@@ -44,6 +44,8 @@ Estimated Lab Time: 50 minutes
     - TCP port 80 from `<your-public-ip>/32`
 
     Do not allow SSH from `0.0.0.0/0`.
+
+9. Inspect the public subnet's associated security lists. On this new preparation network, restrict any broader SSH or HTTP ingress rule to `<your-public-ip>/32`. Keep the existing ICMP and outbound rules. Security-list and NSG rules combine; an NSG does not restrict a broader security-list allowance.
 
 ## Task 2: Launch the RHEL source VM
 
@@ -303,7 +305,7 @@ Estimated Lab Time: 50 minutes
 
 7. Confirm that the application still opens at `http://<public-ip>/` before saving the prepared custom image.
 
-    Continue with Tasks 7 and 8 to capture and export the image. Lab 3 imports it into the destination tenancy and verifies a new instance. Capture the baseline in Lab 5; do not register the destination instance with Red Hat.
+    Continue with Tasks 7 and 8 to capture and export the image. Student Lab 1 creates the destination network, imports the image, and verifies a new instance. Students capture their baseline in Student Lab 3 and do not register the destination VM with Red Hat.
 
 ## Task 7: Capture the prepared source image
 
@@ -341,11 +343,11 @@ Estimated Lab Time: 50 minutes
     - Access type: **Permit object reads**
     - Expiration: A time that covers the planned destination import
 
-8. Create the request and copy the complete PAR URL into your private notes. Use it in Lab 3, Task 1.
+8. Create the request and copy the complete PAR URL into your private notes. Supply it privately for Student Lab 1, Task 3.
 
     The bucket stays private. The PAR grants access to this object to anyone holding the URL, so do not publish it in the workshop or screenshots.
 
-Continue to Lab 3 with the exported image and its object-read PAR URL.
+The instructor workshop is complete. Follow the Student Handoff checklist in the instructor introduction and verify Student Lab 1 before class. Students begin with Student Lab 1 in the separate student workshop.
 
 ## Learn More
 
@@ -360,4 +362,3 @@ Continue to Lab 3 with the exported image and its object-read PAR URL.
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
 - **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
-

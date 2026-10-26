@@ -1,4 +1,4 @@
-# Lab 14: Automate Application Health Checks
+# Lab 12: Automate Application Health Checks
 
 ## Introduction
 
@@ -17,7 +17,7 @@ Estimated Lab Time: 30 minutes
 
 ### Prerequisites
 
-Complete Lab 13 on the Oracle Linux destination VM. Apache must be active and the original marker must respond. The commands use the existing `cloud-user` account and reserve `workshop-health.service`, `workshop-health.timer`, and `/usr/local/bin/workshop-health.sh`.
+Complete Lab 11 on the Oracle Linux destination VM. Apache must be active and the original marker must respond. The commands use the existing `cloud-user` account and reserve `workshop-health.service`, `workshop-health.timer`, and `/usr/local/bin/workshop-health.sh`.
 
 Follow the guided path if you are new to the tools. Experienced learners can attempt the independent challenge within the same lab time and must still pass the completion checks.
 
@@ -213,7 +213,7 @@ Follow the guided path if you are new to the tools. Experienced learners can att
 
 ## Task 6: Save the practice results
 
-1. Confirm that the practice archives are readable by your normal user, then bundle your quickstart files, reports, and application backup. The backup archive ownership was set in Lab 13.
+1. Confirm that the practice archives are readable by your normal user, then bundle your quickstart files, reports, and application backup. The backup archive ownership was set in Lab 11.
 
     ```bash
     <copy>
@@ -231,7 +231,7 @@ Follow the guided path if you are new to the tools. Experienced learners can att
     </copy>
     ```
 
-3. Keep the before/after migration archives saved in Lab 7 as separate evidence. Record the kernel-choice, Ksplice, package, Apache, security, restore, and automation outcomes in your notes. Keep Ksplice results separate from the original migration evidence, including any unresolved eligibility or access issue.
+3. Keep the before/after migration archives saved in Lab 5 as separate evidence. Record the kernel-choice, Ksplice, package, Apache, security, restore, and automation outcomes in your notes. Keep Ksplice results separate from the original migration evidence, including any unresolved eligibility or access issue.
 
 4. Choose whether to keep the instance for further practice. Keeping it is a valid completion choice. Follow Task 7 only if you are finished and want to remove temporary resources; the following optional Console actions are outside the terminal-based skill exercises.
 
@@ -243,15 +243,11 @@ Follow the guided path if you are new to the tools. Experienced learners can att
 
 3. If you created `ol-migrate-before-conversion` and no longer need it, delete that boot-volume backup. Skip this step if no backup was created.
 
-4. Delete the preparation `rhel-9-8-source` VM and its boot volume only if image preparation is finished and the prepared image is retained.
+4. Delete network security groups and VCN resources only if they were created for this exercise and no retained instances or other resources depend on them. Keep shared networking.
 
-5. Remove the object-read PAR when no further imports require it. Retain the exported image object and its private bucket for reuse. A new PAR can be created for a future import.
+5. Delete a workshop compartment only if it is empty and no longer needed. A compartment containing reusable images or image objects should be retained.
 
-6. Delete network security groups and VCN resources only if they were created for this exercise and no retained instances or other resources depend on them. Keep shared networking.
-
-7. Delete a workshop compartment only if it is empty and no longer needed. A compartment containing reusable images or image objects should be retained.
-
-8. Review resources in both tenancies and record what was retained. Do not delete `rhel-9-8-apache-source` or its exported object as routine workshop cleanup.
+6. Review only your student resources and record what was retained. Keep your imported `rhel-9-8-apache-source` image for rebuilding if needed. Instructor preparation VMs, source images, export objects, buckets, and PARs remain under instructor control; do not delete or revoke them.
 
 ## Learn More
 

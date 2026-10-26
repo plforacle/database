@@ -1,4 +1,4 @@
-# Lab 9: Explore Rebootless Patching with Ksplice
+# Lab 7: Explore Rebootless Patching with Ksplice
 
 ## Introduction
 
@@ -20,7 +20,7 @@ Estimated Lab Time: 30 minutes
 
 ### Prerequisites
 
-Complete Labs 7 and 8, keeping the migration evidence unchanged. Use a healthy Oracle Linux 9.8 destination VM with a maintained Oracle UEK or RHCK, internet access, and sudo privileges. Verify the current maintained-kernels documentation linked below. Do not assume that a particular patch will be available on the workshop date.
+Complete Labs 5 and 6, keeping the migration evidence unchanged. Use a healthy Oracle Linux 9.8 destination VM with a maintained Oracle UEK or RHCK, internet access, and sudo privileges. Verify the current maintained-kernels documentation linked below. Do not assume that a particular patch will be available on the workshop date.
 
 If access or kernel support prevents the live exercise, record the actual error and discuss it with the instructor. Other administration labs may continue, but do not report that patches were applied. Beginners follow the guided path; experienced learners should explain the evidence that distinguishes a successful patch application from a successful no-updates check.
 
@@ -186,7 +186,7 @@ If access or kernel support prevents the live exercise, record the actual error 
 
 3. Complete when the monitor is stopped, Apache and its checksum are healthy, and the outcome is recorded accurately. Available updates should have been applied only when the supported apply path succeeded. Follow-on package maintenance still matters so that a future boot uses current on-disk software. Ksplice reduces reboot requirements for supported fixes; it does not eliminate every reason for maintenance or reboot.
 
-4. Continue to Lab 10. If the live exercise was blocked, carry that open issue in your notes; completing other administration labs does not resolve or validate Ksplice access.
+4. Continue to Lab 8. If the live exercise was blocked, carry that open issue in your notes; completing other administration labs does not resolve or validate Ksplice access.
 
 ## Learn More
 

@@ -1,8 +1,8 @@
-# Lab 7: Validate the Migration
+# Lab 5: Validate the Migration
 
 ## Introduction
 
-A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and save your results. Keep the instance for the post-migration practice labs. Optional resource cleanup is at the end of Lab 14.
+A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and save your results. Keep the instance for the post-migration practice labs. Optional resource cleanup is at the end of Lab 12.
 
 ### Objectives
 
@@ -145,7 +145,7 @@ Estimated Lab Time: 25 minutes
     </copy>
     ```
 
-    This gate validates the RHCK conversion before the separate UEK exercise in Lab 8. Keep this recorded result after switching kernels; a later, deliberate UEK boot does not invalidate the earlier migration.
+    This gate validates the RHCK conversion before the separate UEK exercise in Lab 6. Keep this recorded result after switching kernels; a later, deliberate UEK boot does not invalidate the earlier migration.
 
     Confirm `ID=ol`, version 9.8, an Oracle kernel package vendor, and a running kernel name without `uek`. The exact RHCK build may differ from the original RHEL kernel. The `test` commands return no output when successful; any nonzero exit status is a failed check.
 
@@ -280,11 +280,11 @@ Estimated Lab Time: 25 minutes
 
 3. Retain the migration reports and log if needed for review. Record the run directory shown in Task 4 and the corresponding log under `/var/log/migrate-to-oracle-linux/` before deleting the VM.
 
-4. Keep the preparation and destination `rhel-9-8-apache-source` custom images and the prepared export object for future workshops. Keep the raw source image if it is still needed. Deleting a VM does not require deleting these reusable assets.
+4. Retain your imported `rhel-9-8-apache-source` image for rebuilding or future practice. The instructor retains the preparation image, raw source image, and exported object. Deleting your VM does not require deleting the reusable image.
 
-5. Confirm that registration was removed from the preparation VM in Lab 2. The destination instance was never registered with Red Hat, so there is no destination registration to remove.
+5. Confirm that the registration-cleanup checks in Lab 1 passed. The destination instance was never registered with Red Hat, so there is no destination registration to remove.
 
-6. Keep the instance running for Labs 8 through 14. Preserve these migration archives unchanged; use separate practice reports and backups for later work. Optional resource cleanup is at the end of Lab 14.
+6. Keep the instance running for Labs 6 through 12. Preserve these migration archives unchanged; use separate practice reports and backups for later work. Optional resource cleanup is at the end of Lab 12.
 
 ## Task 7: Review migration knowledge
 
@@ -306,9 +306,9 @@ Estimated Lab Time: 25 minutes
 
 5. What must be cleaned up outside OCI?
 
-    The preparation VM must be unregistered from Red Hat before image capture, as completed in Lab 2. The destination instance does not create a new Red Hat registration.
+    The instructor removes Red Hat registration from the preparation VM before image capture. Students verify that cleanup in Lab 1. The destination instance does not create a new Red Hat registration.
 
-Complete the migration validation and knowledge review before starting Lab 8: Explore Oracle Linux Kernel Choices.
+Complete the migration validation and knowledge review before starting Lab 6: Explore Oracle Linux Kernel Choices.
 
 ## Learn More
 
@@ -319,4 +319,3 @@ Complete the migration validation and knowledge review before starting Lab 8: Ex
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
 - **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
-

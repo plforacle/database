@@ -1,4 +1,4 @@
-# Lab 10: Maintain Oracle Linux Packages
+# Lab 8: Maintain Oracle Linux Packages
 
 ## Introduction
 
@@ -17,7 +17,7 @@ Estimated Lab Time: 25 minutes
 
 ### Prerequisites
 
-Complete Lab 7 with a successful migration decision, complete the kernel-choice exercise in Lab 8, and record the Ksplice outcome from Lab 9. A recorded Ksplice access/support issue can remain open while you practice package maintenance; it must not be reported as successful live patching. Run on the converted Oracle Linux destination VM with internet access and sudo privileges. Do not repeat Red Hat registration.
+Complete Lab 5 with a successful migration decision, complete the kernel-choice exercise in Lab 6, and record the Ksplice outcome from Lab 7. A recorded Ksplice access/support issue can remain open while you practice package maintenance; it must not be reported as successful live patching. Run on the converted Oracle Linux destination VM with internet access and sudo privileges. Do not repeat Red Hat registration.
 
 Use the guided steps if you are new to Linux. Experienced learners can attempt the independent challenge within the same lab time, then verify every completion check.
 
@@ -146,7 +146,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
 
 2. Record the selected update result, tree package version, repository names, and application verification results in `$HOME/ol-practice-reports/package-maintenance.txt`. No specific update count or package version is required.
 
-3. Complete when Oracle repositories respond, tree runs, package checks pass, and the original page checksum is unchanged. Continue to Lab 11.
+3. Complete when Oracle repositories respond, tree runs, package checks pass, and the original page checksum is unchanged. Continue to Lab 9.
 
 ## Learn More
 

@@ -1,4 +1,4 @@
-# Lab 11: Configure and Troubleshoot Apache
+# Lab 9: Configure and Troubleshoot Apache
 
 ## Introduction
 
@@ -17,7 +17,7 @@ Estimated Lab Time: 25 minutes
 
 ### Prerequisites
 
-Complete Labs 7 and 10. Use the Oracle Linux destination VM as `cloud-user`. Keep the original migration evidence. The paths `workshop-practice.conf` and `/var/www/html/workshop-practice` are reserved for this exercise.
+Complete Labs 5 and 8. Use the Oracle Linux destination VM as `cloud-user`. Keep the original migration evidence. The paths `workshop-practice.conf` and `/var/www/html/workshop-practice` are reserved for this exercise.
 
 Use the guided steps if you are new to Linux. Experienced learners can attempt the independent challenge within the same lab time, then verify every completion check.
 
@@ -151,7 +151,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
 
 ## Task 5: Complete the independent challenge and checkpoint
 
-1. Challenge: explain the differences between a connection failure, HTTP 403, HTTP 404, and a configuration syntax error. Identify the first command or log you would use for each. Beginners can use the examples above for connection failure and 404; Lab 12 demonstrates 403.
+1. Challenge: explain the differences between a connection failure, HTTP 403, HTTP 404, and a configuration syntax error. Identify the first command or log you would use for each. Beginners can use the examples above for connection failure and 404; Lab 10 demonstrates 403.
 
 2. Record the cause and recovery of the service outage in `$HOME/ol-practice-reports/apache-incident.txt`. Check the original checksum again:
 
@@ -162,7 +162,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
     </copy>
     ```
 
-3. Complete when both pages work, Apache is enabled and active, and the original checksum is OK. Keep the practice page and configuration for Labs 12 and 13. Continue to Lab 12.
+3. Complete when both pages work, Apache is enabled and active, and the original checksum is OK. Keep the practice page and configuration for Labs 10 and 11. Continue to Lab 10.
 
 ## Learn More
 

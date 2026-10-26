@@ -1,10 +1,10 @@
-# Lab 5: Assess Readiness and Protect the Source
+# Lab 3: Assess Readiness and Protect the Source
 
 ## Introduction
 
-Begin this lab after the prepared custom image has been moved to the destination OCI tenancy and a new RHEL instance has been launched from it. Connect to that instance using its public IP, SSH key, and `cloud-user` account. Red Hat registration was removed in Lab 2 and is not required here.
+Begin this lab after importing the prepared image and launching your destination VM in Lab 1. Connect using its public IP, SSH key, and `cloud-user` account. The instructor removed Red Hat registration before image capture. You verified that cleanup in Lab 1; no registration is required here.
 
-Complete the read-only system exercises in Lab 4 first. Capture the destination instance baseline, then inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and decide whether to create a boot-volume backup before changing the operating system.
+Complete the read-only system exercises in Lab 2 first. Capture the destination instance baseline, then inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and decide whether to create a boot-volume backup before changing the operating system.
 
 The migration script is maintained in an Oracle-owned GitHub repository, but the repository states that the scripts are community-based and are not officially supported by Oracle.
 
@@ -136,7 +136,7 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-    No enabled source repositories are expected after the Lab 2 registration cleanup. Oracle repositories are configured by the migration script.
+    No enabled source repositories are expected after the instructor removed registration before image capture. Oracle repositories are configured by the migration script.
 
 5. Identify packages with a different or unspecified vendor:
 
@@ -241,7 +241,7 @@ Estimated Lab Time: 30 minutes
     </copy>
     ```
 
-    This is a proposed package plan, not the final list of retained packages. Source release packages can be removed and other packages replaced during conversion. Review unfamiliar packages or packages needed by the workload before passing the migration gate. Lab 7 checks the final package state.
+    This is a proposed package plan, not the final list of retained packages. Source release packages can be removed and other packages replaced during conversion. Review unfamiliar packages or packages needed by the workload before passing the migration gate. Lab 5 checks the final package state.
 
 5. Do not continue if the dry run reports an unresolved error involving:
 
@@ -295,7 +295,7 @@ Estimated Lab Time: 30 minutes
     - Dry run completed without an unresolved blocker.
     - The verified script checksum returned OK.
     - The baseline evidence bundle was captured on the destination instance.
-    - Red Hat registration was removed and subscription plugins were disabled in Lab 2.
+    - The registration-cleanup checks in Lab 1 passed: no registration certificates remain and both subscription plugins are disabled.
     - If a backup was selected, its state is Available and its OCID was recorded. Otherwise, the rebuild decision was recorded.
     - Apache is active, including after any optional backup.
     - The workload marker is returned.
@@ -327,4 +327,3 @@ Estimated Lab Time: 30 minutes
 
 - **Author** - Perside Foster, Principal Solution Engineer, Oracle
 - **Last Updated By/Date** - Oracle LiveLabs Workshop Team, October 2026
-
