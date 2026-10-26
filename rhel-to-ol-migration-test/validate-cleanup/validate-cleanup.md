@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and save your results. Keep the instance for the post-migration practice labs. Optional resource cleanup is at the end of Lab 12.
+A changed operating-system identity is not enough to declare migration success. In this lab, you capture post-migration evidence, compare it with the RHEL baseline, verify the workload and security state, review exceptions, and save your results. Keep the instance for the post-migration practice labs. Retain the lab resources until the workshop owner requests cleanup.
 
 ### Objectives
 
@@ -284,7 +284,7 @@ Estimated Lab Time: 25 minutes
 
 5. Confirm that the registration-cleanup checks in Lab 1 passed. The destination instance was never registered with Red Hat, so there is no destination registration to remove.
 
-6. Keep the instance running for Labs 6 through 12. Preserve these migration archives unchanged; use separate practice reports and backups for later work. Optional resource cleanup is at the end of Lab 12.
+6. Keep this instance for Labs 6 and 7 and preserve it for review afterward. Labs 8 through 10 use a separate on-premises client. Preserve the migration archives unchanged and keep OSMH reports separate. Retain the lab resources until the workshop owner requests cleanup.
 
 ## Task 7: Review migration knowledge
 

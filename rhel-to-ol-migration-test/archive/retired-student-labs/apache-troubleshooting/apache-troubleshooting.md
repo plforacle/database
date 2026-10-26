@@ -151,7 +151,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
 
 ## Task 5: Complete the independent challenge and checkpoint
 
-1. Challenge: explain the differences between a connection failure, HTTP 403, HTTP 404, and a configuration syntax error. Identify the first command or log you would use for each. Beginners can use the examples above for connection failure and 404; Lab 10 demonstrates 403.
+1. Challenge: explain the differences between a connection failure, HTTP 403, HTTP 404, and a configuration syntax error. Identify the first command or log you would use for each. The guided steps demonstrate connection failure and 404. Use the Apache documentation to explain how access restrictions can produce 403.
 
 2. Record the cause and recovery of the service outage in `$HOME/ol-practice-reports/apache-incident.txt`. Check the original checksum again:
 
@@ -162,7 +162,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
     </copy>
     ```
 
-3. Complete when both pages work, Apache is enabled and active, and the original checksum is OK. Keep the practice page and configuration for Labs 10 and 11. Continue to Lab 10.
+3. Complete when both pages work, Apache is enabled and active, and the original checksum is OK. Keep the practice page, configuration, and migration evidence on this VM. Lab 10 begins the OSMH exercises on a separate instructor-provided on-premises client.
 
 ## Learn More
 

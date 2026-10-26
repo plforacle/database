@@ -186,7 +186,7 @@ If access or kernel support prevents the live exercise, record the actual error 
 
 3. Complete when the monitor is stopped, Apache and its checksum are healthy, and the outcome is recorded accurately. Available updates should have been applied only when the supported apply path succeeded. Follow-on package maintenance still matters so that a future boot uses current on-disk software. Ksplice reduces reboot requirements for supported fixes; it does not eliminate every reason for maintenance or reboot.
 
-4. Continue to Lab 8. If the live exercise was blocked, carry that open issue in your notes; completing other administration labs does not resolve or validate Ksplice access.
+4. Continue to Lab 8 to prepare for on-premises OS Management Hub. If the Ksplice exercise was blocked, carry that open issue in your notes; OSMH registration does not resolve or validate Ksplice access.
 
 ## Learn More
 

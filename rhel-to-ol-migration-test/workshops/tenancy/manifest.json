@@ -46,29 +46,24 @@
       "filename": "../../ksplice-live-patching/ksplice-live-patching.md"
     },
     {
-      "title": "Lab 8: Maintain Oracle Linux Packages",
-      "description": "Inspect repositories, preview selected maintenance, install a utility, and verify the application.",
-      "filename": "../../maintain-packages/maintain-packages.md"
+      "title": "Lab 8: Prepare OS Management Hub for On-Premises Management",
+      "description": "Verify OSMH access, the instructor-prepared on-premises station, mirrored content, and client readiness.",
+      "filename": "../../osmh-prepare/osmh-prepare.md"
     },
     {
-      "title": "Lab 9: Configure and Troubleshoot Apache",
-      "description": "Configure practice content, inspect logs, and recover a stopped service.",
-      "filename": "../../apache-troubleshooting/apache-troubleshooting.md"
+      "title": "Lab 9: Register an On-Premises Oracle Linux Client",
+      "description": "Create the non-OCI client profile, activate Management Agent, and verify registration, sources, and Apache.",
+      "filename": "../../osmh-register-client/osmh-register-client.md"
     },
     {
-      "title": "Lab 10: Manage Application Security",
-      "description": "Practice permissions, SELinux file contexts, and runtime/permanent firewall rules.",
-      "filename": "../../application-security/application-security.md"
+      "title": "Lab 10: Patch and Verify Oracle Linux with OS Management Hub",
+      "description": "Apply an available update, plan maintenance, inspect job outcomes, and preserve application and management evidence.",
+      "filename": "../../osmh-patch-verify/osmh-patch-verify.md"
     },
     {
-      "title": "Lab 11: Back Up and Restore the Application",
-      "description": "Archive application content and configuration, restore selected files, and verify recovery.",
-      "filename": "../../application-backup/application-backup.md"
-    },
-    {
-      "title": "Lab 12: Automate Application Health Checks",
-      "description": "Create a script and systemd timer, detect a fault, recover, and optionally clean up.",
-      "filename": "../../health-automation/health-automation.md"
+      "title": "Reference: On-Premises Management Agent",
+      "description": "Shared installation and activation procedure for the on-premises station and clients.",
+      "filename": "../../osmh-agent-install/osmh-agent-install.md"
     },
     {
       "title": "Need Help?",
