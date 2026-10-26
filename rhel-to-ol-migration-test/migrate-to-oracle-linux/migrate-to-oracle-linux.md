@@ -211,6 +211,8 @@ Estimated Lab Time: 40 minutes
 
 5. Open `http://<public-ip>/` in your browser and confirm the workshop page still appears.
 
+    ![The public workshop page still displays MIGRATION_WORKLOAD_OK after migration and reboot into Oracle Linux.](./images/application-after-migration.png)
+
 6. If any immediate check fails, preserve the migration logs before attempting remediation.
 
 ## Task 6: Review what changed and what stayed the same
