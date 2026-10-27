@@ -1,4 +1,4 @@
-# Lab 9: Register an On-Premises Oracle Linux Client
+# Lab 8: Register an On-Premises Oracle Linux Client
 
 ## Introduction
 
@@ -14,7 +14,7 @@ Estimated Lab Time: 30 minutes
 
 ### Prerequisites
 
-Complete Lab 8. Use its assigned on-premises client, shared station, install key, and agent RPM. The required mirrors must be synchronized. Keep your original OCI migration VM and evidence unchanged.
+Complete Lab 7. Use its assigned on-premises client, shared station, install key, and agent RPM. The required mirrors must be synchronized. Keep your original OCI migration VM and evidence unchanged.
 
 Do not run the non-OCI agent procedure on the OCI migration VM. This lab uses an on-premises client and the **On premises or third-party cloud** profile type.
 
@@ -24,7 +24,7 @@ Do not run the non-OCI agent procedure on the OCI migration VM. This lab uses an
 
 2. Name the profile `ol-migrate-osmh-STUDENT_ID`, replacing `STUDENT_ID` with your assigned suffix. Profile names must be unique within the tenancy.
 
-3. Select **On premises or third-party cloud** as the instance location. Enable the management station option and select the shared station verified in Lab 8.
+3. Select **On premises or third-party cloud** as the instance location. Enable the management station option and select the shared station verified in Lab 7.
 
 4. Select Oracle as the OS vendor, Oracle Linux 9 as the OS version, and `x86_64` as the architecture. Choose the **Software source** profile type and attach the instructor-approved BaseOS Latest and AppStream sources.
 
@@ -51,7 +51,7 @@ Do not run the non-OCI agent procedure on the OCI migration VM. This lab uses an
     </copy>
     ```
 
-    Match the hostname to the client assigned in Lab 8. Stop if this is the OCI migration VM or the management station.
+    Match the hostname to the client assigned in Lab 7. Stop if this is the OCI migration VM or the management station.
 
 3. Create `/etc/osmh-profile` with no filename extension:
 
@@ -83,7 +83,7 @@ Do not run the non-OCI agent procedure on the OCI migration VM. This lab uses an
 
 4. Confirm the enabled OSMH repository URLs identify the assigned station and its mirror port. Metadata retrieval must succeed. An agent process alone does not establish successful registration or package delivery.
 
-5. If registration or metadata retrieval fails, preserve the error and use the troubleshooting table in Lab 10. Do not remove the agent or repeatedly rerun setup without identifying the cause.
+5. If registration or metadata retrieval fails, preserve the error and use the troubleshooting table in Lab 9. Do not remove the agent or repeatedly rerun setup without identifying the cause.
 
 ## Task 5: Verify application continuity and complete the checkpoint
 
@@ -104,7 +104,7 @@ Do not run the non-OCI agent procedure on the OCI migration VM. This lab uses an
 
 3. Record the profile name, managed-instance identifier, Active status, repository evidence, and application results in `$HOME/ol-practice-reports/osmh/registration.txt`. Do not include the install key.
 
-4. Complete only when registration, inventory, package metadata, and application checks pass. Continue to Lab 10 to manage updates through OSMH.
+4. Complete only when registration, inventory, package metadata, and application checks pass. Continue to Lab 9 to manage updates through OSMH.
 
 ## Learn More
 

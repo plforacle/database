@@ -2,27 +2,26 @@
 
 ## Introduction
 
-Learn how to migrate on-premises systems from Red Hat Enterprise Linux to Oracle Linux and manage them after migration. Labs 1 through 7 use OCI-hosted practice infrastructure to convert a prepared RHEL 9.8 VM to Oracle Linux 9.8 while preserving Apache. Labs 8 through 10 use an instructor-provided on-premises Oracle Linux client and management station for OS Management Hub. Begin with Student Lab 1 and complete the labs in order.
+Learn how to migrate on-premises systems from Red Hat Enterprise Linux to Oracle Linux and manage them after migration. The seven labs use one OCI-hosted practice VM to convert RHEL 9.8 to Oracle Linux 9.8, preserve Apache, apply Ksplice patches, explore kernel choices, and begin managing updates with OS Management Hub (OSMH). Begin with Student Lab 1 and complete the labs in order.
 
 Your instructor prepares the source image in a separate instructor workshop and supplies its object-read PAR URL. You create the destination network and VM yourself. You do not need a Red Hat account or access to the preparation tenancy.
 
-Lab 1 builds the network, imports the prepared image, launches the VM, and verifies the application and registration cleanup. Lab 2 introduces everyday Linux commands. Labs 3 through 5 capture the baseline, assess readiness, convert the same VM, reboot, and validate the result.
+Lab 1 builds the network, imports the prepared image, launches the VM, and verifies the application and registration cleanup. Lab 2 introduces everyday Linux commands. Lab 3 assesses readiness and explains the migration dry run. Lab 4 converts the same VM, reviews migration reports, reboots, and verifies Oracle Linux and the application.
 
-Labs 6 and 7 explore UEK kernel choice and Ksplice live patching when supported updates and access are available. Labs 8 through 10 introduce OS Management Hub: verify the shared on-premises station, register an assigned on-premises client, and manage updates. Retain the OCI migration VM and its evidence while working on the separate OSMH client.
+Lab 5 demonstrates Ksplice live patching on the migrated RHCK. Lab 6 then installs UEK and explores kernel choice. The instructor verifies patch availability before class. Lab 7 registers the same migrated VM with OSMH, reviews its inventory, and applies an available package update through the OCI Console.
 
-Estimated Workshop Time: 6 hours (360 minutes), including 15 minutes of orientation; additional time may be needed for provisioning, mirror synchronization, and jobs
+Estimated Workshop Time: 5 hours
 
 ### Objectives
 
 - Create the destination network and import an instructor-provided RHEL application image.
 - Launch and verify a RHEL VM without registering it with Red Hat.
-- Practice Linux commands and capture a migration baseline.
+- Practice Linux commands and assess migration readiness.
 - Convert the VM to Oracle Linux 9.8 with RHCK and verify application continuity.
-- Compare evidence and review package exceptions.
-- Explore UEK and supported Ksplice patching.
-- Register an on-premises Oracle Linux client with OS Management Hub through a local management station.
-- Apply an available package update, plan a maintenance window, and verify the application and job results.
-- Preserve migration and OSMH evidence separately and retain the lab resources for review.
+- Review the migration reports and package exceptions.
+- Apply supported Ksplice patches on RHCK, then install and explore UEK.
+- Register the migrated VM with OSMH, inspect its inventory, and apply an available package update.
+- Keep the migration, patching, kernel, and management results for review.
 
 ### Prerequisites
 
@@ -31,13 +30,10 @@ Estimated Workshop Time: 6 hours (360 minutes), including 15 minutes of orientat
 - A browser and SSH client, plus an SSH key pair or permission to generate one in the launch wizard.
 - Quota and regional capacity for `VM.Standard.E5.Flex` with 1 OCPU and at least 8 GB memory, or an instructor-tested compatible x86_64 alternative. The boot volume must be at least 50 GB or the image minimum.
 - For Ksplice: a maintained Oracle kernel, service connectivity, and eligible access. The OCI BYOI path uses Oracle's OCI installer without ULN registration. Record any access or support failure as unresolved.
+- For Lab 7: Console permissions to manage OSMH resources, software sources, and the VM's agent plugins. Policy Advisor also requires IAM permissions for groups, dynamic groups, and policies. Arrange administrator assistance if those permissions are unavailable.
 - Boot-volume backup permission only if you choose the optional backup in Lab 3. Otherwise, retain the prepared image for rebuilding the disposable VM; rebuilding loses changes made after image capture.
-- For Labs 8 through 10: an assigned on-premises Oracle Linux 9 x86_64 client with SSH, sudo, and the Apache test application; a separate registered management station with synchronized BaseOS and AppStream mirrors; and valid Oracle Linux Basic or Premier Support for these on-premises systems.
-- OSMH user permissions, a private Management Agent install key, a current Linux x86_64 agent RPM, station connection details, and access to the assigned OCI service region and compartment. The instructor prepares IAM and the station before class.
 
-The additional OSMH hosts are real on-premises systems, separate from the OCI migration VM. The control service is in OCI. OCI instances use Oracle Cloud Agent and are not registered through the on-premises procedure in these labs.
-
-> **Important:** Keep PAR URLs, SSH private keys, and Management Agent install keys private. Hide them in screenshots and shared output. The instructor supplies the prepared image through an authorized organizational process.
+> **Important:** Keep PAR URLs and SSH private keys private. Hide them in screenshots and shared output. The instructor supplies the prepared image through an authorized organizational process.
 
 ## Workshop Architecture
 
@@ -49,44 +45,40 @@ Instructor-provided prepared RHEL image and object-read PAR URL
 Student VM: ol-migrate-rhel-source, running RHEL 9.8 and Apache
         |
         | Lab 2: Linux quickstart
-        | Lab 3: baseline, assessment, dry run, recovery choice
+        | Lab 3: readiness, script verification, dry run, optional backup
         | Lab 4: conversion to Oracle Linux RHCK and reboot
-        | Lab 5: compare evidence and review exceptions
         v
 Same VM running Oracle Linux 9.8 with a working application
         |
-        | Labs 6-7: UEK and Ksplice
+        | Lab 5: Ksplice live patching on RHCK
+        | Lab 6: install and boot UEK
         v
-Preserve the migration VM and its evidence
-
-Separate on-premises Oracle Linux client with the Apache test application
+Same migrated VM, now running UEK
         |
-        | Lab 8: verify shared station, sources, and connectivity
-        | Lab 9: register the client with OS Management Hub
-        | Lab 10: apply updates, plan maintenance, verify the application
+        | Lab 7: OSMH setup, registration, inventory, and package update
         v
-Retain OSMH reports and migration evidence as distinct results
+Retain the VM, application, and workshop results for review
 ```
 
 ## Workshop Conventions
 
 - Lab numbers throughout this workshop refer to student labs.
 - The prepared custom image is `rhel-9-8-apache-source`; the destination VM is `ol-migrate-rhel-source`.
-- In Labs 1 through 7, `<public-ip>` means the OCI migration VM public IP. In Labs 8 through 10, use the on-premises client and station addresses assigned by the instructor.
-- Use the same region and compartment for the migration exercises. For OSMH, use the assigned service region and compartment. Use unique profile names with your student suffix.
-- Run migration commands as `cloud-user`. Use the assigned sudo-capable account on the on-premises OSMH client. Confirm the hostname before running installation commands.
+- `<public-ip>` means the public IP of the same workshop VM throughout all seven labs.
+- Use the same region and VM compartment throughout.
+- Run Linux commands as `cloud-user`, using sudo where shown. Confirm the hostname before running installation commands.
 - Keep PAR URLs private; never copy a URL from a screenshot.
 - Verify registration cleanup in Lab 1. Do not register the destination VM with Red Hat.
-- Complete each lab's starting checks. Lab 2 confines file practice to your home directory; Labs 6 and 7 change the migrated system after evidence is preserved. Labs 8 through 10 use the separate on-premises client.
+- Complete each lab's starting checks. Lab 2 confines file practice to your home directory; Labs 5 and 6 change the migrated system after the migration and reboot checks.
 - Complete every recovery step after a controlled fault, even if you stop a lab early.
-- Preserve the original application page and migration archives. Keep the OSMH client reports separate; they do not establish that the OCI migration VM was registered or patched through OSMH.
+- Preserve the original application page and the migration reports written by the script.
 - Independent challenges use the same completion checks as the guided path.
-- A successful migration requires application and system evidence, including final package review.
-- Keep the migration VM, on-premises client, shared station, profiles, keys, images, export objects, and PARs for review. Cleanup is outside this workshop and occurs only when requested by the workshop owner.
+- Complete the OS, kernel, report, and webpage checks in Lab 4 before the kernel and patching exercises.
+- Keep the VM, networking, images, export objects, PARs, OSMH profile, and results for review. Cleanup is outside this workshop and occurs only when requested by the workshop owner.
 
 ## Workshop Schedule
 
-The agenda totals 360 minutes of planned student activity. The instructor provisions the OSMH hosts and completes initial mirror synchronization before class. Transfers, optional backup, and update-job execution can require additional elapsed time.
+The agenda totals 290 minutes of planned student activity. Transfers, optional backup, patch downloads, reboots, agent registration, and update jobs can require additional elapsed time.
 
 | Session | Minutes |
 | --- | ---: |
@@ -95,18 +87,14 @@ The agenda totals 360 minutes of planned student activity. The instructor provis
 | Lab 2: Linux Command-Line Quickstart | 60 |
 | Lab 3: Assess Readiness and Protect the Source | 30 |
 | Lab 4: Migrate to Oracle Linux | 40 |
-| Lab 5: Validate the Migration | 25 |
+| Lab 5: Explore Rebootless Patching with Ksplice | 30 |
 | Lab 6: Explore Oracle Linux Kernel Choices | 30 |
-| Lab 7: Explore Rebootless Patching with Ksplice | 30 |
-| Lab 8: Prepare OS Management Hub for On-Premises Management | 25 |
-| Lab 9: Register an On-Premises Oracle Linux Client | 30 |
-| Lab 10: Patch and Verify Oracle Linux with OS Management Hub | 30 |
-| **Total** | **360** |
+| Lab 7: OS Management Hub Quickstart on OCI | 40 |
+| **Total** | **290** |
 
 ## Learn More
 
-- [OSMH supported environments and prerequisites](https://docs.oracle.com/en-us/iaas/osmh/doc/getstarted.htm)
-- [On-premises management station architecture](https://docs.oracle.com/en-us/iaas/osmh/doc/understand-management-stations.htm)
+- [Monitor and Update Oracle Linux with Oracle OS Management Hub](https://docs.oracle.com/en/learn/osmh-monitor/index.html): a separate introduction to ongoing OS management, with its own environment and prerequisites.
 
 - [Creating a VCN with internet connectivity](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/quickstartnetworking.htm)
 - [Importing a custom image](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/custom-images-import.htm)

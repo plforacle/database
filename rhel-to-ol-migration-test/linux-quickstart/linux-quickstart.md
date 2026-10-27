@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Practice everyday commands on the prepared RHEL destination VM before capturing its migration baseline. File changes stay in your home directory; system and Apache checks are read-only.
+Practice everyday commands on the prepared RHEL destination VM before assessing its migration readiness. File changes stay in your home directory; system and Apache checks are read-only.
 
 ### Objectives
 
@@ -212,7 +212,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
     </copy>
     ```
 
-    Expect Apache to be `enabled` and `active`. An enabled service is configured to start at boot; an active service is running now. RPM queries the local package database. Oracle repository operations are introduced after conversion in Lab 8.
+    Expect Apache to be `enabled` and `active`. An enabled service is configured to start at boot; an active service is running now. RPM queries the local package database. Oracle repositories are inspected after conversion in Lab 4.
 
 ## Task 7: Complete the independent challenge and readiness report
 
@@ -247,7 +247,7 @@ Use the guided steps if you are new to Linux. Experienced learners can attempt t
     </copy>
     ```
 
-    Complete only when the three PASS messages, workload marker, and `active` appear. If a workspace exercise fails, repeat that task without editing system files. Continue to Lab 3 to capture the actual migration baseline.
+    Complete only when the three PASS messages, workload marker, and `active` appear. If a workspace exercise fails, repeat that task without editing system files. Continue to Lab 3 to assess migration readiness and run the migration dry run.
 
 ## Learn More
 

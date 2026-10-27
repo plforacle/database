@@ -1,8 +1,8 @@
-# Lab 10: Patch and Verify Oracle Linux with OS Management Hub
+# Lab 9: Patch and Verify Oracle Linux with OS Management Hub
 
 ## Introduction
 
-Use OSMH to apply a controlled update to the on-premises client registered in Lab 9. Compare package versions, inspect job results, plan a maintenance window, and verify that Apache continues to serve the application.
+Use OSMH to apply a controlled update to the on-premises client registered in Lab 8. Compare package versions, inspect job results, plan a maintenance window, and verify that Apache continues to serve the application.
 
 Estimated Lab Time: 30 minutes, plus download and job execution time
 
@@ -15,7 +15,7 @@ Estimated Lab Time: 30 minutes, plus download and job execution time
 
 ### Prerequisites
 
-Complete Lab 9 with an Active client, synchronized content, working repository metadata, and passing application checks. Use the assigned on-premises client throughout. Keep the shared station available and the migration VM and its evidence intact.
+Complete Lab 8 with an Active client, synchronized content, working repository metadata, and passing application checks. Use the assigned on-premises client throughout. Keep the shared station available and the migration VM and its evidence intact.
 
 ## Task 1: Select an update and capture the baseline
 

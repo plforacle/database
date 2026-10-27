@@ -1,10 +1,10 @@
-# Lab 8: Prepare OS Management Hub for On-Premises Management
+# Lab 7: Prepare OS Management Hub for On-Premises Management
 
 ## Introduction
 
 Use OS Management Hub (OSMH) to manage Oracle Linux after migration. The service runs in OCI; the managed server and its management station run on premises. This lab follows the station-based architecture in the SME example.
 
-Labs 1 through 7 use an OCI-hosted migration VM. For Labs 8 through 10, use the separate on-premises Oracle Linux client assigned by your instructor. The client has the same Apache test application. Its registration and update results are separate evidence from the migration of your OCI VM.
+Labs 1 through 6 use an OCI-hosted migration VM. For Labs 7 through 9, use the separate on-premises Oracle Linux client assigned by your instructor. The client has the same Apache test application. Its registration and update results are separate evidence from the migration of your OCI VM.
 
 Estimated Lab Time: 25 minutes
 
@@ -16,7 +16,7 @@ Estimated Lab Time: 25 minutes
 
 ### Prerequisites
 
-Complete Lab 7 and record its actual Ksplice outcome, including any unresolved access or support issue. Your instructor must complete the OSMH Instructor Setup guide before this lab and provide the following:
+Complete Labs 5 and 6. Retain the Ksplice results from Lab 5 and the UEK verification from Lab 6, including any unresolved issue. Your instructor must complete the OSMH Instructor Setup guide before this lab and provide the following:
 
 - An on-premises Oracle Linux 9 x86_64 client, its SSH details, and a sudo-capable account.
 - A separate, registered management station with synchronized Oracle Linux 9 BaseOS and AppStream mirrors, a client-reachable hostname, and its proxy and mirror ports.
@@ -117,7 +117,7 @@ The instructor may share the station across students. Do not reconfigure it, reg
 
 2. Complete when the assigned client is Oracle Linux 9 x86_64, the station and mirrors are ready, both ports are reachable, Apache is `enabled` and `active`, the workload marker appears, and SELinux is `Enforcing`.
 
-3. Record your client and station details in `$HOME/ol-practice-reports/osmh/environment.txt`, excluding secrets. Continue to Lab 9. Preserve the earlier OCI migration evidence separately.
+3. Record your client and station details in `$HOME/ol-practice-reports/osmh/environment.txt`, excluding secrets. Continue to Lab 8. Preserve the earlier OCI migration evidence separately.
 
 ## Learn More
 

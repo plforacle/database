@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this lab, you launch the imported custom image as an actual RHEL VM. You then register and update RHEL, deploy an Apache workload, and remove Red Hat registration before capturing and exporting the reusable image. This is an instructor preparation lab. Students create their own network, import the prepared image, and verify their instance in Student Lab 1. They capture baseline evidence in Student Lab 3.
+In this lab, you launch the imported custom image as an actual RHEL VM. You then register and update RHEL, deploy an Apache workload, and remove Red Hat registration before capturing and exporting the reusable image. This is an instructor preparation lab. Students create their own network, import the prepared image, and verify their instance in Student Lab 1. They assess readiness and run the migration dry run in Student Lab 3.
 
 ### Objectives
 
@@ -305,7 +305,7 @@ Estimated Lab Time: 50 minutes
 
 7. Confirm that the application still opens at `http://<public-ip>/` before saving the prepared custom image.
 
-    Continue with Tasks 7 and 8 to capture and export the image. Student Lab 1 creates the destination network, imports the image, and verifies a new instance. Students capture their baseline in Student Lab 3 and do not register the destination VM with Red Hat.
+    Continue with Tasks 7 and 8 to capture and export the image. Student Lab 1 creates the destination network, imports the image, and verifies a new instance. Students assess readiness in Student Lab 3 and do not register the destination VM with Red Hat.
 
 ## Task 7: Capture the prepared source image
 

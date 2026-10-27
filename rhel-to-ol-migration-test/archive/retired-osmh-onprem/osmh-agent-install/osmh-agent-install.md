@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Use this reference on the management station during instructor preparation or on the assigned on-premises client during Student Lab 9. Complete the calling guide's profile step first. Return to that guide after activation.
+Use this reference on the management station during instructor preparation or on the assigned on-premises client during Student Lab 8. Complete the calling guide's profile step first. Return to that guide after activation.
 
 Estimated Time: 10 minutes per host, included in the calling guide's estimate
 

@@ -4,7 +4,7 @@
 
 Begin this lab after importing the prepared image and launching your destination VM in Lab 1. Connect using its public IP, SSH key, and `cloud-user` account. The instructor removed Red Hat registration before image capture. You verified that cleanup in Lab 1; no registration is required here.
 
-Complete the read-only system exercises in Lab 2 first. Capture the destination instance baseline, then inspect repositories, packages, disk space, services, and the running kernel. You then execute the pinned migration script in dry-run mode and decide whether to create a boot-volume backup before changing the operating system.
+Complete the read-only system exercises in Lab 2 first. Inspect the operating system, running kernel, disk space, RPM database, repositories, and package vendors. You then execute the pinned migration script in dry-run mode and decide whether to create a boot-volume backup before changing the operating system.
 
 The migration script is maintained in an Oracle-owned GitHub repository, but the repository states that the scripts are community-based and are not officially supported by Oracle.
 
@@ -12,87 +12,14 @@ The migration script is maintained in an Oracle-owned GitHub repository, but the
 
 In this lab, you will:
 
-- Capture a repeatable baseline on the destination instance before migration.
 - Assess the source system for common migration risks.
 - Download and verify a pinned migration script.
 - Run a non-changing migration dry run.
 - Choose an optional boot-volume backup or record that the disposable VM will be rebuilt if needed.
-- Document the rollback decision point.
 
 Estimated Lab Time: 30 minutes
 
-## Task 1: Create the baseline evidence bundle
-
-1. Create an evidence directory:
-
-    ```bash
-    <copy>
-    mkdir -p "$HOME/ol-migration-evidence/before"
-    EVIDENCE="$HOME/ol-migration-evidence/before"
-    </copy>
-    ```
-
-2. Capture the operating system, kernel, repositories, and packages:
-
-    ```bash
-    <copy>
-    cat /etc/os-release > "$EVIDENCE/os-release.txt"
-    uname -a > "$EVIDENCE/kernel.txt"
-    sudo dnf repolist --enabled > "$EVIDENCE/repositories.txt"
-    rpm -qa --qf '%{NAME}\t%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\t%{VENDOR}\n' \
-      | sort > "$EVIDENCE/packages.tsv"
-    </copy>
-    ```
-
-    `No repositories available` is expected for this unregistered source. The repository evidence file may be empty. Do not register the VM to change this result.
-
-3. Capture services, networking, firewall, and SELinux:
-
-    ```bash
-    <copy>
-    systemctl is-enabled httpd > "$EVIDENCE/httpd-enabled.txt"
-    systemctl is-active httpd > "$EVIDENCE/httpd-active.txt"
-    sudo ss -lntup > "$EVIDENCE/listening-ports.txt"
-    ip address show > "$EVIDENCE/addresses.txt"
-    ip route show > "$EVIDENCE/routes.txt"
-    getenforce > "$EVIDENCE/selinux.txt"
-    sudo firewall-cmd --list-all > "$EVIDENCE/firewall.txt"
-    </copy>
-    ```
-
-4. Capture the workload response and checksum:
-
-    ```bash
-    <copy>
-    curl --fail --silent http://127.0.0.1/ > "$EVIDENCE/application.html"
-    sha256sum /var/www/html/index.html > "$EVIDENCE/application-sha256.txt"
-    </copy>
-    ```
-
-5. Create an archive:
-
-    ```bash
-    <copy>
-    tar -C "$HOME/ol-migration-evidence" -czf \
-      "$HOME/ol-migration-evidence/rhel-before.tar.gz" before
-    ls -lh "$HOME/ol-migration-evidence/rhel-before.tar.gz"
-    </copy>
-    ```
-
-6. Confirm the source checkpoint:
-
-    ```bash
-    <copy>
-    grep '^ID=' /etc/os-release
-    systemctl is-active httpd
-    getenforce
-    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
-    </copy>
-    ```
-
-    Expected results are `ID="rhel"`, `active`, `Enforcing`, and the workload marker.
-
-## Task 2: Assess the source operating system
+## Task 1: Assess the source operating system
 
 1. Confirm the source version and architecture:
 
@@ -150,17 +77,7 @@ Estimated Lab Time: 30 minutes
 
     Third-party packages are not automatically proof of a blocker. They require application-owner review.
 
-6. Confirm the workshop workload remains healthy:
-
-    ```bash
-    <copy>
-    systemctl is-active httpd
-    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
-    getenforce
-    </copy>
-    ```
-
-## Task 3: Download and verify the pinned migration script
+## Task 2: Download and verify the pinned migration script
 
 1. Create a working directory:
 
@@ -196,17 +113,16 @@ Estimated Lab Time: 30 minutes
     migrate-to-oracle-linux.sh: OK
     ```
 
-4. Make the verified script executable and inspect its version and help:
+4. Make the verified script executable and check its version:
 
     ```bash
     <copy>
     chmod 0755 migrate-to-oracle-linux.sh
     ./migrate-to-oracle-linux.sh --version
-    ./migrate-to-oracle-linux.sh --help | less
     </copy>
     ```
 
-## Task 4: Run the migration dry run
+## Task 3: Run the migration dry run
 
 1. Run the non-changing assessment for an Oracle Linux 9.8 RHCK target:
 
@@ -223,38 +139,23 @@ Estimated Lab Time: 30 minutes
 
     Expected completion is `Dry-run completed. No package changes were made.` Exact and nearest-release candidate counts can vary as repositories change. Printed removal and installation commands describe the proposed migration; they are not executed in this dry run.
 
-3. Locate the newest migration state directory and log:
+    Use the [migration script documentation](https://github.com/oracle/migrate-to-ol/blob/main/README-migrate-to-oracle-linux.md) to interpret the summary. This workshop keeps the tested script version pinned; the current documentation can describe newer versions.
 
-    ```bash
-    <copy>
-    sudo ls -1dt /var/lib/migrate-to-oracle-linux/* | head -1
-    sudo ls -1t /var/log/migrate-to-oracle-linux/*.log | head -1
-    </copy>
-    ```
+    | Result | What it means | What to do |
+    | --- | --- | --- |
+    | Exact reinstall candidates | An Oracle package with the same name, epoch, version, release, and architecture is available. | Review the planned replacements. |
+    | Nearest-release reinstall candidates | An exact match is unavailable, but another Oracle package release is available. | Review the proposed version changes for packages your application needs. |
+    | Packages without an Oracle replacement | The plan could not find an Oracle replacement for these source packages. | Review the listed packages with the instructor before continuing. |
 
-4. If the dry run reports packages without an Oracle replacement, review the proposed unavailable-package list. Set `RUN_DIR` to the state directory printed by your run:
+    Follow the state and log paths printed by your own run. The state directory contains package plans and HTML reports, including `migration-rpm-map.html`. These describe a proposed conversion. A package listed as unavailable during assessment can be removed or replaced later in the actual migration.
 
-    ```bash
-    <copy>
-    RUN_DIR="$(sudo ls -1dt /var/lib/migrate-to-oracle-linux/* | head -1)"
-    sudo cat "$RUN_DIR/unavailable-reinstall.nevra"
-    </copy>
-    ```
+    The dry run does not perform the package conversion or test the next boot. It writes assessment files and reports, so successful completion is not proof that the migration has finished.
 
-    This is a proposed package plan, not the final list of retained packages. Source release packages can be removed and other packages replaced during conversion. Review unfamiliar packages or packages needed by the workload before passing the migration gate. Lab 5 checks the final package state.
+    If the run reports an error, resolve it with the instructor before moving to Lab 4. Pay particular attention to source or target compatibility, the running kernel, RPM database errors, disk space, and access to Oracle repositories. Do not bypass a failed check to continue.
 
-5. Do not continue if the dry run reports an unresolved error involving:
+## Task 4: Create an optional pre-migration recovery point
 
-    - Unsupported source release or architecture
-    - Cross-major target selection
-    - Broken RPM database
-    - Insufficient disk space
-    - A source kernel newer than the running kernel
-    - Unreachable Oracle repositories
-
-## Task 5: Create an optional pre-migration recovery point
-
-1. Choose whether to create a backup. For this disposable practice VM, you may skip the rest of Task 5 and record `Backup skipped; rebuild from rhel-9-8-apache-source if needed`. Do not stop Apache when skipping this task.
+1. Choose whether to create a backup. For this disposable practice VM, you may skip the rest of Task 4 and record `Backup skipped; rebuild from rhel-9-8-apache-source if needed`. Do not stop Apache when skipping this task.
 
     A backup is recommended for systems with valuable data. Rebuilding from the prepared image does not recover changes made after image capture. If you choose a backup, continue below.
 
@@ -287,35 +188,6 @@ Estimated Lab Time: 30 minutes
     ```
 
 9. Record the backup OCID and creation time in your workshop notes.
-
-## Task 6: Pass the migration gate
-
-1. Confirm every required condition:
-
-    - Dry run completed without an unresolved blocker.
-    - The verified script checksum returned OK.
-    - The baseline evidence bundle was captured on the destination instance.
-    - The registration-cleanup checks in Lab 1 passed: no registration certificates remain and both subscription plugins are disabled.
-    - If a backup was selected, its state is Available and its OCID was recorded. Otherwise, the rebuild decision was recorded.
-    - Apache is active, including after any optional backup.
-    - The workload marker is returned.
-
-2. Recheck Apache and the workload response:
-
-    ```bash
-    <copy>
-    systemctl is-active httpd
-    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
-    </copy>
-    ```
-
-    Expected results are `active` and the `MIGRATION_WORKLOAD_OK` marker.
-
-3. If any condition fails, stop here and correct it before continuing.
-
-4. Review the rollback decision:
-
-    If the migration fails and the VM cannot return to a stable state, preserve the logs. If you created a backup, use your approved boot-volume restore procedure. If you skipped the backup, rebuild the disposable destination VM from `rhel-9-8-apache-source`, repeat this lab, and use a new baseline.
 
 ## Learn More
 

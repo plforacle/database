@@ -2,7 +2,7 @@
 
 ## Introduction
 
-You are ready to convert the RHEL source VM in place. The migration script replaces distribution release packages and repositories, synchronizes packages with Oracle Linux 9.8, installs Oracle Linux RHCK, and creates detailed migration reports.
+After completing the readiness checks and dry run in Lab 3, convert the RHEL VM to Oracle Linux 9.8. The script replaces distribution release packages, configures Oracle repositories, replaces packages with Oracle builds, installs Oracle Linux RHCK, and writes migration reports.
 
 The VM remains the same OCI instance. Its operating-system identity, repositories, packages, and kernel change.
 
@@ -17,46 +17,13 @@ In this lab, you will:
 
 Estimated Lab Time: 40 minutes
 
-## Task 1: Reconfirm the migration gate
-
-1. Connect to the RHEL source VM and enter the migration working directory:
-
-    ```bash
-    <copy>
-    cd "$HOME/ol-migration"
-    </copy>
-    ```
-
-2. Confirm the verified script remains unchanged:
-
-    ```bash
-    <copy>
-    echo '5435b59e2f0e672111fd1545b2b428cabe473e7c116a353716c2f7de869d0a42  migrate-to-oracle-linux.sh' \
-      | sha256sum --check
-    </copy>
-    ```
-
-3. Confirm the source and workload state:
-
-    ```bash
-    <copy>
-    grep -E '^(ID|VERSION_ID)=' /etc/os-release
-    uname -r
-    systemctl is-active httpd
-    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
-    </copy>
-    ```
-
-4. Confirm the recovery choice recorded in Lab 3. If a backup was selected, verify that `ol-migrate-before-conversion` is Available. If it was skipped for this disposable VM, confirm that `rhel-9-8-apache-source` is retained for rebuilding.
-
-5. Continue only when all checks pass.
-
-## Task 2: Execute the migration
+## Task 1: Execute the migration
 
 1. Start the migration to Oracle Linux 9.8 and select RHCK:
 
     ```bash
     <copy>
+    cd "$HOME/ol-migration"
     sudo ./migrate-to-oracle-linux.sh \
       -y \
       --target-version 9.8 \
@@ -66,23 +33,23 @@ Estimated Lab Time: 40 minutes
 
     The operation changes repositories, distribution packages, and the installed kernel. Do not close the SSH session while the command is running.
 
-2. Monitor the major phases:
+2. Follow the migration output. The [script documentation](https://github.com/oracle/migrate-to-ol/blob/main/README-migrate-to-oracle-linux.md) describes the main operations:
 
-    - Source validation and system snapshot
-    - Oracle repository bootstrap
-    - RHEL release-package removal
-    - Oracle Linux release-package installation
-    - Package replacement and distribution synchronization
-    - Oracle Linux RHCK installation
-    - Final identity and report checks
+    - Check the source, target, RPM database, and running kernel.
+    - Record the starting OS, repositories, and installed packages.
+    - Configure Oracle repositories and replace the distribution release packages.
+    - Replace packages with Oracle builds. This same-release migration uses exact package matches where available and nearest-release replacements where needed.
+    - Install the selected RHCK kernel, set the boot default, and write the final reports.
 
-3. If the command fails, do not rerun it blindly. Preserve the displayed log path and review the last completed phase.
+    This workshop uses the script version verified in Lab 3. The current repository documentation can describe newer versions.
+
+3. Check the completion result. Continue only after the script reports `Migration completed.` If it reports an error, keep the displayed log path and review it with the instructor before retrying. The documentation explains the migration modes and report files; use the log from your run to identify the failed operation.
 
 4. At successful completion, record the run directory and log file.
 
-    Ignore the script's `Reboot into Oracle Linux when ready:` message and the `reboot` command displayed below it. Complete Task 3 before rebooting in Task 4.
+    When the script displays `Reboot into Oracle Linux when ready:`, first complete Task 2 below. Reboot in Task 3.
 
-## Task 3: Inspect the converted system before reboot
+## Task 2: Inspect the converted system before reboot
 
 1. Verify that the installed user space identifies as Oracle Linux:
 
@@ -112,29 +79,27 @@ Estimated Lab Time: 40 minutes
 
     The selected Oracle RHCK build may differ from the source RHEL kernel, including a lower release suffix. Verify that it is installed and selected for boot; the running kernel is checked after reboot.
 
-4. Locate the newest migration run directory:
+4. Review the migration reports. Set `RUN_DIR` to the **State** path printed by the completed migration, replacing `<run-id>` with your actual run ID. Use the migration run rather than the earlier dry run:
 
     ```bash
     <copy>
-    RUN_DIR="$(sudo ls -1dt /var/lib/migrate-to-oracle-linux/* | head -1)"
-    echo "$RUN_DIR"
-    sudo find "$RUN_DIR" -maxdepth 1 -type f -printf '%f\n' | sort
+    RUN_DIR="/var/lib/migrate-to-oracle-linux/<run-id>"
+    sudo ls -1 "$RUN_DIR"
     </copy>
     ```
 
-5. Review the package migration summary if present:
+    The [Reports section of the script documentation](https://github.com/oracle/migrate-to-ol/blob/main/README-migrate-to-oracle-linux.md) explains the report files. Review the HTML reports listed at completion with your instructor:
 
-    ```bash
-    <copy>
-    sudo sed -n '1,40p' "$RUN_DIR/migration-rpm-map.tsv"
-    </copy>
-    ```
+    | Report | What to review |
+    | --- | --- |
+    | `migration-rpm-map.html` | The package migration results and exceptions. |
+    | `reinstalled-oracle-exact.html` | Packages reinstalled with exact Oracle matches. |
+    | `reinstalled-oracle-nearest.html` | Packages replaced with a different Oracle release. |
+    | `not-reinstalled-oracle.html` | Packages that were not reinstalled from Oracle repositories. |
 
-    These first 40 rows are a preview, not a complete exception review. The `unavailable` plan can include source package names that are removed or replaced later in the run. Review the final retained-package report in Lab 5.
+    Review version changes and any retained source-vendor packages needed by your application. A dry-run unavailable-package list is a plan; it does not establish which packages remain installed after migration. Warnings need review, but do not automatically mean the conversion failed. Ask the instructor to resolve unfamiliar exceptions before continuing.
 
-    Warnings about EVRA differences or retained source-vendor packages require review, but do not by themselves establish a failed conversion. Do not remove packages simply to eliminate a vendor warning.
-
-## Task 4: Reboot into Oracle Linux RHCK
+## Task 3: Reboot into Oracle Linux RHCK
 
 1. Reboot the VM:
 
@@ -173,70 +138,11 @@ Estimated Lab Time: 40 minutes
 
     The exact kernel build can vary. The vendor and RHCK checks establish the selected boot path; do not require the pre-migration kernel version string to stay unchanged.
 
-## Task 5: Perform the immediate health check
-
-1. Check failed services:
-
-    ```bash
-    <copy>
-    systemctl --failed --no-pager
-    </copy>
-    ```
-
-2. Verify the application service:
-
-    ```bash
-    <copy>
-    systemctl is-enabled httpd
-    systemctl is-active httpd
-    </copy>
-    ```
-
-3. Verify the local workload response:
-
-    ```bash
-    <copy>
-    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
-    </copy>
-    ```
-
-4. Verify SELinux and the firewall:
-
-    ```bash
-    <copy>
-    getenforce
-    sudo firewall-cmd --query-service=http
-    </copy>
-    ```
-
-5. Open `http://<public-ip>/` in your browser and confirm the workshop page still appears.
+5. Open `http://<public-ip>/` in your browser and confirm the page still displays `MIGRATION_WORKLOAD_OK`.
 
     ![The public workshop page still displays MIGRATION_WORKLOAD_OK after migration and reboot into Oracle Linux.](./images/application-after-migration.png)
 
-6. If any immediate check fails, preserve the migration logs before attempting remediation.
-
-## Task 6: Review what changed and what stayed the same
-
-1. Identify elements that changed:
-
-    - Distribution identity and release packages
-    - Repository definitions and signing keys
-    - Support and update source
-    - Installed and default kernel package
-    - Some vendor-specific packages
-
-2. Identify elements that stayed operational:
-
-    - OCI instance identity and networking
-    - SSH account and public key
-    - Apache configuration and content
-    - Systemd service management
-    - Firewall and SELinux operating concepts
-    - RPM and DNF administration model
-
-3. Confirm the lab checkpoint:
-
-    The same OCI VM now runs Oracle Linux 9.8 with an Oracle Linux RHCK, and the workload is reachable.
+    If the page is unavailable, keep the migration log and ask the instructor to investigate before continuing.
 
 ## Learn More
 

@@ -21,16 +21,6 @@
       "filename": "../../launch-baseline-rhel/launch-baseline-rhel.md"
     },
     {
-      "title": "OSMH Instructor Setup",
-      "description": "Prepare service permissions, the shared on-premises station and mirrors, and assigned student clients before Labs 8 through 10.",
-      "filename": "../../osmh-instructor-setup/osmh-instructor-setup.md"
-    },
-    {
-      "title": "Reference: On-Premises Management Agent",
-      "description": "Shared installation and activation procedure for the on-premises station and clients.",
-      "filename": "../../osmh-agent-install/osmh-agent-install.md"
-    },
-    {
       "title": "Need Help?",
       "description": "Review common solutions and options for assistance.",
       "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-freetier.md"

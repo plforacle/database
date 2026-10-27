@@ -158,7 +158,7 @@ No Red Hat account, local RHEL download, Object Storage bucket, or image-prepara
 
 11. Open `http://<public-ip>/` in your browser and confirm that the HTML page displays `MIGRATION_WORKLOAD_OK`.
 
-12. Continue to Lab 2, the Linux Command-Line Quickstart, on this destination instance. Capture the migration baseline afterward in Lab 3. Do not repeat the preparation registration or package installation steps.
+12. Continue to Lab 2, the Linux Command-Line Quickstart, on this destination instance. Assess migration readiness afterward in Lab 3. Do not repeat the preparation registration or package installation steps.
 
 ## Learn More
 

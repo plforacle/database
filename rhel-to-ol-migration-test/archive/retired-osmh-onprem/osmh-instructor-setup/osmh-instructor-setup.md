@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Prepare the shared station and on-premises clients before Student Labs 8 through 10. This setup guide supplements the two instructor image-preparation labs. It follows the SME-provided osmh-onprem-lab example and uses a real on-premises environment.
+Prepare the shared station and on-premises clients before Student Labs 7 through 9. This setup guide supplements the two instructor image-preparation labs. It follows the SME-provided osmh-onprem-lab example and uses a real on-premises environment.
 
-Students retain their OCI migration VMs from Labs 1 through 7. They use separate on-premises Oracle Linux clients for the OSMH exercises. Do not present these clients as the OCI instances that were migrated earlier.
+Students retain their OCI migration VMs from Labs 1 through 6. They use separate on-premises Oracle Linux clients for the OSMH exercises. Do not present these clients as the OCI instances that were migrated earlier.
 
 Estimated Time: 45 minutes of instructor activity, plus provisioning and mirror synchronization
 
@@ -113,7 +113,7 @@ Estimated Time: 45 minutes of instructor activity, plus provisioning and mirror 
 
 3. Select the required sources and choose **Actions > Sync software sources now**, then **Sync now**. Monitor the jobs and station storage until all selected mirrors are synchronized.
 
-4. Keep the warm-up profile and shared station in place throughout the class. Finish the initial download before Student Lab 8; transfer time can exceed the workshop's active time estimates.
+4. Keep the warm-up profile and shared station in place throughout the class. Finish the initial download before Student Lab 7; transfer time can exceed the workshop's active time estimates.
 
 ## Task 5: Prepare and assign the on-premises clients
 
@@ -137,7 +137,7 @@ Estimated Time: 45 minutes of instructor activity, plus provisioning and mirror 
 
 4. Assign each student a unique client hostname and profile suffix. Provide the client SSH account, private connection details, OSMH region and compartment, station hostname and ports, approved source list, install key, RPM path, and maintenance-window plan.
 
-5. Pilot Student Labs 8 through 10 on one assigned client. Confirm registration, source delivery, job results, and application checks before class. An absence of available updates must be recorded accurately; do not downgrade systems to create an exercise result.
+5. Pilot Student Labs 7 through 9 on one assigned client. Confirm registration, source delivery, job results, and application checks before class. An absence of available updates must be recorded accurately; do not downgrade systems to create an exercise result.
 
 6. Capture station health, synchronized mirrors, profile association, client Active status, and update-job evidence during the pilot. Retain the station, clients, profiles, keys, and all OCI resources. Cleanup is outside this setup guide.
 

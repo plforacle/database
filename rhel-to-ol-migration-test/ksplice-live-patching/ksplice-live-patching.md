@@ -1,10 +1,16 @@
-# Lab 7: Explore Rebootless Patching with Ksplice
+# Lab 5: Explore Rebootless Patching with Ksplice
 
 ## Introduction
 
-Evaluate Ksplice after migration validation and the kernel-choice exercise. The Uptrack client can apply available supported kernel fixes to the running system without a reboot. You will record the boot identity, sample the original application's HTTP responses, inspect available live patches, and verify the outcome.
+Continue on the Oracle RHCK used for migration in Lab 4. Uptrack is the Ksplice client. It downloads and applies supported kernel fixes without rebooting the system. You will inspect available patches, apply them when available, and check the boot identity and application response afterward. Lab 6 introduces UEK after this patching test is complete.
 
-This lab uses the standalone command-line client, not Cloud Agent. The OCI installation path below applies to the migrated BYOI instance used in this workshop. On OCI, Oracle documents access without ULN registration. Outside OCI, arrange the required Oracle Linux support entitlement and use its documented client-installation path before joining Task 3; do not use the OCI installer as a general-purpose entitlement workaround.
+**BYOI (Bring Your Own Image)** means importing your own operating-system image into OCI to create a VM. In this workshop, you imported the instructor-prepared RHEL image, launched a VM from it, and migrated that VM to Oracle Linux.
+
+OCI gives your VM access to the Ksplice update service without registration with the Unbreakable Linux Network (ULN).
+
+Standard Oracle Linux images supplied by OCI normally have the Ksplice client installed. Our VM started from a custom RHEL image, and Uptrack was missing after migration in our test. Task 2 checks for Uptrack and installs it only if it is missing.
+
+For on-premises systems, Ksplice requires an eligible Oracle Linux support subscription, such as Premier Support, and the installation procedure for that environment.
 
 ### Objectives
 
@@ -13,59 +19,44 @@ In this lab, you will:
 - Check kernel maintenance and Ksplice access requirements.
 - Install Uptrack on the converted OCI instance.
 - Inspect and apply available live kernel updates when supported.
-- Compare boot identity and observed application availability.
+- Verify the applied patches, unchanged boot identity, and application response.
 - Distinguish live patching from on-disk package maintenance.
 
 Estimated Lab Time: 30 minutes
 
 ### Prerequisites
 
-Complete Labs 5 and 6, keeping the migration evidence unchanged. Use a healthy Oracle Linux 9.8 destination VM with a maintained Oracle UEK or RHCK, internet access, and sudo privileges. Verify the current maintained-kernels documentation linked below. Do not assume that a particular patch will be available on the workshop date.
+Complete the migration, report review, reboot, and webpage checks in Lab 4. Keep the script-generated migration reports unchanged. Use the same healthy Oracle Linux 9.8 destination VM, still running its maintained Oracle RHCK, with internet access and sudo privileges. The instructor must verify that applicable Ksplice patches are available for this RHCK before class, using the maintained-kernels documentation linked below.
 
-If access or kernel support prevents the live exercise, record the actual error and discuss it with the instructor. Other administration labs may continue, but do not report that patches were applied. Beginners follow the guided path; experienced learners should explain the evidence that distinguishes a successful patch application from a successful no-updates check.
+To complete the full live-patching test, at least one available patch must actually be applied. A successful client installation or no-updates check is a useful result, but leaves the patch-application test incomplete. Resolve access, kernel-support, or availability issues with the instructor before claiming the full test passed.
 
-## Task 1: Record the starting state and monitor the application
+## Task 1: Check the starting kernel and application
 
-1. Keep one SSH session open for the entire lab. Record the current boot ID, kernel, application process, and checksum:
+1. Create a separate report directory for this attempt and record the starting boot state:
 
     ```bash
     <copy>
-    REPORT="$HOME/ol-practice-reports/ksplice"
+    REPORT="$HOME/ol-practice-reports/ksplice/$(date -u +%Y%m%dT%H%M%SZ)"
     mkdir -p "$REPORT"
+    printf 'Report directory: %s\n' "$REPORT"
     cat /proc/sys/kernel/random/boot_id > "$REPORT/boot-id-before.txt"
-    uname -r > "$REPORT/boot-kernel-before.txt"
+    uname -r | tee "$REPORT/boot-kernel-before.txt"
     rpm -qf "/boot/vmlinuz-$(uname -r)" --qf '%{NAME} %{VERSION}-%{RELEASE} %{VENDOR}\n'
-    systemctl show httpd -p MainPID --value > "$REPORT/httpd-pid-before.txt"
-    sha256sum --check "$HOME/ol-migration-evidence/before/application-sha256.txt"
+    </copy>
+    ```
+
+    Confirm the running kernel belongs to Oracle, has no `uek` in its version, and is the RHCK verified in Lab 4. Keep this SSH session open so `REPORT` remains available. If you reconnect, set `REPORT` to the directory printed above.
+
+2. Check the application before patching:
+
+    ```bash
+    <copy>
+    systemctl is-active httpd
     curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
     </copy>
     ```
 
-    Stop if the application is unhealthy or the kernel is not Oracle-owned. Confirm eligibility against the maintained-kernels reference. A family being maintained does not guarantee that every newly released build already has live patches.
-
-2. Start a lightweight background HTTP monitor in this same session:
-
-    ```bash
-    <copy>
-    (
-      set -o pipefail
-      while :; do
-        printf '%s ' "$(date -Is)"
-        if curl --fail --silent --show-error --max-time 5 http://127.0.0.1/ \
-          | grep -q MIGRATION_WORKLOAD_OK; then
-          printf 'HTTP_OK\n'
-        else
-          printf 'HTTP_FAIL\n'
-        fi
-        sleep 2
-      done
-    ) > "$REPORT/http-monitor.log" 2>&1 &
-    MONITOR_PID=$!
-    printf 'Monitor process: %s\n' "$MONITOR_PID"
-    </copy>
-    ```
-
-    Keep this session and its `MONITOR_PID` variable. Do not reboot or deliberately stop Apache during this lab. The monitor starts before installation so it also covers setup activity. If you stop the lab early, stop this background job using Task 4, Step 2 before closing the session.
+    Expect `active` and the workload marker. Resolve an application failure before continuing.
 
 ## Task 2: Install the client on the OCI BYOI instance
 
@@ -103,7 +94,7 @@ If access or kernel support prevents the live exercise, record the actual error 
     </copy>
     ```
 
-    Do not pass `--autoinstall` in this exercise. Inspect the installer's output because setup may install or apply updates as part of configuring the client. The boot-ID and application observations started before setup. If client installation fails, stop the monitor, record the failure, and ask the instructor to review access and support before continuing with Ksplice commands.
+    Do not pass `--autoinstall` in this exercise. Inspect the installer's output because setup may apply updates while configuring the client. Record any such patches. If installation fails, save the error and review access and kernel support with the instructor before proceeding.
 
 ## Task 3: Inspect and apply available live kernel updates
 
@@ -111,7 +102,7 @@ If access or kernel support prevents the live exercise, record the actual error 
 
     ```bash
     <copy>
-    sudo uptrack-show
+    sudo uptrack-show | tee "$REPORT/installed-updates-before.txt"
     sudo uptrack-uname -r | tee "$REPORT/effective-kernel-after-install.txt"
     sudo uptrack-upgrade -n > "$REPORT/available-updates.txt" 2>&1
     UPTRACK_STATUS=$?
@@ -127,66 +118,60 @@ If access or kernel support prevents the live exercise, record the actual error 
     ```bash
     <copy>
     sudo uptrack-upgrade -y
+    PATCH_STATUS=$?
+    printf 'Apply exit status: %s\n' "$PATCH_STATUS"
     sudo uptrack-show | tee "$REPORT/applied-updates.txt"
     sudo uptrack-uname -r | tee "$REPORT/effective-kernel-after.txt"
     </copy>
     ```
 
-    Run the apply command only after reviewing a valid available-update result. Keep the HTTP monitor running. If application fails, preserve the output and inspect the supported-kernel and access requirements; do not blindly rerun or remove all patches as a generic fix.
+    Run the apply command only when the preview lists applicable updates. Confirm a successful apply result and actual patch identifiers in `uptrack-show`. If the command fails, save the output and investigate with the instructor before retrying.
 
-3. If no updates are available, record that outcome. If setup already applied updates, record those from `uptrack-show`. If the current kernel is reported as unsupported or has no patch stream yet, check the current maintenance reference with the instructor. A newly released kernel can lack published patches even when its family is maintained. Do not downgrade the kernel to manufacture a demonstration.
+3. If no updates are available, record the kernel and outcome. If setup already applied patches, review its output and the installed patch identifiers. A newly released kernel can have no published patches yet; see the [maintained-kernels guidance](https://docs.oracle.com/en/operating-systems/oracle-linux/ksplice-user/ksplice-MaintainedKernels.html).
 
-    An authorization, network, TLS, or repository error is not equivalent to having no updates available. Record unresolved access/support errors as a blocked live exercise, not successful patching. Continue to the observation and monitor-stop task in every case.
+    The October 27, 2026 test applied 135 patches to Oracle RHCK `5.14.0-687.5.3.el9_8` and reached effective version `5.14.0-687.48.1.el9_8` without rebooting during patching. Counts and availability can change. If your RHCK has no updates, ask the instructor to review the kernel and available patches before continuing. Leave the patch-application test incomplete until actual updates can be applied. Do not remove patches to create an artificial before state.
 
-## Task 4: Verify the boot and application observations
+    An access, network, or unsupported-kernel error also requires investigation. Preserve the output for the instructor.
 
-1. Compare the recorded state without rebooting:
+## Task 4: Verify the applied patches and running system
+
+1. Confirm the VM has not rebooted and the boot-kernel version is unchanged:
 
     ```bash
     <copy>
     cat /proc/sys/kernel/random/boot_id > "$REPORT/boot-id-after.txt"
     uname -r > "$REPORT/boot-kernel-after.txt"
-    systemctl show httpd -p MainPID --value > "$REPORT/httpd-pid-after.txt"
     diff -u "$REPORT/boot-id-before.txt" "$REPORT/boot-id-after.txt"
     diff -u "$REPORT/boot-kernel-before.txt" "$REPORT/boot-kernel-after.txt"
-    diff -u "$REPORT/httpd-pid-before.txt" "$REPORT/httpd-pid-after.txt"
-    systemctl is-active httpd
-    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
-    sha256sum --check "$HOME/ol-migration-evidence/before/application-sha256.txt"
     </copy>
     ```
 
-    Expect no differences, active Apache, the workload marker, and checksum OK. A changed boot ID means a reboot occurred and this run does not demonstrate rebootless patching. A changed Apache PID needs investigation before claiming the service was not restarted.
+    Both comparisons should produce no differences. A changed boot ID means a reboot occurred during this attempt.
 
-2. Stop only the monitor started in this SSH session and inspect its observations:
+2. Review the patch state and check the application:
 
     ```bash
     <copy>
-    kill "$MONITOR_PID"
-    wait "$MONITOR_PID" 2>/dev/null || true
-    tail -10 "$REPORT/http-monitor.log"
-    grep -c HTTP_OK "$REPORT/http-monitor.log"
-    grep -c HTTP_FAIL "$REPORT/http-monitor.log"
+    sudo uptrack-show | tee "$REPORT/installed-updates-after.txt"
+    sudo uptrack-uname -r
+    systemctl is-active httpd
+    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
     </copy>
     ```
 
-    Require at least one HTTP_OK observation and investigate any HTTP_FAIL result. A count of zero matches makes `grep -c` return status 1, which is expected for a zero-failure count. These two-second samples record observed responses; they are not a continuous load test or proof about every possible request.
+    Confirm the patch identifiers applied in Task 3 are present. Expect `active` and the workload marker. These application checks show responses before and after patching; they do not measure every request during patch application. `Installed updates: None` does not demonstrate successful patch application.
 
-    If the session was lost, the monitor and shell variables may also be gone. Reconnect, inspect any remaining log, and record the observation gap rather than guessing a process ID to kill. Repeat the monitoring part in a new session if complete evidence is needed.
+## Task 5: Record the test result
 
-## Task 5: Explain the result and complete the checkpoint
+1. Record the kernel, patch identifiers, and outcome in `$REPORT/result.txt`:
 
-1. Record one accurate outcome in `$HOME/ol-practice-reports/ksplice/result.txt`:
+    - Full patch test passed: actual patches were applied, boot identity stayed unchanged, and the application responded before and after patching.
+    - No updates available: client installation and availability checks worked, but actual patch application remains untested.
+    - Test blocked: record the installation, access, support, apply, or verification error for follow-up.
 
-    - Updates applied: list actual applied updates, unchanged boot identity, and application observations.
-    - No additional updates: record the client state and availability result; do not claim you observed a new patch being applied.
-    - Live exercise blocked: retain the real installation, access, or kernel-support error and the instructor's follow-up decision.
+2. Review the result with the instructor. Resolve any incomplete full test before marking the patch-application exercise complete. Keep the reports, then continue to Lab 6: Explore Oracle Linux Kernel Choices.
 
-2. Challenge: explain why a boot-kernel version can stay unchanged while the effective kernel changes, why the UEK exercise required a reboot but this one should not, and why live patching does not replace updating on-disk packages. This Uptrack exercise addresses kernel updates; it does not demonstrate Enhanced Client user-space patching.
-
-3. Complete when the monitor is stopped, Apache and its checksum are healthy, and the outcome is recorded accurately. Available updates should have been applied only when the supported apply path succeeded. Follow-on package maintenance still matters so that a future boot uses current on-disk software. Ksplice reduces reboot requirements for supported fixes; it does not eliminate every reason for maintenance or reboot.
-
-4. Continue to Lab 8 to prepare for on-premises OS Management Hub. If the Ksplice exercise was blocked, carry that open issue in your notes; OSMH registration does not resolve or validate Ksplice access.
+    Live patches update the running kernel. Updating on-disk packages remains part of normal maintenance so that a future boot uses current software.
 
 ## Learn More
 

@@ -2,47 +2,37 @@
 
 ## Introduction
 
-The core conversion used Oracle Linux RHCK and was validated in Lab 5. Now explore the Unbreakable Enterprise Kernel (UEK) as a separate post-migration choice. Install UEK 8, select it for boot, reboot, and verify the same Apache application. Keep the working RHCK installed as a fallback.
+You migrated to Oracle Linux RHCK in Lab 4 and tested Ksplice on that running kernel in Lab 5. Now explore the Unbreakable Enterprise Kernel (UEK) as a separate post-migration choice. Install UEK 8, select it for boot, reboot, and verify the running kernel. Keep the working RHCK installed.
 
-Kernel choice depends on workload requirements, hardware, and software certification. This small Apache exercise demonstrates boot and application continuity; it does not establish performance improvements or certify another application. Switching the boot kernel requires a reboot, unlike the Ksplice live-patching exercise in Lab 7.
+Kernel choice depends on workload requirements, hardware, and software certification. This lab demonstrates switching from RHCK to UEK. This deliberate reboot happens after the Ksplice test is complete; it does not invalidate the earlier demonstration of live patching without a reboot.
 
 ### Objectives
 
 In this lab, you will:
 
-- Distinguish RHCK from UEK and record the working RHCK boot path.
+- Distinguish RHCK from UEK.
 - Install UEK 8 from Oracle repositories.
-- Select and boot UEK, then verify the application.
-- Identify a fallback procedure without removing the original kernel.
+- Select and boot UEK, then verify the running kernel.
 
 Estimated Lab Time: 30 minutes
 
 ### Prerequisites
 
-Complete Lab 5 with a successful RHCK migration decision and saved evidence. Use the Oracle Linux 9.8 x86_64 destination VM and keep your SSH key and connection details available. The original application checksum must still match its baseline. Run these changes only on the workshop VM.
+Complete Labs 4 and 5 and retain the Ksplice patch results. Use the same Oracle Linux 9.8 x86_64 destination VM, still running RHCK, and keep your SSH key and connection details available. Run these changes only on the workshop VM.
 
-Beginners should follow the guided path. Experienced learners can explain and perform the kernel selection independently, but must record the fallback path and pass the same verification checks.
+## Task 1: Check the current kernel and compare choices
 
-## Task 1: Record the working kernel and compare choices
-
-1. Confirm the validated starting state and save its boot path:
+1. Confirm the operating system, running kernel, and default boot kernel:
 
     ```bash
     <copy>
-    mkdir -p "$HOME/ol-practice-reports/kernel-choice"
-    cat /etc/os-release
+    grep -E '^(ID|VERSION_ID)=' /etc/os-release
     uname -r
-    rpm -qf "/boot/vmlinuz-$(uname -r)" --qf '%{NAME} %{VERSION}-%{RELEASE} %{VENDOR}\n'
-    printf '/boot/vmlinuz-%s\n' "$(uname -r)" \
-      > "$HOME/ol-practice-reports/kernel-choice/rhck-kernel-path.txt"
     sudo grubby --default-kernel
-    cat /proc/sys/kernel/random/boot_id \
-      > "$HOME/ol-practice-reports/kernel-choice/boot-id-before-uek.txt"
-    sha256sum --check "$HOME/ol-migration-evidence/before/application-sha256.txt"
     </copy>
     ```
 
-    Start from Oracle Linux 9.8, an Oracle-owned kernel without `uek` in its running version, and checksum OK. Stop if migration validation is incomplete. Do not overwrite the migration evidence archives.
+    Expect `ID="ol"`, `VERSION_ID="9.8"`, and a running RHCK version without `uek`. The default kernel should match the booted RHCK used in Lab 5. Its `uname -r` value remains the boot version even after Ksplice has advanced the effective kernel version.
 
 2. Inspect the installed kernels and available repositories:
 
@@ -102,11 +92,10 @@ Beginners should follow the guided path. Experienced learners can explain and pe
     printf 'UEK boot image: %s\n' "$UEK_KERNEL"
     test -f "$UEK_KERNEL" && rpm -qf "$UEK_KERNEL" \
       --qf '%{NAME} %{VERSION}-%{RELEASE} %{VENDOR}\n'
-    cat "$HOME/ol-practice-reports/kernel-choice/rhck-kernel-path.txt"
     </copy>
     ```
 
-    The UEK path must be nonempty, identify an existing file, contain `el9uek`, and belong to an Oracle package. Confirm the saved RHCK file also exists. Do not proceed with an empty or unverified path.
+    The UEK path must be nonempty, identify an existing file, contain `el9uek`, and belong to an Oracle package. Do not proceed with an empty or unverified path.
 
 2. Select UEK and verify the resulting default:
 
@@ -137,7 +126,7 @@ Beginners should follow the guided path. Experienced learners can explain and pe
 
     Wait for SSH to accept connections again. The following task runs in the new SSH session; shell variables from before the reboot are no longer set.
 
-## Task 4: Verify UEK and the original application
+## Task 4: Verify the running UEK kernel
 
 1. Verify the booted kernel, default, and OS identity:
 
@@ -147,56 +136,12 @@ Beginners should follow the guided path. Experienced learners can explain and pe
     rpm -qf "/boot/vmlinuz-$(uname -r)" --qf '%{NAME} %{VERSION}-%{RELEASE} %{VENDOR}\n'
     sudo grubby --default-kernel
     grep -E '^(ID|VERSION_ID)=' /etc/os-release
-    cat /proc/sys/kernel/random/boot_id \
-      > "$HOME/ol-practice-reports/kernel-choice/boot-id-after-uek.txt"
     </copy>
     ```
 
-    Expect Oracle Linux 9.8, an Oracle-owned kernel with `el9uek` in its version, and a matching boot default. The boot ID should differ from the one recorded in Task 1 because this exercise rebooted. Record the actual version; do not require a fixed build number.
+    Expect Oracle Linux 9.8, an Oracle-owned kernel with `el9uek` in its version, and a matching boot default. Record the actual version; do not require a fixed build number.
 
-2. Validate the application and security state:
-
-    ```bash
-    <copy>
-    systemctl is-enabled httpd
-    systemctl is-active httpd
-    systemctl --failed --no-pager
-    curl --fail --silent http://127.0.0.1/ | grep MIGRATION_WORKLOAD_OK
-    sha256sum --check "$HOME/ol-migration-evidence/before/application-sha256.txt"
-    getenforce
-    sudo firewall-cmd --query-service=http
-    </copy>
-    ```
-
-    Expect Apache enabled/active, no unexpected failed units, the marker, checksum OK, SELinux Enforcing, and HTTP allowed. Verify `http://<public-ip>/` in the browser again. Keep this result separate from the earlier RHCK migration validation.
-
-## Task 5: Understand fallback and complete the checkpoint
-
-1. Challenge: explain why installing UEK does not immediately change `uname -r`, why selecting a default does not prove that kernel is running, and why an unchanged application checksum is useful after the kernel change. Beginners can use Tasks 1 through 4 as evidence.
-
-2. Review the fallback commands. Run them only if you need to return to the saved RHCK and SSH is available:
-
-    ```bash
-    <copy>
-    RHCK_KERNEL="$(cat "$HOME/ol-practice-reports/kernel-choice/rhck-kernel-path.txt")"
-    if test -n "$RHCK_KERNEL" && test -f "$RHCK_KERNEL"; then
-      sudo grubby --set-default "$RHCK_KERNEL"
-    fi
-    sudo grubby --default-kernel
-    </copy>
-    ```
-
-    Verify that the displayed path is the saved RHCK. Reboot only after confirming it, then repeat the application checks. If you choose to stay on RHCK, disable UEK repositories to keep future kernel maintenance aligned with that choice:
-
-    ```bash
-    <copy>
-    sudo dnf config-manager --disable ol9_UEKR7 ol9_UEKR8
-    </copy>
-    ```
-
-    If the VM cannot boot or accept SSH, use the instance console or your approved recovery procedure to select the retained RHCK, or rebuild the disposable VM from the prepared image. Do not remove kernels while diagnosing an inaccessible system. Record a fallback as a fallback result, not a successful UEK test.
-
-3. In the normal guided path, leave UEK selected and running. Record the RHCK path, booted UEK version, application result, and fallback decision in `$HOME/ol-practice-reports/kernel-choice/result.txt`. Continue to Lab 7 only after the chosen Oracle kernel and application are healthy. Ksplice can be evaluated on a maintained Oracle UEK or Oracle RHCK; a retained Red Hat-built kernel is not an acceptable substitute.
+    Continue to Lab 7: OS Management Hub Quickstart on OCI after these checks pass, using this same VM. Keep your kernel and patching results for review.
 
 ## Learn More
 
