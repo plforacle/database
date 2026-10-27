@@ -141,7 +141,7 @@ Complete Labs 4 and 5 and retain the Ksplice patch results. Use the same Oracle 
 
     Expect Oracle Linux 9.8, an Oracle-owned kernel with `el9uek` in its version, and a matching boot default. Record the actual version; do not require a fixed build number.
 
-    Continue to Lab 7: OS Management Hub Quickstart on OCI after these checks pass, using this same VM. Keep your kernel and patching results for review.
+    You have completed the main workshop. Keep your VM, kernel results, and patching results for review. If time allows, open optional Lab 7 to explore OSMH. You can use its independent Luna lab option or continue on this VM with the required permissions.
 
 ## Learn More
 

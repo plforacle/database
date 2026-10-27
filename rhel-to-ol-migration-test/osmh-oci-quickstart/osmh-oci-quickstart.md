@@ -1,8 +1,12 @@
-# Lab 7: OS Management Hub Quickstart on OCI
+# Lab 7: OS Management Hub Quickstart on OCI (Optional)
 
 ## Introduction
 
-Your RHEL VM now runs Oracle Linux. Use OS Management Hub (OSMH) to view its software inventory and manage a package update from the OCI Console. Continue using `ol-migrate-rhel-source` and the Apache application from the earlier labs.
+This lab is optional. You have completed the main migration workshop after Lab 6. Use this extra activity to learn how OS Management Hub (OSMH) manages software inventory and package updates from the OCI Console.
+
+During training, you can run the independent Luna lab [Monitor and Update Oracle Linux with Oracle OS Management Hub](https://luna.oracle.com/lab/d60f64fb-76b8-4a46-9b90-75ce4ff7e0b5/steps). Open the link and follow that lab's setup and steps in its own environment. You do not need to complete the tasks below when using Luna.
+
+If you choose to practice on your migrated VM instead, follow Tasks 1 through 5 below using `ol-migrate-rhel-source` and its Apache application. This path requires the permissions and connectivity listed below.
 
 You will set up OSMH for your compartment, register this VM, and run an update job. Oracle Cloud Agent runs on the VM and provides the OS Management Hub Agent plugin used for registration.
 
@@ -12,9 +16,11 @@ You will set up OSMH for your compartment, register this VM, and run an update j
 - Register the migrated OCI VM and view its inventory.
 - Apply an available package update and verify the job and application.
 
-Estimated Lab Time: 40 minutes, plus agent registration and job execution time
+Estimated Lab Time: 40 minutes for the migrated-VM path, plus agent registration and job execution time. The independent Luna lab has its own duration. Neither option is included in the main workshop time.
 
 ### Prerequisites
+
+These prerequisites apply to Tasks 1 through 5 on the migrated VM. For Luna, follow the prerequisites in the linked lab.
 
 - Complete the migration, Ksplice, and kernel-choice exercises. Keep their results.
 - Use the same OCI region, compartment, VM, SSH account, and key as the earlier labs.

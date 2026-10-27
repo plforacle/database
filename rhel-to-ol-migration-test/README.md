@@ -3,9 +3,9 @@
 This folder contains separate instructor preparation and student workshops.
 
 - [Instructor workshop](workshops/instructor/index.html): Prepare the reusable RHEL image in two labs, then provide the image URL and OCI access instructions to students.
-- [Student workshop](workshops/tenancy/index.html): Begin at Lab 1, create your network and VM, then complete migration, live patching, kernel choices, and an OSMH quickstart across seven labs on that same VM.
+- [Student workshop](workshops/tenancy/index.html): Complete six main labs on the same VM, covering setup, migration, live patching, and kernel choices. Lab 7 is an optional OSMH activity with an independent Luna option.
 
-The existing `workshops/tenancy` entry opens the student workshop. The instructor workshop has its own manifest and introduction. The separate migration-validation, package-maintenance, Apache-troubleshooting, security, application-backup, and automation labs are preserved under `archive/retired-student-labs`. The former station-based OSMH labs and supporting guides are preserved under `archive/retired-osmh-onprem`. Lab 4 completes migration, Lab 5 tests Ksplice on RHCK, Lab 6 explores UEK, and Lab 7 introduces OSMH on the same VM. Planned student time is 4 hours 50 minutes, including orientation.
+The existing `workshops/tenancy` entry opens the student workshop. The instructor workshop has its own manifest and introduction. The separate migration-validation, package-maintenance, Apache-troubleshooting, security, application-backup, and automation labs are preserved under `archive/retired-student-labs`. The former station-based OSMH labs and supporting guides are preserved under `archive/retired-osmh-onprem`. Lab 4 completes migration, Lab 5 tests Ksplice on RHCK, and Lab 6 explores UEK. The main agenda has 250 minutes of activity including orientation; allow about five hours with provisioning, downloads, and reboots. Optional Lab 7 requires extra time.
 
 ## Entry Files
 
@@ -18,9 +18,9 @@ Students need an OCI environment and the instructor-provided prepared-image PAR 
 
 ## OSMH Environment
 
-All seven labs use `ol-migrate-rhel-source` as OCI practice infrastructure for the on-premises migration scenario. The [OSMH quickstart](osmh-oci-quickstart/osmh-oci-quickstart.md) continues on the migrated VM. Students configure the service, register the VM, review inventory, and apply an available package update through the Console.
+Labs 1 through 6 use `ol-migrate-rhel-source` as OCI practice infrastructure for the on-premises migration scenario. Optional [Lab 7](osmh-oci-quickstart/osmh-oci-quickstart.md) links to the independent [Luna OSMH lab](https://luna.oracle.com/lab/d60f64fb-76b8-4a46-9b90-75ce4ff7e0b5/steps), which students can run during training in its own environment. It also retains the migrated-VM tasks as an alternative when the required permissions are available.
 
-Students need the documented OSMH, software-source, Compute plugin, and IAM permissions, or tenancy administrator assistance. The live test verified Oracle Cloud Agent installation, but IAM errors prevented completion of service setup. Plugin registration, inventory, and update execution remain unverified on this image. Pilot these before class. Oracle's [OSMH tutorial](https://docs.oracle.com/en/learn/osmh-monitor/index.html) remains additional learning with its own prerequisites.
+For the migrated-VM option, students need the documented OSMH, software-source, Compute plugin, and IAM permissions, or administrator assistance. The live test verified Oracle Cloud Agent installation, but IAM errors prevented completion of service setup. Plugin registration, inventory, and update execution remain unverified on this image. The owner reported successful live testing of Labs 1 through 6; optional Lab 7 testing is planned for Wednesday, October 28, 2026.
 
 ## Lab Number Mapping
 

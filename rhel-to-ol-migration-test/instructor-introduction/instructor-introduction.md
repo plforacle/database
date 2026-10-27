@@ -79,11 +79,11 @@ Before teaching, follow Student Lab 1 with a permitted test account to verify th
 
 Pilot Student Labs 4 and 5 on a disposable VM from the prepared image before class. Verify that the migrated Oracle RHCK has actual Ksplice updates available and that they can be applied. Students complete Ksplice on RHCK in Lab 5 before installing UEK in Lab 6. Patch availability changes, so the earlier test's patch count is not a guarantee for a later class.
 
-## OSMH Readiness Before Class
+## Optional OSMH Activity
 
-Students configure OSMH for their migrated VM in Student Lab 7. Confirm their permissions to manage OSMH resources, software sources, and Compute agent plugins. Policy Advisor requires additional IAM permissions to manage groups, dynamic groups, and policies; arrange tenancy administrator assistance where needed.
+Student Lab 7 is optional. During training, students can run the independent [Luna OSMH lab](https://luna.oracle.com/lab/d60f64fb-76b8-4a46-9b90-75ce4ff7e0b5/steps) using its own environment and instructions. Check access before class. Students can start it if time allows or complete it later.
 
-Pilot Lab 7 on the exact migrated image before class. Confirm Oracle Cloud Agent installation, plugin compatibility, registration, inventory, and an available package update. The current live test verified agent installation, but IAM errors prevented completion of OSMH setup. Registration and update execution remain unverified. Physical on-premises registration uses a different agent and setup procedure.
+If offering the retained migrated-VM path instead, confirm student permissions to manage OSMH resources, software sources, and Compute agent plugins. Policy Advisor also requires IAM permissions; arrange administrator assistance where needed. Pilot this path on the exact migrated image. The current live test verified agent installation, but IAM errors prevented completion of OSMH setup. Registration and update execution remain unverified. Physical on-premises registration uses a different agent and setup procedure.
 
 ## Learn More
 

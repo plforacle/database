@@ -41,8 +41,8 @@
       "filename": "../../kernel-choice/kernel-choice.md"
     },
     {
-      "title": "Lab 7: OS Management Hub Quickstart on OCI",
-      "description": "Register the migrated VM with OSMH, inspect its inventory, and run one available package update through the Console.",
+      "title": "Lab 7: OS Management Hub Quickstart on OCI (Optional)",
+      "description": "Choose the independent Luna OSMH lab or use the migrated VM for optional registration, inventory, and update practice.",
       "filename": "../../osmh-oci-quickstart/osmh-oci-quickstart.md"
     },
     {
