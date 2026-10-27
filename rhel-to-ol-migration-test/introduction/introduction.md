@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Study on-premises RHEL-to-Oracle Linux migration and ongoing Linux management. Labs 1 through 7 use OCI-hosted practice infrastructure to convert a prepared RHEL 9.8 VM to Oracle Linux 9.8 while preserving Apache. Labs 8 through 10 use an instructor-provided on-premises Oracle Linux client and management station for OS Management Hub. Begin with Student Lab 1 and complete the labs in order.
+Learn how to migrate on-premises systems from Red Hat Enterprise Linux to Oracle Linux and manage them after migration. Labs 1 through 7 use OCI-hosted practice infrastructure to convert a prepared RHEL 9.8 VM to Oracle Linux 9.8 while preserving Apache. Labs 8 through 10 use an instructor-provided on-premises Oracle Linux client and management station for OS Management Hub. Begin with Student Lab 1 and complete the labs in order.
 
 Your instructor prepares the source image in a separate instructor workshop and supplies its object-read PAR URL. You create the destination network and VM yourself. You do not need a Red Hat account or access to the preparation tenancy.
 

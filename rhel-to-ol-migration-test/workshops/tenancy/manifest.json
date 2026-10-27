@@ -30,18 +30,14 @@
       "description": "Convert in place, reboot into Oracle RHCK, and verify the application.",
       "filename": "../../migrate-to-oracle-linux/migrate-to-oracle-linux.md"
     },
+
     {
-      "title": "Lab 5: Validate the Migration",
-      "description": "Compare migration evidence and review package exceptions before further practice.",
-      "filename": "../../validate-cleanup/validate-cleanup.md"
-    },
-    {
-      "title": "Lab 6: Explore Oracle Linux Kernel Choices",
+      "title": "Lab 5: Explore Oracle Linux Kernel Choices",
       "description": "Install and boot UEK 8, retain RHCK as fallback, and retest the migrated application.",
       "filename": "../../kernel-choice/kernel-choice.md"
     },
     {
-      "title": "Lab 7: Explore Rebootless Patching with Ksplice",
+      "title": "Lab 6: Explore Rebootless Patching with Ksplice",
       "description": "Check eligibility, install Uptrack, evaluate available live patches, and compare boot identity and application observations.",
       "filename": "../../ksplice-live-patching/ksplice-live-patching.md"
     },
