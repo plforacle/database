@@ -83,7 +83,7 @@ Pilot Student Labs 4 and 5 on a disposable VM from the prepared image before cla
 
 Student Lab 7 is optional. During training, students can run the independent [Luna OSMH lab](https://luna.oracle.com/lab/d60f64fb-76b8-4a46-9b90-75ce4ff7e0b5/steps) using its own environment and instructions. Check access before class. Students can start it if time allows or complete it later.
 
-If offering the retained migrated-VM path instead, confirm student permissions to manage OSMH resources, software sources, and Compute agent plugins. Policy Advisor also requires IAM permissions; arrange administrator assistance where needed. Pilot this path on the exact migrated image. The current live test verified agent installation, but IAM errors prevented completion of OSMH setup. Registration and update execution remain unverified. Physical on-premises registration uses a different agent and setup procedure.
+If offering the retained migrated-VM path instead, confirm student permissions to manage OSMH resources, software sources, and Compute agent plugins. Policy Advisor also requires IAM permissions; arrange administrator assistance where needed. Pilot this path on the exact migrated image. The October 29, 2026 test in a Luna tenancy in Frankfurt confirmed Active registration, four attached sources, visible package inventory, a successful one-package update work request, and a working Apache application afterward. Physical on-premises registration uses a different agent and setup procedure.
 
 ## Learn More
 

@@ -110,9 +110,20 @@ These prerequisites apply to Tasks 1 through 5 on the migrated VM. For Luna, fol
 
     If Setup says to use your home region for IAM changes, switch to the home region named in the error and rerun Policy Advisor for the same compartment. After successful setup, return to your VM's region before continuing. If group or policy creation still reports `Unauthorized`, a tenancy administrator must resolve the missing IAM permissions. See [Policy Advisor errors](https://docs.oracle.com/en-us/iaas/osmh/doc/troubleshoot-policies.htm).
 
-3. Open the VM's VCN and check the route table associated with its subnet. OSMH requires connectivity to OCI services. If a service-gateway route is absent, create a service gateway for `All <region> Services in Oracle Services Network`, then add a route for that service CIDR label through the gateway. Keep the existing internet-gateway route and allow the required outbound HTTPS traffic. See the [OSMH networking requirements](https://docs.oracle.com/en-us/iaas/osmh/doc/getstarted.htm).
+3. Check the VM's network access. Open **Compute > Instances**, select the lab VM, and open **Networking**. Follow the primary network interface's **Subnet** link, then open its **Route Table** and **Route Rules**.
 
-4. Return to OSMH. Open **Software sources**, select **Add vendor software source**, and choose **Oracle Linux 9** and **x86_64**. Add **BaseOS Latest**, **AppStream**, **UEK Release 8**, and **Oracle Software for OCI users**, where available. Reuse sources already added to the service.
+    Check which network setup you are using:
+
+    - **Public subnet with an internet gateway:** Keep the existing `0.0.0.0/0` route to the internet gateway. Do not add an `All <region> Services in Oracle Services Network` service-gateway route to this same table. Oracle documents a routing conflict with that combination. A public instance can reach Oracle services through the internet gateway.
+    - **Private subnet:** Follow the [OSMH networking requirements](https://docs.oracle.com/en-us/iaas/osmh/doc/getstarted.htm) for a service gateway using `All <region> Services in Oracle Services Network` and a matching subnet route. Keep any existing NAT route needed for internet access.
+
+    Return to the subnet and open its **Security Lists**, then **Egress Rules**. Confirm outbound HTTPS on TCP port 443 is allowed. If the VM uses network security groups, check their egress rules too. Route rules alone do not prove that the VM can reach OSMH.
+
+    See Oracle's [public-subnet routing restriction](https://docs.oracle.com/en-us/iaas/Content/Network/Reference/known_issues_for_networking.htm). Resolve access failures before registration. If using the independent Luna option, follow that lab's network setup in its own environment.
+
+4. Return to OSMH. Open **Software sources**, select **Add vendor software source**, and choose **Oracle Linux 9** and **x86_64**. Add **BaseOS Latest**, **AppStream**, **UEK Release 8**, and **Oracle Linux 9 OCI Included Packages (x86_64)** (`ol9_oci_included-x86_64`), where available. Reuse sources already added to the service.
+
+    For the OCI included source, select `ol9_oci_included-x86_64`. The similarly named `ol9_oracle_software-x86_64` is a different source.
 
     Software sources supply the packages managed by OSMH. BaseOS and AppStream provide the core packages; UEK Release 8 matches the kernel exercise. Use the source compartment shown in the Console, which can be the root compartment.
 

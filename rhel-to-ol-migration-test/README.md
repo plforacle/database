@@ -5,7 +5,7 @@ This folder contains separate instructor preparation and student workshops.
 - [Instructor workshop](workshops/instructor/index.html): Prepare the reusable RHEL image in two labs, then provide the image URL and OCI access instructions to students.
 - [Student workshop](workshops/tenancy/index.html): Complete six main labs on the same VM, covering setup, migration, live patching, and kernel choices. Lab 7 is an optional OSMH activity with an independent Luna option.
 
-The existing `workshops/tenancy` entry opens the student workshop. The instructor workshop has its own manifest and introduction. The separate migration-validation, package-maintenance, Apache-troubleshooting, security, application-backup, and automation labs are preserved under `archive/retired-student-labs`. The former station-based OSMH labs and supporting guides are preserved under `archive/retired-osmh-onprem`. Lab 4 completes migration, Lab 5 tests Ksplice on RHCK, and Lab 6 explores UEK. The main agenda has 250 minutes of activity including orientation; allow about five hours with provisioning, downloads, and reboots. Optional Lab 7 requires extra time.
+The existing `workshops/tenancy` entry opens the student workshop. The instructor workshop has its own manifest and introduction. Retired labs and review records are stored separately in the owner's backup, outside this LiveLabs workshop folder. Lab 4 completes migration, Lab 5 tests Ksplice on RHCK, and Lab 6 explores UEK. The main agenda has 250 minutes of activity including orientation; allow about five hours with provisioning, downloads, and reboots. Optional Lab 7 requires extra time.
 
 ## Entry Files
 
@@ -20,11 +20,11 @@ Students need an OCI environment and the instructor-provided prepared-image PAR 
 
 Labs 1 through 6 use `ol-migrate-rhel-source` as OCI practice infrastructure for the on-premises migration scenario. Optional [Lab 7](osmh-oci-quickstart/osmh-oci-quickstart.md) links to the independent [Luna OSMH lab](https://luna.oracle.com/lab/d60f64fb-76b8-4a46-9b90-75ce4ff7e0b5/steps), which students can run during training in its own environment. It also retains the migrated-VM tasks as an alternative when the required permissions are available.
 
-For the migrated-VM option, students need the documented OSMH, software-source, Compute plugin, and IAM permissions, or administrator assistance. The live test verified Oracle Cloud Agent installation, but IAM errors prevented completion of service setup. Plugin registration, inventory, and update execution remain unverified on this image. The owner reported successful live testing of Labs 1 through 6; optional Lab 7 testing is planned for Wednesday, October 28, 2026.
+For the migrated-VM option, students need the documented OSMH, software-source, Compute plugin, and IAM permissions, or administrator assistance. The owner reported successful live testing of Labs 1 through 6 and completed optional Lab 7 on October 29, 2026, using `ol-migrate-rhel-source` in a Luna tenancy in Frankfurt. The supplied results confirm the OSMH plugin Running, the managed instance Active, all four sources attached, package inventory visible, and a one-package update work request Succeeded at 100 percent. Apache remained active and returned `MIGRATION_WORKLOAD_OK` after the update. The updated package name and before/after versions were not supplied, so the version comparison was not independently verified. These results cover the workshop's Lab 7 tasks in that environment; they do not establish completion of every step in the separate Luna tutorial.
 
 ## Lab Number Mapping
 
-The October 25 live-test notes and older QA records retain their original lab numbers. Use this mapping when resuming an existing test. Original Labs 1 and 2 are now the two instructor labs.
+Earlier review and live-test notes are kept in the owner's backup and retain their original lab numbers. Use this mapping when resuming an existing test. Original Labs 1 and 2 are now the two instructor labs.
 
 | Original lab | Student lab | Title |
 | --- | --- | --- |
@@ -42,7 +42,7 @@ The October 25 live-test notes and older QA records retain their original lab nu
 | 14 | Retired | Automate Application Health Checks |
 | New | 7 | OS Management Hub Quickstart on OCI |
 
-The October 27 live test completed kernel switching and the full Ksplice patch test in the earlier lab order. Ksplice applied 135 patches on the retained Oracle RHCK without rebooting during patching, and the application responded before and after. The revised sequence keeps learners on RHCK for Ksplice before introducing UEK. Existing successful test results remain valid. Lab 7 has been restored at the owner's request; historical QA notes retain earlier scope decisions and test results.
+The October 27 live test completed kernel switching and the full Ksplice patch test in the earlier lab order. Ksplice applied 135 patches on the retained Oracle RHCK without rebooting during patching, and the application responded before and after. The revised sequence keeps learners on RHCK for Ksplice before introducing UEK. Existing successful test results remain valid. Lab 7 is optional. Historical review notes are retained in the owner's backup.
 
 ## Resource Ownership
 
