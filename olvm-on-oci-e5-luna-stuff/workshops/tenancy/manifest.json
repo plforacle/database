@@ -1,0 +1,27 @@
+{
+  "workshoptitle": "Oracle Linux Virtualization Manager (OLVM) on OCI - Beginner",
+  "help": "livelabs-help-oci_us@oracle.com",
+  "tutorials": [
+    
+    {
+      "title": "Luna OLVM Administration - Training",
+      "description": "Complete a separate Luna session covering OLVM deployment, migration, backup, monitoring, snapshots, and users and roles. Allow 6-8 hours; requires the direct Luna lab link.",
+      "filename": "../../olvm-luna/olvm-luna.md"
+    },
+    {
+      "title": "OLVM Administration - Quiz",
+      "description": "Use alongside Luna OLVM Administration: 100 scored OLVM questions, ten per task, with discussion explanations and an 80% passing score.",
+      "filename": "../../olvm-ilt-quiz/olvm-ilt-quiz.md"
+    },
+    {
+      "title": "OLVM Administration - Self-Study Quiz Bank",
+      "description": "Separate 500-question study bank across seven weighted objective areas, with explanations, module badges, and a 38-subtopic coverage guide.",
+      "filename": "../../olvm-self-study/olvm-self-study.md"
+    },
+    {
+      "title": "Need Help?",
+      "description": "Troubleshooting resources and directions for getting assistance during the workshop.",
+      "filename": "https://livelabs.oracle.com/cdn/common/labs/need-help/need-help-freetier.md"
+    }
+  ]
+}
